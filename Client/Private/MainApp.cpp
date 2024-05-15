@@ -6,6 +6,8 @@
 
 #include "Background.h"
 
+#include "ImGui_Main.h"
+
 
 CMainApp::CMainApp()
 	: m_pGameInstance { CGameInstance::Get_Instance() }
@@ -28,10 +30,11 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
 
-	m_pGameInstance->Add_Prototype(L"Prototype_Loading_BG", CBackground::Create(m_pDevice, m_pContext));
+	m_pImGui_Main = CImGui_Main::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pImGui_Main)
+		return E_FAIL;
 
-
-	if (FAILED(Open_Level(LEVEL_GAMEPLAY)))
+	if (FAILED(m_pGameInstance->Change_Level(CLevel_Tool::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
@@ -40,6 +43,8 @@ HRESULT CMainApp::Initialize()
 void CMainApp::Tick(_float fTimeDelta)
 {
 	m_pGameInstance->Tick_Engine(fTimeDelta);
+
+	m_pImGui_Main->Tick(fTimeDelta);
 }
 
 HRESULT CMainApp::Render()
@@ -52,17 +57,12 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Draw();
 
+	m_pImGui_Main->Render();
+
 	m_pGameInstance->Present();
 	return S_OK;
 }
 
-HRESULT CMainApp::Open_Level(LEVEL eStartLevelID)
-{
-	if (FAILED(m_pGameInstance->Change_Level(CLevel_Loading::Create(eStartLevelID, m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	return S_OK;
-}
 
 HRESULT CMainApp::Ready_Prototype_Component()
 {

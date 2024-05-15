@@ -25,9 +25,6 @@
     <Filter Include="01. Levels\00. Loading\Loader">
       <UniqueIdentifier>{d7a516a4-2521-4980-a217-4807612ec8bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\01. Title">
-      <UniqueIdentifier>{9fcdbdf1-7ee1-4737-94a5-7e51ca840b9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Levels\02. GamePlay">
       <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
     </Filter>
@@ -69,6 +66,24 @@
     </Filter>
     <Filter Include="02. GameObjects\Testing\TestAnim">
       <UniqueIdentifier>{1e8c9bde-1ec5-4fb4-bce0-fd84817f37a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="100. IMGUI">
+      <UniqueIdentifier>{55cddb12-6c8e-4f86-bde0-c7a4d8eee25d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\03. Tool">
+      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\00. Loading\01. Title">
+      <UniqueIdentifier>{9fcdbdf1-7ee1-4737-94a5-7e51ca840b9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="100. IMGUI\00. ImGui_Main">
+      <UniqueIdentifier>{a254e204-3881-4607-8094-9dc2d0a7ee29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="100. IMGUI\00. ToolState">
+      <UniqueIdentifier>{5742d96d-4671-4b61-be94-420d02a76830}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="100. IMGUI\01. Anim_Tool">
+      <UniqueIdentifier>{e4065ac7-4940-420e-b257-5f14f782f446}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +144,18 @@
     <ClInclude Include="..\Public\TestAnim.h">
       <Filter>02. GameObjects\Testing\TestAnim</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Level_Tool.h">
+      <Filter>01. Levels\03. Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ImGui_Main.h">
+      <Filter>100. IMGUI\00. ImGui_Main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolState.h">
+      <Filter>100. IMGUI\00. ToolState</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Anim_Tool.h">
+      <Filter>100. IMGUI\01. Anim_Tool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -169,6 +196,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\TestAnim.cpp">
       <Filter>02. GameObjects\Testing\TestAnim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Tool.cpp">
+      <Filter>01. Levels\03. Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ImGui_Main.cpp">
+      <Filter>100. IMGUI\00. ImGui_Main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolState.cpp">
+      <Filter>100. IMGUI\00. ToolState</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Anim_Tool.cpp">
+      <Filter>100. IMGUI\01. Anim_Tool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

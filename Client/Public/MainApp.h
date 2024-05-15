@@ -26,11 +26,9 @@ private:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
 
-	CGameInstance* m_pGameInstance = nullptr;
+	CGameInstance*			m_pGameInstance = nullptr;
 
-private:
-	HRESULT Open_Level(LEVEL eStartLevelID);
-
+	class CImGui_Main*		m_pImGui_Main = nullptr;
 private:
 	HRESULT	Ready_Prototype_Component();
 	HRESULT Ready_Prototype_Shader();

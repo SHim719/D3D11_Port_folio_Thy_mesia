@@ -16,6 +16,7 @@ namespace Client
 		LEVEL_LOADING, 
 		LEVEL_TITLE,
 		LEVEL_GAMEPLAY,
+		LEVEL_TOOL,
 		LEVEL_END };
 }
 

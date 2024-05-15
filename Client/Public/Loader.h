@@ -26,7 +26,7 @@ public:
 
 private:
 	HRESULT Load_Default();
-
+	HRESULT Loading_ToolLevel();
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

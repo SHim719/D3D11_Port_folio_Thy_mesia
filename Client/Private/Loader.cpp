@@ -51,6 +51,8 @@ unsigned int CLoader::Loading()
 	case LEVEL_GAMEPLAY:
 		hr = Load_Default();
 		break;
+	case LEVEL_TOOL:
+		hr = Loading_ToolLevel();
 	}
 
 	LeaveCriticalSection(&m_CriticalSection);
@@ -116,6 +118,13 @@ HRESULT CLoader::Load_Default()
 
 	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
 
+	m_bIsFinished = true;
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_ToolLevel()
+{
+	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
 	m_bIsFinished = true;
 	return S_OK;
 }

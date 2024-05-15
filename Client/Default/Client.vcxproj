@@ -169,38 +169,46 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Anim_Tool.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Client_Components.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Enemy.h" />
     <ClInclude Include="..\Public\Free_Camera.h" />
+    <ClInclude Include="..\Public\ImGui_Main.h" />
     <ClInclude Include="..\Public\Levels_Header.h" />
     <ClInclude Include="..\Public\Level_GamePlay.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
+    <ClInclude Include="..\Public\Level_Tool.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\TestAnim.h" />
     <ClInclude Include="..\Public\TestGround.h" />
     <ClInclude Include="..\Public\TestStaticObj.h" />
+    <ClInclude Include="..\Public\ToolState.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Anim_Tool.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
     <ClCompile Include="..\Private\Free_Camera.cpp" />
+    <ClCompile Include="..\Private\ImGui_Main.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
+    <ClCompile Include="..\Private\Level_Tool.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\TestAnim.cpp" />
     <ClCompile Include="..\Private\TestGround.cpp" />
     <ClCompile Include="..\Private\TestStaticObj.cpp" />
+    <ClCompile Include="..\Private\ToolState.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -42,6 +42,9 @@ void CLevel_Loading::Tick(_float TimeDelta)
 			case LEVEL_GAMEPLAY:
 				pLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
 				break;
+			case LEVEL_TOOL:
+				pLevel = CLevel_Tool::Create(m_pDevice, m_pContext);
+				break;
 			}
 
 			if (nullptr == pLevel)
