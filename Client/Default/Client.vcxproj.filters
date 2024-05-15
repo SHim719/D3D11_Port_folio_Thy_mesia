@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="03. Client_Components">
+      <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI">
+      <UniqueIdentifier>{05e2490f-83af-4688-86c7-d0def919f5ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects">
+      <UniqueIdentifier>{e561c34e-d6f4-478c-9e8b-6bb897b1098c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels">
+      <UniqueIdentifier>{2fd56b7c-25e0-41fb-978b-b8be6be0a2aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp">
+      <UniqueIdentifier>{edc3c5d1-ea6b-4e29-b34d-540396673e0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\00. Loading">
+      <UniqueIdentifier>{415cf11b-c036-4b34-a51b-7fe799dac4c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Managers">
+      <UniqueIdentifier>{917e7d2a-74dc-4341-a9d3-99dd0cb1e949}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\00. Loading\Loader">
+      <UniqueIdentifier>{d7a516a4-2521-4980-a217-4807612ec8bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\01. Title">
+      <UniqueIdentifier>{9fcdbdf1-7ee1-4737-94a5-7e51ca840b9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\02. GamePlay">
+      <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="98. Default">
+      <UniqueIdentifier>{9a853736-99fd-4100-b927-5433508f68ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines">
+      <UniqueIdentifier>{3adbd17b-c224-4d61-9067-175bbd3d0d56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines\Headers">
+      <UniqueIdentifier>{13a9a52c-33da-481b-94ef-daa2dacd02df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. ShaderFiles">
+      <UniqueIdentifier>{f0bdbf26-a0e5-494c-a48c-6f01c1fe6752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\00. Background">
+      <UniqueIdentifier>{d77d19c9-d9e6-4fcd-a3d0-908e2d78be74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player">
+      <UniqueIdentifier>{aa72ff72-1ace-4fd0-a5c4-a7f304de7a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Camera">
+      <UniqueIdentifier>{4d6fb1a2-32d5-43aa-aed6-8fbfcf023880}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Camera\Free_Camera">
+      <UniqueIdentifier>{64d3bb41-8fc8-447c-8dd6-841009cef042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Enemy">
+      <UniqueIdentifier>{c151c21c-0afd-4e07-a6ca-7a53edd2ef0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\Testing">
+      <UniqueIdentifier>{cae783a2-dd47-4fe9-a97b-da242cabcb8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\Testing\TestStaticObj">
+      <UniqueIdentifier>{77b0a51a-105a-4cc1-a2f1-28ae70389f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\Testing\TestGround">
+      <UniqueIdentifier>{7af8c766-ac01-4c74-8b61-8bdeeda74225}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\Testing\TestAnim">
+      <UniqueIdentifier>{1e8c9bde-1ec5-4fb4-bce0-fd84817f37a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Client.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>98. Default</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MainApp.h">
+      <Filter>00. MainApp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Defines.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Components.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>01. Levels\00. Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Loader.h">
+      <Filter>01. Levels\00. Loading\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_GamePlay.h">
+      <Filter>01. Levels\02. GamePlay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Levels_Header.h">
+      <Filter>99. Defines\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Background.h">
+      <Filter>02. GameObjects\00. Background</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player.h">
+      <Filter>02. GameObjects\02. Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Free_Camera.h">
+      <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy.h">
+      <Filter>02. GameObjects\03. Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestStaticObj.h">
+      <Filter>02. GameObjects\Testing\TestStaticObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestGround.h">
+      <Filter>02. GameObjects\Testing\TestGround</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestAnim.h">
+      <Filter>02. GameObjects\Testing\TestAnim</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Client.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MainApp.cpp">
+      <Filter>00. MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Loading.cpp">
+      <Filter>01. Levels\00. Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Loader.cpp">
+      <Filter>01. Levels\00. Loading\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_GamePlay.cpp">
+      <Filter>01. Levels\02. GamePlay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Background.cpp">
+      <Filter>02. GameObjects\00. Background</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Player.cpp">
+      <Filter>02. GameObjects\02. Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Free_Camera.cpp">
+      <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy.cpp">
+      <Filter>02. GameObjects\03. Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestStaticObj.cpp">
+      <Filter>02. GameObjects\Testing\TestStaticObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestGround.cpp">
+      <Filter>02. GameObjects\Testing\TestGround</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestAnim.cpp">
+      <Filter>02. GameObjects\Testing\TestAnim</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Client.ico">
+      <Filter>98. Default</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>98. Default</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Client.rc">
+      <Filter>98. Default</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli">
+      <Filter>96. ShaderFiles</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNonAnim.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
