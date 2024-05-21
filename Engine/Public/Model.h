@@ -11,6 +11,14 @@ public:
 	typedef vector<class CBone*>	BONES;
 	typedef vector<class CMeshContainer*>	MESHES;
 
+public:
+	typedef struct tagLoadModelDesc
+	{
+		TYPE eType;
+		const char* pModelFilePath;
+		const char* pModelFileName;
+		_float4x4 PivotMatrix;
+	}LOADMODELDESC;
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CModel(const CModel& rhs);
@@ -31,7 +39,7 @@ public:
 
 
 public:
-	HRESULT Initialize_Prototype(TYPE eType, const char* pModelFilePath, const char* pModelFileName, vector<_uint> LoadIndices, _fmatrix PivotMatrix);
+	HRESULT Initialize_Prototype();
 	HRESULT Initialize(void* pArg)	override;
 
 public:
@@ -67,6 +75,7 @@ public:
 	_uint	Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
 	void	Set_AnimIndex(_uint iAnimIndex) { m_iCurrentAnimIndex = iAnimIndex; }
 
+
 private:
 	class CVTF*		m_pVTF = nullptr;
 
@@ -75,8 +84,8 @@ public:
 	HRESULT Bind_VTF(CShader* pShader, const char* pConstantName, _uint iMeshIndex);
 
 private:
-	HRESULT Ready_MeshContainers(_fmatrix PivotMatrix, const vector<_uint>& LoadIndices);
-	HRESULT Ready_Materials(const char* pModelFilePath, const vector<_uint>& LoadIndices);
+	HRESULT Ready_MeshContainers(_fmatrix PivotMatrix);
+	HRESULT Ready_Materials(const char* pModelFilePath);
 	HRESULT Ready_Bones(aiNode* pNode, class CBone* pParent, _uint iDepth);
 	HRESULT Ready_Animations();
 	

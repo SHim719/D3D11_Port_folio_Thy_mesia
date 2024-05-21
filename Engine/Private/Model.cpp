@@ -60,22 +60,30 @@ _uint CModel::Get_MaterialIndex(_uint iMeshIndex)
 	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
 }
 
-HRESULT CModel::Initialize_Prototype(TYPE eType, const char* pModelFilePath, const char* pModelFileName, vector<_uint> LoadIndices, _fmatrix PivotMatrix)
+HRESULT CModel::Initialize_Prototype()
 {
-	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
+	
+	return S_OK;
+}
+
+HRESULT CModel::Initialize(void* pArg)
+{
+	LOADMODELDESC* modelDesc = (LOADMODELDESC*)pArg;
+
+	m_PivotMatrix = modelDesc->PivotMatrix;
 
 	char		szFullPath[MAX_PATH] = "";
 
-	strcpy_s(szFullPath, pModelFilePath);
-	strcat_s(szFullPath, pModelFileName);
+	strcpy_s(szFullPath, modelDesc->pModelFilePath);
+	strcat_s(szFullPath, modelDesc->pModelFileName);
 
 	_uint		iFlag = 0;
 
-	m_eModelType = eType;
+	m_eModelType = modelDesc->eType;
 
 	// aiProcess_PreTransformVertices : 모델을 구성하는 메시 중, 이 메시의 이름과 뼈의 이름이 같은 상황이라면 이 뼈의 행렬을 메시의 정점에 다 곱해서 로드한다. 
 	// 모든 애니메이션 정보는 폐기된다. 
-	if (TYPE_NONANIM == eType)
+	if (TYPE_NONANIM == m_eModelType)
 		iFlag |= aiProcess_PreTransformVertices | aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace;
 	else
 		iFlag |= aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace;
@@ -86,32 +94,20 @@ HRESULT CModel::Initialize_Prototype(TYPE eType, const char* pModelFilePath, con
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
-	if (0 == LoadIndices.size()) 
-	{
-		LoadIndices.resize(m_pAIScene->mNumMeshes);
-		for (size_t i = 0; i < LoadIndices.size(); ++i)
-			LoadIndices[i] = (_uint)i;
-	}
-
-
-	if (FAILED(Ready_MeshContainers(PivotMatrix, LoadIndices)))
+	if (FAILED(Ready_MeshContainers(XMLoadFloat4x4(&(modelDesc->PivotMatrix)))))
 		return E_FAIL;
 
-	
-	if (FAILED(Ready_Materials(pModelFilePath, LoadIndices)))
+
+	if (FAILED(Ready_Materials(modelDesc->pModelFilePath)))
 		return E_FAIL;
 
-	if (TYPE_ANIM == eType)
+	if (TYPE_ANIM == modelDesc->eType)
 	{
 		if (FAILED(Ready_Animations()))
 			return E_FAIL;
 	}
 
-	return S_OK;
-}
 
-HRESULT CModel::Initialize(void* pArg)
-{
 	/* 뼈대 정볼르 로드하낟. */
 	/* 이 모델 전체의 뼈의 정보를 로드한다. */
 	/* Bone : 뼈의 상태를 가진다.(offSetMatrix, Transformation, CombinedTransformation */
@@ -228,12 +224,12 @@ HRESULT CModel::Bind_VTF(CShader* pShader, const char* pConstantName, _uint iMes
 	return m_pVTF->Bind_ShaderResourceView(pShader, pConstantName, iMeshIndex);
 }
 
-HRESULT CModel::Ready_MeshContainers(_fmatrix PivotMatrix, const vector<_uint>& LoadIndices)
+HRESULT CModel::Ready_MeshContainers(_fmatrix PivotMatrix)
 {
 	/* 메시의 갯수를 얻어온다. */
-	m_iNumMeshes = (_uint)LoadIndices.size();
+	m_iNumMeshes = m_pAIScene->mNumMeshes;
 
-	for (_uint i : LoadIndices)
+	for (_uint i = 0 ; i < m_iNumMeshes; ++i)
 	{
 		CMeshContainer* pMeshContainer = CMeshContainer::Create(m_pDevice, m_pContext, m_eModelType, m_pAIScene->mMeshes[i], this, PivotMatrix);
 		if (nullptr == pMeshContainer)
@@ -245,16 +241,16 @@ HRESULT CModel::Ready_MeshContainers(_fmatrix PivotMatrix, const vector<_uint>& 
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Materials(const char* pModelFilePath, const vector<_uint>& LoadIndices)
+HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 {
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
 	
 	m_iNumMaterials = m_pAIScene->mNumMaterials;
-	m_Materials.reserve(LoadIndices.size());
+	m_Materials.reserve(m_iNumMaterials);
 
-	for (_uint i : LoadIndices)
+	for (_uint i = 0; i < m_iNumMaterials; ++i)
 	{
 		MATERIALDESC		MaterialDesc;
 		ZeroMemory(&MaterialDesc, sizeof(MATERIALDESC));

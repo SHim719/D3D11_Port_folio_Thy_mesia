@@ -11,8 +11,6 @@ class CCollider;
 class CRenderer;
 class CTransform;
 class CNavigation;
-
-
 class CHierarchyNode;
 END
 

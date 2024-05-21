@@ -5,9 +5,6 @@
 #include "Free_Camera.h"
 #include "Player.h"
 #include "Enemy.h"
-#include "TestStaticObj.h"
-#include "TestGround.h"
-#include "TestAnim.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -107,14 +104,6 @@ HRESULT CLoader::Load_Default()
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_Enemy"), CEnemy::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_TestStaticObj"), CTestStaticObj::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_TestAnim"), CTestAnim::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_TestGround"), CTestGround::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
 

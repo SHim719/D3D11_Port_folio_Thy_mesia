@@ -87,4 +87,12 @@ namespace Engine
 		static const unsigned int iNumElements = 6;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXANIMMODEL_DECLARATION;
+
+
+	typedef struct TagObjectInfo
+	{
+		XMFLOAT3 vPosition = {};
+		XMFLOAT3 vRotation = {};
+		XMFLOAT3 vScale = { 1.f, 1.f, 1.f };
+	}OBJINFO;
 }

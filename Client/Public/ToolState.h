@@ -5,6 +5,9 @@
 
 #include "GameInstance.h"
 
+#include "GameObject.h"
+
+
 BEGIN(Client)
 
 class CToolState : public CBase

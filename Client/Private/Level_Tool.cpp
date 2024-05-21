@@ -38,7 +38,5 @@ void CLevel_Tool::Free()
 {
 	__super::Free();
 
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+
 }

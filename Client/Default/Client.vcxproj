@@ -183,10 +183,9 @@
     <ClInclude Include="..\Public\Level_Tool.h" />
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
+    <ClInclude Include="..\Public\Map_Tool.h" />
     <ClInclude Include="..\Public\Player.h" />
-    <ClInclude Include="..\Public\TestAnim.h" />
-    <ClInclude Include="..\Public\TestGround.h" />
-    <ClInclude Include="..\Public\TestStaticObj.h" />
+    <ClInclude Include="..\Public\ToolAnimObj.h" />
     <ClInclude Include="..\Public\ToolState.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -204,10 +203,9 @@
     <ClCompile Include="..\Private\Level_Tool.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
+    <ClCompile Include="..\Private\Map_Tool.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
-    <ClCompile Include="..\Private\TestAnim.cpp" />
-    <ClCompile Include="..\Private\TestGround.cpp" />
-    <ClCompile Include="..\Private\TestStaticObj.cpp" />
+    <ClCompile Include="..\Private\ToolAnimObj.cpp" />
     <ClCompile Include="..\Private\ToolState.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

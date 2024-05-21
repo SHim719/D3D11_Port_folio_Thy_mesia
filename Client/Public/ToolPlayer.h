@@ -11,22 +11,20 @@ class CCollider;
 class CRenderer;
 class CTransform;
 class CNavigation;
-
-
 class CHierarchyNode;
 END
 
 BEGIN(Client)
 
-class CTestAnim final : public CGameObject
+class CToolPlayer final : public CGameObject
 {
 public:
-	enum PARTTYPE { PART_HEAD, PART_REGIONARM, PART_WEAPON, PART_END };
+	enum PARTTYPE { PART_BODY, PART_HEAD, PART_REGIONARM, PART_END };
 	//	enum COLLIDERTYPE { COLLIDERTYPE_AABB, COLLIDERTYPE_OBB, COLLIDERTYPE_SPHERE, COLLILDERTYPE_END };
 private:
-	CTestAnim(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CTestAnim(const CTestAnim& rhs);
-	virtual ~CTestAnim() = default;
+	CToolPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CToolPlayer(const CToolPlayer& rhs);
+	virtual ~CToolPlayer() = default;
 
 public:
 	HRESULT Initialize_Prototype()		override;
@@ -37,9 +35,8 @@ public:
 
 private:
 	CShader* m_pShader = nullptr;
-	CModel* m_pModel = nullptr;
+	CModel* m_pModels[PARTTYPE::PART_END] = {};
 	//CCollider* m_pColliderCom[COLLILDERTYPE_END] = { nullptr };
-	//CNavigation* m_pNavigationCom = nullptr;
 
 private:
 	vector<CGameObject*>				m_Parts;
@@ -48,15 +45,19 @@ private:
 	//vector<class CHierarchyNode*>		m_Sockets;
 
 private:
-	HRESULT Ready_Components();
+	_bool isAnimPlaying = false;
+public:
+	void Stop_Anim() { isAnimPlaying = false; }
+	void Play_Anim() { isAnimPlaying = true; }
 
-	//HRESULT Ready_Sockets();
-	//HRESULT Ready_TestAnimParts();
+
+private:
+	HRESULT Ready_Components();
 
 	//HRESULT Update_Weapon();
 
 public:
-	static CTestAnim* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CToolPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
 };
