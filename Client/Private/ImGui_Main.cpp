@@ -16,16 +16,25 @@ CImGui_Main::CImGui_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CImGui_Main::Initialize()
 {
+
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    //io.DisplaySize = ImVec2(float(g_iWinSizeX), float(g_iWinSizeY));
+
+    RECT rect = {};
+    GetClientRect(g_hWnd, &rect);
+    long Width = rect.right - rect.left;
+    long Height = rect.bottom - rect.top;
+
+    io.DisplaySize = ImVec2(float(Width), float(Height));
 
     ImGui_ImplWin32_Init(g_hWnd);
     ImGui_ImplDX11_Init(m_pDevice, m_pContext);
 
     m_ToolStates[MAP] = CMap_Tool::Create(m_pDevice, m_pContext);
     m_ToolStates[ANIM] = CAnim_Tool::Create(m_pDevice, m_pContext);
+
+    m_eToolState = MAP;
    
     return S_OK;
 }

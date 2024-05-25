@@ -166,12 +166,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\Public\Anim_Tool.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Client_Components.h" />
+    <ClInclude Include="..\Public\Client_Functions.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Enemy.h" />
@@ -185,7 +183,7 @@
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Map_Tool.h" />
     <ClInclude Include="..\Public\Player.h" />
-    <ClInclude Include="..\Public\ToolAnimObj.h" />
+    <ClInclude Include="..\Public\ToolMapObj.h" />
     <ClInclude Include="..\Public\ToolState.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -195,6 +193,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Anim_Tool.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\Client_Functions.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
     <ClCompile Include="..\Private\Free_Camera.cpp" />
     <ClCompile Include="..\Private\ImGui_Main.cpp" />
@@ -205,7 +204,7 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Map_Tool.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
-    <ClCompile Include="..\Private\ToolAnimObj.cpp" />
+    <ClCompile Include="..\Private\ToolMapObj.cpp" />
     <ClCompile Include="..\Private\ToolState.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">

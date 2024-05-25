@@ -33,6 +33,10 @@ protected:
 	CAMERADESC					m_CameraDesc;
 
 public:
+	_float	Get_FovY() const { return m_CameraDesc.fFovy; }
+	void	Set_FovY(_float fFovDegree) { m_CameraDesc.fFovy = fFovDegree; }
+
+public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free();
 };

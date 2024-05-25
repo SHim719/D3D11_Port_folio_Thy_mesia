@@ -76,14 +76,14 @@
     <Filter Include="02. GameObjects\99. ToolObject\1. ToolAnimObj">
       <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\0. ToolStaticObj">
-      <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
-    </Filter>
     <Filter Include="100. IMGUI\01. Anim_Tool">
       <UniqueIdentifier>{e4065ac7-4940-420e-b257-5f14f782f446}</UniqueIdentifier>
     </Filter>
     <Filter Include="100. IMGUI\02. Map_Tool">
       <UniqueIdentifier>{aba63799-2135-4792-a325-8081c5300357}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\0. ToolMapObj">
+      <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -153,11 +153,14 @@
     <ClInclude Include="..\Public\Map_Tool.h">
       <Filter>100. IMGUI\02. Map_Tool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ToolMapObj.h">
+      <Filter>02. GameObjects\99. ToolObject\0. ToolMapObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Functions.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Client.cpp">
-      <Filter>98. Default</Filter>
-    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>98. Default</Filter>
     </ClCompile>
@@ -203,6 +206,15 @@
     <ClCompile Include="..\Private\Map_Tool.cpp">
       <Filter>100. IMGUI\02. Map_Tool</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\ToolMapObj.cpp">
+      <Filter>02. GameObjects\99. ToolObject\0. ToolMapObj</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>98. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Client_Functions.cpp">
+      <Filter>99. Defines</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -216,9 +228,6 @@
     <ResourceCompile Include="Client.rc">
       <Filter>98. Default</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli">

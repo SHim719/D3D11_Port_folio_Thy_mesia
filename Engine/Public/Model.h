@@ -15,8 +15,8 @@ public:
 	typedef struct tagLoadModelDesc
 	{
 		TYPE eType;
-		const char* pModelFilePath;
-		const char* pModelFileName;
+		string strModelFilePath;
+		string strModelFileName;
 		_float4x4 PivotMatrix;
 	}LOADMODELDESC;
 private:
@@ -39,7 +39,7 @@ public:
 
 
 public:
-	HRESULT Initialize_Prototype();
+	HRESULT Initialize_Prototype(void* pArg);
 	HRESULT Initialize(void* pArg)	override;
 
 public:
@@ -90,8 +90,7 @@ private:
 	HRESULT Ready_Animations();
 	
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const char* pModelFilePath, const char* pModelFileName, 
-		const vector<_uint>& LoadIndices, _fmatrix PivotMatrix = XMMatrixIdentity());
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	virtual CComponent* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

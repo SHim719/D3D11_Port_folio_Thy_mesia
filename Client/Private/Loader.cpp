@@ -44,12 +44,8 @@ unsigned int CLoader::Loading()
 
 	switch (m_eNextLevelID)
 	{
-	case LEVEL_TITLE:
-	case LEVEL_GAMEPLAY:
-		hr = Load_Default();
-		break;
 	case LEVEL_TOOL:
-		hr = Loading_ToolLevel();
+		hr = Loading_Tool();
 	}
 
 	LeaveCriticalSection(&m_CriticalSection);
@@ -61,36 +57,15 @@ unsigned int CLoader::Loading()
 
 }
 
-HRESULT CLoader::Load_Default()
+HRESULT CLoader::Loading_Tool()
 {
 	lstrcpy(m_szLoadingText, TEXT("Load Model."));
 
-
-	_matrix		PivotMatrix = XMMatrixIdentity();
-
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(To_Radian(-90.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Model_Player_Body"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../Resources/Models/Player/", "PlayerAnim.fbx", { 1, 2 }, PivotMatrix))))
-		return E_FAIL;
-
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(To_Radian(-90.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Model_Player_Head"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_SKELETALMESH, "../../Resources/Models/Player/", "Player_Head.fbx", {}, PivotMatrix))))
-		return E_FAIL;
-
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(To_Radian(-90.f));
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Model_PuppetString"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_SKELETALMESH, "../../Resources/Models/Player/", "PuppetString.fbx", {}, PivotMatrix))))
-		return E_FAIL;
-
-	PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Model_BlackBoard"),
-		CModel::Create(m_pDevice, m_pContext, CModel::TYPE_NONANIM, "../../Resources/Models/Props/", "BlackBoard.fbx", {}, PivotMatrix))))
-		return E_FAIL;
-
-	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(To_Radian(90.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Model_TestAnim"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_ANIM, "../../Resources/Models/AnimTest/", "Anim.fbx", PivotMatrix))))
+	//_matrix		PivotMatrix = XMMatrixIdentity();
+	//
+	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(To_Radian(-90.f));
+	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Model_Puppetwstring"),
+	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_SKELETALMESH, "../../Resources/Models/Player/", "Puppetwstring.fbx", PivotMatrix))))
 	//	return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Load Prototype."));
@@ -110,14 +85,6 @@ HRESULT CLoader::Load_Default()
 	m_bIsFinished = true;
 	return S_OK;
 }
-
-HRESULT CLoader::Loading_ToolLevel()
-{
-	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
-	m_bIsFinished = true;
-	return S_OK;
-}
-
 
 CLoader* CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
 {

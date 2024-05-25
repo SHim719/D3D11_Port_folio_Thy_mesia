@@ -46,7 +46,6 @@ void CLevel_Loading::Tick(_float TimeDelta)
 				pLevel = CLevel_Tool::Create(m_pDevice, m_pContext);
 				break;
 			}
-
 			if (nullptr == pLevel)
 				return;
 

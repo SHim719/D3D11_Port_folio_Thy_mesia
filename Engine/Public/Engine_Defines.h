@@ -32,6 +32,7 @@ using namespace DirectX;
 #include <random>
 #include <unordered_map>
 #include <functional>
+#include <fstream>
 
 
 #include "Engine_Macro.h"

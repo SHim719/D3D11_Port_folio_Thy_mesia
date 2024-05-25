@@ -86,8 +86,6 @@ HRESULT CToolAnimObj::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	if (FAILED(_super))
-
 	return S_OK;
 }
 
@@ -122,8 +120,8 @@ void CToolAnimObj::Free()
 {
 	__super::Free();
 
-	for (auto& pModel : m_pModels)
-		Safe_Release(pModel);
+	//for (auto& pModel : m_pModels)
+	//	Safe_Release(pModel);
 
 	Safe_Release(m_pShader);
 }

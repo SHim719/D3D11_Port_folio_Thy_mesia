@@ -6,6 +6,7 @@
 #include "GameInstance.h"
 
 #include "GameObject.h"
+#include "Free_Camera.h"
 
 
 BEGIN(Client)
@@ -26,6 +27,7 @@ protected:
 
 	class CGameInstance*	m_pGameInstance = { nullptr };
 
+	class CFree_Camera*		m_pCamera = nullptr;
 public:
 	virtual void Free() override;
 };

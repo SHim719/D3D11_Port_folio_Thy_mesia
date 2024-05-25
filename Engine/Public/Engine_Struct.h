@@ -89,10 +89,5 @@ namespace Engine
 	}VTXANIMMODEL_DECLARATION;
 
 
-	typedef struct TagObjectInfo
-	{
-		XMFLOAT3 vPosition = {};
-		XMFLOAT3 vRotation = {};
-		XMFLOAT3 vScale = { 1.f, 1.f, 1.f };
-	}OBJINFO;
+	
 }

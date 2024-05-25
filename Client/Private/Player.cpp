@@ -101,7 +101,7 @@ HRESULT CPlayer::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Model_Player_Body"), TEXT("Model_Body"), (CComponent**)&m_pModels[PART_BODY])))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Model_PuppetString"), TEXT("Model_PuppetString"), (CComponent**)&m_pModels[PART_REGIONARM])))
+	if (FAILED(__super::Add_Component(LEVEL_GAMEPLAY, TEXT("Prototype_Model_Puppetwstring"), TEXT("Model_Puppetwstring"), (CComponent**)&m_pModels[PART_REGIONARM])))
 		return E_FAIL;
 
 	return S_OK;

@@ -12,6 +12,8 @@ CToolState::CToolState(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CToolState::Initialize(void* pArg)
 {
+    m_pCamera = static_cast<CFree_Camera*>(m_pGameInstance->Find_GameObject(LEVEL_TOOL, L"Camera"));
+
 	return S_OK;
 }
 

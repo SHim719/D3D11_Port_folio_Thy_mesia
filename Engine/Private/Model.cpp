@@ -10,6 +10,7 @@
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
+	XMStoreFloat4x4(&m_PivotMatrix, XMMatrixIdentity());
 }
 
 CModel::CModel(const CModel& rhs)
@@ -60,22 +61,13 @@ _uint CModel::Get_MaterialIndex(_uint iMeshIndex)
 	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
 }
 
-HRESULT CModel::Initialize_Prototype()
-{
-	
-	return S_OK;
-}
-
-HRESULT CModel::Initialize(void* pArg)
+HRESULT CModel::Initialize_Prototype(void* pArg)
 {
 	LOADMODELDESC* modelDesc = (LOADMODELDESC*)pArg;
 
 	m_PivotMatrix = modelDesc->PivotMatrix;
 
-	char		szFullPath[MAX_PATH] = "";
-
-	strcpy_s(szFullPath, modelDesc->pModelFilePath);
-	strcat_s(szFullPath, modelDesc->pModelFileName);
+	string strFullPath = modelDesc->strModelFilePath + modelDesc->strModelFileName;
 
 	_uint		iFlag = 0;
 
@@ -89,7 +81,7 @@ HRESULT CModel::Initialize(void* pArg)
 		iFlag |= aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace;
 
 	/* 파일의 정보를 읽어서 aiScene안에 보관한다.  */
-	m_pAIScene = m_Importer.ReadFile(szFullPath, iFlag);
+	m_pAIScene = m_Importer.ReadFile(strFullPath.c_str(), iFlag);
 
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
@@ -97,8 +89,7 @@ HRESULT CModel::Initialize(void* pArg)
 	if (FAILED(Ready_MeshContainers(XMLoadFloat4x4(&(modelDesc->PivotMatrix)))))
 		return E_FAIL;
 
-
-	if (FAILED(Ready_Materials(modelDesc->pModelFilePath)))
+	if (FAILED(Ready_Materials(modelDesc->strModelFilePath.c_str())))
 		return E_FAIL;
 
 	if (TYPE_ANIM == modelDesc->eType)
@@ -106,40 +97,42 @@ HRESULT CModel::Initialize(void* pArg)
 		if (FAILED(Ready_Animations()))
 			return E_FAIL;
 	}
+	return S_OK;
+}
 
+HRESULT CModel::Initialize(void* pArg)
+{
+	vector<CMeshContainer*>		MeshContainers;
 
-	/* 뼈대 정볼르 로드하낟. */
-	/* 이 모델 전체의 뼈의 정보를 로드한다. */
-	/* Bone : 뼈의 상태를 가진다.(offSetMatrix, Transformation, CombinedTransformation */
-	Ready_Bones(m_pAIScene->mRootNode, nullptr, 0);
-
-	/* 뎁스로 정렬한다. */
-	/*sort(m_Bones.begin(), m_Bones.end(), [](CBone* pSour, CBone* pDest)
+	for (auto& pPrototype : m_Meshes)
 	{
-		return pSour->Get_Depth() < pDest->Get_Depth();
-	});*/
+		CMeshContainer* pMeshContainer = (CMeshContainer*)pPrototype->Clone();
+		if (nullptr == pMeshContainer)
+			return E_FAIL;
+
+		MeshContainers.push_back(pMeshContainer);
+
+		Safe_Release(pPrototype);
+	}
+
+	m_Meshes.clear();
+
+	m_Meshes = MeshContainers;
 
 	if (TYPE_NONANIM != m_eModelType)
 	{
-		_uint		iNumMeshes = 0;
+		/* 뼈대 정볼르 로드하낟. */
+		/* 이 모델 전체의 뼈의 정보를 로드한다. */
+		/* Bone : 뼈의 상태를 가진다.(offSetMatrix, Transformation, CombinedTransformation */
+		Ready_Bones(m_pAIScene->mRootNode, nullptr, 0);
 
-		vector<CMeshContainer*>		MeshContainers;
-
-		for (auto& pPrototype : m_Meshes)
+		/* 뎁스로 정렬한다. */
+		/*sort(m_Bones.begin(), m_Bones.end(), [](CBone* pSour, CBone* pDest)
 		{
-			CMeshContainer* pMeshContainer = (CMeshContainer*)pPrototype->Clone();
-			if (nullptr == pMeshContainer)
-				return E_FAIL;
+			return pSour->Get_Depth() < pDest->Get_Depth();
+		});*/
 
-			MeshContainers.push_back(pMeshContainer);
-
-			Safe_Release(pPrototype);
-		}
-
-		m_Meshes.clear();
-
-		m_Meshes = MeshContainers;
-
+		_uint		iNumMeshes = 0;
 		for (auto& pMeshContainer : m_Meshes)
 		{
 			if (nullptr != pMeshContainer)
@@ -246,7 +239,6 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 	if (nullptr == m_pAIScene)
 		return E_FAIL;
 
-	
 	m_iNumMaterials = m_pAIScene->mNumMaterials;
 	m_Materials.reserve(m_iNumMaterials);
 
@@ -273,6 +265,7 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
 
 			strcpy_s(szFullPath, pModelFilePath);
+			strcat_s(szFullPath, "Tex\\");
 			strcat_s(szFullPath, szFileName);
 			strcat_s(szFullPath, szExt);
 
@@ -335,14 +328,14 @@ HRESULT CModel::Ready_Animations()
 }
 
 
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, TYPE eType, const char* pModelFilePath, const char* pModelFileName, const vector<_uint>& LoadIndices,
-	_fmatrix PivotMatrix)
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(eType, pModelFilePath, pModelFileName, LoadIndices, PivotMatrix)))
+	if (FAILED(pInstance->Initialize_Prototype(pArg)))
 	{
 		MSG_BOX(TEXT("Failed To Created : CModel"));
+		assert(false);
 		Safe_Release(pInstance);
 	}
 
@@ -356,6 +349,7 @@ CComponent* CModel::Clone(void* pArg)
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
 		MSG_BOX(TEXT("Failed To Cloned : CModel"));
+		assert(false);
 		Safe_Release(pInstance);
 	}
 

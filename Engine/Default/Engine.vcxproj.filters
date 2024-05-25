@@ -324,4 +324,7 @@
       <Filter>01.Utility\03. Components\05. Model\VTF</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\Client\Default\ReadMe.txt" />
+  </ItemGroup>
 </Project>

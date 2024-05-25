@@ -57,8 +57,6 @@ public:
 protected:
 	_bool m_bDestroyed = { false };
 	_bool m_bActive = { true };
-
-	string m_strTag = "";
 public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
 	_bool Is_Destroyed() { return m_bDestroyed; }
@@ -66,7 +64,6 @@ public:
 	void Set_Active(_bool b) { m_bActive = b; }
 	_bool Is_Active() { return m_bActive; }
 
-	const string& Get_Tag() const { return m_strTag; }
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

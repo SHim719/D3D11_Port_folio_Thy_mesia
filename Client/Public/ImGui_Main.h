@@ -34,7 +34,7 @@ private:
 	void ComboBox_ToolSelect();
 
 private:
-	ToolState						m_eToolState = ANIM;
+	ToolState						m_eToolState = TOOL_END;
 	class CToolState*				m_ToolStates[TOOL_END] = {};
 
 

@@ -25,8 +25,7 @@ public:
 	unsigned int Loading();
 
 private:
-	HRESULT Load_Default();
-	HRESULT Loading_ToolLevel();
+	HRESULT Loading_Tool();
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

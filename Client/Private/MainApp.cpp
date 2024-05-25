@@ -30,11 +30,11 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
 
-	m_pImGui_Main = CImGui_Main::Create(m_pDevice, m_pContext);
-	if (nullptr == m_pImGui_Main)
+	if (FAILED(m_pGameInstance->Change_Level(CLevel_Tool::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Change_Level(CLevel_Tool::Create(m_pDevice, m_pContext))))
+	m_pImGui_Main = CImGui_Main::Create(m_pDevice, m_pContext);
+	if (nullptr == m_pImGui_Main)
 		return E_FAIL;
 
 	return S_OK;

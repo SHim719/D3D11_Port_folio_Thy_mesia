@@ -18,11 +18,8 @@ private:
 	LEVEL			m_eNextLevel = LEVEL_END;
 	class CLoader*	m_pLoader = nullptr;
 
-
 public:
 	static CLevel_Loading* Create(LEVEL eNextLevel, ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	void Free()	override;
-
-
 };
 
