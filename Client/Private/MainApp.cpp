@@ -74,10 +74,6 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CTransform::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_BG_Texture"),
-		CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Loading.png"))))
-		return E_FAIL;
-
 	if (FAILED(Ready_Prototype_Shader()))
 		return E_FAIL;
 	

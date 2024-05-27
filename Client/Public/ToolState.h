@@ -28,6 +28,12 @@ protected:
 	class CGameInstance*	m_pGameInstance = { nullptr };
 
 	class CFree_Camera*		m_pCamera = nullptr;
+
+protected:
+	virtual void Camera_Window();
+	bool _stdcall VectorOfStringGetter(void* data, _int n, const char** out_text);
+	
+
 public:
 	virtual void Free() override;
 };

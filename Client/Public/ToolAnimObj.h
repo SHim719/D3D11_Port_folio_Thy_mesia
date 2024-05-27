@@ -29,11 +29,8 @@ private:
 	vector<CGameObject*>				m_Parts;
 	typedef vector<CGameObject*>		PARTS;
 
-	//vector<class CHierarchyNode*>		m_Sockets; 
-
-	_bool								m_bSubMesh = false;
 private:
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void* pArg);
 
 	//HRESULT Ready_Sockets();
 	//HRESULT Ready_EnemyParts();
@@ -41,9 +38,13 @@ private:
 	//HRESULT Update_Weapon();
 
 public:
+	CModel* Get_Model() const { return m_pModel; }
+
+public:
 	static CToolAnimObj* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg);
 	virtual void Free() override;
 };
+
 END
 

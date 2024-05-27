@@ -18,8 +18,11 @@ CAnimation::CAnimation(const CAnimation& rhs)
 		Safe_AddRef(pChannel);
 }
 
-HRESULT CAnimation::Initialize_Prototype(aiAnimation* pAIAnimation)
+
+HRESULT CAnimation::Initialize(aiAnimation* pAIAnimation)
 {
+	m_strAnimName = pAIAnimation->mName.C_Str();
+
 	m_fDuration = (_float)pAIAnimation->mDuration;
 	m_fTickPerSecond = (_float)pAIAnimation->mTicksPerSecond;
 
@@ -40,30 +43,16 @@ HRESULT CAnimation::Initialize_Prototype(aiAnimation* pAIAnimation)
 		m_Channels.push_back(pChannel);
 	}
 
-	return S_OK;
-}
 
-HRESULT CAnimation::Initialize(CModel* pModel)
-{
 	for (_uint i = 0; i < m_iNumChannels; ++i)
-	{
 		m_ChannelKeyFrames.push_back(0);
-
-		CBone* pNode = pModel->Get_Bone(m_Channels[i]->Get_Name());
-
-		if (nullptr == pNode)
-			return E_FAIL;
-
-		m_Bones.push_back(pNode);
-
-		Safe_AddRef(pNode);
-	}
+	
 
 	return S_OK;
 }
 
 
-HRESULT CAnimation::Play_Animation(_float fTimeDelta)
+HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool bLoop)
 {
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta;
 
@@ -85,7 +74,7 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta)
 	/* 하이어라키 노드에 저장해준다. */
 	for (auto& pChannel : m_Channels)
 	{
-		m_ChannelKeyFrames[iChannelIndex] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex], m_Bones[iChannelIndex]);
+		m_ChannelKeyFrames[iChannelIndex] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex], Bones[iChannelIndex]);
 
 		++iChannelIndex;
 	}
@@ -93,24 +82,12 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta)
 	return S_OK;
 }
 
+
 CAnimation* CAnimation::Create(aiAnimation* pAIAnimation)
 {
 	CAnimation* pInstance = new CAnimation();
 
-	if (FAILED(pInstance->Initialize_Prototype(pAIAnimation)))
-	{
-		MSG_BOX(TEXT("Failed To Created : CAnimation"));
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
-CAnimation* CAnimation::Clone(CModel* pModel)
-{
-	CAnimation* pInstance = new CAnimation(*this);
-
-	if (FAILED(pInstance->Initialize(pModel)))
+	if (FAILED(pInstance->Initialize(pAIAnimation)))
 	{
 		MSG_BOX(TEXT("Failed To Created : CAnimation"));
 		Safe_Release(pInstance);
@@ -126,9 +103,4 @@ void CAnimation::Free()
 
 	m_Channels.clear();
 
-
-	for (auto& pBone : m_Bones)
-		Safe_Release(pBone);
-
-	m_Bones.clear();
 }

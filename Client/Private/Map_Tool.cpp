@@ -1,5 +1,6 @@
 #include "Map_Tool.h"
 
+
 CMap_Tool::CMap_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CToolState(pDevice, pContext)
 {
@@ -16,7 +17,7 @@ HRESULT CMap_Tool::Initialize(void* pArg)
 void CMap_Tool::Tick(_float fTimeDelta)
 {
     Main_Window();
-    Camera_Window();
+    __super::Camera_Window();
 }
 
 void CMap_Tool::Main_Window()
@@ -33,35 +34,28 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
     if (L"" == wstrFolderPath)
         return E_FAIL;
 
-    CFileFind fileFind;
+   fs::path folderPath(wstrFolderPath);
+   
+   for (const fs::directory_entry& entry : fs::directory_iterator(folderPath))
+   {
+       fs::path fileName = entry.path().filename();
+       fs::path fileTitle = fileName.stem();
+      
+       CModel::LOADMODELDESC desc;
+       ZeroMemory(&desc, sizeof(desc));
+       desc.eType = CModel::TYPE_NONANIM;
+       XMStoreFloat4x4(&desc.PivotMatrix, XMMatrixScaling(0.01f, 0.01f, 0.01f));
+       desc.strModelFilePath = folderPath.generic_string() + "/";
+       desc.strModelFileName = fileName.generic_string();
 
-    wstring wstrFilePath = wstrFolderPath + L"\\*.*";
+       wstring wstrPrototypeTag = L"Prototype_Model_";
+       wstrPrototypeTag += fileTitle.c_str();
+       if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel::Create(m_pDevice, m_pContext, &desc))))
+           return E_FAIL;
 
-    BOOL    bContinue = fileFind.FindFile(wstrFilePath.c_str());
+       m_strPlacable_Objects.push_back(fileTitle.generic_string());
+   }
 
-    while (bContinue = fileFind.FindNextFile())
-    {
-        if (fileFind.IsDots())
-            continue;
-
-        if (fileFind.IsSystem())
-            continue;
-
-        wstring wstrModelFileTitle = fileFind.GetFileTitle().GetString();
-        wstring wstrModelFileName = fileFind.GetFileName().GetString();
-
-        CModel::LOADMODELDESC desc;
-        ZeroMemory(&desc, sizeof(desc));
-        desc.eType = CModel::TYPE_NONANIM;
-        XMStoreFloat4x4(&desc.PivotMatrix, XMMatrixScaling(0.01f, 0.01f, 0.01f));
-        desc.strModelFilePath = Convert_WStrToStr(wstrFilePath.substr(0, wstrFilePath.size() - 3));
-        desc.strModelFileName = Convert_WStrToStr(wstrModelFileName);
-
-        if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_" + wstrModelFileTitle, CModel::Create(m_pDevice, m_pContext, &desc))))
-            return E_FAIL;
-
-        m_strPlacable_Objects.push_back(Convert_WStrToStr(fileFind.GetFileTitle().GetString()));
-    }
 
     return S_OK;
 }
@@ -112,36 +106,7 @@ HRESULT CMap_Tool::Create_ObjectInLevel()
     return S_OK;
 }
 
-void CMap_Tool::Camera_Window()
-{
-    ImGui::Begin("Camera_State", (bool*)0);
-    ImGui::SetCursorPos(ImVec2(23, 36));
-    ImGui::Text("Camera Position");
 
-    ImGui::SetCursorPos(ImVec2(16, 57));
-    ImGui::PushItemWidth(200);
-
-    _float4 vCamPos;
-    XMStoreFloat4(&vCamPos, m_pCamera->Get_Transform()->Get_Position());
-    if (ImGui::InputFloat3("##CamPos", &(vCamPos.x)))
-        m_pCamera->Get_Transform()->Set_Position(XMLoadFloat4(&vCamPos));
-    ImGui::PopItemWidth();
-
-
-    ImGui::SetCursorPos(ImVec2(25, 90));
-    ImGui::Text("FovY");
-
-    ImGui::SetCursorPos(ImVec2(18, 105));
-    ImGui::PushItemWidth(183);
-
-    _float fFovY = m_pCamera->Get_FovY();
-    if (ImGui::InputFloat("##Fov", &fFovY, 0.01f, 179.f, "%.3f"))
-        m_pCamera->Set_FovY(fFovY);
-
-    ImGui::PopItemWidth();
-
-    ImGui::End();
-}
 
 void CMap_Tool::Menu_Bar()
 {

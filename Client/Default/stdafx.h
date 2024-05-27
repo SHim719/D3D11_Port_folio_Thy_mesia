@@ -18,9 +18,7 @@
 #include <windows.h>
 #include <shlobj.h>
 #include <shlwapi.h>
-
-#define _AFXDLL
-#include <afx.h>
+#include <commdlg.h>
 
 // C 런타임 헤더 파일입니다.
 #include <stdlib.h>

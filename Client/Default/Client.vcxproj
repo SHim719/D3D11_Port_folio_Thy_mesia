@@ -183,6 +183,8 @@
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Map_Tool.h" />
     <ClInclude Include="..\Public\Player.h" />
+    <ClInclude Include="..\Public\TestGround.h" />
+    <ClInclude Include="..\Public\ToolAnimObj.h" />
     <ClInclude Include="..\Public\ToolMapObj.h" />
     <ClInclude Include="..\Public\ToolState.h" />
     <ClInclude Include="Client.h" />
@@ -204,8 +206,10 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Map_Tool.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
+    <ClCompile Include="..\Private\TestGround.cpp" />
     <ClCompile Include="..\Private\ToolMapObj.cpp" />
     <ClCompile Include="..\Private\ToolState.cpp" />
+    <ClCompile Include="..\Public\ToolAnimObj.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

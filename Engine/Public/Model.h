@@ -26,6 +26,8 @@ private:
 
 public:
 	class CBone* Get_Bone(const char* pNodeName);
+	
+	_uint Find_BoneIndex(const char* pBoneName);
 
 	_uint Get_NumMeshes() const {
 		return m_iNumMeshes;
@@ -43,8 +45,8 @@ public:
 	HRESULT Initialize(void* pArg)	override;
 
 public:
+	HRESULT SetUp_BoneMatrices(class CShader* pShader);
 	HRESULT SetUp_OnShader(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pConstantName);
-	HRESULT Play_Animation(_float fTimeDelta);
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 
 private:
@@ -64,31 +66,36 @@ private:
 	
 private:
 	vector<class CBone*>					m_Bones;
-
+	vector<_uint>							m_BoneIndices;
+	_uint									m_iNumBones;
 private:
 	_uint									m_iCurrentAnimIndex = 0;
 	_uint									m_iNumAnimations = 0;
 	vector<class CAnimation*>				m_Animations;
 
+	_bool									m_bIsPlaying = false;
+	_bool									m_bLoop = false;
 public:
+	const vector<CAnimation*>& Get_Animations() const { return m_Animations; }
+
 	_uint	Get_NumAnimations() const { return m_iNumAnimations; }
 	_uint	Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
-	void	Set_AnimIndex(_uint iAnimIndex) { m_iCurrentAnimIndex = iAnimIndex; }
+	HRESULT Add_Animations(const char* pAnimFilePath);
 
+	HRESULT		Play_Animation(_float fTimeDelta);
+	void		Change_Animation(_uint iAnimIdx);
+	_bool		Is_Playing() const { return m_bIsPlaying; }
+	void		Set_Playing(_bool bPlaying) { m_bIsPlaying = bPlaying; }
+	void		Set_Loop(_bool bLoop) { m_bLoop = bLoop;}
+	_bool		Is_Loop() const { return m_bLoop; }
 
-private:
-	class CVTF*		m_pVTF = nullptr;
-
-public:
-	void	Update_VTF(_uint iMeshIndex);
-	HRESULT Bind_VTF(CShader* pShader, const char* pConstantName, _uint iMeshIndex);
-
-private:
+private: 
 	HRESULT Ready_MeshContainers(_fmatrix PivotMatrix);
 	HRESULT Ready_Materials(const char* pModelFilePath);
 	HRESULT Ready_Bones(aiNode* pNode, class CBone* pParent, _uint iDepth);
-	HRESULT Ready_Animations();
-	
+	HRESULT Ready_Animations(const aiScene* pAIScene);
+	HRESULT Setup_Bones();
+
 public:
 	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	virtual CComponent* Clone(void* pArg = nullptr);
@@ -96,3 +103,10 @@ public:
 };
 
 END
+
+
+
+//private:
+//	class CVTF* m_pVTF = nullptr;
+//	void	Update_VTF(_uint iMeshIndex);
+//HRESULT Bind_VTF(CShader* pShader, const char* pConstantName, _uint iMeshIndex);

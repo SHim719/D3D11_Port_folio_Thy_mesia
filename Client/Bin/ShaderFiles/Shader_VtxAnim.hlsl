@@ -1,10 +1,11 @@
 
 #include "Shader_Defines.hlsli"
 
-// float4x4
-matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D		g_VTF;
+matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
+matrix			g_BoneMatrices[256];
+
+//texture2D		g_VTF;
 
 texture2D		g_DiffuseTexture;
 
@@ -27,36 +28,20 @@ struct VS_OUT
 	float4		vProjPos : TEXCOORD2;
 };
 
-//matrix Get_BoneMatrix(uint iIdx, texture2D VTFTex)
+//matrix GetBoneMatrix(int idx, texture2D tex2D)
 //{
-//    float4 uvCol = float4(((float) ((iIdx % 16) * 4) + 0.5f) / 64.0f, ((float) ((iIdx / 16)) + 0.5f) / 64.0f, 0.0f, 0.0f);
-//	
-//    matrix boneMatrix =
+//    float2 uvCol = float2(((float)(idx % 16 * 4) + 0.5f) / 64.0f, ((float)(idx / 16) + 0.5f) / 64.0f);
+//
+//    matrix mat =
 //    {
-//        VTFTex.SampleLevel(DefaultSampler, uvCol, 0),
-//		VTFTex.SampleLevel(DefaultSampler, uvCol + float4(1.0f / 64.0f, 0, 0, 0), 0),
-//		VTFTex.SampleLevel(DefaultSampler, uvCol + float4(2.0f / 64.0f, 0, 0, 0), 0),
-//		VTFTex.SampleLevel(DefaultSampler, uvCol + float4(3.0f / 64.0f, 0, 0, 0), 0)
+//        tex2D.SampleLevel(DefaultSampler, uvCol, 0),
+//		tex2D.SampleLevel(DefaultSampler, uvCol + float2(1.0f / 64.0f, 0.f), 0),
+//		tex2D.SampleLevel(DefaultSampler, uvCol + float2(2.0f / 64.0f, 0.f), 0),
+//		tex2D.SampleLevel(DefaultSampler, uvCol + float2(3.0f / 64.0f, 0.f), 0)
 //    };
 //
-//    return boneMatrix;
+//    return mat;
 //}
-
-
-matrix GetBoneMatrix(int idx, texture2D tex2D)
-{
-    float2 uvCol = float2(((float)(idx % 16 * 4) + 0.5f) / 64.0f, ((float)(idx / 16) + 0.5f) / 64.0f);
-
-    matrix mat =
-    {
-        tex2D.SampleLevel(DefaultSampler, uvCol, 0),
-		tex2D.SampleLevel(DefaultSampler, uvCol + float2(1.0f / 64.0f, 0.f), 0),
-		tex2D.SampleLevel(DefaultSampler, uvCol + float2(2.0f / 64.0f, 0.f), 0),
-		tex2D.SampleLevel(DefaultSampler, uvCol + float2(3.0f / 64.0f, 0.f), 0)
-    };
-
-    return mat;
-}
 
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -70,10 +55,10 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	float		fWeightW = 1.f - (In.vBlendWeight.x + In.vBlendWeight.y + In.vBlendWeight.z);
 
-    matrix BoneMatrix =  GetBoneMatrix(In.vBlendIndex.x, g_VTF) * In.vBlendWeight.x
-		+ GetBoneMatrix(In.vBlendIndex.y, g_VTF) * In.vBlendWeight.y
-		+ GetBoneMatrix(In.vBlendIndex.z, g_VTF) * In.vBlendWeight.z
-		+ GetBoneMatrix(In.vBlendIndex.w, g_VTF) * fWeightW;
+    matrix BoneMatrix = g_BoneMatrices[In.vBlendIndex.x] * In.vBlendWeight.x
+		+ g_BoneMatrices[In.vBlendIndex.y] * In.vBlendWeight.y
+		+ g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z
+		+ g_BoneMatrices[In.vBlendIndex.w] * fWeightW;
 
 	vector		vPosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
 	vector		vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);

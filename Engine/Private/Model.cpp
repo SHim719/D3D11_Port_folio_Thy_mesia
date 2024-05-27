@@ -4,7 +4,6 @@
 #include "Bone.h"
 #include "Animation.h"
 #include "Shader.h"
-#include "VTF.h"
 
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -56,6 +55,20 @@ CBone* CModel::Get_Bone(const char* pNodeName)
 	return *iter;
 }
 
+_uint CModel::Find_BoneIndex(const char* pBoneName)
+{
+	_uint iBoneIdx = 0;
+	for (CBone* pBone : m_Bones)
+	{
+		if (!strcmp(pBoneName, pBone->Get_Name()))
+			break;
+
+		++iBoneIdx;
+	}
+
+	return iBoneIdx;
+}
+
 _uint CModel::Get_MaterialIndex(_uint iMeshIndex)
 {
 	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
@@ -94,7 +107,7 @@ HRESULT CModel::Initialize_Prototype(void* pArg)
 
 	if (TYPE_ANIM == modelDesc->eType)
 	{
-		if (FAILED(Ready_Animations()))
+		if (FAILED(Ready_Animations(m_pAIScene)))
 			return E_FAIL;
 	}
 	return S_OK;
@@ -104,6 +117,7 @@ HRESULT CModel::Initialize(void* pArg)
 {
 	vector<CMeshContainer*>		MeshContainers;
 
+	_uint iNumMeshes = 0;
 	for (auto& pPrototype : m_Meshes)
 	{
 		CMeshContainer* pMeshContainer = (CMeshContainer*)pPrototype->Clone();
@@ -132,37 +146,27 @@ HRESULT CModel::Initialize(void* pArg)
 			return pSour->Get_Depth() < pDest->Get_Depth();
 		});*/
 
-		_uint		iNumMeshes = 0;
-		for (auto& pMeshContainer : m_Meshes)
-		{
-			if (nullptr != pMeshContainer)
-				pMeshContainer->SetUp_Bones(this, m_pAIScene->mMeshes[iNumMeshes++]);
-		}
-	}
-	if (TYPE_ANIM == m_eModelType)
-	{
-		m_pVTF = CVTF::Create(m_pDevice, m_pContext, this);
-		if (nullptr == m_pVTF)
-			return E_FAIL;
-
-		vector<CAnimation*>		Animations;
-
-		for (auto& pPrototype : m_Animations)
-		{
-			CAnimation* pAnimation = pPrototype->Clone(this);
-			if (nullptr == pAnimation)
-				return E_FAIL;
-
-			Animations.push_back(pAnimation);
-
-			Safe_Release(pPrototype);
-		}
-
-		m_Animations.clear();
-
-		m_Animations = Animations;
+		Setup_Bones();	
 	}
 	return S_OK;
+}
+
+HRESULT CModel::SetUp_BoneMatrices(CShader* pShader)
+{
+	if (0 == m_iNumAnimations)
+		return S_OK;
+
+	_float4x4 BoneMatrices[256];
+
+	// NO_VTF
+	for (_uint i = 0; i < m_iNumBones; ++i)
+	{
+		XMStoreFloat4x4(&BoneMatrices[i], XMMatrixTranspose(m_Bones[m_BoneIndices[i]]->Get_OffSetMatrix() 
+			* m_Bones[m_BoneIndices[i]]->Get_CombinedTransformation() 
+			* XMLoadFloat4x4(&m_PivotMatrix)));
+	}
+
+	return pShader->Set_RawValue("g_BoneMatrices", BoneMatrices, sizeof(_float4x4) * 256);
 }
 
 HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pConstantName)
@@ -175,11 +179,11 @@ HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, aiTexture
 
 HRESULT CModel::Play_Animation(_float fTimeDelta)
 {
-	if (m_iCurrentAnimIndex >= m_iNumAnimations)
+	if (!m_bIsPlaying || m_iCurrentAnimIndex >= m_iNumAnimations)
 		return E_FAIL;
 
 	/* 현재 재생하고자하는 애니메이션이 제어해야할 뼈들의 지역행렬을 갱신해낸다. */
-	m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta);
+	m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones, m_bLoop);
 
 	/* 지역행렬을 순차적으로(부모에서 자식으로) 누적하여 m_CombinedTransformation를 만든다.  */
 	for (auto& pBone : m_Bones)
@@ -188,6 +192,22 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 	}
 
 	return S_OK;
+}
+
+HRESULT CModel::Add_Animations(const char* pAnimFilePath)
+{
+	Assimp::Importer Importer;
+	_uint iFlag = aiProcess_ConvertToLeftHanded | aiProcess_CalcTangentSpace;
+
+	const aiScene* pExtraAiScene = Importer.ReadFile(pAnimFilePath, iFlag);
+	if (nullptr == pExtraAiScene)
+		return E_FAIL;
+
+	HRESULT hr = Ready_Animations(pExtraAiScene);
+	
+	Importer.FreeScene();
+
+	return hr;
 }
 
 HRESULT CModel::Render(CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
@@ -199,22 +219,10 @@ HRESULT CModel::Render(CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
 	return S_OK;
 }
 
-void CModel::Update_VTF(_uint iMeshIndex)
+void CModel::Change_Animation(_uint iAnimIdx)
 {
-	if (TYPE_ANIM != m_eModelType)
-		return;
-
-	_float4x4		BoneMatrices[1024];
-
-	m_Meshes[iMeshIndex]->SetUp_BoneMatrices(BoneMatrices, m_Bones, XMLoadFloat4x4(&m_PivotMatrix));
-
-	m_pVTF->Update_VTF(BoneMatrices, iMeshIndex);
-	
-}
-
-HRESULT CModel::Bind_VTF(CShader* pShader, const char* pConstantName, _uint iMeshIndex)
-{
-	return m_pVTF->Bind_ShaderResourceView(pShader, pConstantName, iMeshIndex);
+	m_Animations[m_iCurrentAnimIndex]->Reset();
+	m_iCurrentAnimIndex = iAnimIdx;
 }
 
 HRESULT CModel::Ready_MeshContainers(_fmatrix PivotMatrix)
@@ -265,7 +273,7 @@ HRESULT CModel::Ready_Materials(const char* pModelFilePath)
 			_splitpath_s(strPath.data, nullptr, 0, nullptr, 0, szFileName, MAX_PATH, szExt, MAX_PATH);
 
 			strcpy_s(szFullPath, pModelFilePath);
-			strcat_s(szFullPath, "Tex\\");
+			strcat_s(szFullPath, "Tex/");
 			strcat_s(szFullPath, szFileName);
 			strcat_s(szFullPath, szExt);
 
@@ -306,23 +314,46 @@ HRESULT CModel::Ready_Bones(aiNode* pNode, CBone* pParent, _uint iDepth)
 	{
 		Ready_Bones(pNode->mChildren[i], pBone, iDepth);
 	}
-
 	return S_OK;
 }
 
-HRESULT CModel::Ready_Animations()
+HRESULT CModel::Ready_Animations(const aiScene* pAIScene)
 {
-	m_iNumAnimations = m_pAIScene->mNumAnimations;
+	m_iNumAnimations += pAIScene->mNumAnimations;
 
-	for (_uint i = 0; i < m_pAIScene->mNumAnimations; ++i)
+	m_Animations.reserve(m_iNumAnimations);
+	for (_uint i = 0; i < pAIScene->mNumAnimations; ++i)
 	{
-		aiAnimation* pAIAnimation = m_pAIScene->mAnimations[i];
+		aiAnimation* pAIAnimation = pAIScene->mAnimations[i];
 
 		CAnimation* pAnimation = CAnimation::Create(pAIAnimation);
 		if (nullptr == pAnimation)
 			return E_FAIL;
 
 		m_Animations.push_back(pAnimation);
+	}
+	return S_OK;
+}
+
+HRESULT CModel::Setup_Bones()
+{
+	m_iNumBones = m_pAIScene->mMeshes[0]->mNumBones;
+
+	m_BoneIndices.reserve(m_iNumBones);
+	for (_uint i = 0; i < m_iNumBones; ++i)
+	{
+		aiBone* pAIBone = m_pAIScene->mMeshes[0]->mBones[i];
+
+		_uint iBoneIdx = Find_BoneIndex(pAIBone->mName.data);
+		m_BoneIndices.push_back(iBoneIdx);
+
+		CBone* pBone = m_Bones[iBoneIdx];
+
+		_float4x4 OffsetMatrix;
+
+		memcpy(&OffsetMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
+
+		pBone->Set_OffsetMatrix(XMMatrixTranspose(XMLoadFloat4x4(&OffsetMatrix)));
 	}
 	return S_OK;
 }
@@ -379,3 +410,22 @@ void CModel::Free()
 
 	m_Importer.FreeScene();
 }
+
+
+//void CModel::Update_VTF(_uint iMeshIndex)
+//{
+//	if (TYPE_ANIM != m_eModelType)
+//		return;
+//
+//	_float4x4		BoneMatrices[1024];
+//
+//	m_Meshes[iMeshIndex]->SetUp_BoneMatrices(BoneMatrices, m_Bones, XMLoadFloat4x4(&m_PivotMatrix));
+//
+//	m_pVTF->Update_VTF(BoneMatrices, iMeshIndex);
+//
+//}
+//
+//HRESULT CModel::Bind_VTF(CShader* pShader, const char* pConstantName, _uint iMeshIndex)
+//{
+//	return m_pVTF->Bind_ShaderResourceView(pShader, pConstantName, iMeshIndex);
+//}

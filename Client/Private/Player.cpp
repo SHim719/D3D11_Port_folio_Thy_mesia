@@ -29,7 +29,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_pGameInstance->GetKeyDown(eKeyCode::Q))
 	{
 		_uint iNextAnimIdx = (m_pModels[PART_BODY]->Get_CurrentAnimIndex() + 1) % m_pModels[PART_BODY]->Get_NumAnimations();
-		m_pModels[PART_BODY]->Set_AnimIndex(iNextAnimIdx);
+		//m_pModels[PART_BODY]->Set_AnimIndex(iNextAnimIdx);
 	}
 }
 
@@ -52,8 +52,8 @@ HRESULT CPlayer::Render()
 	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
-	m_pModels[PART_BODY]->Update_VTF(0);
-	m_pModels[PART_BODY]->Bind_VTF(m_pShader, "g_VTF", 0);
+	//m_pModels[PART_BODY]->Update_VTF(0);
+	//m_pModels[PART_BODY]->Bind_VTF(m_pShader, "g_VTF", 0);
 
 	for (_uint i = 0; i < PART_END; ++i)
 	{

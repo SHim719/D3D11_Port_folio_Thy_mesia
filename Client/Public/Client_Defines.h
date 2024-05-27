@@ -2,6 +2,7 @@
 
 #include "../Default/stdafx.h"
 #include <process.h>
+#include <filesystem>
 
 #include "Client_Components.h"
 #include "Client_Struct.h"
@@ -22,5 +23,6 @@ namespace Client
 
 extern HWND				g_hWnd;
 
+namespace fs = std::filesystem;
 
 using namespace Client;

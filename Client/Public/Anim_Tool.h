@@ -2,6 +2,9 @@
 
 #include "ToolState.h"
 
+
+BEGIN(Client)
+
 class CAnim_Tool : public CToolState
 {
 protected:
@@ -12,20 +15,24 @@ public:
 	HRESULT Initialize(void* pArg)	override;
 	void Tick(_float fTimeDelta)	override;
 
-
 private:
 	void Main_Window();
-
-private:
 	void Menu_Bar();
-	void PlayerAnim_Bar();
-	void OtherAnim_Bar();
-private:
-	CGameObject* pAnimObject = nullptr;
+	void Anim_ListBox();
+	void Anim_Buttons();
 
+private:
+	class CToolAnimObj* m_pAnimObj = nullptr;
+	class CModel*		m_pModel = nullptr;
+	string				m_strNowLoaded = "";
+
+	vector<string>		m_strAnimations;
+	_int				m_iCurSelAnimIdx = 0;
+	_bool				m_bLoop = false;
 public:
 	static CAnim_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;
 };
 
+END
 

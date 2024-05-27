@@ -23,7 +23,6 @@ private:
 
 	HRESULT Create_ObjectInLevel();
 private:
-	void Camera_Window();
 	void Menu_Bar();
 	void TabBar();
 

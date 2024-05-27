@@ -26,15 +26,10 @@ public:
 	virtual HRESULT Initialize_Prototype(CModel::TYPE eModelType, const aiMesh* pAIMesh, class CModel* pModel, _fmatrix PivotMatrix);
 	virtual HRESULT Initialize(void* pArg);
 
-	HRESULT SetUp_Bones(CModel* pModel, aiMesh* pAIMesh);
-	void SetUp_BoneMatrices(_float4x4* pBoneMatrices, CModel::BONES& Bones, _fmatrix PivotMatrix);
 private:
 	char				m_szName[MAX_PATH] = "";
 	_uint				m_iMaterialIndex = 0;
 	_uint				m_iNumBones = 0;
-
-	vector<class CBone*>	m_Bones;
-
 private:
 	HRESULT Ready_Vertices(const aiMesh* pAIMesh, _fmatrix PivotMatrix);
 	HRESULT Ready_AnimVertices(const aiMesh* pAIMesh, CModel* pModel);

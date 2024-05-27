@@ -34,7 +34,7 @@ HRESULT CImGui_Main::Initialize()
     m_ToolStates[MAP] = CMap_Tool::Create(m_pDevice, m_pContext);
     m_ToolStates[ANIM] = CAnim_Tool::Create(m_pDevice, m_pContext);
 
-    m_eToolState = MAP;
+    m_eToolState = ANIM;
    
     return S_OK;
 }

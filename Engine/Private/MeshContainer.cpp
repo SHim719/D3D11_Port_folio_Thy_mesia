@@ -84,45 +84,6 @@ HRESULT CMeshContainer::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CMeshContainer::SetUp_Bones(CModel* pModel, aiMesh* pAIMesh)
-{
-	m_iNumBones = pAIMesh->mNumBones;
-	m_Bones.reserve(m_iNumBones);
-
-	for (_uint i = 0; i < m_iNumBones; ++i)
-	{
-		aiBone* pAIBone = pAIMesh->mBones[i];
-
-		CBone* pBone = pModel->Get_Bone(pAIBone->mName.data);
-
-		_float4x4 OffsetMatrix;
-
-		memcpy(&OffsetMatrix, &pAIBone->mOffsetMatrix, sizeof(_float4x4));
-
-		pBone->Set_OffsetMatrix(XMMatrixTranspose(XMLoadFloat4x4(&OffsetMatrix)));
-
-		m_Bones.push_back(pBone);
-
-		Safe_AddRef(pBone);
-	}
-	return S_OK;
-}
-
-void CMeshContainer::SetUp_BoneMatrices(_float4x4* pBoneMatrices, CModel::BONES& Bones, _fmatrix PivotMatrix)
-{
-	if (0 == m_iNumBones)
-	{
-		XMStoreFloat4x4(&pBoneMatrices[0], XMMatrixIdentity());
-		return;
-	}
-
-	for (_uint i = 0; i < m_iNumBones; ++i)
-	{
-		XMStoreFloat4x4(&pBoneMatrices[i], m_Bones[i]->Get_OffSetMatrix() * m_Bones[i]->Get_CombinedTransformation() * PivotMatrix);
-	}
-}
-
-
 HRESULT CMeshContainer::Ready_Vertices(const aiMesh* pAIMesh, _fmatrix PivotMatrix)
 {
 	m_iNumVertexBuffers = 1;
@@ -272,8 +233,4 @@ void CMeshContainer::Free()
 {
 	__super::Free();
 
-	for (auto& pBone : m_Bones)
-		Safe_Release(pBone);
-
-	m_Bones.clear();
 }

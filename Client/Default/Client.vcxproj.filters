@@ -147,9 +147,6 @@
     <ClInclude Include="..\Public\Anim_Tool.h">
       <Filter>100. IMGUI\01. Anim_Tool</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ToolAnimObj.h">
-      <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Map_Tool.h">
       <Filter>100. IMGUI\02. Map_Tool</Filter>
     </ClInclude>
@@ -158,6 +155,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Client_Functions.h">
       <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolAnimObj.h">
+      <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestGround.h">
+      <Filter>02. GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -200,9 +203,6 @@
     <ClCompile Include="..\Private\Anim_Tool.cpp">
       <Filter>100. IMGUI\01. Anim_Tool</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ToolAnimObj.cpp">
-      <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Map_Tool.cpp">
       <Filter>100. IMGUI\02. Map_Tool</Filter>
     </ClCompile>
@@ -214,6 +214,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Client_Functions.cpp">
       <Filter>99. Defines</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Public\ToolAnimObj.cpp">
+      <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestGround.cpp">
+      <Filter>02. GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

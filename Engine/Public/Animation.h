@@ -12,11 +12,16 @@ private:
 	virtual ~CAnimation() = default;
 
 public:
-	HRESULT Initialize_Prototype(aiAnimation* pAIAnimation);
-	HRESULT Initialize(class CModel* pModel);
-	HRESULT Play_Animation(_float fTimeDelta);
+	HRESULT Initialize(aiAnimation* pAIAnimation);
+	HRESULT Play_Animation(_float fTimeDelta, vector<class CBone*>& Bones, _bool bLoop);
+
+	void Reset() {
+		m_fPlayTime = 0.f;
+	};
 
 private:
+	string						m_strAnimName = "";
+
 	/* 이 애니메이션을 구동하기위해 사용되는 뼈의 갯수. */
 	_uint						m_iNumChannels = 0;
 	vector<class CChannel*>		m_Channels;
@@ -29,13 +34,14 @@ private:
 
 	_float						m_fPlayTime = 0.f;
 
-private: /* 복제된 애니메이션 마다 따로 가진다. */
-	vector<class CBone*>		m_Bones;
+private:
 	vector<_uint>				m_ChannelKeyFrames;
 
 public:
+	const string& Get_AnimName() { return m_strAnimName; }
+
+public:
 	static CAnimation* Create(aiAnimation* pAIAnimation);
-	CAnimation* Clone(class CModel* pModel);
 	virtual void Free() override;
 };
 
