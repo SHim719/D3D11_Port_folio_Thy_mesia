@@ -33,6 +33,14 @@ HRESULT CGameObject::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CGameObject::OnActive()
+{
+}
+
+void CGameObject::OnInActive()
+{
+}
+
 void CGameObject::PriorityTick(_float fTimeDelta)
 {
 }
@@ -77,6 +85,15 @@ CComponent* CGameObject::Find_Component(const wstring& strComponentTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+void CGameObject::Set_Active(_bool b)
+{
+	m_bActive = b;
+	if (m_bActive)
+		OnActive();
+	else
+		OnInActive();
 }
 
 void CGameObject::Free()

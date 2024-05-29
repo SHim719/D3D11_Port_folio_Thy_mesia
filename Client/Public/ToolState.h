@@ -19,6 +19,7 @@ protected:
 
 public:
 	virtual HRESULT Initialize(void* pArg);
+	virtual void Start_Tool();
 	virtual void Tick(_float fTimeDelta);
 
 protected:
@@ -30,7 +31,7 @@ protected:
 	class CFree_Camera*		m_pCamera = nullptr;
 
 protected:
-	virtual void Camera_Window();
+	virtual void Camera_Window() PURE;
 	bool _stdcall VectorOfStringGetter(void* data, _int n, const char** out_text);
 	
 

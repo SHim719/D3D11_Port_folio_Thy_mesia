@@ -27,7 +27,7 @@ namespace Engine
 
 	typedef struct tagMaterialDesc
 	{
-		class CTexture*		pTexture[AI_TEXTURE_TYPE_MAX];
+		class CTexture*		pTexture[TEXTURE_TYPE_MAX];
 	}MATERIALDESC;
 
 	typedef struct tagLineIndices32

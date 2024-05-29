@@ -100,6 +100,12 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	m_pComponent_Manager->Clear(iLevelIndex);
 }
 
+void CGameInstance::Clear_Level(_uint iLevelIndex)
+{
+	m_pRenderer->Clear();
+	m_pObject_Manager->Clear(iLevelIndex);
+}
+
 #pragma region GRAPHIC_DEVICE
 
 
@@ -354,6 +360,8 @@ _float4 CGameInstance::Get_CamPosition() const
 
 void CGameInstance::Release_Engine()
 {
+	CModel::Release_Textures();
+
 	CGameInstance::Get_Instance()->Free();
 
 	CGameInstance::Get_Instance()->Destroy_Instance();	

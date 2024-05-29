@@ -17,6 +17,7 @@ public:
 
 private:
 	void Main_Window();
+	void Camera_Window() override;
 
 	HRESULT Open_MeshesByFolder();
 	wstring Get_FolderPath();

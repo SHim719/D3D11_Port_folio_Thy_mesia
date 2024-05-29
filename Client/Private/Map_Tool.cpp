@@ -17,7 +17,7 @@ HRESULT CMap_Tool::Initialize(void* pArg)
 void CMap_Tool::Tick(_float fTimeDelta)
 {
     Main_Window();
-    __super::Camera_Window();
+    Camera_Window();
 }
 
 void CMap_Tool::Main_Window()
@@ -25,6 +25,12 @@ void CMap_Tool::Main_Window()
     ImGui::Begin("Main_Window", (bool*)0, ImGuiWindowFlags_MenuBar);
     Menu_Bar();
     TabBar();
+    ImGui::End();
+}
+
+void CMap_Tool::Camera_Window()
+{
+    __super::Camera_Window();
     ImGui::End();
 }
 
@@ -50,8 +56,8 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
 
        wstring wstrPrototypeTag = L"Prototype_Model_";
        wstrPrototypeTag += fileTitle.c_str();
-       if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel::Create(m_pDevice, m_pContext, &desc))))
-           return E_FAIL;
+       //if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel::Create(m_pDevice, m_pContext, &desc))))
+       //    return E_FAIL;
 
        m_strPlacable_Objects.push_back(fileTitle.generic_string());
    }

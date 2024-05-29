@@ -18,6 +18,8 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
+	virtual void OnActive();
+	virtual void OnInActive();
 	virtual void PriorityTick(_float fTimeDelta);
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
@@ -61,7 +63,7 @@ public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
 	_bool Is_Destroyed() { return m_bDestroyed; }
 
-	void Set_Active(_bool b) { m_bActive = b; }
+	void Set_Active(_bool b);
 	_bool Is_Active() { return m_bActive; }
 
 public:

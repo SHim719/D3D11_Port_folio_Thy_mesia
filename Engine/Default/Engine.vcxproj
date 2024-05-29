@@ -188,6 +188,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
   <ItemGroup>
     <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\Public\Base.h" />
+    <ClInclude Include="..\Public\Engine_Enums.h" />
     <ClInclude Include="..\Public\MyCamera.h" />
     <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\public\Component.h" />

@@ -19,6 +19,8 @@ public:
 		string strModelFileName;
 		_float4x4 PivotMatrix;
 	}LOADMODELDESC;
+
+
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CModel(const CModel& rhs);
@@ -26,7 +28,7 @@ private:
 
 public:
 	class CBone* Get_Bone(const char* pNodeName);
-	
+
 	_uint Find_BoneIndex(const char* pBoneName);
 
 	_uint Get_NumMeshes() const {
@@ -41,33 +43,35 @@ public:
 
 
 public:
-	HRESULT Initialize_Prototype(void* pArg);
-	HRESULT Initialize(void* pArg)	override;
+	HRESULT Initialize_Prototype(const string& strModelFilePath, const string& strModelFileName);
+	HRESULT Initialize(void* pArg, CModel* pModel);
 
 public:
 	HRESULT SetUp_BoneMatrices(class CShader* pShader);
-	HRESULT SetUp_OnShader(class CShader* pShader, _uint iMaterialIndex, aiTextureType eTextureType, const char* pConstantName);
+	HRESULT SetUp_OnShader(class CShader* pShader, _uint iMaterialIndex, TextureType eTextureType, const char* pConstantName);
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 
+	void Set_PivotMatrix(_fmatrix PivotMatrix);
 private:
-	const aiScene*				m_pAIScene = nullptr;
-	Assimp::Importer			m_Importer;
-
 	_float4x4					m_PivotMatrix;
 	TYPE						m_eModelType = TYPE_END;
 
 private:
 	_uint									m_iNumMeshes = 0;
 	vector<class CMeshContainer*>			m_Meshes;
-	
+
 private:
-	_uint									m_iNumMaterials = 0;
-	vector<MATERIALDESC>					m_Materials;
-	
+	static map<const string, class CTexture*>	g_ModelTextures;
+	_uint										m_iNumMaterials = 0;
+	vector<MATERIALDESC>						m_Materials;
+
 private:
 	vector<class CBone*>					m_Bones;
 	vector<_uint>							m_BoneIndices;
 	_uint									m_iNumBones;
+public:
+	const BONES& Get_Bones() { return m_Bones; }
+
 private:
 	_uint									m_iCurrentAnimIndex = 0;
 	_uint									m_iNumAnimations = 0;
@@ -80,24 +84,25 @@ public:
 
 	_uint	Get_NumAnimations() const { return m_iNumAnimations; }
 	_uint	Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
-	HRESULT Add_Animations(const char* pAnimFilePath);
 
 	HRESULT		Play_Animation(_float fTimeDelta);
 	void		Change_Animation(_uint iAnimIdx);
 	_bool		Is_Playing() const { return m_bIsPlaying; }
-	void		Set_Playing(_bool bPlaying) { m_bIsPlaying = bPlaying; }
-	void		Set_Loop(_bool bLoop) { m_bLoop = bLoop;}
+	void		Set_AnimPlay() { m_bIsPlaying = true; }
+	void		Set_AnimPause() { m_bIsPlaying = false; }
+	void		Set_Loop(_bool bLoop) { m_bLoop = bLoop; }
 	_bool		Is_Loop() const { return m_bLoop; }
 
-private: 
-	HRESULT Ready_MeshContainers(_fmatrix PivotMatrix);
-	HRESULT Ready_Materials(const char* pModelFilePath);
-	HRESULT Ready_Bones(aiNode* pNode, class CBone* pParent, _uint iDepth);
-	HRESULT Ready_Animations(const aiScene* pAIScene);
-	HRESULT Setup_Bones();
+private:
+	HRESULT Import_Model(const string& strFilePath, const string& strFileName);
+	HRESULT Import_Meshes(ifstream& fin);
+	HRESULT Import_MaterialInfo(ifstream& fin, const string& strFilePath);
+	HRESULT Import_Bones(ifstream& fin);
+	HRESULT Import_Animations(ifstream& fin);
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& strModelFilePath, const string& strModelFileName);
+	static void Release_Textures();
 	virtual CComponent* Clone(void* pArg = nullptr);
 	virtual void Free() override;
 };

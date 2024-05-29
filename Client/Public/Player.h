@@ -19,7 +19,6 @@ BEGIN(Client)
 class CPlayer final : public CGameObject
 {
 public:
-	enum PARTTYPE { PART_BODY, PART_HEAD, PART_REGIONARM, PART_END };
 //	enum COLLIDERTYPE { COLLIDERTYPE_AABB, COLLIDERTYPE_OBB, COLLIDERTYPE_SPHERE, COLLILDERTYPE_END };
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -35,13 +34,13 @@ public:
 
 private:
 	CShader*	m_pShader = nullptr;
-	CModel*		m_pModels[PARTTYPE::PART_END] = {};
+	CModel*		m_pModel = nullptr;
 	//CCollider* m_pColliderCom[COLLILDERTYPE_END] = { nullptr };
 	//CNavigation* m_pNavigationCom = nullptr;
 
 private:
-	vector<CGameObject*>				m_Parts;
-	typedef vector<CGameObject*>		PARTS;
+	//vector<CGameObject*>				m_Parts;
+	//typedef vector<CGameObject*>		PARTS;
 
 	//vector<class CHierarchyNode*>		m_Sockets;
 

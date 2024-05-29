@@ -1,35 +1,37 @@
 #include "Bone.h"
+#include "Model.h"
 
 CBone::CBone()
 {
 
 }
 
-HRESULT CBone::Initialize(aiNode* pAINode, CBone* pParent, _uint iDepth)
+CBone::CBone(const CBone& rhs)
+	: m_OffsetMatrix(rhs.m_OffsetMatrix)
+	, m_Transformation(rhs.m_Transformation)
+	, m_iDepth(rhs.m_iDepth)
+	, m_iParentBoneIdx(rhs.m_iParentBoneIdx)
 {
-	/* 뼈 이름 보관. */
-	strcpy_s(m_szName, pAINode->mName.data);
-
-	/* 씬객체로 부터 행렬정보를 받아올때는 반드시 전치해서 받아와라. */
-	XMStoreFloat4x4(&m_OffsetMatrix, XMMatrixIdentity());
-
-	memcpy(&m_Transformation, &pAINode->mTransformation, sizeof(_float4x4));
-	XMStoreFloat4x4(&m_Transformation, XMMatrixTranspose(XMLoadFloat4x4(&m_Transformation)));
-
-	m_iDepth = iDepth;
-	m_pParent = pParent;
-
+	strcpy_s(m_szName, rhs.m_szName);
 	XMStoreFloat4x4(&m_CombinedTransformation, XMMatrixIdentity());
+}
 
-	Safe_AddRef(m_pParent);
+
+HRESULT CBone::Initialize(ifstream& fin, CModel* pModel)
+{
+	fin.read(m_szName, sizeof(m_szName));
+	fin.read((char*)&m_OffsetMatrix, sizeof(_float4x4));
+	fin.read((char*)&m_Transformation, sizeof(_float4x4));
+	fin.read((char*)&m_iDepth, sizeof(_uint));
+	fin.read((char*)&m_iParentBoneIdx, sizeof(_int));
 
 	return S_OK;
 }
 
-void CBone::Set_CombinedTransformation()
+void CBone::Set_CombinedTransformation(const vector<CBone*>& Bones)
 {
-	if (nullptr != m_pParent)
-		XMStoreFloat4x4(&m_CombinedTransformation, XMLoadFloat4x4(&m_Transformation) * XMLoadFloat4x4(&m_pParent->m_CombinedTransformation));
+	if (m_iParentBoneIdx >= 0)
+		XMStoreFloat4x4(&m_CombinedTransformation, XMLoadFloat4x4(&m_Transformation) * XMLoadFloat4x4(&Bones[m_iParentBoneIdx]->m_CombinedTransformation));
 	else
 		m_CombinedTransformation = m_Transformation;
 }
@@ -39,11 +41,11 @@ void CBone::Set_OffsetMatrix(_fmatrix OffsetMatrix)
 	XMStoreFloat4x4(&m_OffsetMatrix, OffsetMatrix);
 }
 
-CBone* CBone::Create(aiNode* pAINode, CBone* pParent, _uint iDepth)
+CBone* CBone::Create(ifstream& fin, CModel* pModel)
 {
 	CBone* pInstance = new CBone();
 
-	if (FAILED(pInstance->Initialize(pAINode, pParent, iDepth)))
+	if (FAILED(pInstance->Initialize(fin, pModel)))
 	{
 		MSG_BOX(TEXT("Failed To Created : CBone"));
 		Safe_Release(pInstance);
@@ -52,7 +54,13 @@ CBone* CBone::Create(aiNode* pAINode, CBone* pParent, _uint iDepth)
 	return pInstance;
 }
 
+CBone* CBone::Clone()
+{
+	CBone* pInstance = new CBone(*this);
+
+	return pInstance;
+}
+
 void CBone::Free()
 {
-	Safe_Release(m_pParent);
 }

@@ -228,6 +228,9 @@
     <ClInclude Include="..\Public\VTF.h">
       <Filter>01.Utility\03. Components\05. Model\VTF</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_Enums.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

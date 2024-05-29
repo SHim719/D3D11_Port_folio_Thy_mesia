@@ -15,6 +15,7 @@ int ASCII[(UINT)eKeyCode::End] =
 void CKey_Manager::Initialize()
 {
 	createKeys();
+
 }
 
 void CKey_Manager::Update()

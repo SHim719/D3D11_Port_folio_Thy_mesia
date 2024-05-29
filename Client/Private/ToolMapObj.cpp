@@ -50,7 +50,7 @@ HRESULT CToolMapObj::Render()
 
 	for (_uint j = 0; j < iNumMeshes; ++j)
 	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, aiTextureType_DIFFUSE, "g_DiffuseTexture")))
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))

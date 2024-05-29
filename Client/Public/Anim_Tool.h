@@ -17,6 +17,8 @@ public:
 
 private:
 	void Main_Window();
+	void Camera_Window() override;
+
 	void Menu_Bar();
 	void Anim_ListBox();
 	void Anim_Buttons();

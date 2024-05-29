@@ -4,7 +4,7 @@
 #include "GameObject.h"
 
 BEGIN(Client)
-class CToolMapObj : public CGameObject
+class CToolMapObj final : public CGameObject
 {
 private:
 	CToolMapObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -31,12 +31,6 @@
     <Filter Include="98. Default">
       <UniqueIdentifier>{9a853736-99fd-4100-b927-5433508f68ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="99. Defines">
-      <UniqueIdentifier>{3adbd17b-c224-4d61-9067-175bbd3d0d56}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="99. Defines\Headers">
-      <UniqueIdentifier>{13a9a52c-33da-481b-94ef-daa2dacd02df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="96. ShaderFiles">
       <UniqueIdentifier>{f0bdbf26-a0e5-494c-a48c-6f01c1fe6752}</UniqueIdentifier>
     </Filter>
@@ -84,6 +78,18 @@
     </Filter>
     <Filter Include="02. GameObjects\99. ToolObject\0. ToolMapObj">
       <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines">
+      <UniqueIdentifier>{3adbd17b-c224-4d61-9067-175bbd3d0d56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Defines\Headers">
+      <UniqueIdentifier>{13a9a52c-33da-481b-94ef-daa2dacd02df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Camera\Main_Camera">
+      <UniqueIdentifier>{fab6a260-7889-4a97-8d83-bc4ad0b82081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="100. IMGUI\99. TestPlay_Tool">
+      <UniqueIdentifier>{fc8339cb-083f-414a-82c5-c75b332e09c0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +168,12 @@
     <ClInclude Include="..\Public\TestGround.h">
       <Filter>02. GameObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TestPlay_Tool.h">
+      <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Main_Camera.h">
+      <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -220,6 +232,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\TestGround.cpp">
       <Filter>02. GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestPlay_Tool.cpp">
+      <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Main_Camera.cpp">
+      <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

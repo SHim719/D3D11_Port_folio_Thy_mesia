@@ -3,6 +3,7 @@
 
 #include "Anim_Tool.h"
 #include "Map_Tool.h"
+#include "TestPlay_Tool.h"
 
 CImGui_Main::CImGui_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : m_pDevice(pDevice)
@@ -33,9 +34,10 @@ HRESULT CImGui_Main::Initialize()
 
     m_ToolStates[MAP] = CMap_Tool::Create(m_pDevice, m_pContext);
     m_ToolStates[ANIM] = CAnim_Tool::Create(m_pDevice, m_pContext);
+    m_ToolStates[TESTPLAY] = CTestPlay_Tool::Create(m_pDevice, m_pContext);
 
-    m_eToolState = ANIM;
-   
+    m_eToolState = TESTPLAY;
+    m_ToolStates[m_eToolState]->Start_Tool();
     return S_OK;
 }
 
@@ -63,8 +65,11 @@ void CImGui_Main::ComboBox_ToolSelect()
     ImGui::Begin("Tool");
     ImGui::SetCursorPos(ImVec2(11, 33.5));
     ImGui::PushItemWidth(100);
-    const char* Tools[] = { "Map", "Animation", "Effect"};
+    const char* Tools[] = { "Map", "Animation", "Effect", "CutScene", "TestPlay"};
     if (ImGui::Combo("##ToolComboBox", (int*)(&m_eToolState), Tools, IM_ARRAYSIZE(Tools)))
+    {
+        m_pGameInstance->Clear_Level(LEVEL_TOOL);
+    }
     ImGui::PopItemWidth();
     ImGui::End();
     
@@ -92,4 +97,8 @@ void CImGui_Main::Free()
     Safe_Release(m_pDevice);
     Safe_Release(m_pContext);
     Safe_Release(m_pGameInstance);
+
+    for (_uint i = 0; i < TOOL_END; ++i)
+        Safe_Release(m_ToolStates[i]);
+    
 }

@@ -6,7 +6,7 @@
 
 
 BEGIN(Client)
-class CToolAnimObj : public CGameObject
+class CToolAnimObj final : public CGameObject
 {
 private:
 	CToolAnimObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

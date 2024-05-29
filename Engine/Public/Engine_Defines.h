@@ -15,12 +15,6 @@
 #include <DirectXMath.h>
 using namespace DirectX;
 
-
-#include <Assimp/scene.h>
-#include <Assimp/Importer.hpp>
-#include <Assimp/postprocess.h>
-
-
 #include <map>
 #include <list>
 #include <vector>
@@ -34,11 +28,15 @@ using namespace DirectX;
 #include <functional>
 #include <fstream>
 
+#include "Engine_Enums.h"
+#define TEXTURE_TYPE_MAX TextureType_TRANSMISSION
+
 
 #include "Engine_Macro.h"
 #include "Engine_Function.h"
 #include "Engine_Typedef.h"
 #include "Engine_Struct.h"
+
 
 
 #ifdef _DEBUG

@@ -3,70 +3,22 @@
 #include "Bone.h"
 
 
-
 CChannel::CChannel()
 {
 }
 
-HRESULT CChannel::Initialize(aiNodeAnim* pAIChannel)
+
+
+HRESULT CChannel::Initialize(ifstream& fin)
 {
-	/* 특정 애니메이션에서 사용되는 뼈의 정보이다. */
-	/* 이 이름은 모델이 가지고 있는 Bones의 뼈대 중 한놈과 이름이 같을 것이다. */
-	/* 이 이름으로 같은 이름을 가진 Bones를 채널에 보관해둔다. */
-	/* 왜 보관하니? : 채널이 가진 키프레임중 시간대에 맞는 키플에ㅣㅁ 상태를 만들고. 이걸로 행렬 만들고.
-	이렇게 만든 행렬을 erarchyNodes에 저장해놔야해. */
-	strcpy_s(m_szName, pAIChannel->mNodeName.data);
+	fin.read(m_szName, sizeof(m_szName));
 
-	//m_pBone = pModel->Get_Bone(m_szName);
-	//if (nullptr == m_pBone)
-	//	return E_FAIL;
+	fin.read((char*)&m_iNumKeyFrames, sizeof(_uint));
 
-	// Safe_AddRef(m_pBone);
-
-
-	/* 키프레임 정보들를 로드한다. */
-	/* 키프레임 : 전체애니메이션 동작 중, 특정 시간대에 이 ㅜ뼈가 표현해야할 동작의 상태 행렬정보이다. */
-
-	/* 이 키프레임 갯수는 크기, 회전, 이동마다 갯수가 다를 수 있다. */
-	/* 개숫가 다르다? : 부족한놈은 이전 시간대에 키프레임ㅇ 상태를 가지기 때문이다. */
-	m_iNumKeyFrames = max(pAIChannel->mNumScalingKeys, pAIChannel->mNumRotationKeys);
-	m_iNumKeyFrames = max(m_iNumKeyFrames, pAIChannel->mNumPositionKeys);
-
-	/* 이 변수를 루프 밖에 선언한이유? 없는 상태인 경우 저장해놨던
-	이전 루프의 상태를 이용해서 키프레임 상태를 만들기 위해. */
-	_float3			vScale;
-	_float4			vRotation;
-	_float3			vPosition;
-
+	m_KeyFrames.resize(m_iNumKeyFrames);
 	for (_uint i = 0; i < m_iNumKeyFrames; ++i)
 	{
-		KEYFRAME			KeyFrame;
-		ZeroMemory(&KeyFrame, sizeof(KEYFRAME));
-
-		if (i < pAIChannel->mNumScalingKeys)
-		{
-			memcpy(&vScale, &pAIChannel->mScalingKeys[i].mValue, sizeof(_float3));
-			KeyFrame.fTime = (_float)pAIChannel->mScalingKeys[i].mTime;
-		}
-		if (i < pAIChannel->mNumRotationKeys)
-		{
-			vRotation.x = pAIChannel->mRotationKeys[i].mValue.x;
-			vRotation.y = pAIChannel->mRotationKeys[i].mValue.y;
-			vRotation.z = pAIChannel->mRotationKeys[i].mValue.z;
-			vRotation.w = pAIChannel->mRotationKeys[i].mValue.w;
-			KeyFrame.fTime = (_float)pAIChannel->mRotationKeys[i].mTime;
-		}
-		if (i < pAIChannel->mNumPositionKeys)
-		{
-			memcpy(&vPosition, &pAIChannel->mPositionKeys[i].mValue, sizeof(_float3));
-			KeyFrame.fTime = (_float)pAIChannel->mPositionKeys[i].mTime;
-		}
-
-		KeyFrame.vScale = vScale;
-		KeyFrame.vRotation = vRotation;
-		KeyFrame.vPosition = vPosition;
-
-		m_KeyFrames.push_back(KeyFrame);
+		fin.read((char*)&m_KeyFrames[i], sizeof(KEYFRAME));
 	}
 
 	return S_OK;
@@ -78,17 +30,12 @@ _uint CChannel::Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, 
 	_float4			vRotation;
 	_float3			vPosition;
 
-	/* 마지막 키프레임이상으로 넘어갔을때 : 마지막 키프레임 자세로 고정할 수 있도록 한다. */
 	if (fPlayTime >= m_KeyFrames.back().fTime)
 	{
 		vScale = m_KeyFrames.back().vScale;
 		vRotation = m_KeyFrames.back().vRotation;
 		vPosition = m_KeyFrames.back().vPosition;
 	}
-
-	/* 특정 키프레임과 키프레임 사이에 존재한다. */
-	/* 1을 기준으로 얼마나 재생되었는지(키프레임과 키프레임 사이를)를 확인한다.( Ratio) */
-	/* 결정된Ratio값에 따라 두 키프레임사이의 상태행려를 만들어 낸다. */
 	else
 	{
 		while (fPlayTime >= m_KeyFrames[iCurrentKeyFrame + 1].fTime)
@@ -123,11 +70,11 @@ _uint CChannel::Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, 
 	return iCurrentKeyFrame;
 }
 
-CChannel* CChannel::Create(aiNodeAnim* pAIChannel)
+CChannel* CChannel::Create(ifstream& fin)
 {
 	CChannel* pInstance = new CChannel();
 
-	if (FAILED(pInstance->Initialize(pAIChannel)))
+	if (FAILED(pInstance->Initialize(fin)))
 	{
 		MSG_BOX(TEXT("Failed To Created : CChannel"));
 		Safe_Release(pInstance);

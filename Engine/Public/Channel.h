@@ -16,9 +16,9 @@ public:
 	}
 
 public:
-	HRESULT Initialize(aiNodeAnim* pAIChannel);
-	_uint Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, class CBone* pNode);
+	HRESULT Initialize(ifstream& fin);
 
+	_uint Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, class CBone* pNode);
 
 private:
 	char							m_szName[MAX_PATH] = "";
@@ -27,7 +27,7 @@ private:
 	vector<KEYFRAME>				m_KeyFrames;
 
 public:
-	static CChannel* Create(aiNodeAnim* pAIChannel);
+	static CChannel* Create(ifstream& fin);
 	virtual void Free() override;
 };
 

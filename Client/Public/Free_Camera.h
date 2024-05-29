@@ -14,6 +14,7 @@ protected:
 	virtual ~CFree_Camera() = default;
 
 public:
+	void OnActive()						override;
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 

@@ -11,6 +11,11 @@ CFree_Camera::CFree_Camera(const CFree_Camera& rhs, CTransform::TRANSFORMDESC* p
 }
 
 
+void CFree_Camera::OnActive()
+{
+	ShowCursor(TRUE);
+}
+
 void CFree_Camera::Tick(_float fTimeDelta)
 {
 	m_tPrevMousePos = m_tCurrentMousePos;

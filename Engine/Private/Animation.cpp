@@ -13,40 +13,47 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_iNumChannels(rhs.m_iNumChannels)
 	, m_fTickPerSecond(rhs.m_fTickPerSecond)
 	, m_fPlayTime(rhs.m_fPlayTime)
+	, m_strAnimName(rhs.m_strAnimName)
+	, m_BoneIndices(rhs.m_BoneIndices)
 {
 	for (auto& pChannel : m_Channels)
 		Safe_AddRef(pChannel);
+
+	m_ChannelKeyFrames.resize(rhs.m_ChannelKeyFrames.size(), 0);
 }
 
-
-HRESULT CAnimation::Initialize(aiAnimation* pAIAnimation)
+HRESULT CAnimation::Initialize(ifstream& fin)
 {
-	m_strAnimName = pAIAnimation->mName.C_Str();
+	_uint iNameLen = 0;
+	char szAnimName[MAX_PATH] = "";
+	fin.read((char*)&iNameLen, sizeof(_uint));
+	fin.read(szAnimName, iNameLen);
 
-	m_fDuration = (_float)pAIAnimation->mDuration;
-	m_fTickPerSecond = (_float)pAIAnimation->mTicksPerSecond;
+	m_strAnimName = szAnimName;
 
-	/* 현재 애니메이션에서 제어해야할 뼈들의 갯수를 저장한다. */
-	m_iNumChannels = pAIAnimation->mNumChannels;
+	fin.read((char*)&m_fDuration, sizeof(_float));
+	fin.read((char*)&m_fTickPerSecond, sizeof(_float));
+	fin.read((char*)&m_iNumChannels, sizeof(_uint));
 
-
-	/* 현재 애니메이션에서 제어해야할 뼈정보들을 생성하여 보관한다. */
+	m_BoneIndices.reserve(m_iNumChannels);
 	for (_uint i = 0; i < m_iNumChannels; ++i)
 	{
-		/* aiNodeAnim : mChannel은 키프레임 정보들을 가지낟. */
-		CChannel* pChannel = CChannel::Create(pAIAnimation->mChannels[i]);
-		if (nullptr == pChannel)
-			return E_FAIL;
-
-		/* 왜 모아두는데?> 특정 애님에ㅣ션 상태일때 애니메이션을 재생하면 모든 뼈의 상태를 갱신하는건 빡세. 느려.
-		현재 애미에시연을 구동하기위한 뼈대만 상태 갱신해주기 위해. */
-		m_Channels.push_back(pChannel);
+		_uint iBoneIdx = 0;
+		fin.read((char*)&iBoneIdx, sizeof(_uint));
+		m_BoneIndices.push_back(iBoneIdx);
 	}
 
-
-	for (_uint i = 0; i < m_iNumChannels; ++i)
+	m_Channels.reserve(m_iNumChannels);
+	m_ChannelKeyFrames.reserve(m_iNumChannels);
+	for (size_t i = 0; i < m_iNumChannels; ++i)
+	{
 		m_ChannelKeyFrames.push_back(0);
-	
+
+		CChannel* pChannel = CChannel::Create(fin);
+		if (nullptr == pChannel)
+			return E_FAIL;
+		m_Channels.push_back(pChannel);
+	}
 
 	return S_OK;
 }
@@ -74,7 +81,8 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bo
 	/* 하이어라키 노드에 저장해준다. */
 	for (auto& pChannel : m_Channels)
 	{
-		m_ChannelKeyFrames[iChannelIndex] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex], Bones[iChannelIndex]);
+		m_ChannelKeyFrames[iChannelIndex] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex],
+			Bones[m_BoneIndices[iChannelIndex]]);
 
 		++iChannelIndex;
 	}
@@ -83,15 +91,22 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bo
 }
 
 
-CAnimation* CAnimation::Create(aiAnimation* pAIAnimation)
+CAnimation* CAnimation::Create(ifstream& fin)
 {
 	CAnimation* pInstance = new CAnimation();
 
-	if (FAILED(pInstance->Initialize(pAIAnimation)))
+	if (FAILED(pInstance->Initialize(fin)))
 	{
 		MSG_BOX(TEXT("Failed To Created : CAnimation"));
 		Safe_Release(pInstance);
 	}
+
+	return pInstance;
+}
+
+CAnimation* CAnimation::Clone()
+{
+	CAnimation* pInstance = new CAnimation(*this);
 
 	return pInstance;
 }
