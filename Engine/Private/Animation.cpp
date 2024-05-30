@@ -65,13 +65,7 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bo
 
 	if (m_fPlayTime >= m_fDuration)
 	{
-		m_fPlayTime = 0.f;
-
-		for (auto& pChannel : m_Channels)
-		{
-			for (auto& iCurrentKeyFrame : m_ChannelKeyFrames)
-				iCurrentKeyFrame = 0;
-		}
+		Reset();
 	}
 
 	_uint		iChannelIndex = 0;
@@ -88,6 +82,17 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bo
 	}
 
 	return S_OK;
+}
+
+void CAnimation::Reset()
+{
+	m_fPlayTime = 0.f;
+
+	for (auto& pChannel : m_Channels)
+	{
+		for (auto& iCurrentKeyFrame : m_ChannelKeyFrames)
+			iCurrentKeyFrame = 0;
+	}
 }
 
 

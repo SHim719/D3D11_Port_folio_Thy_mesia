@@ -67,6 +67,13 @@ public:
 		return XMVector3Normalize(Get_State(STATE_LOOK));
 	}
 
+	_vector Get_GroundLook() const {
+		return XMVector3Normalize(XMVectorSetY(Get_Look(), 0.f));
+	}
+
+	_vector Calculate_VecToQuat(_fvector vAxis, _cvector vVector) {
+		return XMQuaternionRotationMatrix(XMMatrixLookToLH(XMVectorZero(), vVector, vAxis));
+	}
 
 public:
 	HRESULT Initialize_Prototype()				override;
@@ -85,6 +92,7 @@ public:
 	
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
+	void Rotation_Quaternion(_fvector vQuat);
 	void LookAt(_fvector vAt);
 	//void LookAt_ForLandObject(_fvector vAt);
 	//void Move(_fvector vTargetPos, _float fTimeDelta, _float fLimitDistance = 0.1f);
@@ -94,8 +102,10 @@ public:
 
 	void Add_RollInput(_float fRadian);
 	void Add_YAxisInput(_float fRadian);
+
+	
 private:
-	_float4x4					m_WorldMatrix;
+	_float4x4				m_WorldMatrix;
 	TRANSFORMDESC			m_TransformDesc;
 
 public:

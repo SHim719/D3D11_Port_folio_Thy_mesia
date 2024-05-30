@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "Player_Defines.h"
 
 BEGIN(Engine)
 class CModel;
@@ -39,14 +40,18 @@ private:
 	//CNavigation* m_pNavigationCom = nullptr;
 
 private:
+	PlayerState			m_eState = PlayerState::State_End;
+	class CState_Base*	m_States[(_uint)PlayerState::State_End] = {};
 	//vector<CGameObject*>				m_Parts;
 	//typedef vector<CGameObject*>		PARTS;
 
 	//vector<class CHierarchyNode*>		m_Sockets;
+public:
+	void Change_State(PlayerState eState);
 
 private:
 	HRESULT Ready_Components();
-
+	HRESULT Ready_States();
 	//HRESULT Update_Weapon();
 
 public:

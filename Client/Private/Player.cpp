@@ -1,5 +1,6 @@
 #include "Player.h"
 
+#include "Player_States.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -21,8 +22,12 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+	if (FAILED(Ready_States()))
+		return E_FAIL;
+
 	m_pModel->Set_AnimPlay();
-	m_pModel->Change_Animation(3);
+
+	Change_State(PlayerState::State_Idle);
 
 	return S_OK;
 }
@@ -31,7 +36,7 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	if (m_pGameInstance->GetKeyNone(eKeyCode::RButton))
 	{
-		Corvus_No1
+		m_States[(_uint)m_eState]->OnGoing(fTimeDelta);
 	}
 
 	m_pModel->Play_Animation(fTimeDelta);
@@ -77,6 +82,15 @@ HRESULT CPlayer::Render()
 	return S_OK;
 }
 
+void CPlayer::Change_State(PlayerState eState)
+{
+	m_States[(_uint)eState]->OnState_End();
+
+	m_eState = eState;
+
+	m_States[(_uint)eState]->OnState_Start();
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORMDESC		TransformDesc;
@@ -93,6 +107,15 @@ HRESULT CPlayer::Ready_Components()
 
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), TEXT("Prototype_Model_Player"), TEXT("Model"), (CComponent**)&m_pModel)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_States()
+{
+	m_States[(_uint)PlayerState::State_Idle] = CPlayerState_Idle::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Jog] = CPlayerState_Jog::Create(m_pDevice, m_pContext, this);
+
 
 	return S_OK;
 }
@@ -127,6 +150,9 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+
+	for (_uint i = 0; i < (_uint)PlayerState::State_End; ++i)
+		Safe_Release(m_States[i]);
 
 	Safe_Release(m_pModel);
 

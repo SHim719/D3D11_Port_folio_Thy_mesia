@@ -20,6 +20,7 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pTarget = m_pGameInstance->Find_GameObject(m_pGameInstance->Get_CurrentLevelID(), L"Player", 0);
+	Safe_AddRef(m_pTarget);
 
 	CTransform* pPlayerTransform = m_pTarget->Get_Transform();
 

@@ -31,6 +31,9 @@ void CTestPlay_Tool::Start_Tool()
 
     m_pMain_Camera->Set_Active(false);
     m_pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 1.f, 1.f));
+
+    Safe_AddRef(m_pPlayer);
+    Safe_AddRef(m_pMain_Camera);
 }
 
 void CTestPlay_Tool::Tick(_float fTimeDelta)
@@ -87,5 +90,6 @@ void CTestPlay_Tool::Free()
 {
     __super::Free();
 
-
+    Safe_Release(m_pPlayer);
+    Safe_Release(m_pMain_Camera);
 }

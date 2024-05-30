@@ -24,6 +24,7 @@ void CTransform::Set_State(STATE eState, _fvector vState)
 	XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 }
 
+
 HRESULT CTransform::Initialize_Prototype()
 {
 	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
@@ -140,6 +141,25 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::Rotation_Quaternion(_fvector vQuat)
+{
+	_float3		vScale = Get_Scale();
+
+	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
+	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
+	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
+
+	_matrix	RotationMatrix = XMMatrixRotationQuaternion(vQuat);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
 void CTransform::LookAt(_fvector vAt)
 {
 	_fvector		vLook	= vAt - Get_State(CTransform::STATE_POSITION);
@@ -189,6 +209,7 @@ void CTransform::Add_YAxisInput(_float fRadian)
 	Set_State(STATE_UP, vUp);
 	Set_State(STATE_LOOK, vLook);
 }
+
 
 CTransform* CTransform::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

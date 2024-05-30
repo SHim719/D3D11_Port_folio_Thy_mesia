@@ -15,9 +15,7 @@ public:
 	HRESULT Initialize(ifstream& fin);
 	HRESULT Play_Animation(_float fTimeDelta, vector<class CBone*>& Bones, _bool bLoop);
 
-	void Reset() {
-		m_fPlayTime = 0.f;
-	};
+	void Reset();
 
 private:
 	string						m_strAnimName = "";

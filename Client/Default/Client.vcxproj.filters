@@ -1,14 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="03. Client_Components">
-      <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. UI">
       <UniqueIdentifier>{05e2490f-83af-4688-86c7-d0def919f5ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects">
-      <UniqueIdentifier>{e561c34e-d6f4-478c-9e8b-6bb897b1098c}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Levels">
       <UniqueIdentifier>{2fd56b7c-25e0-41fb-978b-b8be6be0a2aa}</UniqueIdentifier>
@@ -34,21 +28,6 @@
     <Filter Include="96. ShaderFiles">
       <UniqueIdentifier>{f0bdbf26-a0e5-494c-a48c-6f01c1fe6752}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\00. Background">
-      <UniqueIdentifier>{d77d19c9-d9e6-4fcd-a3d0-908e2d78be74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Player">
-      <UniqueIdentifier>{aa72ff72-1ace-4fd0-a5c4-a7f304de7a43}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\01. Camera">
-      <UniqueIdentifier>{4d6fb1a2-32d5-43aa-aed6-8fbfcf023880}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\01. Camera\Free_Camera">
-      <UniqueIdentifier>{64d3bb41-8fc8-447c-8dd6-841009cef042}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\03. Enemy">
-      <UniqueIdentifier>{c151c21c-0afd-4e07-a6ca-7a53edd2ef0b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="100. IMGUI">
       <UniqueIdentifier>{55cddb12-6c8e-4f86-bde0-c7a4d8eee25d}</UniqueIdentifier>
     </Filter>
@@ -64,20 +43,11 @@
     <Filter Include="100. IMGUI\00. ToolState">
       <UniqueIdentifier>{5742d96d-4671-4b61-be94-420d02a76830}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject">
-      <UniqueIdentifier>{a30fb29b-086b-471a-815d-25ec9dccaec7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\1. ToolAnimObj">
-      <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
-    </Filter>
     <Filter Include="100. IMGUI\01. Anim_Tool">
       <UniqueIdentifier>{e4065ac7-4940-420e-b257-5f14f782f446}</UniqueIdentifier>
     </Filter>
     <Filter Include="100. IMGUI\02. Map_Tool">
       <UniqueIdentifier>{aba63799-2135-4792-a325-8081c5300357}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\0. ToolMapObj">
-      <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
     </Filter>
     <Filter Include="99. Defines">
       <UniqueIdentifier>{3adbd17b-c224-4d61-9067-175bbd3d0d56}</UniqueIdentifier>
@@ -85,11 +55,62 @@
     <Filter Include="99. Defines\Headers">
       <UniqueIdentifier>{13a9a52c-33da-481b-94ef-daa2dacd02df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="100. IMGUI\99. TestPlay_Tool">
+      <UniqueIdentifier>{fc8339cb-083f-414a-82c5-c75b332e09c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State">
+      <UniqueIdentifier>{f7573f10-348a-408e-b9ba-957bc721571d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects">
+      <UniqueIdentifier>{e561c34e-d6f4-478c-9e8b-6bb897b1098c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\00. Background">
+      <UniqueIdentifier>{d77d19c9-d9e6-4fcd-a3d0-908e2d78be74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player">
+      <UniqueIdentifier>{aa72ff72-1ace-4fd0-a5c4-a7f304de7a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Camera">
+      <UniqueIdentifier>{4d6fb1a2-32d5-43aa-aed6-8fbfcf023880}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\01. Camera\Free_Camera">
+      <UniqueIdentifier>{64d3bb41-8fc8-447c-8dd6-841009cef042}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects\01. Camera\Main_Camera">
       <UniqueIdentifier>{fab6a260-7889-4a97-8d83-bc4ad0b82081}</UniqueIdentifier>
     </Filter>
-    <Filter Include="100. IMGUI\99. TestPlay_Tool">
-      <UniqueIdentifier>{fc8339cb-083f-414a-82c5-c75b332e09c0}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\03. Enemy">
+      <UniqueIdentifier>{c151c21c-0afd-4e07-a6ca-7a53edd2ef0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject">
+      <UniqueIdentifier>{a30fb29b-086b-471a-815d-25ec9dccaec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\1. ToolAnimObj">
+      <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\0. ToolMapObj">
+      <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="95. Client_Components">
+      <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\00. State_Base">
+      <UniqueIdentifier>{8fc12e36-aecd-4506-9291-b8be4ca7ee87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\01. Player_State">
+      <UniqueIdentifier>{07182893-84d4-493a-b9b8-14cb44323865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player\Define">
+      <UniqueIdentifier>{0e4045a1-145f-4eb5-b384-776987f0c0b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\01. Player_State\00. PlayerState_Base">
+      <UniqueIdentifier>{3d38f81e-3750-4bc3-a092-fc21bbc9b2e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\01. Player_State\01. PlayerState_Idle">
+      <UniqueIdentifier>{4f85e5a9-4052-43b0-b17a-66bd501520ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\01. Player_State\02. PlayerState_Jog">
+      <UniqueIdentifier>{746d33b3-1235-4b28-b441-d7cd8e614b2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +195,27 @@
     <ClInclude Include="..\Public\Main_Camera.h">
       <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\State_Base.h">
+      <Filter>03. State\00. State_Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Idle.h">
+      <Filter>03. State\01. Player_State\01. PlayerState_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Defines.h">
+      <Filter>02. GameObjects\02. Player\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_States.h">
+      <Filter>02. GameObjects\02. Player\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Macro.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Base.h">
+      <Filter>03. State\01. Player_State\00. PlayerState_Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Jog.h">
+      <Filter>03. State\01. Player_State\02. PlayerState_Jog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -227,9 +269,6 @@
     <ClCompile Include="..\Private\Client_Functions.cpp">
       <Filter>99. Defines</Filter>
     </ClCompile>
-    <ClCompile Include="..\Public\ToolAnimObj.cpp">
-      <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\TestGround.cpp">
       <Filter>02. GameObjects</Filter>
     </ClCompile>
@@ -238,6 +277,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\Main_Camera.cpp">
       <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Base.cpp">
+      <Filter>03. State\00. State_Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Idle.cpp">
+      <Filter>03. State\01. Player_State\01. PlayerState_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Base.cpp">
+      <Filter>03. State\01. Player_State\00. PlayerState_Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Jog.cpp">
+      <Filter>03. State\01. Player_State\02. PlayerState_Jog</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolAnimObj.cpp">
+      <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

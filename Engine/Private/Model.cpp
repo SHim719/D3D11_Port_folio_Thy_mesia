@@ -130,10 +130,8 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 	if (!m_bIsPlaying || m_iCurrentAnimIndex >= m_iNumAnimations)
 		return E_FAIL;
 
-	/* 현재 재생하고자하는 애니메이션이 제어해야할 뼈들의 지역행렬을 갱신해낸다. */
 	m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones, m_bLoop);
 
-	/* 지역행렬을 순차적으로(부모에서 자식으로) 누적하여 m_CombinedTransformation를 만든다.  */
 	for (auto& pBone : m_Bones)
 	{
 		pBone->Set_CombinedTransformation(m_Bones);
