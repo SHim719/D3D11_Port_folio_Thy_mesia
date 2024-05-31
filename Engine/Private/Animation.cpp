@@ -59,30 +59,45 @@ HRESULT CAnimation::Initialize(ifstream& fin)
 }
 
 
-HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool bLoop)
+
+HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones)
 {
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta;
 
 	if (m_fPlayTime >= m_fDuration)
-	{
 		Reset();
-	}
 
 	_uint		iChannelIndex = 0;
 
-	/* 이 애니메이션 구동을 위한 모든 뼈들을 순회하며 뼈들의 행렬을 갱신해준다. */
-	/* Transformation : 전달된 시간에 따른 키프레임(시간, 스케일, 회전, 이동)정보를 이용하여 Transformation을 만든다. */
-	/* 하이어라키 노드에 저장해준다. */
 	for (auto& pChannel : m_Channels)
 	{
-		m_ChannelKeyFrames[iChannelIndex] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex],
+		m_ChannelKeyFrames[iChannelIndex++] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex],
 			Bones[m_BoneIndices[iChannelIndex]]);
+	}
+	
 
-		++iChannelIndex;
+	return S_OK;
+}
+
+HRESULT CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones)
+{
+	m_fPlayTime += m_fTickPerSecond * fTimeDelta;
+
+	_float fRatio = m_fPlayTime / m_fBlendingTime;
+	if (fRatio > 1.f)
+		return E_FAIL;
+
+	_uint		iChannelIndex = 0;
+	for (auto& pChannel : m_Channels)
+	{
+		m_ChannelKeyFrames[iChannelIndex++] = pChannel->Blend_Transformation(fRatio, m_fPlayTime, m_ChannelKeyFrames[iChannelIndex],
+			Bones[m_BoneIndices[iChannelIndex]]);
 	}
 
 	return S_OK;
 }
+
+
 
 void CAnimation::Reset()
 {

@@ -38,6 +38,7 @@ private:
 	class CBone*		m_pCameraBone = nullptr;
 
 	_float4				m_vPlayerNeckOffset = { 0.f, 2.f, 0.f, 0.f };
+	_int				m_iSensitivity = 2;
 public:
 	void Init_TargetPos();
 	void Set_Target(CGameObject* pTarget);

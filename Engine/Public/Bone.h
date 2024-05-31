@@ -29,26 +29,35 @@ public:
 		return XMLoadFloat4x4(&m_CombinedTransformation);
 	}
 
-
 public:
+	HRESULT Initialize(ifstream& fin, class CModel* pModel);
+	void Set_CombinedTransformation(const vector<CBone*>& Bones);
+	void Set_OffsetMatrix(_fmatrix OffsetMatrix) {
+		XMStoreFloat4x4(&m_OffsetMatrix, OffsetMatrix);
+	}
+
 	void Set_Transformation(_fmatrix Transformation) {
 		XMStoreFloat4x4(&m_Transformation, Transformation);
 	}
 
-public:
-	HRESULT Initialize(ifstream& fin, class CModel* pModel);
-	void Set_CombinedTransformation(const vector<CBone*>& Bones);
-	void Set_OffsetMatrix(_fmatrix OffsetMatrix);
-
 	void Set_ParentIdx(_int iIdx) {
 		m_iParentBoneIdx = iIdx;
 	}
+
+	void Set_LastKeyFrame(const KEYFRAME& KeyFrame)	{
+		memcpy(&m_LastKeyFrame, &KeyFrame, sizeof(KEYFRAME));
+	}
+	
+public:
+	void Set_BlendTransformation(const KEYFRAME& curKeyFrame, _float fRatio);
+
 
 private:
 	char				m_szName[MAX_PATH] = "";
 	_float4x4			m_OffsetMatrix;
 	_float4x4			m_Transformation;
 	_float4x4			m_CombinedTransformation;
+	KEYFRAME			m_LastKeyFrame;
 
 	_int				m_iParentBoneIdx = -1;
 	_uint				m_iDepth = 0;

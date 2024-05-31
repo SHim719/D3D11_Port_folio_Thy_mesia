@@ -30,7 +30,6 @@ private:
 
 	vector<string>		m_strAnimations;
 	_int				m_iCurSelAnimIdx = 0;
-	_bool				m_bLoop = false;
 public:
 	static CAnim_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;

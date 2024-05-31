@@ -13,7 +13,8 @@ private:
 
 public:
 	HRESULT Initialize(ifstream& fin);
-	HRESULT Play_Animation(_float fTimeDelta, vector<class CBone*>& Bones, _bool bLoop);
+	HRESULT Play_Animation(_float fTimeDelta, vector<class CBone*>& Bones);
+	HRESULT Play_Animation_Blend(_float fTimeDelta, vector<class CBone*>& Bones);
 
 	void Reset();
 
@@ -24,6 +25,7 @@ private:
 	_float						m_fDuration = 0.f;
 	_float						m_fTickPerSecond = 0.f;
 	_float						m_fPlayTime = 0.f;
+	_float						m_fBlendingTime = 0.f;
 
 private:
 	vector<_uint>				m_ChannelKeyFrames;
@@ -31,6 +33,8 @@ private:
 
 public:
 	const string& Get_AnimName() { return m_strAnimName; }
+	void Set_BlendingTime(_float fTime) { 
+		m_fBlendingTime = fTime * m_fTickPerSecond; }
 
 public:
 	static CAnimation* Create(ifstream& fin);

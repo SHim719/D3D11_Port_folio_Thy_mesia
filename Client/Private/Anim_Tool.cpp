@@ -101,12 +101,6 @@ void CAnim_Tool::Anim_Buttons()
 
     ImGui::SetCursorPos(ImVec2(220.5, 131));
     ImGui::Button("Replay");
-
-    ImGui::SetCursorPos(ImVec2(220, 162));
-    if (nullptr != m_pModel)
-        m_bLoop = m_pModel->Is_Loop();
-    if (nullptr != m_pModel && ImGui::Checkbox("Loop?", &m_bLoop))
-        m_pModel->Set_Loop(!m_bLoop);
 }
 
 CAnim_Tool* CAnim_Tool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

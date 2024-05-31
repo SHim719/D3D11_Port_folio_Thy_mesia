@@ -71,7 +71,7 @@ void CMain_Camera::Init_TargetPos()
 	CTransform* pPlayerTransform = m_pTarget->Get_Transform();
 
 	_vector vCameraOffset = pPlayerTransform->Get_Right() * m_vPlayerNeckOffset.x
-		+ pPlayerTransform->Get_Up() * 3.5f - pPlayerTransform->Get_Look() * 1.5f;
+		+ pPlayerTransform->Get_Up() * 2.f - pPlayerTransform->Get_Look() * 2.5f;
 	_vector vCameraPosition = pPlayerTransform->Get_Position() + vCameraOffset;
 
 	m_pTransform->Set_Position(vCameraPosition);
@@ -108,14 +108,12 @@ void CMain_Camera::Rotation_ByMouse(_float fTimeDelta)
 	_vector vAt = pTargetTransform->Get_Position() + XMLoadFloat4(&m_vPlayerNeckOffset);
 
 	_bool bRotate = false;
-	if (abs(MouseGap.x) > 2)
+	if (abs(MouseGap.x) > m_iSensitivity)
 	{
 		_float fDeltaTheta = MouseGap.x * fTimeDelta * 0.2f;
 		m_pTransform->Add_YAxisInput(fDeltaTheta);
 
-		_vector		vYAxis = XMVectorSet(0.f, 1.0f, 0.f, 0.f);
-
-		_matrix	RotationMatrix = XMMatrixRotationAxis(vYAxis, fDeltaTheta);
+		_matrix	RotationMatrix = XMMatrixRotationAxis(YAXIS, fDeltaTheta);
 
 		_vector vDist = m_pTransform->Get_Position() - vAt;
 		vDist = XMVector3TransformCoord(vDist, RotationMatrix);
@@ -124,7 +122,7 @@ void CMain_Camera::Rotation_ByMouse(_float fTimeDelta)
 
 		bRotate = true;
 	}
-	if (abs(MouseGap.y) > 2)
+	if (abs(MouseGap.y) > m_iSensitivity)
 	{
 		_float fDeltaTheta = MouseGap.y * fTimeDelta * 0.2f;
 		m_pTransform->Add_RollInput(fDeltaTheta);

@@ -130,7 +130,22 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 	if (!m_bIsPlaying || m_iCurrentAnimIndex >= m_iNumAnimations)
 		return E_FAIL;
 
-	m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones, m_bLoop);
+	if (m_bBlending)
+	{
+		m_Animations[m_iCurrentAnimIndex]->Play_Animation_Blend(fTimeDelta, m_Bones);
+		m_fBlendingTime -= fTimeDelta;
+		if (m_fBlendingTime <= 0.f)
+		{
+			m_fBlendingTime = 0.f;
+			m_bBlending = false;
+		}
+	}
+	
+	else
+	{
+		m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones);
+	}
+		
 
 	for (auto& pBone : m_Bones)
 	{
@@ -155,11 +170,20 @@ void CModel::Set_PivotMatrix(_fmatrix PivotMatrix)
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
 }
 
-void CModel::Change_Animation(_uint iAnimIdx)
+void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 {
 	if (iAnimIdx < (_uint)m_Animations.size())
 		m_Animations[m_iCurrentAnimIndex]->Reset();
+
 	m_iCurrentAnimIndex = iAnimIdx;
+
+	if (fBlendingTime > 0.f)
+	{
+		m_bBlending = true;
+		m_fBlendingTime = fBlendingTime;
+		m_Animations[m_iCurrentAnimIndex]->Set_BlendingTime(fBlendingTime);
+	}
+	
 }
 
 HRESULT CModel::Import_Model(const string& strFilePath, const string& strFileName)

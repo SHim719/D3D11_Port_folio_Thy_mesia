@@ -18,14 +18,14 @@ public:
 public:
 	HRESULT Initialize(ifstream& fin);
 
-	_uint Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, class CBone* pNode);
+	_uint Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, class CBone* pBone);
+	_uint Blend_Transformation(_float fBlendRatio, _float fPlayTime, _uint iCurrentKeyFrame, CBone* pBone);
 
 private:
 	char							m_szName[MAX_PATH] = "";
 
 	_uint							m_iNumKeyFrames = 0;
 	vector<KEYFRAME>				m_KeyFrames;
-
 public:
 	static CChannel* Create(ifstream& fin);
 	virtual void Free() override;

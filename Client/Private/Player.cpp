@@ -27,7 +27,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pModel->Set_AnimPlay();
 
-	Change_State(PlayerState::State_Idle);
+	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);
+	m_eState = PlayerState::State_Idle;
+
 
 	return S_OK;
 }

@@ -78,7 +78,8 @@ private:
 	vector<class CAnimation*>				m_Animations;
 
 	_bool									m_bIsPlaying = false;
-	_bool									m_bLoop = false;
+	_bool									m_bBlending = false;
+	_float									m_fBlendingTime = 0.f;
 public:
 	const vector<CAnimation*>& Get_Animations() const { return m_Animations; }
 
@@ -86,12 +87,10 @@ public:
 	_uint	Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
 
 	HRESULT		Play_Animation(_float fTimeDelta);
-	void		Change_Animation(_uint iAnimIdx);
+	void		Change_Animation(_uint iAnimIdx, _float fBlendingTime = 0.1f);
 	_bool		Is_Playing() const { return m_bIsPlaying; }
 	void		Set_AnimPlay() { m_bIsPlaying = true; }
 	void		Set_AnimPause() { m_bIsPlaying = false; }
-	void		Set_Loop(_bool bLoop) { m_bLoop = bLoop; }
-	_bool		Is_Loop() const { return m_bLoop; }
 
 private:
 	HRESULT Import_Model(const string& strFilePath, const string& strFileName);

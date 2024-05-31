@@ -36,9 +36,35 @@ void CBone::Set_CombinedTransformation(const vector<CBone*>& Bones)
 		m_CombinedTransformation = m_Transformation;
 }
 
-void CBone::Set_OffsetMatrix(_fmatrix OffsetMatrix)
+
+void CBone::Set_BlendTransformation(const KEYFRAME& curKeyFrame, _float fRatio)
 {
-	XMStoreFloat4x4(&m_OffsetMatrix, OffsetMatrix);
+	_float3			vScale;
+	_float4			vRotation;
+	_float3			vPosition;
+
+	_float3		vSourScale, vDestScale;
+	_float4		vSourRotation, vDestRotation;
+	_float3		vSourPosition, vDestPosition;
+
+	vSourScale = m_LastKeyFrame.vScale;
+	vDestScale = curKeyFrame.vScale;
+
+	vSourRotation = m_LastKeyFrame.vRotation;
+	vDestRotation = curKeyFrame.vRotation;
+
+	vSourPosition = m_LastKeyFrame.vPosition;
+	vDestPosition = curKeyFrame.vPosition;
+
+	XMStoreFloat3(&vScale, XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio));
+	XMStoreFloat4(&vRotation, XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio));
+	XMStoreFloat3(&vPosition, XMVectorLerp(XMLoadFloat3(&vSourPosition), XMLoadFloat3(&vDestPosition), fRatio));
+
+	_matrix	TransformationMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorSet(0.f, 0.f, 0.f, 1.f)
+		, XMLoadFloat4(&vRotation)
+		, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+
+	XMStoreFloat4x4(&m_Transformation, TransformationMatrix);
 }
 
 CBone* CBone::Create(ifstream& fin, CModel* pModel)
