@@ -98,6 +98,8 @@ public:
 	_float4 Get_CamPosition() const;
 #pragma endregion
 
+
+
 private:
 	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
 	class CLevel_Manager*			m_pLevel_Manager = { nullptr };
@@ -110,6 +112,7 @@ private:
 	class CFrustum*					m_pFrustum = { nullptr };
 	class CRenderer*				m_pRenderer = { nullptr };
 	class CPipeLine*				m_pPipeLine = { nullptr };
+
 
 public:
 	static void Release_Engine();

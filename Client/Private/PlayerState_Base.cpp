@@ -13,7 +13,8 @@ HRESULT CPlayerState_Base::Initialize(void* pArg)
 
 	m_pPlayer = (CPlayer*)pArg;
 
-	m_pMain_Camera = static_cast<CMain_Camera*>(m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Camera", 0));
+
+	m_pMain_Camera = static_cast<CMain_Camera*>(m_pGameInstance->Find_GameObject(GET_CURLEVEL, L"Camera", 0));
 	if (nullptr == m_pMain_Camera)
 		return E_FAIL;
 

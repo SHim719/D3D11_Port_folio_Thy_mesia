@@ -12,19 +12,27 @@ namespace Client
 	{
 		return string().assign(wstr.begin(), wstr.end());
 	}
-	
-	wstring Get_FileNameStem(const wstring& wstrFileFullPath)
-	{
-		size_t iOffset = wstrFileFullPath.rfind(L'\\') + 1;
-		size_t iPathLength = wstrFileFullPath.length();
-		return wstrFileFullPath.substr(iOffset, iPathLength - iOffset - 4);
-	}
-	
+
 
 	wstring Get_Path(const wstring& wstrFileFullPath)
 	{
 		size_t iPathLength = wstrFileFullPath.rfind(L'\\') + 1;
 		return wstrFileFullPath.substr(0, iPathLength);
 	}
+
+	_matrix Get_LookTo(_fvector vNewLook)
+	{
+		_fvector		vLook = vNewLook;
+		_fvector		vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+		_fvector		vUp = XMVector3Cross(vLook, vRight);
+
+		return _matrix(
+			vRight,
+			vUp,
+			vLook,
+			XMVectorSet(0.f, 0.f, 0.f, 1.f)
+		);
+	}
+
 
 }

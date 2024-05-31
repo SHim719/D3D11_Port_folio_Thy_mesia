@@ -26,11 +26,14 @@ void CTestPlay_Tool::Start_Tool()
     camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
     camDesc.vEye = { 0.f, 10.f, 0.f, 1.f };
 
-    m_pPlayer = static_cast<CPlayer*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Player", L"Prototype_Player", nullptr));
     m_pMain_Camera = static_cast<CMain_Camera*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Camera", L"Prototype_Main_Camera", &camDesc));
+    m_pPlayer = static_cast<CPlayer*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Player", L"Prototype_Player", nullptr));
 
-    m_pMain_Camera->Set_Active(false);
     m_pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 1.f, 1.f));
+    
+    m_pMain_Camera->Set_Target(m_pPlayer);
+    m_pMain_Camera->Init_TargetPos();
+    m_pMain_Camera->Set_Active(false);
 
     Safe_AddRef(m_pPlayer);
     Safe_AddRef(m_pMain_Camera);

@@ -27,30 +27,44 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 		return;
 	}
 
+	if (KEY_PUSHING(eKeyCode::LShift))
+	{
+
+	}
+
+	//_float vDot = XMVectorGetX(XMVector3Dot(vPlayerLook, vNewLook));
+
+	//if (vDot > 0.99f)
+	//{
+	//	
+	//}
+
 	CTransform* pCameraTransform = m_pMain_Camera->Get_Transform();
-	_vector vGroundLook = pCameraTransform->Get_GroundLook();
+	_vector vCameraLook = pCameraTransform->Get_GroundLook();
+	_vector vCameraRight = pCameraTransform->Get_GroundRight();
 	_vector vPlayerLook = m_pOwnerTransform->Get_Look();
+	_vector vNewLook = XMVectorZero();
 
 	if (KEY_PUSHING(eKeyCode::W))
-	{
-		_vector vYAxis = XMVectorSet(0.f, 1.f, 0.f, 0.f);
-		_vector vQuat = (XMQuaternionSlerp(m_pOwnerTransform->Calculate_VecToQuat(vYAxis, vPlayerLook), m_pOwnerTransform->Calculate_VecToQuat(vYAxis, vGroundLook), 0.2f));
-		m_pOwnerTransform->Rotation_Quaternion(vQuat);
-	}
+		vNewLook += vCameraLook;
+	if (KEY_PUSHING(eKeyCode::S))
+		vNewLook -= vCameraLook;
+	if (KEY_PUSHING(eKeyCode::D))
+		vNewLook += vCameraRight;
+	if (KEY_PUSHING(eKeyCode::A))
+		vNewLook -= vCameraRight;
 
-	if (KEY_DOWN(eKeyCode::W) || KEY_DOWN(eKeyCode::A) || KEY_DOWN(eKeyCode::S) || KEY_DOWN(eKeyCode::D))
-	{
-		if (KEY_PUSHING(eKeyCode::LShift))
-		{
-			
-		}
-		else
-		{
-			
-		}
-	}
+	if (XMVectorGetX(XMVector3Length(vNewLook)) < FLT_EPSILON)
+		return;
 
-	m_pOwnerTransform->Go_Straight(fTimeDelta);
+	vNewLook = XMVector3Normalize(vNewLook);
+
+	_vector StartQuat = XMQuaternionRotationMatrix(Get_LookTo(vPlayerLook));
+	_vector EndQuat = XMQuaternionRotationMatrix(Get_LookTo(vNewLook));
+
+	m_pOwnerTransform->Rotation_Quaternion(XMQuaternionSlerp(StartQuat, EndQuat, m_fRotRate * fTimeDelta));
+
+	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);	
 }
 
 void CPlayerState_Jog::OnState_End()

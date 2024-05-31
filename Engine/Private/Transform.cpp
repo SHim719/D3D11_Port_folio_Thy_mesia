@@ -87,6 +87,14 @@ void CTransform::Go_Down(_float fTimeDelta)
 	Set_Position(vPos);
 }
 
+void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta)
+{
+	_vector vPos = Get_Position();
+	vPos += vDir * m_TransformDesc.fSpeedPerSec * fTimeDelta;
+
+	Set_Position(vPos);
+}
+
 void CTransform::Set_Scale(_float3 vScale)
 {
 	Set_State(CTransform::STATE_RIGHT,
@@ -143,17 +151,13 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 
 void CTransform::Rotation_Quaternion(_fvector vQuat)
 {
-	_float3		vScale = Get_Scale();
-
-	_vector		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f) * vScale.x;
-	_vector		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f) * vScale.y;
-	_vector		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f) * vScale.z;
-
 	_matrix	RotationMatrix = XMMatrixRotationQuaternion(vQuat);
 
-	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
-	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
-	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+	_float3		vScale = Get_Scale();
+
+	_vector vRight = RotationMatrix.r[0] * vScale.x;
+	_vector vUp = RotationMatrix.r[1] * vScale.y;
+	_vector vLook = RotationMatrix.r[2] * vScale.z;
 
 	Set_State(STATE_RIGHT, vRight);
 	Set_State(STATE_UP, vUp);

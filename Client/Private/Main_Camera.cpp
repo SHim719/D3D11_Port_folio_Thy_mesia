@@ -19,18 +19,7 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) 
 		return E_FAIL;
 
-	m_pTarget = m_pGameInstance->Find_GameObject(m_pGameInstance->Get_CurrentLevelID(), L"Player", 0);
-	Safe_AddRef(m_pTarget);
-
-	CTransform* pPlayerTransform = m_pTarget->Get_Transform();
-
-	_vector vCameraOffset = pPlayerTransform->Get_Right() * m_vPlayerNeckOffset.x
-		+ pPlayerTransform->Get_Up() * 3.5f - pPlayerTransform->Get_Look() * 1.5f;
-	_vector vCameraPosition = pPlayerTransform->Get_Position() + vCameraOffset;
-
-	m_pTransform->Set_Position(vCameraPosition);
 	
-	m_pTransform->LookAt(pPlayerTransform->Get_Position() + XMLoadFloat4(&m_vPlayerNeckOffset));
 	return S_OK;
 }
 
@@ -50,6 +39,11 @@ void CMain_Camera::PriorityTick(_float fTimeDelta)
 
 void CMain_Camera::Tick(_float fTimeDelta)
 {
+	if (KEY_DOWN(eKeyCode::NUMPAD0))
+		m_eState = DEFAULT;
+	if (KEY_DOWN(eKeyCode::NUMPAD1))
+		m_eState = UI;
+
 	switch (m_eState)
 	{
 	case CMain_Camera::DEFAULT:
@@ -71,6 +65,20 @@ void CMain_Camera::LateTick(_float fTimeDelta)
 }
 
 
+void CMain_Camera::Init_TargetPos()
+{
+
+	CTransform* pPlayerTransform = m_pTarget->Get_Transform();
+
+	_vector vCameraOffset = pPlayerTransform->Get_Right() * m_vPlayerNeckOffset.x
+		+ pPlayerTransform->Get_Up() * 3.5f - pPlayerTransform->Get_Look() * 1.5f;
+	_vector vCameraPosition = pPlayerTransform->Get_Position() + vCameraOffset;
+
+	m_pTransform->Set_Position(vCameraPosition);
+
+	m_pTransform->LookAt(pPlayerTransform->Get_Position() + XMLoadFloat4(&m_vPlayerNeckOffset));
+}
+
 void CMain_Camera::Set_Target(CGameObject* pTarget)
 {
 	Safe_Release(m_pTarget);
@@ -89,18 +97,18 @@ void CMain_Camera::Default_State(_float fTimeDelta)
 
 void CMain_Camera::Rotation_ByMouse(_float fTimeDelta)
 {
-	POINT MouseGap = m_CurrentMousePos;
-	GetCursorPos(&m_CurrentMousePos);
-	ScreenToClient(g_hWnd, &m_CurrentMousePos);
+	POINT ptCenter = { g_iWinSizeX >> 1, g_iWinSizeY >> 1 };
+	POINT ptMouse = {};
+	GetCursorPos(&ptMouse);
+	ScreenToClient(g_hWnd, &ptMouse);
 
-	MouseGap.x = m_CurrentMousePos.x - MouseGap.x;
-	MouseGap.y = m_CurrentMousePos.y - MouseGap.y;
+	POINT MouseGap = { ptMouse.x - ptCenter.x, ptMouse.y - ptCenter.y };
 
 	CTransform* pTargetTransform = m_pTarget->Get_Transform();
 	_vector vAt = pTargetTransform->Get_Position() + XMLoadFloat4(&m_vPlayerNeckOffset);
 
 	_bool bRotate = false;
-	if (MouseGap.x != 0.f)
+	if (abs(MouseGap.x) > 2)
 	{
 		_float fDeltaTheta = MouseGap.x * fTimeDelta * 0.2f;
 		m_pTransform->Add_YAxisInput(fDeltaTheta);
@@ -116,7 +124,7 @@ void CMain_Camera::Rotation_ByMouse(_float fTimeDelta)
 
 		bRotate = true;
 	}
-	if (MouseGap.y != 0.f)
+	if (abs(MouseGap.y) > 2)
 	{
 		_float fDeltaTheta = MouseGap.y * fTimeDelta * 0.2f;
 		m_pTransform->Add_RollInput(fDeltaTheta);
@@ -136,6 +144,9 @@ void CMain_Camera::Rotation_ByMouse(_float fTimeDelta)
 	if (bRotate)
 		m_pTransform->LookAt(vAt);
 
+
+	ClientToScreen(g_hWnd, &ptCenter);
+	SetCursorPos(ptCenter.x, ptCenter.y);
 }
 
 

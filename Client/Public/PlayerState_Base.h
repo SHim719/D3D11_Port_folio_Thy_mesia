@@ -21,6 +21,8 @@ protected:
 	CPlayer*		m_pPlayer = nullptr;
 	CMain_Camera*	m_pMain_Camera = nullptr;
 
+	_float			m_fRotRate = 15.f;
+
 public:
 	void Free() override;
 };

@@ -67,13 +67,14 @@ public:
 		return XMVector3Normalize(Get_State(STATE_LOOK));
 	}
 
+	_vector Get_GroundRight() const {
+		return XMVector3Normalize(XMVectorSetY(Get_Right(), 0.f));
+	}
+
 	_vector Get_GroundLook() const {
 		return XMVector3Normalize(XMVectorSetY(Get_Look(), 0.f));
 	}
 
-	_vector Calculate_VecToQuat(_fvector vAxis, _cvector vVector) {
-		return XMQuaternionRotationMatrix(XMMatrixLookToLH(XMVectorZero(), vVector, vAxis));
-	}
 
 public:
 	HRESULT Initialize_Prototype()				override;
@@ -86,6 +87,7 @@ public:
 	void Go_Right(_float fTimeDelta);
 	void Go_Up(_float fTimeDelta);
 	void Go_Down(_float fTimeDelta);
+	void Go_Dir(_fvector vDir, _float fTimeDelta);
 
 	void Set_Scale(_float3 vScale);
 	_float3 Get_Scale() const;

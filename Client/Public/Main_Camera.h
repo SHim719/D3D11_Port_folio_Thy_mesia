@@ -34,12 +34,12 @@ public:
 private:
 	CameraState m_eState = DEFAULT;
 
-	class CGameObject* m_pTarget = nullptr;
-	class CBone* m_pCameraBone = nullptr;
+	class CGameObject*	m_pTarget = nullptr;
+	class CBone*		m_pCameraBone = nullptr;
 
-	_float4 m_vPlayerNeckOffset = { 0.f, 2.f, 0.f, 0.f };
-	POINT m_CurrentMousePos = { -1, -1 };
+	_float4				m_vPlayerNeckOffset = { 0.f, 2.f, 0.f, 0.f };
 public:
+	void Init_TargetPos();
 	void Set_Target(CGameObject* pTarget);
 
 private:
