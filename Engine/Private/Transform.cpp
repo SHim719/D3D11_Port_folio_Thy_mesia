@@ -95,6 +95,14 @@ void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta)
 	Set_Position(vPos);
 }
 
+void CTransform::Go_Root(_fvector vDeltaRoot, _fvector vLook)
+{
+	_vector vPos = Get_Position();
+	vPos += XMVectorGetZ(vDeltaRoot) * vLook;
+
+	Set_Position(vPos);
+}
+
 void CTransform::Set_Scale(_float3 vScale)
 {
 	Set_State(CTransform::STATE_RIGHT,

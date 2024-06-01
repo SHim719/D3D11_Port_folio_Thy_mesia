@@ -69,9 +69,26 @@ private:
 	vector<class CBone*>					m_Bones;
 	vector<_uint>							m_BoneIndices;
 	_uint									m_iNumBones;
+	_uint									m_iRootBoneIdx;
+	_float4									m_vPrevRootPos = {};
+	_float4									m_vDeltaRootPos = {};
 public:
 	const BONES& Get_Bones() { return m_Bones; }
 
+	_vector Get_DeltaRootPos() const {
+		return XMLoadFloat4(&m_vDeltaRootPos);
+	}
+
+	_vector Organize_RootPos(_vector OriginRootPos) {
+		return XMVectorSet(OriginRootPos.m128_f32[0], OriginRootPos.m128_f32[2], -OriginRootPos.m128_f32[1], 1.f);
+	}
+
+	void Reset_RootPos() {
+		XMStoreFloat4(&m_vPrevRootPos, XMVectorZero());
+	}
+
+private:
+	void Calc_DeltaRootPos();
 private:
 	_uint									m_iCurrentAnimIndex = 0;
 	_uint									m_iNumAnimations = 0;
@@ -79,7 +96,6 @@ private:
 
 	_bool									m_bIsPlaying = false;
 	_bool									m_bBlending = false;
-	_float									m_fBlendingTime = 0.f;
 public:
 	const vector<CAnimation*>& Get_Animations() const { return m_Animations; }
 

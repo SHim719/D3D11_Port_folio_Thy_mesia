@@ -30,6 +30,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);
 	m_eState = PlayerState::State_Idle;
 
+	//Change_State(PlayerState::State_SprintStart);
+
 
 	return S_OK;
 }
@@ -117,6 +119,7 @@ HRESULT CPlayer::Ready_States()
 {
 	m_States[(_uint)PlayerState::State_Idle] = CPlayerState_Idle::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Jog] = CPlayerState_Jog::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_SprintStart] = CPlayerState_SprintStart::Create(m_pDevice, m_pContext, this);
 
 
 	return S_OK;

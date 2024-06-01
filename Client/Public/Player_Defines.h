@@ -128,6 +128,7 @@ enum class PlayerState
 {
 	State_Idle,
 	State_Jog,
+	State_SprintStart,
 	State_Sprint,
 	State_End,
 };

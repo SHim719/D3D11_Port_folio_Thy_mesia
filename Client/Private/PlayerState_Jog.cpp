@@ -29,42 +29,12 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 
 	if (KEY_PUSHING(eKeyCode::LShift))
 	{
-
+		m_pPlayer->Change_State(PlayerState::State_SprintStart);
 	}
 
-	//_float vDot = XMVectorGetX(XMVector3Dot(vPlayerLook, vNewLook));
+	_vector vNewLook = Rotate_To_CameraLook(fTimeDelta);
 
-	//if (vDot > 0.99f)
-	//{
-	//	
-	//}
-
-	CTransform* pCameraTransform = m_pMain_Camera->Get_Transform();
-	_vector vCameraLook = pCameraTransform->Get_GroundLook();
-	_vector vCameraRight = pCameraTransform->Get_GroundRight();
-	_vector vPlayerLook = m_pOwnerTransform->Get_Look();
-	_vector vNewLook = XMVectorZero();
-
-	if (KEY_PUSHING(eKeyCode::W))
-		vNewLook += vCameraLook;
-	if (KEY_PUSHING(eKeyCode::S))
-		vNewLook -= vCameraLook;
-	if (KEY_PUSHING(eKeyCode::D))
-		vNewLook += vCameraRight;
-	if (KEY_PUSHING(eKeyCode::A))
-		vNewLook -= vCameraRight;
-
-	if (XMVectorGetX(XMVector3Length(vNewLook)) < FLT_EPSILON)
-		return;
-
-	vNewLook = XMVector3Normalize(vNewLook);
-
-	_vector StartQuat = XMQuaternionRotationMatrix(Get_LookTo(vPlayerLook));
-	_vector EndQuat = XMQuaternionRotationMatrix(Get_LookTo(vNewLook));
-
-	m_pOwnerTransform->Rotation_Quaternion(XMQuaternionSlerp(StartQuat, EndQuat, m_fRotRate * fTimeDelta));
-
-	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);	
+	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);
 }
 
 void CPlayerState_Jog::OnState_End()

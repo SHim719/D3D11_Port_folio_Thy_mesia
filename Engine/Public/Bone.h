@@ -21,6 +21,10 @@ public:
 		return m_iDepth;
 	}
 
+	_matrix Get_Tranformation(){
+		return XMLoadFloat4x4(&m_Transformation);
+	}
+
 	_matrix Get_OffSetMatrix() {
 		return XMLoadFloat4x4(&m_OffsetMatrix);
 	}
@@ -47,6 +51,15 @@ public:
 	void Set_LastKeyFrame(const KEYFRAME& KeyFrame)	{
 		memcpy(&m_LastKeyFrame, &KeyFrame, sizeof(KEYFRAME));
 	}
+
+	void Reset_Position() {
+		XMStoreFloat4((_float4*)m_Transformation.m[3], XMVectorSetW(XMVectorZero(), 1.f));
+	}
+
+	void Set_RootBone() {
+		m_bRootBone = true;
+	}
+		
 	
 public:
 	void Set_BlendTransformation(const KEYFRAME& curKeyFrame, _float fRatio);
@@ -61,6 +74,7 @@ private:
 
 	_int				m_iParentBoneIdx = -1;
 	_uint				m_iDepth = 0;
+	_bool				m_bRootBone = false;
 public:
 	static CBone* Create(ifstream& fin, class CModel* pModel);
 	CBone* Clone();

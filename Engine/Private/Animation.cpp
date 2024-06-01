@@ -34,6 +34,7 @@ HRESULT CAnimation::Initialize(ifstream& fin)
 	fin.read((char*)&m_fDuration, sizeof(_float));
 	fin.read((char*)&m_fTickPerSecond, sizeof(_float));
 	fin.read((char*)&m_iNumChannels, sizeof(_uint));
+	fin.read((char*)&m_fPlayRate, sizeof(_float));
 
 	m_BoneIndices.reserve(m_iNumChannels);
 	for (_uint i = 0; i < m_iNumChannels; ++i)
@@ -62,10 +63,16 @@ HRESULT CAnimation::Initialize(ifstream& fin)
 
 HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones)
 {
+	HRESULT hr = S_OK;
+
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta;
 
 	if (m_fPlayTime >= m_fDuration)
+	{
 		Reset();
+		hr = E_FAIL;
+	}
+		
 
 	_uint		iChannelIndex = 0;
 
@@ -76,16 +83,21 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones)
 	}
 	
 
-	return S_OK;
+	return hr;
 }
 
 HRESULT CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones)
 {
+	HRESULT hr = S_OK;
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta;
 
 	_float fRatio = m_fPlayTime / m_fBlendingTime;
 	if (fRatio > 1.f)
-		return E_FAIL;
+	{
+		fRatio = 1.f;
+		hr = E_FAIL;
+	}
+		
 
 	_uint		iChannelIndex = 0;
 	for (auto& pChannel : m_Channels)
@@ -94,7 +106,7 @@ HRESULT CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bone
 			Bones[m_BoneIndices[iChannelIndex]]);
 	}
 
-	return S_OK;
+	return hr;
 }
 
 

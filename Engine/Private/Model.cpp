@@ -27,6 +27,7 @@ CModel::CModel(const CModel& rhs)
 	, m_iCurrentAnimIndex(rhs.m_iCurrentAnimIndex)
 	, m_iNumAnimations(rhs.m_iNumAnimations)
 	, m_PivotMatrix(rhs.m_PivotMatrix)
+	, m_iRootBoneIdx(rhs.m_iRootBoneIdx)
 {
 	for (auto& pMeshContainer : m_Meshes)
 		Safe_AddRef(pMeshContainer);
@@ -125,27 +126,36 @@ HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, TextureTy
 	return m_Materials[iMaterialIndex].pTexture[eTextureType]->Set_SRV(pShader, pConstantName);
 }
 
+
+void CModel::Calc_DeltaRootPos()
+{
+	_vector vNowRootPos = Organize_RootPos(m_Bones[m_iRootBoneIdx]->Get_Tranformation().r[3]);
+
+	XMStoreFloat4(&m_vDeltaRootPos, (vNowRootPos - XMLoadFloat4(&m_vPrevRootPos)));
+
+	XMStoreFloat4(&m_vPrevRootPos, vNowRootPos);
+
+	m_Bones[m_iRootBoneIdx]->Reset_Position();
+}
+
 HRESULT CModel::Play_Animation(_float fTimeDelta)
 {
 	if (!m_bIsPlaying || m_iCurrentAnimIndex >= m_iNumAnimations)
 		return E_FAIL;
 
+
 	if (m_bBlending)
 	{
-		m_Animations[m_iCurrentAnimIndex]->Play_Animation_Blend(fTimeDelta, m_Bones);
-		m_fBlendingTime -= fTimeDelta;
-		if (m_fBlendingTime <= 0.f)
-		{
-			m_fBlendingTime = 0.f;
+		if (FAILED(m_Animations[m_iCurrentAnimIndex]->Play_Animation_Blend(fTimeDelta, m_Bones)))
 			m_bBlending = false;
-		}
 	}
-	
 	else
 	{
-		m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones);
+		if (FAILED(m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones)))
+			XMStoreFloat4(&m_vPrevRootPos, XMVectorZero());
 	}
-		
+	
+	Calc_DeltaRootPos();
 
 	for (auto& pBone : m_Bones)
 	{
@@ -180,7 +190,6 @@ void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 	if (fBlendingTime > 0.f)
 	{
 		m_bBlending = true;
-		m_fBlendingTime = fBlendingTime;
 		m_Animations[m_iCurrentAnimIndex]->Set_BlendingTime(fBlendingTime);
 	}
 	
@@ -299,6 +308,9 @@ HRESULT CModel::Import_Bones(ifstream& fin)
 		fin.read((char*)&iBoneIdx, sizeof(_uint));
 		m_BoneIndices.push_back(iBoneIdx);
 	}
+
+	m_iRootBoneIdx = m_BoneIndices[0];
+	m_Bones[m_iRootBoneIdx]->Set_RootBone();
 
 	return S_OK;
 }

@@ -26,6 +26,7 @@ private:
 	_float						m_fTickPerSecond = 0.f;
 	_float						m_fPlayTime = 0.f;
 	_float						m_fBlendingTime = 0.f;
+	_float						m_fPlayRate = 1.f;
 
 private:
 	vector<_uint>				m_ChannelKeyFrames;

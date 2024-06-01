@@ -187,6 +187,7 @@
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerState_Base.h" />
     <ClInclude Include="..\Public\PlayerState_Jog.h" />
+    <ClInclude Include="..\Public\PlayerState_SprintStart.h" />
     <ClInclude Include="..\Public\Player_States.h" />
     <ClInclude Include="..\Public\Player_Defines.h" />
     <ClInclude Include="..\Public\PlayerState_Idle.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="..\Private\PlayerState_Base.cpp" />
     <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_Jog.cpp" />
+    <ClCompile Include="..\Private\PlayerState_SprintStart.cpp" />
     <ClCompile Include="..\Private\State_Base.cpp" />
     <ClCompile Include="..\Private\TestGround.cpp" />
     <ClCompile Include="..\Private\TestPlay_Tool.cpp" />

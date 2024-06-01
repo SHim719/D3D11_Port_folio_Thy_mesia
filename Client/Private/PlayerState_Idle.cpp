@@ -24,13 +24,10 @@ void CPlayerState_Idle::OnGoing(_float fTimeDelta)
 	if (KEY_DOWN(eKeyCode::W) || KEY_DOWN(eKeyCode::A) || KEY_DOWN(eKeyCode::S) || KEY_DOWN(eKeyCode::D))
 	{
 		if (KEY_PUSHING(eKeyCode::LShift))
-		{
-
-		}
+			m_pPlayer->Change_State(PlayerState::State_SprintStart);
 		else
-		{
 			m_pPlayer->Change_State(PlayerState::State_Jog);
-		}
+		
 	}
 }
 

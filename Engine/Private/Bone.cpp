@@ -11,6 +11,7 @@ CBone::CBone(const CBone& rhs)
 	, m_Transformation(rhs.m_Transformation)
 	, m_iDepth(rhs.m_iDepth)
 	, m_iParentBoneIdx(rhs.m_iParentBoneIdx)
+	, m_bRootBone(rhs.m_bRootBone)
 {
 	strcpy_s(m_szName, rhs.m_szName);
 	XMStoreFloat4x4(&m_CombinedTransformation, XMMatrixIdentity());
@@ -37,6 +38,7 @@ void CBone::Set_CombinedTransformation(const vector<CBone*>& Bones)
 }
 
 
+
 void CBone::Set_BlendTransformation(const KEYFRAME& curKeyFrame, _float fRatio)
 {
 	_float3			vScale;
@@ -53,7 +55,11 @@ void CBone::Set_BlendTransformation(const KEYFRAME& curKeyFrame, _float fRatio)
 	vSourRotation = m_LastKeyFrame.vRotation;
 	vDestRotation = curKeyFrame.vRotation;
 
-	vSourPosition = m_LastKeyFrame.vPosition;
+	if (m_bRootBone)
+		vSourPosition =  _float3(0.f, 0.f, 0.f);
+	else
+		vSourPosition = m_LastKeyFrame.vPosition;
+		
 	vDestPosition = curKeyFrame.vPosition;
 
 	XMStoreFloat3(&vScale, XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio));

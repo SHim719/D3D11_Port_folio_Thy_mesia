@@ -112,6 +112,9 @@
     <Filter Include="03. State\01. Player_State\02. PlayerState_Jog">
       <UniqueIdentifier>{746d33b3-1235-4b28-b441-d7cd8e614b2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. State\01. Player_State\03. PlayerState_SprintStart">
+      <UniqueIdentifier>{58fb744d-0798-43c4-96a6-6c3c2dcefaf1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -216,6 +219,9 @@
     <ClInclude Include="..\Public\PlayerState_Jog.h">
       <Filter>03. State\01. Player_State\02. PlayerState_Jog</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_SprintStart.h">
+      <Filter>03. State\01. Player_State\03. PlayerState_SprintStart</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -292,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ToolAnimObj.cpp">
       <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_SprintStart.cpp">
+      <Filter>03. State\01. Player_State\03. PlayerState_SprintStart</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

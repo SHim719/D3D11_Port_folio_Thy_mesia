@@ -27,6 +27,9 @@ HRESULT CState_Base::Initialize(void* pArg)
 	if (nullptr == m_pOwnerTransform)
 		return E_FAIL;
 
+	Safe_AddRef(m_pModel);
+	Safe_AddRef(m_pOwnerTransform);
+
 	return S_OK;
 }
 
