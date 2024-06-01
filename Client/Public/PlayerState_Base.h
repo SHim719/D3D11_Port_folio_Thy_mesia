@@ -18,7 +18,8 @@ public:
 	void OnState_End()					override;
 
 protected:
-	_vector Rotate_To_CameraLook(_float fTimeDelta);
+	_vector Calc_NewLook();
+	void Rotate_To_Look(_vector vNewLook, _float fTimeDelta);
 
 protected:
 	CPlayer*		m_pPlayer = nullptr;

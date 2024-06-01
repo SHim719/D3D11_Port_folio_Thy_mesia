@@ -41,9 +41,8 @@ public:
 
 	bool GetKeyDown(eKeyCode _keyCode) { return vecKey[(UINT)_keyCode].eState == eKeyState::Down; }
 	bool GetKeyUp(eKeyCode _keyCode) {	return	vecKey[(UINT)_keyCode].eState == eKeyState::Up; }
-	bool GetKey(eKeyCode _keyCode) {	return	vecKey[(UINT)_keyCode].eState == eKeyState::Pressed; }
-	bool GetKeyNone(eKeyCode _keyCode) { return vecKey[(UINT)_keyCode].eState == eKeyState::None; }
-
+	bool GetKey(eKeyCode _keyCode) {	return	vecKey[(UINT)_keyCode].eState == eKeyState::Pressed || vecKey[(UINT)_keyCode].eState == eKeyState::Down;}
+	bool GetKeyNone(eKeyCode _keyCode) { return vecKey[(UINT)_keyCode].eState == eKeyState::None || vecKey[(UINT)_keyCode].eState == eKeyState::Up;}
 private:
 	CKey_Manager() {};
 	~CKey_Manager() = default;

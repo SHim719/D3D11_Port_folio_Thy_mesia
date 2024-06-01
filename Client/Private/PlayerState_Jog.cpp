@@ -32,7 +32,8 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 		m_pPlayer->Change_State(PlayerState::State_SprintStart);
 	}
 
-	_vector vNewLook = Rotate_To_CameraLook(fTimeDelta);
+	_vector vNewLook = Calc_NewLook();
+	Rotate_To_Look(vNewLook, fTimeDelta);
 
 	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);
 }

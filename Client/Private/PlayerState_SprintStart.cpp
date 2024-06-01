@@ -29,7 +29,9 @@ void CPlayerState_SprintStart::OnGoing(_float fTimeDelta)
 		return;
 	}
 
-	_vector vNewLook = Rotate_To_CameraLook(fTimeDelta);
+	_vector vNewLook = Calc_NewLook();
+	Rotate_To_Look(vNewLook, fTimeDelta);
+
 	m_pOwnerTransform->Go_Root(m_pModel->Get_DeltaRootPos(), vNewLook);
 	
 }
