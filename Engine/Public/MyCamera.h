@@ -30,6 +30,9 @@ public:
 	HRESULT Render()					override;
 
 protected:
+	void Update_View() const;
+
+protected:
 	CAMERADESC					m_CameraDesc;
 
 public:

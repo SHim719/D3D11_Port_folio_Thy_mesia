@@ -34,7 +34,7 @@ HRESULT CLevel_Tool::Initialize()
 	camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	camDesc.fNear = 0.1f;
 	camDesc.fFar = 300.f;
-	camDesc.fFovy = 70.f;
+	camDesc.fFovy = 60.f;
 	camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
 	camDesc.vEye = { 0.f, 10.f, 0.f, 1.f };
 

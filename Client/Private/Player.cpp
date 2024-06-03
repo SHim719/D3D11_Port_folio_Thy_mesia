@@ -25,6 +25,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_States()))
 		return E_FAIL;
 
+	m_pTransform->Set_MoveLook(m_pTransform->Get_Look());
+
 	m_pModel->Set_AnimPlay();
 
 	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);

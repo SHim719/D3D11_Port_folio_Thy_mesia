@@ -21,7 +21,7 @@ void CPlayerState_Idle::OnState_Start()
 
 void CPlayerState_Idle::OnGoing(_float fTimeDelta)
 {
-	if (KEY_DOWN(eKeyCode::W) || KEY_DOWN(eKeyCode::A) || KEY_DOWN(eKeyCode::S) || KEY_DOWN(eKeyCode::D))
+	if (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
 	{
 		if (KEY_PUSHING(eKeyCode::LShift))
 			m_pPlayer->Change_State(PlayerState::State_SprintStart);

@@ -106,10 +106,13 @@ public:
 	void Add_RollInput(_float fRadian);
 	void Add_YAxisInput(_float fRadian);
 
+	void Set_MoveLook(_fvector vLook) { XMStoreFloat4(&m_vMoveLook, vLook); }
+	_vector Get_MoveLook() const { return XMLoadFloat4(&m_vMoveLook); }
 	
 private:
 	_float4x4				m_WorldMatrix;
-	TRANSFORMDESC			m_TransformDesc;
+	TRANSFORMDESC			m_TransformDesc; 
+	_float4					m_vMoveLook;
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

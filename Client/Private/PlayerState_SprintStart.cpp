@@ -30,6 +30,12 @@ void CPlayerState_SprintStart::OnGoing(_float fTimeDelta)
 	}
 
 	_vector vNewLook = Calc_NewLook();
+
+	if (0.f == vNewLook.m128_f32[0] && 0.f == vNewLook.m128_f32[1])
+		return;
+
+	m_pOwnerTransform->Set_MoveLook(vNewLook);
+
 	Rotate_To_Look(vNewLook, fTimeDelta);
 
 	m_pOwnerTransform->Go_Root(m_pModel->Get_DeltaRootPos(), vNewLook);

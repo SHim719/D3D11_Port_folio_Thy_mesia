@@ -72,7 +72,7 @@ void CFree_Camera::Tick(_float fTimeDelta)
 
 void CFree_Camera::LateTick(_float fTimeDelta)
 {
-	__super::LateTick(fTimeDelta);
+	__super::Update_View();
 }
 
 void CFree_Camera::Rotation_By_Mouse()
