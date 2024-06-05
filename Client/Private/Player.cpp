@@ -2,6 +2,8 @@
 
 #include "Player_States.h"
 
+#include "Weapon.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -23,6 +25,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	if (FAILED(Ready_States()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Weapons()))
 		return E_FAIL;
 
 	m_pTransform->Set_MoveLook(m_pTransform->Get_Look());
@@ -123,6 +128,27 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Jog] = CPlayerState_Jog::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_SprintStart] = CPlayerState_SprintStart::Create(m_pDevice, m_pContext, this);
 
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_Weapons()
+{
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
+	XMStoreFloat4x4(&WeaponDesc.PivotMatrix, m_pModel->Get_PivotMatrix());
+
+	CGameObject* pDagger = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	if (nullptr == pDagger)
+		return E_FAIL;
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
+	CGameObject* pSaber = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	if (nullptr == pDagger)
+		return E_FAIL;
 
 	return S_OK;
 }

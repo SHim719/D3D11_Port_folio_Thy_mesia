@@ -9,6 +9,5 @@
 #define GET_CURLEVEL m_pGameInstance->Get_CurrentLevelID()
 
 
-
 #define YAXIS XMVectorSet(0.f, 1.f, 0.f, 0.f)
  

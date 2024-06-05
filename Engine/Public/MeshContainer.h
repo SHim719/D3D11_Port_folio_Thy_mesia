@@ -16,12 +16,6 @@ private:
 	CMeshContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CMeshContainer(const CMeshContainer& rhs);
 	virtual ~CMeshContainer() = default;
-
-public:
-	_uint Get_MaterialIndex() const {
-		return m_iMaterialIndex;
-	}
-
 public:
 	HRESULT Initialize(ifstream& fin, CModel::TYPE eModelType);
 

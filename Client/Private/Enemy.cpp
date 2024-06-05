@@ -21,8 +21,6 @@ HRESULT CEnemy::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	//m_pModel->NoVTF = true;
-
 	return S_OK;
 }
 
@@ -58,7 +56,7 @@ HRESULT CEnemy::Render()
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, m_pModel->Get_MaterialIndex(i), TextureType_DIFFUSE, "g_DiffuseTexture")))
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/

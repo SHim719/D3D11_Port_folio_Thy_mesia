@@ -66,10 +66,6 @@ _uint CModel::Find_BoneIndex(const char* pBoneName)
 	return iBoneIdx;
 }
 
-_uint CModel::Get_MaterialIndex(_uint iMeshIndex)
-{
-	return m_Meshes[iMeshIndex]->Get_MaterialIndex();
-}
 
 HRESULT CModel::Initialize_Prototype(const string& strModelFilePath, const string& strModelFileName)
 {

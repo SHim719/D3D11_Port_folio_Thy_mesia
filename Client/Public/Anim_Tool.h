@@ -24,6 +24,10 @@ private:
 	void Anim_Buttons();
 
 private:
+	void Load_BinaryModel();
+	void Load_Weapon();
+
+private:
 	class CToolAnimObj* m_pAnimObj = nullptr;
 	class CModel*		m_pModel = nullptr;
 	string				m_strNowLoaded = "";

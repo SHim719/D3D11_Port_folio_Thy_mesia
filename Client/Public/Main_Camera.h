@@ -37,10 +37,11 @@ private:
 	class CGameObject*	m_pTarget = nullptr;
 	class CBone*		m_pCameraBone = nullptr;
 	
-	_float4				m_vOffset = { 0.f, 1.f, 2.5f, 0.f };
-	_float4				m_vPlayerNeckOffset = { 0.f, 2.f, 0.f, 0.f };
+	_float4				m_vOffset = { 0.f, 1.5f, 2.5f, 0.f };
+	_float4				m_vPlayerNeckOffset = { 0.1f, 2.f, 0.f, 0.f };
 	_float4				m_vPrevTargetPos = {};
 	_float4				m_vCameraArmDist = {};
+	_float				m_fOriginArmLength;
 
 	_int				m_iSensitivity = 2;
 	_float				m_fFollowingSpeed = 3.f;

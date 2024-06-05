@@ -34,6 +34,10 @@ public:
 		return m_WorldMatrix;
 	}
 
+	void Set_WorldMatrix(_fmatrix WorldMatrix) {
+		XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
+	}
+
 	_float4x4 Get_WorldFloat4x4_TP() const {
 		_float4x4	WorldMatrix;
 		XMStoreFloat4x4(&WorldMatrix, XMMatrixTranspose(Get_WorldMatrix()));

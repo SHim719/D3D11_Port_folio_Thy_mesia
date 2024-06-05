@@ -115,6 +115,9 @@
     <Filter Include="03. State\01. Player_State\03. PlayerState_SprintStart">
       <UniqueIdentifier>{58fb744d-0798-43c4-96a6-6c3c2dcefaf1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\04. Weapon">
+      <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -222,6 +225,9 @@
     <ClInclude Include="..\Public\PlayerState_SprintStart.h">
       <Filter>03. State\01. Player_State\03. PlayerState_SprintStart</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Weapon.h">
+      <Filter>02. GameObjects\04. Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -301,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_SprintStart.cpp">
       <Filter>03. State\01. Player_State\03. PlayerState_SprintStart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Weapon.cpp">
+      <Filter>02. GameObjects\04. Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

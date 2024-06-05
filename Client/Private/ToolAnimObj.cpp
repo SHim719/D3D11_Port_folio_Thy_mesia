@@ -1,4 +1,5 @@
 #include "ToolAnimObj.h"
+#include "Weapon.h"
 
 
 CToolAnimObj::CToolAnimObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -19,6 +20,16 @@ HRESULT CToolAnimObj::Initialize_Prototype()
 HRESULT CToolAnimObj::Initialize(void* pArg)
 {
 	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
+	XMStoreFloat4x4(&WeaponDesc.PivotMatrix, m_pModel->Get_PivotMatrix());
+
+	CGameObject* pDagger = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	if (nullptr == pDagger)
 		return E_FAIL;
 
 	return S_OK;
@@ -54,7 +65,7 @@ HRESULT CToolAnimObj::Render()
 
 	for (_uint j = 0; j < iNumMeshes; ++j)
 	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, m_pModel->Get_MaterialIndex(j), TextureType_DIFFUSE, "g_DiffuseTexture")))
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))

@@ -197,6 +197,7 @@
     <ClInclude Include="..\Public\ToolAnimObj.h" />
     <ClInclude Include="..\Public\ToolMapObj.h" />
     <ClInclude Include="..\Public\ToolState.h" />
+    <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\Private\ToolAnimObj.cpp" />
     <ClCompile Include="..\Private\ToolMapObj.cpp" />
     <ClCompile Include="..\Private\ToolState.cpp" />
+    <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

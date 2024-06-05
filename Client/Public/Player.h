@@ -45,13 +45,13 @@ private:
 	//vector<CGameObject*>				m_Parts;
 	//typedef vector<CGameObject*>		PARTS;
 
-	//vector<class CHierarchyNode*>		m_Sockets;
 public:
 	void Change_State(PlayerState eState);
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_States();
+	HRESULT Ready_Weapons();
 	//HRESULT Update_Weapon();
 
 public:

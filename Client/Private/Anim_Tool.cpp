@@ -51,6 +51,11 @@ void CAnim_Tool::Menu_Bar()
     {
         if (ImGui::BeginMenu("File"))
         {
+            if (ImGui::MenuItem("Load Model"))
+            {
+                Load_BinaryModel();
+            }
+
             if (ImGui::MenuItem("Load KeyFrame"))
             {
             
@@ -102,6 +107,57 @@ void CAnim_Tool::Anim_Buttons()
     ImGui::SetCursorPos(ImVec2(220.5, 131));
     ImGui::Button("Replay");
 }
+
+void CAnim_Tool::Load_BinaryModel()
+{
+    _tchar szFullPath[MAX_PATH] = {};
+    OPENFILENAME ofn = {};
+
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = g_hWnd;
+    ofn.lpstrFile = szFullPath;
+    ofn.nMaxFile = sizeof(szFullPath);
+    ofn.lpstrFilter = L"*.dat";
+    ofn.lpstrInitialDir = L"../../Resources/Model/";
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (GetOpenFileName(&ofn))
+    {
+        fs::path fullPath(szFullPath);
+
+        fs::path fileName = fullPath.filename();
+        fs::path fileTitle = fileName.stem();
+
+        string strModelFilePath = fullPath.parent_path().generic_string() + "/";
+        string strModelFileName = fileName.generic_string();
+
+        if (m_pAnimObj)
+            m_pAnimObj->Set_Destroy(true);
+
+        wstring wstrPrototypeTag = L"Prototype_Model_";
+        wstrPrototypeTag += fileTitle.generic_wstring();
+        if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel::Create(m_pDevice, m_pContext, strModelFilePath, strModelFileName))))
+            assert(false);
+
+        Safe_Release(m_pAnimObj);
+        Safe_Release(m_pModel);
+
+        m_pAnimObj = static_cast<CToolAnimObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Model", L"Prototype_ToolAnimObj", &wstrPrototypeTag));
+        m_pAnimObj->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 1.f, 1.f));
+        m_pModel = m_pAnimObj->Get_Model();
+        m_strNowLoaded = fileName.generic_string();
+
+        const auto& Anims = m_pModel->Get_Animations();
+        m_strAnimations.reserve(Anims.size());
+        for (CAnimation* pAnim : Anims)
+            m_strAnimations.emplace_back(pAnim->Get_AnimName());
+
+
+        Safe_AddRef(m_pAnimObj);
+        Safe_AddRef(m_pModel);
+    }
+}
+
 
 CAnim_Tool* CAnim_Tool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {

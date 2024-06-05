@@ -11,16 +11,6 @@ public:
 	typedef vector<class CBone*>	BONES;
 	typedef vector<class CMeshContainer*>	MESHES;
 
-public:
-	typedef struct tagLoadModelDesc
-	{
-		TYPE eType;
-		string strModelFilePath;
-		string strModelFileName;
-		_float4x4 PivotMatrix;
-	}LOADMODELDESC;
-
-
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CModel(const CModel& rhs);
@@ -80,7 +70,7 @@ public:
 	}
 
 	_vector Organize_RootPos(_vector OriginRootPos) {
-		return XMVectorSet(OriginRootPos.m128_f32[0], OriginRootPos.m128_f32[2], -OriginRootPos.m128_f32[1], 1.f);
+		return XMVectorSet(OriginRootPos.m128_f32[0] * 0.001f, OriginRootPos.m128_f32[1] * 0.001f, -OriginRootPos.m128_f32[2] * 0.001f, 1.f);
 	}
 
 	void Reset_RootPos() {

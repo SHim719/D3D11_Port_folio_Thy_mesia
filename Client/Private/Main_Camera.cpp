@@ -79,6 +79,8 @@ void CMain_Camera::Init_TargetPos()
 
 	m_pTransform->LookAt(vPlayerNeckPos);
 
+	m_fOriginArmLength = XMVector3Length(XMLoadFloat4(&m_vOffset)).m128_f32[0];
+
 	XMStoreFloat4(&m_vPrevTargetPos, pPlayerTransform->Get_Position());
 } 
 
@@ -98,7 +100,7 @@ void CMain_Camera::Rotate_CameraArm(_fvector vAxis, _float fDeltaTheta)
 	_vector vDist = m_pTransform->Get_Position() - vAt;
 	vDist = XMVector3TransformCoord(vDist, RotationMatrix);
 
-	vDist = XMVector3Normalize(vDist) * 2.5f;
+	vDist = XMVector3Normalize(vDist) * m_fOriginArmLength;
 
 	m_pTransform->Set_Position(XMVectorSetW(vAt + vDist, 1.f));
 

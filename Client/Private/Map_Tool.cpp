@@ -47,12 +47,12 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
        fs::path fileName = entry.path().filename();
        fs::path fileTitle = fileName.stem();
       
-       CModel::LOADMODELDESC desc;
-       ZeroMemory(&desc, sizeof(desc));
-       desc.eType = CModel::TYPE_NONANIM;
-       XMStoreFloat4x4(&desc.PivotMatrix, XMMatrixScaling(0.01f, 0.01f, 0.01f));
-       desc.strModelFilePath = folderPath.generic_string() + "/";
-       desc.strModelFileName = fileName.generic_string();
+      ////CModel::LOADMODELDESC desc;
+      //ZeroMemory(&desc, sizeof(desc));
+      //desc.eType = CModel::TYPE_NONANIM;
+      //XMStoreFloat4x4(&desc.PivotMatrix, XMMatrixScaling(0.01f, 0.01f, 0.01f));
+      //desc.strModelFilePath = folderPath.generic_string() + "/";
+      //desc.strModelFileName = fileName.generic_string();
 
        wstring wstrPrototypeTag = L"Prototype_Model_";
        wstrPrototypeTag += fileTitle.c_str();

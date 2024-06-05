@@ -9,14 +9,12 @@ CMeshContainer::CMeshContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 
 CMeshContainer::CMeshContainer(const CMeshContainer& rhs)
 	: CVIBuffer(rhs)
-	, m_iMaterialIndex(rhs.m_iMaterialIndex)
 {
 	strcpy_s(m_szName, rhs.m_szName);
 }
 
 HRESULT CMeshContainer::Initialize(ifstream& fin, CModel::TYPE eType)
 {
-	fin.read((char*)&m_iMaterialIndex, sizeof(_uint));
 	fin.read((char*)&m_iNumVertices, sizeof(_uint));
 
 	if (CModel::TYPE_NONANIM == eType)

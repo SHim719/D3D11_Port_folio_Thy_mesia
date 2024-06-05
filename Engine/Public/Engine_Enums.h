@@ -22,7 +22,7 @@ enum TextureType
     TextureType_AMBIENT_OCCLUSION = 17,
     TextureType_UNKNOWN = 18,
     TextureType_SHEEN = 19,
-    TextureType_CLEARCOAT = 20,
+    TextureType_ORM = 20,
     TextureType_TRANSMISSION = 21,
 };
 

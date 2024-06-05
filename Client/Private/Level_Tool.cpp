@@ -7,6 +7,7 @@
 #include "Free_Camera.h"
 #include "Main_Camera.h"
 #include "Player.h"
+#include "Weapon.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -29,6 +30,14 @@ HRESULT CLevel_Tool::Initialize()
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player", CModel::Create(m_pDevice, m_pContext, 
 		"../../Resources/Models/Corvus/", "Corvus_No1.dat"));
 	m_pGameInstance->Add_Prototype(L"Prototype_Player", CPlayer::Create(m_pDevice, m_pContext));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Weapon", CWeapon::Create(m_pDevice, m_pContext));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player_Dagger", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/", "Corvus_Dagger.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player_Saber", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/", "Corvus_Saber.dat"));
 
 	CCamera::CAMERADESC camDesc{};
 	camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
