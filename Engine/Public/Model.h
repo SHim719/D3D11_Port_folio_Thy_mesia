@@ -8,8 +8,10 @@ class ENGINE_DLL CModel final : public CComponent
 {
 public:
 	enum TYPE { TYPE_NONANIM, TYPE_SKELETALMESH, TYPE_ANIM, TYPE_END };
-	typedef vector<class CBone*>	BONES;
+	typedef vector<class CBone*>			BONES;
 	typedef vector<class CMeshContainer*>	MESHES;
+	typedef vector<class CAnimation*>		ANIMATIONS;
+	typedef unordered_map<string, class CKeyFrameEvent*> KEYFRAMEEVENTS;
 
 private:
 	CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -25,16 +27,14 @@ public:
 		return m_iNumMeshes;
 	}
 
-	_uint Get_MaterialIndex(_uint iMeshIndex);
-
 	_matrix Get_PivotMatrix() {
 		return XMLoadFloat4x4(&m_PivotMatrix);
 	}
 
 
 public:
-	HRESULT Initialize_Prototype(const string& strModelFilePath, const string& strModelFileName);
-	HRESULT Initialize(void* pArg, CModel* pModel);
+	HRESULT Initialize_Prototype(const string& strModelFilePath, const string& strModelFileName, const string& strKeyFrameFilePath);
+	HRESULT Initialize(const BONES& Bones, const ANIMATIONS& Anims, const KEYFRAMEEVENTS& Events);
 
 public:
 	HRESULT SetUp_BoneMatrices(class CShader* pShader);
@@ -58,8 +58,8 @@ private:
 private:
 	vector<class CBone*>					m_Bones;
 	vector<_uint>							m_BoneIndices;
-	_uint									m_iNumBones;
-	_uint									m_iRootBoneIdx;
+	_uint									m_iNumBones = 0;
+	_uint									m_iRootBoneIdx = 0;
 	_float4									m_vPrevRootPos = {};
 	_float4									m_vDeltaRootPos = {};
 public:
@@ -69,44 +69,53 @@ public:
 		return XMLoadFloat4(&m_vDeltaRootPos);
 	}
 
-	_vector Organize_RootPos(_vector OriginRootPos) {
-		return XMVectorSet(OriginRootPos.m128_f32[0] * 0.001f, OriginRootPos.m128_f32[1] * 0.001f, -OriginRootPos.m128_f32[2] * 0.001f, 1.f);
+	_vector Organize_RootPos(_fvector OriginRootPos) {
+		return XMVectorSet(OriginRootPos.m128_f32[0] * 0.01f, OriginRootPos.m128_f32[1] * 0.01f, -OriginRootPos.m128_f32[2] * 0.01f, 1.f);
 	}
 
 	void Reset_RootPos() {
 		XMStoreFloat4(&m_vPrevRootPos, XMVectorZero());
 	}
-
 private:
 	void Calc_DeltaRootPos();
 private:
-	_uint									m_iCurrentAnimIndex = 0;
-	_uint									m_iNumAnimations = 0;
-	vector<class CAnimation*>				m_Animations;
+	_uint											m_iCurrentAnimIndex = 0;
+	_uint											m_iNumAnimations = 0;
+	vector<class CAnimation*>						m_Animations;
 
-	_bool									m_bIsPlaying = false;
-	_bool									m_bBlending = false;
+	_bool											m_bPreview = false;
+	_bool											m_bIsPlaying = false;
+	_bool											m_bBlending = false;
+	_bool											m_bComplete = false;
+
+	unordered_map<string, class CKeyFrameEvent*>	m_AllKeyFrameEvents;
 public:
 	const vector<CAnimation*>& Get_Animations() const { return m_Animations; }
 
 	_uint	Get_NumAnimations() const { return m_iNumAnimations; }
 	_uint	Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
 
-	HRESULT		Play_Animation(_float fTimeDelta);
+	void		Play_Animation(_float fTimeDelta);
 	void		Change_Animation(_uint iAnimIdx, _float fBlendingTime = 0.1f);
 	_bool		Is_Playing() const { return m_bIsPlaying; }
 	void		Set_AnimPlay() { m_bIsPlaying = true; }
 	void		Set_AnimPause() { m_bIsPlaying = false; }
+	void		Set_Preview(_bool b) { m_bPreview = b; }
+	_bool		Is_AnimComplete() const { return m_bComplete; }
+
+	HRESULT		Bind_Func(const string& strEventName, function<void()> pFunc);
 
 private:
-	HRESULT Import_Model(const string& strFilePath, const string& strFileName);
+	HRESULT Import_Model(const string& strFilePath, const string& strFileName, const string& strKeyFramefolderPath);
 	HRESULT Import_Meshes(ifstream& fin);
 	HRESULT Import_MaterialInfo(ifstream& fin, const string& strFilePath);
-	HRESULT Import_Bones(ifstream& fin);
+	HRESULT Import_Bones(ifstream& fin);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 	HRESULT Import_Animations(ifstream& fin);
+	HRESULT Import_KeyFrameEvents(const string& strKeyFramefolderPath);
 
 public:
-	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& strModelFilePath, const string& strModelFileName);
+	static CModel* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& strModelFilePath, const string& strModelFileName,
+		const string& strKeyFrameFilePath = "");
 	static void Release_Textures();
 	virtual CComponent* Clone(void* pArg = nullptr);
 	virtual void Free() override;

@@ -103,6 +103,15 @@ void CTransform::Go_Root(_fvector vDeltaRoot, _fvector vLook)
 	Set_Position(vPos);
 }
 
+void CTransform::Move_Root(_fvector vDeltaRoot)
+{
+	_vector vPos = Get_Position();
+
+	vPos += XMVectorGetX(vDeltaRoot) * Get_Right() + XMVectorGetY(vDeltaRoot) * Get_Up() + XMVectorGetZ(vDeltaRoot) * Get_Look();
+
+	Set_Position(vPos);
+}
+
 void CTransform::Set_Scale(_float3 vScale)
 {
 	Set_State(CTransform::STATE_RIGHT,
@@ -183,6 +192,19 @@ void CTransform::LookAt(_fvector vAt)
 	Set_State(CTransform::STATE_RIGHT,	XMVectorSetW(XMVector3Normalize(vRight)	 * vScale.x, 0.f));
 	Set_State(CTransform::STATE_UP,		XMVectorSetW(XMVector3Normalize(vUp)	 * vScale.y, 0.f));
 	Set_State(CTransform::STATE_LOOK,	XMVectorSetW(XMVector3Normalize(vLook)	 * vScale.z, 0.f));
+}
+
+void CTransform::LookTo(_fvector vTo)
+{
+	_fvector		vLook = vTo;
+	_fvector		vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+	_fvector		vUp = XMVector3Cross(vLook, vRight);
+
+	_float3		vScale = Get_Scale();
+
+	Set_State(CTransform::STATE_RIGHT, XMVectorSetW(XMVector3Normalize(vRight) * vScale.x, 0.f));
+	Set_State(CTransform::STATE_UP, XMVectorSetW(XMVector3Normalize(vUp) * vScale.y, 0.f));
+	Set_State(CTransform::STATE_LOOK, XMVectorSetW(XMVector3Normalize(vLook) * vScale.z, 0.f));
 }
 
 

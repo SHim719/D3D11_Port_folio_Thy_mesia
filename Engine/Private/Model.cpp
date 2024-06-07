@@ -4,6 +4,7 @@
 #include "Bone.h"
 #include "Animation.h"
 #include "Shader.h"
+#include "KeyFrameEvent.h"
 
 
 map<const string, class CTexture*>	CModel::g_ModelTextures;
@@ -67,25 +68,16 @@ _uint CModel::Find_BoneIndex(const char* pBoneName)
 }
 
 
-HRESULT CModel::Initialize_Prototype(const string& strModelFilePath, const string& strModelFileName)
+HRESULT CModel::Initialize_Prototype(const string& strModelFilePath, const string& strModelFileName, const string& strKeyFrameFilePath)
 {
-	if (FAILED(Import_Model(strModelFilePath, strModelFileName)))
+	if (FAILED(Import_Model(strModelFilePath, strModelFileName, strKeyFrameFilePath)))
 		return E_FAIL;
 
 	return S_OK;
 }
 
-HRESULT CModel::Initialize(void* pArg, CModel* pModel)
+HRESULT CModel::Initialize(const BONES& Bones, const ANIMATIONS& Anims, const KEYFRAMEEVENTS& Events)
 {
-	const vector<CAnimation*>& Animations = pModel->Get_Animations();
-	m_Animations.reserve(Animations.size());
-	for (size_t i = 0; i < Animations.size(); ++i)
-	{
-		CAnimation* pAnimation = Animations[i]->Clone();
-		m_Animations.emplace_back(pAnimation);
-	}
-
-	const BONES& Bones = pModel->Get_Bones();
 	m_Bones.reserve(Bones.size());
 	for (size_t i = 0; i < Bones.size(); ++i)
 	{
@@ -93,12 +85,27 @@ HRESULT CModel::Initialize(void* pArg, CModel* pModel)
 		m_Bones.emplace_back(pBone);
 	}
 
+	for (auto& Pair : Events)
+	{
+		CKeyFrameEvent* pEvent = Pair.second->Clone();
+		m_AllKeyFrameEvents.emplace(Pair.first, pEvent);
+	}
+
+
+	m_Animations.reserve(Anims.size());
+	for (size_t i = 0; i < Anims.size(); ++i)
+	{
+		CAnimation* pAnimation = Anims[i]->Clone(m_AllKeyFrameEvents);
+		m_Animations.emplace_back(pAnimation);
+	}
+
+
 	return S_OK;
 }
 
 HRESULT CModel::SetUp_BoneMatrices(CShader* pShader)
 {
-	if (0 == m_iNumAnimations || !m_bIsPlaying)
+	if (0 == m_iNumAnimations)
 		return S_OK;
 
 	_float4x4 BoneMatrices[256];
@@ -125,6 +132,8 @@ HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, TextureTy
 
 void CModel::Calc_DeltaRootPos()
 {
+	if (m_bPreview)
+		return;
 	_vector vNowRootPos = Organize_RootPos(m_Bones[m_iRootBoneIdx]->Get_Tranformation().r[3]);
 
 	XMStoreFloat4(&m_vDeltaRootPos, (vNowRootPos - XMLoadFloat4(&m_vPrevRootPos)));
@@ -134,20 +143,19 @@ void CModel::Calc_DeltaRootPos()
 	m_Bones[m_iRootBoneIdx]->Reset_Position();
 }
 
-HRESULT CModel::Play_Animation(_float fTimeDelta)
+void CModel::Play_Animation(_float fTimeDelta)
 {
-	if (!m_bIsPlaying || m_iCurrentAnimIndex >= m_iNumAnimations)
-		return E_FAIL;
-
+	if (m_iCurrentAnimIndex >= m_iNumAnimations)
+		return;
 
 	if (m_bBlending)
 	{
-		if (FAILED(m_Animations[m_iCurrentAnimIndex]->Play_Animation_Blend(fTimeDelta, m_Bones)))
-			m_bBlending = false;
+		m_bBlending = m_Animations[m_iCurrentAnimIndex]->Play_Animation_Blend(fTimeDelta, m_Bones, m_bIsPlaying);
 	}
 	else
 	{
-		if (FAILED(m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones)))
+		m_bComplete = m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones, m_bIsPlaying);
+		if (m_bComplete)
 			XMStoreFloat4(&m_vPrevRootPos, XMVectorZero());
 	}
 	
@@ -157,8 +165,6 @@ HRESULT CModel::Play_Animation(_float fTimeDelta)
 	{
 		pBone->Set_CombinedTransformation(m_Bones);
 	}
-
-	return S_OK;
 }
 
 
@@ -183,6 +189,8 @@ void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 
 	m_iCurrentAnimIndex = iAnimIdx;
 
+	Reset_RootPos();
+
 	if (fBlendingTime > 0.f)
 	{
 		m_bBlending = true;
@@ -191,7 +199,19 @@ void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 	
 }
 
-HRESULT CModel::Import_Model(const string& strFilePath, const string& strFileName)
+HRESULT CModel::Bind_Func(const string& strEventName, function<void()> pFunc)
+{
+	auto it = m_AllKeyFrameEvents.find(strEventName);
+
+	if (m_AllKeyFrameEvents.end() == it)
+		return E_FAIL;
+
+	it->second->Bind_Func(pFunc);
+
+	return S_OK;
+}
+
+HRESULT CModel::Import_Model(const string& strFilePath, const string& strFileName, const string& strKeyFramefolderPath)
 {
 	string strFullPath = strFilePath + strFileName;
 
@@ -216,9 +236,10 @@ HRESULT CModel::Import_Model(const string& strFilePath, const string& strFileNam
 
 		if (FAILED(Import_Animations(fin)))
 			return E_FAIL;
-	}
 
-	fin.close();
+		if (FAILED(Import_KeyFrameEvents(strKeyFramefolderPath)))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -305,7 +326,7 @@ HRESULT CModel::Import_Bones(ifstream& fin)
 		m_BoneIndices.push_back(iBoneIdx);
 	}
 
-	m_iRootBoneIdx = m_BoneIndices[0];
+	m_iRootBoneIdx = Find_BoneIndex("root");
 	m_Bones[m_iRootBoneIdx]->Set_RootBone();
 
 	return S_OK;
@@ -327,12 +348,80 @@ HRESULT CModel::Import_Animations(ifstream& fin)
 	return S_OK;
 }
 
+HRESULT CModel::Import_KeyFrameEvents(const string& strKeyFramefolderPath)
+{
+	if (strKeyFramefolderPath.empty())
+		return S_OK;
+	fs::path keyFramefolderPath(strKeyFramefolderPath);
 
-CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& strModelFilePath, const string& strModelFileName)
+	for (const fs::directory_entry& entry : fs::directory_iterator(keyFramefolderPath))
+	{
+		if (entry.is_directory())
+			continue;
+		if (".dat" != entry.path().extension().generic_string())
+			continue;
+
+		ifstream fin(entry.path(), ios::binary);
+
+		if (!fin.is_open())
+			return E_FAIL;
+
+		_int iAnimNameLength = 0;
+		_char szAnimName[MAX_PATH] = "";
+		_int iKeyFrame = 0;
+		_int iEventLength = 0;
+		_char szEvent[MAX_PATH] = "";
+
+		fin.read((_char*)&iAnimNameLength, sizeof(_int));
+		fin.read(szAnimName, iAnimNameLength);
+
+		while (true)
+		{
+			fin.read((_char*)&iKeyFrame, sizeof(_int));
+			fin.read((_char*)&iEventLength, sizeof(_int));
+			fin.read(szEvent, iEventLength);
+
+			if (fin.eof())
+				break;
+
+			size_t iAnimIndex = 0;
+			for (; iAnimIndex < m_Animations.size(); ++iAnimIndex) 
+			{
+				if (szAnimName == m_Animations[iAnimIndex]->Get_AnimName())
+					break;
+			}
+
+			if (m_Animations.size() == iAnimIndex) // 일치하는 애니메이션이 없다.
+				return E_FAIL;
+
+			string strEventName = szEvent;
+			CKeyFrameEvent* pEvent = nullptr;
+
+			auto it = m_AllKeyFrameEvents.find(strEventName);
+			if (m_AllKeyFrameEvents.end() == it)
+			{
+				pEvent = CKeyFrameEvent::Create(&strEventName);
+				m_AllKeyFrameEvents.emplace(strEventName, pEvent);
+			}
+			else
+				pEvent = it->second;
+			
+			if (nullptr == pEvent)
+				return E_FAIL;
+
+			m_Animations[iAnimIndex]->Add_KeyFrameEvent(iKeyFrame, pEvent);
+		}
+	}
+	return S_OK;
+}
+
+
+CModel* CModel::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const string& strModelFilePath, const string& strModelFileName,
+	const string& strKeyFrameFilePath)
 {
 	CModel* pInstance = new CModel(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(strModelFilePath, strModelFileName)))
+	if (FAILED(pInstance->Initialize_Prototype(strModelFilePath, strModelFileName, strKeyFrameFilePath)))
 	{
 		MSG_BOX(TEXT("Failed To Created : CModel"));
 		assert(false);
@@ -356,7 +445,7 @@ CComponent* CModel::Clone(void* pArg)
 {
 	CModel* pInstance = new CModel(*this);
 
-	if (FAILED(pInstance->Initialize(pArg, this)))
+	if (FAILED(pInstance->Initialize(m_Bones, m_Animations, m_AllKeyFrameEvents)))
 	{
 		MSG_BOX(TEXT("Failed To Cloned : CModel"));
 		assert(false);
@@ -391,6 +480,11 @@ void CModel::Free()
 		Safe_Release(pMeshContainer);
 
 	m_Meshes.clear();
+
+	for (auto& Pair : m_AllKeyFrameEvents)
+		Safe_Release(Pair.second);
+	
+	m_AllKeyFrameEvents.clear();
 }
 
 

@@ -14,6 +14,13 @@ public:
 	const char* Get_Name() const {
 		return m_szName;
 	}
+	_uint Get_NumKeyFrames() const {
+		return m_iNumKeyFrames;
+	}
+
+	_float Get_FrameGap() const {
+		return m_KeyFrames[1].fTime - m_KeyFrames[0].fTime;
+	}
 
 public:
 	HRESULT Initialize(ifstream& fin);

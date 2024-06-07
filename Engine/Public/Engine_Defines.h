@@ -28,6 +28,8 @@ using namespace DirectX;
 #include <unordered_map>
 #include <functional>
 #include <fstream>
+#include <filesystem>
+
 
 #include "Engine_Enums.h"
 #define TEXTURE_TYPE_MAX TextureType_TRANSMISSION
@@ -57,3 +59,4 @@ using namespace DirectX;
 
 using namespace Engine;
 using namespace std;
+namespace fs = std::filesystem;

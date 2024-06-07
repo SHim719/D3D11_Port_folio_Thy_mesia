@@ -1,36 +1,32 @@
-#include "PlayerState_Jog.h"
+#include "PlayerState_Sprint.h"
 
 
-CPlayerState_Jog::CPlayerState_Jog(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPlayerState_Sprint::CPlayerState_Sprint(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayerState_Base(pDevice, pContext)
 {
 }
 
-HRESULT CPlayerState_Jog::Initialize(void* pArg)
+HRESULT CPlayerState_Sprint::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+
 	return S_OK;
 }
 
-void CPlayerState_Jog::OnState_Start()
+void CPlayerState_Sprint::OnState_Start()
 {
-	m_pModel->Change_Animation(Corvus_SD_RunF_24);
-	m_pOwnerTransform->Set_Speed(m_fJogSpeed);
+	m_pOwnerTransform->Set_Speed(m_fSprintSpeed);
+	m_pModel->Change_Animation(Corvus_SD1_Sprint);
 }
 
-void CPlayerState_Jog::OnGoing(_float fTimeDelta)
+void CPlayerState_Sprint::OnGoing(_float fTimeDelta)
 {
 	if (KEY_NONE(eKeyCode::W) && KEY_NONE(eKeyCode::A) && KEY_NONE(eKeyCode::S) && KEY_NONE(eKeyCode::D))
 	{
 		m_pPlayer->Change_State(PlayerState::State_Idle);
 		return;
-	}
-
-	if (KEY_PUSHING(eKeyCode::LShift))
-	{
-		m_pPlayer->Change_State(PlayerState::State_Sprint);
 	}
 
 	_vector vNewLook = Calc_NewLook();
@@ -44,7 +40,6 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 		m_pPlayer->Change_State(PlayerState::State_Attack);
 		return;
 	}
-		
 
 	m_pOwnerTransform->Set_MoveLook(vNewLook);
 
@@ -53,24 +48,25 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);
 }
 
-void CPlayerState_Jog::OnState_End()
+void CPlayerState_Sprint::OnState_End()
 {
+	m_pOwnerTransform->Set_Speed(m_fJogSpeed);
 }
 
-CPlayerState_Jog* CPlayerState_Jog::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
+CPlayerState_Sprint* CPlayerState_Sprint::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {
-	CPlayerState_Jog* pInstance = new CPlayerState_Jog(pDevice, pContext);
+	CPlayerState_Sprint* pInstance = new CPlayerState_Sprint(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Created : CPlayerState_Jog"));
+		MSG_BOX(TEXT("Failed To Created : CPlayerState_Sprint"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPlayerState_Jog::Free()
+void CPlayerState_Sprint::Free()
 {
 	__super::Free();
 }

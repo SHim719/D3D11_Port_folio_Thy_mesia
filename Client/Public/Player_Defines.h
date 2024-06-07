@@ -2,7 +2,7 @@
 
 enum PlayerAnimName
 {
-	Corvus_ArchiveGetup = 0,
+	Corvus_ArchiveGetup,
 	Corvus_ArchiveLight_up,
 	Corvus_ArchiveSitLoop,
 	Corvus_ArchiveSitStart,
@@ -173,10 +173,8 @@ enum PlayerAnimName
 	Corvus_SD_Ladder_L_Idle,
 	Corvus_SD_Ladder_R_Idle,
 	Corvus_SD_LAttack1,
-	Corvus_SD_LAttack1_Slow,
 	Corvus_SD_LAttack2,
 	Corvus_SD_LAttack3_New,
-	Corvus_SD_LAttack3_New_Slow,
 	Corvus_SD_LAttack4,
 	Corvus_SD_LAttack5,
 	Corvus_SD_M01_SneakAttack_End,
@@ -294,7 +292,7 @@ enum class PlayerState
 {
 	State_Idle,
 	State_Jog,
-	State_SprintStart,
 	State_Sprint,
+	State_Attack,
 	State_End,
 };

@@ -42,8 +42,6 @@ private:
 private:
 	PlayerState			m_eState = PlayerState::State_End;
 	class CState_Base*	m_States[(_uint)PlayerState::State_End] = {};
-	//vector<CGameObject*>				m_Parts;
-	//typedef vector<CGameObject*>		PARTS;
 
 public:
 	void Change_State(PlayerState eState);
@@ -52,7 +50,6 @@ private:
 	HRESULT Ready_Components();
 	HRESULT Ready_States();
 	HRESULT Ready_Weapons();
-	//HRESULT Update_Weapon();
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

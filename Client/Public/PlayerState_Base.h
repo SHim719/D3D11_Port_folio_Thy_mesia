@@ -21,11 +21,16 @@ protected:
 	_vector Calc_NewLook();
 	void Rotate_To_Look(_vector vNewLook, _float fTimeDelta);
 
+	_bool Check_StateChange(PlayerState eState);
+	
 protected:
 	CPlayer*		m_pPlayer = nullptr;
 	CMain_Camera*	m_pMain_Camera = nullptr;
 
 	_float			m_fRotRate = 15.f;
+	_float			m_fJogSpeed = 5.f;
+	_float			m_fSprintSpeed = 8.f;
+
 public:
 	void Free() override;
 };

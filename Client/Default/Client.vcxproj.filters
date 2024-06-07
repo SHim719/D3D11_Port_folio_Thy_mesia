@@ -55,9 +55,6 @@
     <Filter Include="99. Defines\Headers">
       <UniqueIdentifier>{13a9a52c-33da-481b-94ef-daa2dacd02df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="100. IMGUI\99. TestPlay_Tool">
-      <UniqueIdentifier>{fc8339cb-083f-414a-82c5-c75b332e09c0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="03. State">
       <UniqueIdentifier>{f7573f10-348a-408e-b9ba-957bc721571d}</UniqueIdentifier>
     </Filter>
@@ -112,11 +109,20 @@
     <Filter Include="03. State\01. Player_State\02. PlayerState_Jog">
       <UniqueIdentifier>{746d33b3-1235-4b28-b441-d7cd8e614b2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. State\01. Player_State\03. PlayerState_SprintStart">
-      <UniqueIdentifier>{58fb744d-0798-43c4-96a6-6c3c2dcefaf1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\04. Weapon">
       <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\01. Player_State\03. PlayerState_Sprint">
+      <UniqueIdentifier>{58fb744d-0798-43c4-96a6-6c3c2dcefaf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\01. Player_State\05. PlayerState_Attack">
+      <UniqueIdentifier>{4947652d-dcd0-4fda-b241-22cc93c50f32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. State\01. Player_State\04. PlayerState_Avoid">
+      <UniqueIdentifier>{3ef2ea5d-24fb-4784-a39c-b2f0551af820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="100. IMGUI\99. TestPlay_Tool">
+      <UniqueIdentifier>{1a9a7660-075b-4d31-91da-c017877d3d77}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -186,17 +192,11 @@
     <ClInclude Include="..\Public\ToolMapObj.h">
       <Filter>02. GameObjects\99. ToolObject\0. ToolMapObj</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Functions.h">
-      <Filter>99. Defines</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\ToolAnimObj.h">
       <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestGround.h">
       <Filter>02. GameObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\TestPlay_Tool.h">
-      <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Main_Camera.h">
       <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
@@ -222,11 +222,20 @@
     <ClInclude Include="..\Public\PlayerState_Jog.h">
       <Filter>03. State\01. Player_State\02. PlayerState_Jog</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_SprintStart.h">
-      <Filter>03. State\01. Player_State\03. PlayerState_SprintStart</Filter>
+    <ClInclude Include="..\Public\PlayerState_Sprint.h">
+      <Filter>03. State\01. Player_State\03. PlayerState_Sprint</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
       <Filter>02. GameObjects\04. Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TestPlay_Tool.h">
+      <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Attack.h">
+      <Filter>03. State\01. Player_State\05. PlayerState_Attack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Function.h">
+      <Filter>99. Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,9 +293,6 @@
     <ClCompile Include="..\Private\TestGround.cpp">
       <Filter>02. GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\TestPlay_Tool.cpp">
-      <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Main_Camera.cpp">
       <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
     </ClCompile>
@@ -305,11 +311,17 @@
     <ClCompile Include="..\Private\ToolAnimObj.cpp">
       <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_SprintStart.cpp">
-      <Filter>03. State\01. Player_State\03. PlayerState_SprintStart</Filter>
+    <ClCompile Include="..\Private\PlayerState_Sprint.cpp">
+      <Filter>03. State\01. Player_State\03. PlayerState_Sprint</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
       <Filter>02. GameObjects\04. Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TestPlay_Tool.cpp">
+      <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Attack.cpp">
+      <Filter>03. State\01. Player_State\05. PlayerState_Attack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

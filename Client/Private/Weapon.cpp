@@ -37,14 +37,11 @@ void CWeapon::Tick(_float fTimeDelta)
 
 void CWeapon::LateTick(_float fTimeDelta)
 {
-	_matrix SocketMatrix = m_WeaponDesc.pSocketBone->Get_OffSetMatrix() * m_WeaponDesc.pSocketBone->Get_CombinedTransformation()
-		* XMLoadFloat4x4(&m_WeaponDesc.PivotMatrix);
+	_matrix SocketMatrix = m_WeaponDesc.pSocketBone->Get_CombinedTransformation() * XMLoadFloat4x4(&m_WeaponDesc.PivotMatrix);
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
-	//_matrix WorldMatrix = XMMatrixRotationY(To_Radian(90.f)) * XMMatrixScaling(0.01f, 0.01f, 0.01f);
-	//auto x = WorldMatrix * 
 	m_pTransform->Set_WorldMatrix(SocketMatrix * m_WeaponDesc.pParentTransform->Get_WorldMatrix());
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);

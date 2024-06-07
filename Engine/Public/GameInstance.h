@@ -15,7 +15,7 @@ private:
 	virtual ~CGameInstance() = default;
 
 public:
-	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, OUT ID3D11Device** ppDevice, OUT ID3D11DeviceContext** ppContext);
+	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, const string& strKeyFrameDataPath, OUT ID3D11Device** ppDevice, OUT ID3D11DeviceContext** ppContext);
 	void Tick_Engine(_float fTimeDelta);
 	HRESULT	Draw();
 	void Clear(_uint iLevelIndex);
@@ -100,20 +100,21 @@ public:
 
 
 
+
 private:
-	class CGraphic_Device*			m_pGraphic_Device = { nullptr };
-	class CLevel_Manager*			m_pLevel_Manager = { nullptr };
-	class CTimer_Manager*			m_pTimer_Manager = { nullptr };
-	class CObject_Manager*			m_pObject_Manager = { nullptr };
-	class CComponent_Manager*		m_pComponent_Manager = { nullptr };
-	class CKey_Manager*				m_pKey_Manager = { nullptr };
-	class CCollision_Manager*		m_pCollision_Manager = { nullptr };
-	class CSound_Manager*			m_pSound_Manager = { nullptr };
-	class CFrustum*					m_pFrustum = { nullptr };
-	class CRenderer*				m_pRenderer = { nullptr };
-	class CPipeLine*				m_pPipeLine = { nullptr };
+	CGraphic_Device*		m_pGraphic_Device = { nullptr };
+	CLevel_Manager*			m_pLevel_Manager = { nullptr };
+	CTimer_Manager*			m_pTimer_Manager = { nullptr };
+	CObject_Manager*		m_pObject_Manager = { nullptr };
+	CComponent_Manager*		m_pComponent_Manager = { nullptr };
+	CKey_Manager*			m_pKey_Manager = { nullptr };
+	//CCollision_Manager*	m_pCollision_Manager = { nullptr };
+	CSound_Manager*			m_pSound_Manager = { nullptr };
+	//CFrustum*				m_pFrustum = { nullptr };
+	CRenderer*				m_pRenderer = { nullptr };
+	CPipeLine*				m_pPipeLine = { nullptr };
 
-
+	
 public:
 	static void Release_Engine();
 	virtual void Free() override;

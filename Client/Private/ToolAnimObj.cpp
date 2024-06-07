@@ -22,16 +22,7 @@ HRESULT CToolAnimObj::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
-	CWeapon::WEAPONDESC WeaponDesc;
-	WeaponDesc.pParentTransform = m_pTransform;
-	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
-	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
-	XMStoreFloat4x4(&WeaponDesc.PivotMatrix, m_pModel->Get_PivotMatrix());
-
-	CGameObject* pDagger = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
-	if (nullptr == pDagger)
-		return E_FAIL;
-
+	m_pModel->Set_Preview(true);
 	return S_OK;
 }
 

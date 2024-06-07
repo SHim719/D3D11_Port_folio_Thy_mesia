@@ -1,23 +1,29 @@
 #pragma once
 
 #include "Base.h"
+#include "Model.h"
 
 BEGIN(Engine)
 
-class CAnimation final : public CBase
+class ENGINE_DLL CAnimation final : public CBase
 {
+private:
+	typedef unordered_multimap<_int, class CKeyFrameEvent*>	ANIMEVENTS;
+
 private:
 	CAnimation();
 	CAnimation(const CAnimation& rhs);
 	virtual ~CAnimation() = default;
 
 public:
-	HRESULT Initialize(ifstream& fin);
-	HRESULT Play_Animation(_float fTimeDelta, vector<class CBone*>& Bones);
-	HRESULT Play_Animation_Blend(_float fTimeDelta, vector<class CBone*>& Bones);
+	HRESULT Initialize_Prototype(ifstream& fin);
+	HRESULT Initialize(const CModel::KEYFRAMEEVENTS& Events, const ANIMEVENTS& AnimEvents);
+	_bool Play_Animation(_float fTimeDelta, vector<class CBone*>& Bones, _bool bPlay);
+	_bool Play_Animation_Blend(_float fTimeDelta, vector<class CBone*>& Bones, _bool bPlay);
 
 	void Reset();
 
+	
 private:
 	string						m_strAnimName = "";
 	_uint						m_iNumChannels = 0;
@@ -29,17 +35,24 @@ private:
 	_float						m_fPlayRate = 1.f;
 
 private:
-	vector<_uint>				m_ChannelKeyFrames;
-	vector<_uint>				m_BoneIndices;
+	vector<_uint>									m_ChannelKeyFrames;
+	vector<_uint>									m_BoneIndices;
+	unordered_multimap<_int, class CKeyFrameEvent*>	m_KeyFrameEvents;
 
 public:
 	const string& Get_AnimName() { return m_strAnimName; }
 	void Set_BlendingTime(_float fTime) { 
 		m_fBlendingTime = fTime * m_fTickPerSecond; }
 
+	_uint Get_NowKeyFrame() const { return m_ChannelKeyFrames[0]; }
+	_uint Get_NumKeyFrames() const;
+	void Set_CurrentKeyFrames(_uint iKeyFrame);
+
+	void Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent);
+
 public:
 	static CAnimation* Create(ifstream& fin);
-	CAnimation* Clone();
+	CAnimation* Clone(const CModel::KEYFRAMEEVENTS& Events);
 	virtual void Free() override;
 };
 

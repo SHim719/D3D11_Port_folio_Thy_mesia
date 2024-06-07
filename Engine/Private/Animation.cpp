@@ -1,7 +1,9 @@
 #include "..\Public\Animation.h"
 #include "Channel.h"
-#include "Model.h"
+
 #include "Bone.h"
+
+#include "KeyFrameEvent.h"
 
 CAnimation::CAnimation()
 {
@@ -20,9 +22,12 @@ CAnimation::CAnimation(const CAnimation& rhs)
 		Safe_AddRef(pChannel);
 
 	m_ChannelKeyFrames.resize(rhs.m_ChannelKeyFrames.size(), 0);
+
+
 }
 
-HRESULT CAnimation::Initialize(ifstream& fin)
+
+HRESULT CAnimation::Initialize_Prototype(ifstream& fin)
 {
 	_uint iNameLen = 0;
 	char szAnimName[MAX_PATH] = "";
@@ -59,21 +64,38 @@ HRESULT CAnimation::Initialize(ifstream& fin)
 	return S_OK;
 }
 
-
-
-HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones)
+HRESULT CAnimation::Initialize(const CModel::KEYFRAMEEVENTS& Events, const ANIMEVENTS& AnimEvents)
 {
-	HRESULT hr = S_OK;
+	for (auto& Pair : AnimEvents)
+		m_KeyFrameEvents.emplace(Pair);
+	
 
-	m_fPlayTime += m_fTickPerSecond * fTimeDelta;
+	for (auto& Pair : m_KeyFrameEvents)
+	{
+		auto it = Events.find(Pair.second->Get_EventName());
+		if (Events.end() == it)
+			return E_FAIL;
+		
+		Pair.second = it->second;
+		Safe_AddRef(Pair.second);
+	}
+
+
+	return S_OK;
+}
+
+
+
+_bool CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool bPlay)
+{
+	m_fPlayTime += m_fTickPerSecond * fTimeDelta * (_float)bPlay;
 
 	if (m_fPlayTime >= m_fDuration)
 	{
 		Reset();
-		hr = E_FAIL;
+		return true;
 	}
-		
-
+	
 	_uint		iChannelIndex = 0;
 
 	for (auto& pChannel : m_Channels)
@@ -82,22 +104,24 @@ HRESULT CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones)
 			Bones[m_BoneIndices[iChannelIndex]]);
 	}
 	
+	_int iNowKeyFrame = (_int)Get_NowKeyFrame();
+	auto Pair = m_KeyFrameEvents.equal_range(iNowKeyFrame);
+	if (m_KeyFrameEvents.end() != Pair.first)
+	{
+		for (auto it = Pair.first; it != Pair.second; ++it)
+			it->second->Execute();
+	}
 
-	return hr;
+	return false;
 }
 
-HRESULT CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones)
+_bool CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones, _bool bPlay)
 {
-	HRESULT hr = S_OK;
-	m_fPlayTime += m_fTickPerSecond * fTimeDelta;
+	m_fPlayTime += m_fTickPerSecond * fTimeDelta * (_float)bPlay;
 
 	_float fRatio = m_fPlayTime / m_fBlendingTime;
 	if (fRatio > 1.f)
-	{
-		fRatio = 1.f;
-		hr = E_FAIL;
-	}
-		
+		return false;
 
 	_uint		iChannelIndex = 0;
 	for (auto& pChannel : m_Channels)
@@ -106,7 +130,7 @@ HRESULT CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bone
 			Bones[m_BoneIndices[iChannelIndex]]);
 	}
 
-	return hr;
+	return true;
 }
 
 
@@ -122,12 +146,33 @@ void CAnimation::Reset()
 	}
 }
 
+_uint CAnimation::Get_NumKeyFrames() const
+{
+	return m_Channels[0]->Get_NumKeyFrames();
+}
+
+void CAnimation::Set_CurrentKeyFrames(_uint iKeyFrame)
+{
+	m_fPlayTime = m_Channels[0]->Get_FrameGap() * (_float)iKeyFrame;
+
+	for (auto& pChannel : m_Channels)
+	{
+		for (auto& iCurrentKeyFrame : m_ChannelKeyFrames)
+			iCurrentKeyFrame = iKeyFrame;
+	}
+}
+
+void CAnimation::Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent)
+{
+	m_KeyFrameEvents.insert({ iKeyFrame, pEvent }); 
+	Safe_AddRef(pEvent);
+}
 
 CAnimation* CAnimation::Create(ifstream& fin)
 {
 	CAnimation* pInstance = new CAnimation();
 
-	if (FAILED(pInstance->Initialize(fin)))
+	if (FAILED(pInstance->Initialize_Prototype(fin)))
 	{
 		MSG_BOX(TEXT("Failed To Created : CAnimation"));
 		Safe_Release(pInstance);
@@ -136,9 +181,15 @@ CAnimation* CAnimation::Create(ifstream& fin)
 	return pInstance;
 }
 
-CAnimation* CAnimation::Clone()
+CAnimation* CAnimation::Clone(const CModel::KEYFRAMEEVENTS& Events)
 {
 	CAnimation* pInstance = new CAnimation(*this);
+
+	if (FAILED(pInstance->Initialize(Events, m_KeyFrameEvents)))
+	{
+		MSG_BOX(TEXT("Failed To Cloned : CAnimation"));
+		Safe_Release(pInstance);
+	}
 
 	return pInstance;
 }
@@ -150,4 +201,8 @@ void CAnimation::Free()
 
 	m_Channels.clear();
 
+	for (auto& Pair : m_KeyFrameEvents)
+		Safe_Release(Pair.second);
+
+	m_KeyFrameEvents.clear();
 }

@@ -25,13 +25,11 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 
 void CMain_Camera::OnActive()
 {
-	ShowCursor(FALSE);
 	
 }
 
 void CMain_Camera::OnInActive()
 {
-	//ShowCursor(TRUE);
 }
 
 void CMain_Camera::PriorityTick(_float fTimeDelta)

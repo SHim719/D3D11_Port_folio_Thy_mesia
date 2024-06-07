@@ -47,11 +47,6 @@ private:
 private:
 	HRESULT Ready_Components(const wstring& wstrModelTag);
 
-	//HRESULT Ready_Sockets();
-	//HRESULT Ready_WeaponParts();
-
-	//HRESULT Update_Weapon();
-
 public:
 	static CWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual CGameObject* Clone(void* pArg);

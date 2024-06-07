@@ -189,6 +189,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\Public\Base.h" />
     <ClInclude Include="..\Public\Engine_Enums.h" />
+    <ClInclude Include="..\Public\KeyFrameEvent.h" />
     <ClInclude Include="..\Public\MyCamera.h" />
     <ClInclude Include="..\Public\Channel.h" />
     <ClInclude Include="..\public\Component.h" />
@@ -228,6 +229,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
   <ItemGroup>
     <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
+    <ClCompile Include="..\Private\KeyFrameEvent.cpp" />
     <ClCompile Include="..\Private\MyCamera.cpp" />
     <ClCompile Include="..\Private\Channel.cpp" />
     <ClCompile Include="..\private\Component.cpp" />

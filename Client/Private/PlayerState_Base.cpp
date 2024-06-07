@@ -65,6 +65,32 @@ void CPlayerState_Base::Rotate_To_Look(_vector vNewLook, _float fTimeDelta)
 	m_pOwnerTransform->Rotation_Quaternion(XMQuaternionSlerp(StartQuat, EndQuat, m_fRotRate * fTimeDelta));
 }
 
+_bool CPlayerState_Base::Check_StateChange(PlayerState eState)
+{
+	_bool bStateChange = false;
+
+	switch (eState)
+	{
+	case PlayerState::State_Idle:
+		bStateChange = KEY_NONE(eKeyCode::W) && KEY_NONE(eKeyCode::A) && KEY_NONE(eKeyCode::S) && KEY_NONE(eKeyCode::D);
+		break;
+	case PlayerState::State_Jog:
+		bStateChange = KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D);
+		break;
+	case PlayerState::State_Sprint:
+		bStateChange = (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D)) 
+			&& KEY_PUSHING(eKeyCode::LShift);
+		break;
+	case PlayerState::State_Attack:
+		bStateChange = KEY_PUSHING(eKeyCode::LButton);
+		break;
+	case PlayerState::State_End:
+		break;
+	}
+
+	return bStateChange;
+}
+
 void CPlayerState_Base::Free()
 {
 	__super::Free();

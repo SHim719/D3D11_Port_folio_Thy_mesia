@@ -52,18 +52,6 @@
     <Filter Include="01.Utility\03. Components\Manager">
       <UniqueIdentifier>{35bfdb27-6307-4d7b-be3d-c3a304089719}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03. Components\Collider">
-      <UniqueIdentifier>{c9d764b6-af68-4c8e-bd26-0f5f8d181b7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03. Components\Collider\Manager">
-      <UniqueIdentifier>{1246e18d-f35b-4d18-a965-de0080691e17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03. Components\Collider\BoxCollider">
-      <UniqueIdentifier>{ad946128-006e-4e6c-bdd4-c1363fd2264a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03. Components\00. Renderer">
-      <UniqueIdentifier>{283fde21-019a-407e-88b6-b34f46596bbe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03. Components\02. Texture">
       <UniqueIdentifier>{39ddbaff-0892-459f-87ae-269edbb2cf87}</UniqueIdentifier>
     </Filter>
@@ -114,6 +102,21 @@
     </Filter>
     <Filter Include="01.Utility\03. Components\05. Model\Bone">
       <UniqueIdentifier>{e88858ac-f587-4d4b-8e4c-ceee47a20a64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\06. Collider">
+      <UniqueIdentifier>{c9d764b6-af68-4c8e-bd26-0f5f8d181b7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\06. Collider\Manager">
+      <UniqueIdentifier>{1246e18d-f35b-4d18-a965-de0080691e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\06. Collider\BoxCollider">
+      <UniqueIdentifier>{ad946128-006e-4e6c-bdd4-c1363fd2264a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\05. Model\Animation\KeyFrameEvent">
+      <UniqueIdentifier>{4767196d-fbf1-420b-ada3-7efd2edbe869}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\00. System\03. Renderer">
+      <UniqueIdentifier>{eeae3320-7892-4b29-97c3-6da0b42a4fa1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -186,9 +189,6 @@
     <ClInclude Include="..\Public\Components_Headers.h">
       <Filter>99.Defines\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Renderer.h">
-      <Filter>01.Utility\03. Components\00. Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Shader.h">
       <Filter>01.Utility\03. Components\04. Shader</Filter>
     </ClInclude>
@@ -230,6 +230,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Enums.h">
       <Filter>99.Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\KeyFrameEvent.h">
+      <Filter>01.Utility\03. Components\05. Model\Animation\KeyFrameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Renderer.h">
+      <Filter>01.Utility\00. System\03. Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -281,9 +287,6 @@
     <ClCompile Include="..\Private\FMOD_Core.cpp">
       <Filter>01.Utility\06. Sound\FMOD</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Renderer.cpp">
-      <Filter>01.Utility\03. Components\00. Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Shader.cpp">
       <Filter>01.Utility\03. Components\04. Shader</Filter>
     </ClCompile>
@@ -325,6 +328,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\VTF.cpp">
       <Filter>01.Utility\03. Components\05. Model\VTF</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\KeyFrameEvent.cpp">
+      <Filter>01.Utility\03. Components\05. Model\Animation\KeyFrameEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Renderer.cpp">
+      <Filter>01.Utility\00. System\03. Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

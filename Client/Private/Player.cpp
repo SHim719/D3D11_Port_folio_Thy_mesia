@@ -95,7 +95,7 @@ HRESULT CPlayer::Render()
 
 void CPlayer::Change_State(PlayerState eState)
 {
-	m_States[(_uint)eState]->OnState_End();
+	m_States[(_uint)m_eState]->OnState_End();
 
 	m_eState = eState;
 
@@ -126,8 +126,8 @@ HRESULT CPlayer::Ready_States()
 {
 	m_States[(_uint)PlayerState::State_Idle] = CPlayerState_Idle::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Jog] = CPlayerState_Jog::Create(m_pDevice, m_pContext, this);
-	m_States[(_uint)PlayerState::State_SprintStart] = CPlayerState_SprintStart::Create(m_pDevice, m_pContext, this);
-
+	m_States[(_uint)PlayerState::State_Sprint] = CPlayerState_Sprint::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Attack] = CPlayerState_Attack::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }

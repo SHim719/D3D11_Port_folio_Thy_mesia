@@ -93,6 +93,7 @@ public:
 	void Go_Down(_float fTimeDelta);
 	void Go_Dir(_fvector vDir, _float fTimeDelta);
 	void Go_Root(_fvector vDeltaRoot, _fvector vLook);
+	void Move_Root(_fvector vDeltaRoot);
 
 	void Set_Scale(_float3 vScale);
 	_float3 Get_Scale() const;
@@ -101,8 +102,8 @@ public:
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation_Quaternion(_fvector vQuat);
 	void LookAt(_fvector vAt);
-	//void LookAt_ForLandObject(_fvector vAt);
-	//void Move(_fvector vTargetPos, _float fTimeDelta, _float fLimitDistance = 0.1f);
+	void LookTo(_fvector vTo);
+
 
 	void Set_Speed(_float fSpeed) { m_TransformDesc.fSpeedPerSec = fSpeed; }
 	_float Get_Speed() const { return m_TransformDesc.fSpeedPerSec; }

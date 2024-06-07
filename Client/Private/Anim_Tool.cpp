@@ -13,6 +13,12 @@ HRESULT CAnim_Tool::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
+    m_strModelLists.reserve(1);
+    m_strModelLists.emplace_back("Prototype_Model_Player");
+
+
+    Load_KeyFrameNames();
+
 	return S_OK;
 }
 
@@ -20,18 +26,161 @@ void CAnim_Tool::Tick(_float fTimeDelta)
 {
     Main_Window();
     Camera_Window();
+    KeyFrame_Window();
 }
+
+HRESULT CAnim_Tool::Load_KeyFrameNames()
+{
+    string strFullPath = "../../Resources/KeyFrame/KeyFrameData.txt";
+
+    ifstream fin;
+    fin.open(strFullPath);
+
+    string strKeyFrame = "";
+    while (getline(fin, strKeyFrame))
+    {
+        m_strEventNames.emplace_back(strKeyFrame);
+    }
+    fin.close();
+
+    return S_OK;
+}
+
+HRESULT CAnim_Tool::Load_KeyFrames()
+{
+    if (nullptr == m_pModel)
+        return E_FAIL;
+
+    _tchar szFullPath[200000] = {};
+    OPENFILENAME ofn = {};
+
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = g_hWnd;
+    ofn.lpstrFile = szFullPath;
+    ofn.nMaxFile = sizeof(szFullPath);
+    ofn.lpstrFilter = L"*.dat";
+    ofn.lpstrInitialDir = L"../../Resources/Model/";
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_ALLOWMULTISELECT | OFN_EXPLORER;
+
+    if (GetOpenFileName(&ofn))
+    {
+        if (szFullPath[ofn.nFileOffset - 1] == '\0') //복수 선택
+        {
+            _tchar* p = ofn.lpstrFile;
+            vector<wstring> files;
+
+            wstring wstrDirectory(p);
+            p += wstrDirectory.length() + 1;
+
+            while (*p)
+            {
+                wstring wstrFilePath = p;
+                p += wstrFilePath.length() + 1;
+
+                wstring wstrPath(wstrDirectory + L"\\" + wstrFilePath);
+
+                if (FAILED(Load_KeyFrameData(wstrPath.c_str())))
+                    return E_FAIL;
+            }
+            
+        }
+        else // 단일 선택
+        {
+            if (FAILED(Load_KeyFrameData(szFullPath)))
+                return E_FAIL;
+        }
+    }
+
+    return S_OK;
+}
+
+HRESULT CAnim_Tool::Load_KeyFrameData(const _tchar* pPath)
+{
+    ifstream fin(pPath, ios::binary);
+
+    if (!fin.is_open())
+        return E_FAIL;
+
+    _int iAnimNameLength = 0;
+    _char szAnimName[MAX_PATH] = "";
+    _int iKeyFrame = 0;
+    _int iEventLength = 0;
+    _char szEvent[MAX_PATH] = "";
+
+    fin.read((_char*)&iAnimNameLength, sizeof(_int));
+    fin.read(szAnimName, iAnimNameLength);
+
+    while (true)
+    {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               fin.read((_char*)&iKeyFrame, sizeof(_int));
+        fin.read((_char*)&iEventLength, sizeof(_int));
+        fin.read(szEvent, iEventLength);
+        if (fin.eof())
+            break;
+
+        size_t iAnimIndex = 0;
+        for (; iAnimIndex < m_strAnimations.size(); ++iAnimIndex) // 애니메이션 이름에 해당하는 인덱스 찾아가서 기록.
+        {
+            if (m_strAnimations[iAnimIndex] == szAnimName)
+                break;
+        }
+
+        if (m_strAnimations.size() == iAnimIndex)
+            return E_FAIL;
+        
+
+        m_KeyFrameEvents[iAnimIndex].emplace_back(iKeyFrame, string(szEvent));
+    }
+
+    return S_OK;
+}
+
+HRESULT CAnim_Tool::Save_KeyFrameData()
+{
+    _tchar szFullPath[200000] = {};
+    OPENFILENAME ofn = {};
+
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = g_hWnd;
+    ofn.lpstrFile = szFullPath;
+    ofn.nMaxFile = sizeof(szFullPath);
+    ofn.lpstrFilter = L"*.dat";
+    ofn.lpstrInitialDir = L"../../Resources/Model/";
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (GetSaveFileName(&ofn))
+    {
+        ofstream fout(szFullPath, ios::binary);
+
+        if (!fout.is_open())
+            return E_FAIL;
+
+        _int iAnimNameLength = (_int)m_strAnimations[m_iSelAnimIdx].length();
+        _int iEventLength = 0;
+
+        fout.write((_char*)&iAnimNameLength, sizeof(_int));
+        fout.write(m_strAnimations[m_iSelAnimIdx].c_str(), iAnimNameLength);
+
+        size_t iIndex = 0;
+        for (auto& Pair : m_KeyFrameEvents[m_iSelAnimIdx])
+        {
+            iEventLength = (_int)Pair.second.length();
+            fout.write((_char*)&Pair.first, sizeof(_int));      // 키프레임 저장
+            fout.write((_char*)&iEventLength, sizeof(_int));    // 키프레임 이벤트 문자열 길이 저장
+            fout.write(Pair.second.c_str(), iEventLength);      // 키프레임 문자열 자체를 저장.
+            iIndex++;
+        }
+    }
+    return S_OK;
+}
+
 
 void CAnim_Tool::Main_Window()
 {
-	ImGui::Begin("Animation", (bool*)0, ImGuiWindowFlags_MenuBar);
+	ImGui::Begin("Main Window", (bool*)0, ImGuiWindowFlags_MenuBar);
     Menu_Bar();
-    ImGui::SetCursorPos(ImVec2(11.5, 45));
-    ImGui::Text("Loaded Mesh: ");
 
-    ImGui::SetCursorPos(ImVec2(100.5, 45));
-    ImGui::Text(m_strNowLoaded.c_str());
-
+    Model_ListBox();
+    Model_Button();
 
     Anim_ListBox();
     Anim_Buttons();
@@ -45,25 +194,109 @@ void CAnim_Tool::Camera_Window()
     ImGui::End();
 }
 
+void CAnim_Tool::KeyFrame_Window()
+{
+    if (nullptr == m_pModel)
+        return;
+
+    auto& Animations = m_pModel->Get_Animations();
+    _int iNowKeyFrame = (_int)Animations[m_iSelAnimIdx]->Get_NowKeyFrame();
+    _int iNumKeyFrames = (_int)Animations[m_iSelAnimIdx]->Get_NumKeyFrames();
+
+    ImGui::Begin("KeyFrame", (bool*)0);
+
+    ImGui::Text("Now Animaton: %s", m_strAnimations[m_iSelAnimIdx].c_str());
+    ImGui::Text("Now KeyFrame: %d", iNowKeyFrame);
+
+    if (ImGui::SliderInt("##KeyFrameController", &iNowKeyFrame, 0, iNumKeyFrames))
+    {
+        Animations[m_iSelAnimIdx]->Set_CurrentKeyFrames((_uint)iNowKeyFrame);
+    }
+
+    ImGui::SeparatorText("Event");
+    KeyFrameEvent_ComboBox();
+    KeyFrameEvent_ListBox();
+    KeyFrameEvent_Button();
+
+    ImGui::End();
+}
+
+void CAnim_Tool::KeyFrameEvent_ComboBox()
+{   
+    const char** szEventNames = new const char* [m_strEventNames.size()];
+
+    for (_int i = 0; i < (_int)m_strEventNames.size(); ++i)
+        szEventNames[i] = m_strEventNames[i].c_str();
+
+   ImGui::PushItemWidth(180);
+   ImGui::Combo("##EventLists", &m_iSelEventName, szEventNames, (_int)m_strEventNames.size());
+   ImGui::PopItemWidth();
+
+    ImGui::InputText("Event Name", m_szEventName, MAX_PATH);
+    if (ImGui::Button("Add Event Name"))
+        m_strEventNames.emplace_back(m_szEventName);
+
+    Safe_Delete_Array(szEventNames);
+}
+
+void CAnim_Tool::KeyFrameEvent_ListBox()
+{
+    ImGui::SeparatorText("Now KeyFrames");
+
+    m_fKeyFrameButtonStartCursorY = ImGui::GetCursorPosY() + 10.f;
+
+    string* strKeyFrames = new string[m_KeyFrameEvents[m_iSelAnimIdx].size()];
+    for (size_t i = 0; i < m_KeyFrameEvents[m_iSelAnimIdx].size(); ++i)
+        strKeyFrames[i] = "<" + to_string(m_KeyFrameEvents[m_iSelAnimIdx][i].first) + " , " + m_KeyFrameEvents[m_iSelAnimIdx][i].second + ">";
+
+    const _char** szKeyFrames = new const _char* [m_KeyFrameEvents[m_iSelAnimIdx].size()];
+    for (size_t i = 0; i < m_KeyFrameEvents[m_iSelAnimIdx].size(); ++i)
+        szKeyFrames[i] = strKeyFrames[i].c_str();
+
+    ImGui::PushItemWidth(150);
+    ImGui::ListBox("##KeyFrame_ListBox", &m_iSelKeyFrameIdx, szKeyFrames, (_int)m_KeyFrameEvents[m_iSelAnimIdx].size(), 10);
+
+    Safe_Delete_Array(strKeyFrames);
+    Safe_Delete_Array(szKeyFrames);
+}
+
+void CAnim_Tool::KeyFrameEvent_Button()
+{
+    _float fCursorY = m_fAnimListBoxStartCursorY;
+    _float fKeyFrameButtonCursorX = 165.f;
+    ImGui::SetCursorPos(ImVec2(fKeyFrameButtonCursorX, fCursorY));
+    if (ImGui::Button("Add KeyFrameEvent"))
+    {
+        auto Anims = m_pModel->Get_Animations();
+        _int iNowKeyFrame = (_int)Anims[m_iSelAnimIdx]->Get_NowKeyFrame();
+       m_KeyFrameEvents[m_iSelAnimIdx].emplace_back(iNowKeyFrame, m_strEventNames[m_iSelEventName]);
+    }
+
+    fCursorY = ImGui::GetCursorPosY() + 10.f;
+    ImGui::SetCursorPos(ImVec2(fKeyFrameButtonCursorX, fCursorY));
+    if (ImGui::Button("Delete KeyFrameEvent"))
+    {
+        m_KeyFrameEvents[m_iSelAnimIdx].erase(m_KeyFrameEvents[m_iSelAnimIdx].begin() + m_iSelKeyFrameIdx);
+        m_iSelKeyFrameIdx = 0;
+    }
+}
+
 void CAnim_Tool::Menu_Bar()
 {
     if (ImGui::BeginMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Load Model"))
-            {
-                Load_BinaryModel();
-            }
-
             if (ImGui::MenuItem("Load KeyFrame"))
             {
-            
+                if (FAILED(Load_KeyFrames()))
+                    assert(false);
             }
             
             if (ImGui::MenuItem("Save KeyFrame"))
             {
-            
+                if (FAILED(Save_KeyFrameData()))
+                    assert(false);
             }
 
             ImGui::EndMenu();
@@ -73,18 +306,63 @@ void CAnim_Tool::Menu_Bar()
     }
 }
 
+void CAnim_Tool::Model_ListBox()
+{
+    ImGui::SeparatorText("Model");
+    const char** szModels = new const char* [m_strModelLists.size()];
+
+    for (_int i = 0; i < (_int)m_strModelLists.size(); ++i)
+        szModels[i] = m_strModelLists[i].c_str();
+
+    ImGui::PushItemWidth(210);
+    ImGui::ListBox("##Model_ListBox", &m_iSelModelIdx, szModels, (_int)m_strModelLists.size(), 5);
+    ImGui::PopItemWidth();
+
+    Safe_Delete_Array(szModels);
+}
+
+void CAnim_Tool::Model_Button()
+{
+    if (ImGui::Button("Load Model"))
+    {
+        if (m_pAnimObj)
+        {
+            m_pAnimObj->Set_Destroy(true);
+            m_pGameInstance->Clear_Level(LEVEL_TOOL);
+        }
+
+        m_pAnimObj = static_cast<CToolAnimObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"ToolObject", L"Prototype_ToolAnimObj", &Convert_StrToWStr(m_strModelLists[m_iSelModelIdx])));
+        m_pModel = m_pAnimObj->Get_Model();
+
+        m_strAnimations.clear();
+        m_strAnimations.shrink_to_fit();
+        auto Anims = m_pModel->Get_Animations();
+        m_strAnimations.reserve(Anims.size());
+        for (auto pAnim : Anims)
+            m_strAnimations.emplace_back(pAnim->Get_AnimName());
+
+        m_KeyFrameEvents.clear();
+        m_KeyFrameEvents.shrink_to_fit();
+        m_KeyFrameEvents.resize(Anims.size());
+    }
+}
+
 void CAnim_Tool::Anim_ListBox()
 {
+    ImGui::SeparatorText("Animation");
+
+    m_fAnimListBoxStartCursorY = ImGui::GetCursorPosY();
+
     const char** szAnimations = new const char* [m_strAnimations.size()];
 
     for (_int i = 0; i < (_int)m_strAnimations.size(); ++i)
         szAnimations[i] = m_strAnimations[i].c_str();
-    ImGui::PushItemWidth(180);
-    if (ImGui::ListBox("##Anim_ListBox", &m_iCurSelAnimIdx, szAnimations, (_int)m_strAnimations.size()))
+    ImGui::PushItemWidth(210);
+    if (ImGui::ListBox("##Anim_ListBox", &m_iSelAnimIdx, szAnimations, (_int)m_strAnimations.size(), 20))
     {
-        m_pModel->Change_Animation(m_iCurSelAnimIdx);
+        m_pModel->Change_Animation(m_iSelAnimIdx);
+        m_iSelKeyFrameIdx = 0;
     }
-
 
     ImGui::PopItemWidth();
     Safe_Delete_Array(szAnimations);
@@ -92,70 +370,18 @@ void CAnim_Tool::Anim_ListBox()
 
 void CAnim_Tool::Anim_Buttons()
 {
-    ImGui::SetCursorPos(ImVec2(220.5, 68.5));
-    if (ImGui::Button("Play"))
-    {
+    _float fCursorY = m_fAnimListBoxStartCursorY;
+    ImGui::SetCursorPos(ImVec2(230.5, fCursorY));
+    if (ImGui::Button("Play") && m_pModel)
         m_pModel->Set_AnimPlay();
-    }
+
+    fCursorY = ImGui::GetCursorPosY() + 10.f;
         
-    ImGui::SetCursorPos(ImVec2(220.5, 100));
-    if (ImGui::Button("Stop"))
-    {
+    ImGui::SetCursorPos(ImVec2(230.5, fCursorY));
+    if (ImGui::Button("Stop") && m_pModel)
         m_pModel->Set_AnimPause();
-    }
+    
 
-    ImGui::SetCursorPos(ImVec2(220.5, 131));
-    ImGui::Button("Replay");
-}
-
-void CAnim_Tool::Load_BinaryModel()
-{
-    _tchar szFullPath[MAX_PATH] = {};
-    OPENFILENAME ofn = {};
-
-    ofn.lStructSize = sizeof(OPENFILENAME);
-    ofn.hwndOwner = g_hWnd;
-    ofn.lpstrFile = szFullPath;
-    ofn.nMaxFile = sizeof(szFullPath);
-    ofn.lpstrFilter = L"*.dat";
-    ofn.lpstrInitialDir = L"../../Resources/Model/";
-    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-    if (GetOpenFileName(&ofn))
-    {
-        fs::path fullPath(szFullPath);
-
-        fs::path fileName = fullPath.filename();
-        fs::path fileTitle = fileName.stem();
-
-        string strModelFilePath = fullPath.parent_path().generic_string() + "/";
-        string strModelFileName = fileName.generic_string();
-
-        if (m_pAnimObj)
-            m_pAnimObj->Set_Destroy(true);
-
-        wstring wstrPrototypeTag = L"Prototype_Model_";
-        wstrPrototypeTag += fileTitle.generic_wstring();
-        if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel::Create(m_pDevice, m_pContext, strModelFilePath, strModelFileName))))
-            assert(false);
-
-        Safe_Release(m_pAnimObj);
-        Safe_Release(m_pModel);
-
-        m_pAnimObj = static_cast<CToolAnimObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Model", L"Prototype_ToolAnimObj", &wstrPrototypeTag));
-        m_pAnimObj->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 1.f, 1.f));
-        m_pModel = m_pAnimObj->Get_Model();
-        m_strNowLoaded = fileName.generic_string();
-
-        const auto& Anims = m_pModel->Get_Animations();
-        m_strAnimations.reserve(Anims.size());
-        for (CAnimation* pAnim : Anims)
-            m_strAnimations.emplace_back(pAnim->Get_AnimName());
-
-
-        Safe_AddRef(m_pAnimObj);
-        Safe_AddRef(m_pModel);
-    }
 }
 
 

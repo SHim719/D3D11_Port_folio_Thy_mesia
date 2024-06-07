@@ -24,10 +24,9 @@ void CPlayerState_Idle::OnGoing(_float fTimeDelta)
 	if (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
 	{
 		if (KEY_PUSHING(eKeyCode::LShift))
-			m_pPlayer->Change_State(PlayerState::State_SprintStart);
+			m_pPlayer->Change_State(PlayerState::State_Sprint);
 		else
 			m_pPlayer->Change_State(PlayerState::State_Jog);
-		
 	}
 }
 

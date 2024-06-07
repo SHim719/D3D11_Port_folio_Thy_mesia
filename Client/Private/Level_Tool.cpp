@@ -28,7 +28,7 @@ HRESULT CLevel_Tool::Initialize()
 	m_pGameInstance->Add_Clone(LEVEL_TOOL, L"TestGround", L"Prototype_TestGround");
 
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player", CModel::Create(m_pDevice, m_pContext, 
-		"../../Resources/Models/Corvus/", "Corvus_No1.dat"));
+		"../../Resources/Models/Corvus/", "Corvus_No1.dat", "../../Resources/KeyFrame/Player/"));
 	m_pGameInstance->Add_Prototype(L"Prototype_Player", CPlayer::Create(m_pDevice, m_pContext));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Weapon", CWeapon::Create(m_pDevice, m_pContext));
@@ -45,7 +45,7 @@ HRESULT CLevel_Tool::Initialize()
 	camDesc.fFar = 300.f;
 	camDesc.fFovy = 60.f;
 	camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
-	camDesc.vEye = { 0.f, 10.f, 0.f, 1.f };
+	camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
 
 	m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Camera", L"Prototype_Free_Camera", &camDesc);
 	return S_OK;

@@ -8,7 +8,7 @@ CGameInstance::CGameInstance()
 
 }
 
-HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, OUT ID3D11Device** ppDevice, OUT ID3D11DeviceContext** ppContext)
+HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, const string& strKeyFrameDataPath, OUT ID3D11Device** ppDevice, OUT ID3D11DeviceContext** ppContext)
 {
 	m_pGraphic_Device = CGraphic_Device::Create(GraphicDesc, ppDevice, ppContext);
 	if (nullptr == m_pGraphic_Device)
@@ -53,7 +53,6 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	m_pPipeLine = CPipeLine::Create();
 	if (nullptr == m_pPipeLine)
 		return E_FAIL;
-
 
 	return S_OK;
 }
@@ -356,6 +355,7 @@ _float4 CGameInstance::Get_CamPosition() const
 }
 
 #pragma endregion
+
 
 
 void CGameInstance::Release_Engine()
