@@ -18,7 +18,8 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 
 void CPlayerState_Attack::OnState_Start()
 {
-	m_pModel->Change_Animation((_uint)(Corvus_SD_LAttack1 + m_iNowComboCnt), 0.05f);
+	//_float fBlendingTime = m_iNowComboCnt == 0 ? 0.02f : 0.f;
+	m_pModel->Change_Animation((_uint)(Corvus_SD_LAttack1 + m_iNowComboCnt), 0.f);
 	m_bCanNextAttack = false;
 }
 

@@ -31,6 +31,8 @@ private:
 	void Object_Child_Window();
 	void Models_ListBox();
 private:
+	unordered_map<_float, CToolMapObj*> m_PickableObjects; 
+
 	vector<CToolMapObj*> m_MapObjects;
 	vector<string>	m_strPlacable_Objects;
 

@@ -1,5 +1,7 @@
 #include "ToolMapObj.h"
 
+_float CToolMapObj::s_fNextPickingRed = 0.f;
+
 
 CToolMapObj::CToolMapObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -9,6 +11,8 @@ CToolMapObj::CToolMapObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CToolMapObj::CToolMapObj(const CToolMapObj& rhs)
 	: CGameObject(rhs)
 {
+	m_vPickingColor.r = s_fNextPickingRed / 10000.f;
+	s_fNextPickingRed += 1.f;
 }
 
 HRESULT CToolMapObj::Initialize_Prototype()

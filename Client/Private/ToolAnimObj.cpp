@@ -19,8 +19,16 @@ HRESULT CToolAnimObj::Initialize_Prototype()
 
 HRESULT CToolAnimObj::Initialize(void* pArg)
 {
-	if (FAILED(Ready_Components(pArg)))
-		return E_FAIL;
+	PrototypeCharacter* pType = (PrototypeCharacter*)pArg;
+
+	switch (*pType)
+	{
+	case Corvus:
+		if (FAILED(Ready_Corvus()))
+			return E_FAIL;
+		break;
+	}
+
 
 	m_pModel->Set_Preview(true);
 	return S_OK;
@@ -69,7 +77,7 @@ HRESULT CToolAnimObj::Render()
 	return S_OK;
 }
 
-HRESULT CToolAnimObj::Ready_Components(void* pArg)
+HRESULT CToolAnimObj::Ready_Corvus()
 {
 	CTransform::TRANSFORMDESC		TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
@@ -83,9 +91,23 @@ HRESULT CToolAnimObj::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	wstring* strModelPrototypeTag = (wstring*)pArg;
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_Player", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, *strModelPrototypeTag, L"Model", (CComponent**)&m_pModel)))
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
+	XMStoreFloat4x4(&WeaponDesc.PivotMatrix, m_pModel->Get_PivotMatrix());
+
+	CGameObject* pDagger = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	if (nullptr == pDagger)
+		return E_FAIL;
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
+	CGameObject* pSaber = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	if (nullptr == pSaber)
 		return E_FAIL;
 
 	return S_OK;

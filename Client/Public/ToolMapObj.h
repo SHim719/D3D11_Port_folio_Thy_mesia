@@ -21,8 +21,10 @@ public:
 private:
 	CShader*	m_pShader = nullptr;
 	CModel*		m_pModel = nullptr;
-	//CCollider* m_pColliderCom[COLLILDERTYPE_END] = { nullptr };
-	//CNavigation* m_pNavigationCom = nullptr;
+
+private:
+	static _float s_fNextPickingRed;
+	_float4	m_vPickingColor = { 0.f, 0.f, 0.f, 0.f };
 
 private:
 	HRESULT Ready_Components(void* pArg);

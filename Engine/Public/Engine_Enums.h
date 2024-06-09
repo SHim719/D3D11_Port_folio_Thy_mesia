@@ -26,4 +26,9 @@ enum TextureType
     TextureType_TRANSMISSION = 21,
 };
 
+enum CollisionType
+{
+    Trigger,
+    Collision,
+};
 

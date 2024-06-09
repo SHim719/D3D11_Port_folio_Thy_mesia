@@ -96,7 +96,7 @@ public:
 	_uint	Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
 
 	void		Play_Animation(_float fTimeDelta);
-	void		Change_Animation(_uint iAnimIdx, _float fBlendingTime = 0.1f);
+	void		Change_Animation(_uint iAnimIdx, _float fBlendingTime = 0.07f);
 	_bool		Is_Playing() const { return m_bIsPlaying; }
 	void		Set_AnimPlay() { m_bIsPlaying = true; }
 	void		Set_AnimPause() { m_bIsPlaying = false; }

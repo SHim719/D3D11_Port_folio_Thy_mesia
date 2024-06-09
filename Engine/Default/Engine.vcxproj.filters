@@ -109,14 +109,26 @@
     <Filter Include="01.Utility\03. Components\06. Collider\Manager">
       <UniqueIdentifier>{1246e18d-f35b-4d18-a965-de0080691e17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\03. Components\06. Collider\BoxCollider">
-      <UniqueIdentifier>{ad946128-006e-4e6c-bdd4-c1363fd2264a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03. Components\05. Model\Animation\KeyFrameEvent">
       <UniqueIdentifier>{4767196d-fbf1-420b-ada3-7efd2edbe869}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\00. System\03. Renderer">
       <UniqueIdentifier>{eeae3320-7892-4b29-97c3-6da0b42a4fa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\06. Collider\AABB">
+      <UniqueIdentifier>{fb358b95-86b0-4948-9469-c18c89aeab8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\06. Collider\OBB">
+      <UniqueIdentifier>{7da2b806-960f-45c1-a011-e426fb931ba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\06. Collider\Sphere">
+      <UniqueIdentifier>{eee47528-78cb-46d2-9618-ed376d98e7b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\00. System\04. PhysX">
+      <UniqueIdentifier>{653726df-ba04-472f-8d9d-b8c38945afbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\06. Collider\DebugDraw">
+      <UniqueIdentifier>{355c08dd-0b8f-4ac3-8753-a8f134d864de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -237,6 +249,27 @@
     <ClInclude Include="..\public\Renderer.h">
       <Filter>01.Utility\00. System\03. Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Collider.h">
+      <Filter>01.Utility\03. Components\06. Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Collision_Manager.h">
+      <Filter>01.Utility\03. Components\06. Collider\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\AABB.h">
+      <Filter>01.Utility\03. Components\06. Collider\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sphere.h">
+      <Filter>01.Utility\03. Components\06. Collider\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OBB.h">
+      <Filter>01.Utility\03. Components\06. Collider\OBB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PhysX_Manager.h">
+      <Filter>01.Utility\00. System\04. PhysX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\DebugDraw.h">
+      <Filter>01.Utility\03. Components\06. Collider\DebugDraw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -334,6 +367,27 @@
     </ClCompile>
     <ClCompile Include="..\private\Renderer.cpp">
       <Filter>01.Utility\00. System\03. Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collider.cpp">
+      <Filter>01.Utility\03. Components\06. Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Collision_Manager.cpp">
+      <Filter>01.Utility\03. Components\06. Collider\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\AABB.cpp">
+      <Filter>01.Utility\03. Components\06. Collider\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sphere.cpp">
+      <Filter>01.Utility\03. Components\06. Collider\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OBB.cpp">
+      <Filter>01.Utility\03. Components\06. Collider\OBB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PhysX_Manager.cpp">
+      <Filter>01.Utility\00. System\04. PhysX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\DebugDraw.cpp">
+      <Filter>01.Utility\03. Components\06. Collider\DebugDraw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

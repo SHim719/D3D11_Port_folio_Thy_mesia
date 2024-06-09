@@ -8,6 +8,9 @@
 BEGIN(Client)
 class CToolAnimObj final : public CGameObject
 {
+public:
+	enum PrototypeCharacter { Corvus, };
+
 private:
 	CToolAnimObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CToolAnimObj(const CToolAnimObj& rhs);
@@ -21,19 +24,19 @@ public:
 	HRESULT Render()					override;
 
 private:
-	CShader*	m_pShader = nullptr;
-	CModel*		m_pModel = nullptr;
+	CShader*			m_pShader = nullptr;
+	CModel*				m_pModel = nullptr;
 
 private:
-	HRESULT Ready_Components(void* pArg);
+	HRESULT Ready_Corvus();
 
 public:
 	CModel* Get_Model() const { return m_pModel; }
 
 public:
 	static CToolAnimObj* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg);
-	virtual void Free() override;
+	CGameObject* Clone(void* pArg)	override;
+	void Free() override;
 };
 
 END

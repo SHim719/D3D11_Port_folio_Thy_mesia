@@ -13,6 +13,7 @@ protected:
 
 public:
 	HRESULT Initialize(void* pArg)	override;
+	void Start_Tool()				override;
 	void Tick(_float fTimeDelta)	override;
 
 private:
@@ -27,6 +28,8 @@ private:
 	void Camera_Window()			override;
 	
 	void Menu_Bar();
+	void Tab_Bar();
+
 	void Model_ListBox();
 	void Model_Button();
 
@@ -37,6 +40,11 @@ private:
 	void KeyFrameEvent_ComboBox();
 	void KeyFrameEvent_ListBox();
 	void KeyFrameEvent_Button();
+
+	void Bone_ListBox();
+	void Collider_ListBox();
+	void ColliderType_CheckBox();
+	void Collider_Buttons();
 
 private:
 	class CToolAnimObj* m_pAnimObj = nullptr;
@@ -56,6 +64,18 @@ private:
 	vector<vector<pair<_int, string>>>	m_KeyFrameEvents;
 	_int								m_iSelKeyFrameIdx = 0;
 	_float								m_fKeyFrameButtonStartCursorY;
+
+	const char**				m_szBoneNames = nullptr;
+	_int						m_iNumBones = 0;
+	_int						m_iSelBoneIdx = 0;
+	
+	vector<class CToolColliderObj*>	m_Colliders;
+	vector<string>					m_strColliders;
+	_int							m_iSelColliderIdx = 0;
+
+	CCollider::COLLIDERDESC			m_ColliderDesc;
+	_bool							m_bColliderTypes[CCollider::Collider_End] = {};
+	_int							m_iTypeIdx = 0;
 
 public:
 	static CAnim_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);

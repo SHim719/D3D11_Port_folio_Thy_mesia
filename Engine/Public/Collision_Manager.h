@@ -26,18 +26,15 @@ private:
 	HRESULT Initialize();
 
 public:
-	void Tick();
+	void Update();
 
 private:
+	CGameInstance* m_pGameInstance = nullptr;
+
 	unordered_map<UINT64, bool> m_CollisionInfo;
 
 private:
-	void Collision_Box(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eCollisionType);
-
-	bool Check_Intersect_AABB(class CBoxCollider* pDstCollider, CBoxCollider* pSrcCollider, OUT _float3& _fDist);
-
-private:
-	class CGameInstance* m_pGameInstance = { nullptr };
+	void Execute_Collision(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eCollisionType);
 
 public:
 	static CCollision_Manager* Create();

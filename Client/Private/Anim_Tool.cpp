@@ -2,6 +2,8 @@
 
 #include "ToolAnimObj.h"
 #include "Animation.h"
+#include "Bone.h"
+#include "ToolColliderObj.h"
 
 CAnim_Tool::CAnim_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CToolState(pDevice, pContext)
@@ -20,6 +22,11 @@ HRESULT CAnim_Tool::Initialize(void* pArg)
     Load_KeyFrameNames();
 
 	return S_OK;
+}
+
+void CAnim_Tool::Start_Tool()
+{
+    m_pGameInstance->Add_Clone(LEVEL_TOOL, L"TestGround", L"Prototype_TestGround");
 }
 
 void CAnim_Tool::Tick(_float fTimeDelta)
@@ -178,12 +185,7 @@ void CAnim_Tool::Main_Window()
 {
 	ImGui::Begin("Main Window", (bool*)0, ImGuiWindowFlags_MenuBar);
     Menu_Bar();
-
-    Model_ListBox();
-    Model_Button();
-
-    Anim_ListBox();
-    Anim_Buttons();
+    Tab_Bar();
 
 	ImGui::End();
 }
@@ -281,6 +283,99 @@ void CAnim_Tool::KeyFrameEvent_Button()
     }
 }
 
+void CAnim_Tool::Bone_ListBox()
+{
+    if (nullptr == m_pAnimObj)
+        return;
+
+    ImGui::SeparatorText("Bones");
+    ImGui::PushItemWidth(150);
+    if (ImGui::ListBox("##Bone_ListBox", &m_iSelBoneIdx, m_szBoneNames, m_iNumBones, 20))
+    {
+        if (m_Colliders.empty())
+            return;
+        m_Colliders[m_iSelColliderIdx]->Set_AttachBone(m_szBoneNames[m_iSelBoneIdx]);
+    }
+
+}
+
+void CAnim_Tool::Collider_ListBox()
+{
+    ImGui::SeparatorText("Collider");
+
+    const _char** szColliders = new const _char * [m_Colliders.size()];
+    
+    for (size_t i = 0; i < m_strColliders.size(); ++i)
+        szColliders[i] = m_strColliders[i].c_str();
+
+    ImGui::PushItemWidth(150);
+    ImGui::ListBox("##Collider_ListBox", &m_iSelColliderIdx, szColliders, (_int)m_Colliders.size(), 5);
+}
+
+void CAnim_Tool::ColliderType_CheckBox()
+{
+    if (ImGui::Checkbox("AABB", &m_bColliderTypes[0]))
+    {
+        m_bColliderTypes[1] = false;
+        m_bColliderTypes[2] = false;
+        m_iTypeIdx = 0;
+    }
+
+    if (ImGui::Checkbox("OBB", &m_bColliderTypes[1]))
+    {
+        m_bColliderTypes[0] = false;
+        m_bColliderTypes[2] = false;
+        m_iTypeIdx = 1;
+    }
+
+    if (ImGui::Checkbox("Sphere", &m_bColliderTypes[2]))
+    {
+        m_bColliderTypes[0] = false;
+        m_bColliderTypes[1] = false;
+        m_iTypeIdx = 2;
+    }
+}
+
+void CAnim_Tool::Collider_Buttons()
+{
+    ImGui::InputFloat3("Center", &m_ColliderDesc.vCenter.x);
+    ImGui::InputFloat3("Size", &m_ColliderDesc.vSize.x);
+    ImGui::InputFloat3("Rotation", &m_ColliderDesc.vRotation.x);
+
+    if (ImGui::Button("Add Collider"))
+    {
+        CCollider::COLLIDERDESC desc;
+        desc.vCenter = m_ColliderDesc.vCenter;
+        desc.vSize = m_ColliderDesc.vSize;
+        desc.vRotation.x = To_Radian(m_ColliderDesc.vRotation.x);
+        desc.vRotation.y = To_Radian(m_ColliderDesc.vRotation.y);
+        desc.vRotation.z = To_Radian(m_ColliderDesc.vRotation.z);
+        desc.pOwner = m_pAnimObj;
+        desc.eType = (CCollider::ColliderType)m_iTypeIdx;
+
+        CToolColliderObj* pObj = static_cast<CToolColliderObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"ToolObject", L"Prototype_ToolColliderObj", &desc));
+        m_Colliders.push_back(pObj);
+
+        m_strColliders.push_back("Collider");
+    }
+    
+    if (ImGui::Button("Edit Collider"))
+    {
+        if (m_Colliders.empty())
+            return;
+
+        CCollider::COLLIDERDESC desc;
+        desc.vCenter = m_ColliderDesc.vCenter;
+        desc.vSize = m_ColliderDesc.vSize;
+        desc.vRotation.x = To_Radian(m_ColliderDesc.vRotation.x);
+        desc.vRotation.y = To_Radian(m_ColliderDesc.vRotation.y);
+        desc.vRotation.z = To_Radian(m_ColliderDesc.vRotation.z);
+
+        m_Colliders[m_iSelColliderIdx]->Remake_Collider(&desc);
+    }
+}
+
+
 void CAnim_Tool::Menu_Bar()
 {
     if (ImGui::BeginMenuBar())
@@ -303,6 +398,34 @@ void CAnim_Tool::Menu_Bar()
             
         }
         ImGui::EndMenuBar();
+    }
+}
+
+void CAnim_Tool::Tab_Bar()
+{
+    if (ImGui::BeginTabBar("Models"))
+    {
+        if (ImGui::BeginTabItem("Anim"))
+        {
+            Model_ListBox();
+            Model_Button();
+
+            Anim_ListBox();
+            Anim_Buttons();
+
+            ImGui::EndTabItem();
+        }
+
+        if (ImGui::BeginTabItem("Collider"))
+        {
+            Bone_ListBox();
+            Collider_ListBox();
+            ColliderType_CheckBox();
+            Collider_Buttons();
+
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
     }
 }
 
@@ -331,7 +454,7 @@ void CAnim_Tool::Model_Button()
             m_pGameInstance->Clear_Level(LEVEL_TOOL);
         }
 
-        m_pAnimObj = static_cast<CToolAnimObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"ToolObject", L"Prototype_ToolAnimObj", &Convert_StrToWStr(m_strModelLists[m_iSelModelIdx])));
+        m_pAnimObj = static_cast<CToolAnimObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"ToolObject", L"Prototype_ToolAnimObj", &m_iSelModelIdx));
         m_pModel = m_pAnimObj->Get_Model();
 
         m_strAnimations.clear();
@@ -344,6 +467,14 @@ void CAnim_Tool::Model_Button()
         m_KeyFrameEvents.clear();
         m_KeyFrameEvents.shrink_to_fit();
         m_KeyFrameEvents.resize(Anims.size());
+
+        auto& Bones = m_pModel->Get_Bones();
+
+        m_szBoneNames = new const _char * [Bones.size()];
+        for (size_t i = 0; i < Bones.size(); ++i)
+            m_szBoneNames[i] = Bones[i]->Get_Name();
+
+        m_iNumBones = (_int)Bones.size();
     }
 }
 
@@ -403,6 +534,6 @@ void CAnim_Tool::Free()
 {
 	__super::Free();
 
-    Safe_Release(m_pAnimObj);
-    Safe_Release(m_pModel);
+    Safe_Delete_Array(m_szBoneNames);
+ 
 }

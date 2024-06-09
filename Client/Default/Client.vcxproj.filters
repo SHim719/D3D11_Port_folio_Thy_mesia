@@ -91,38 +91,38 @@
     <Filter Include="95. Client_Components">
       <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. State\00. State_Base">
-      <UniqueIdentifier>{8fc12e36-aecd-4506-9291-b8be4ca7ee87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. State\01. Player_State">
-      <UniqueIdentifier>{07182893-84d4-493a-b9b8-14cb44323865}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Player\Define">
       <UniqueIdentifier>{0e4045a1-145f-4eb5-b384-776987f0c0b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. State\01. Player_State\00. PlayerState_Base">
-      <UniqueIdentifier>{3d38f81e-3750-4bc3-a092-fc21bbc9b2e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. State\01. Player_State\01. PlayerState_Idle">
-      <UniqueIdentifier>{4f85e5a9-4052-43b0-b17a-66bd501520ea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. State\01. Player_State\02. PlayerState_Jog">
-      <UniqueIdentifier>{746d33b3-1235-4b28-b441-d7cd8e614b2a}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\04. Weapon">
       <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03. State\01. Player_State\03. PlayerState_Sprint">
-      <UniqueIdentifier>{58fb744d-0798-43c4-96a6-6c3c2dcefaf1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. State\01. Player_State\05. PlayerState_Attack">
-      <UniqueIdentifier>{4947652d-dcd0-4fda-b241-22cc93c50f32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="03. State\01. Player_State\04. PlayerState_Avoid">
-      <UniqueIdentifier>{3ef2ea5d-24fb-4784-a39c-b2f0551af820}</UniqueIdentifier>
-    </Filter>
     <Filter Include="100. IMGUI\99. TestPlay_Tool">
       <UniqueIdentifier>{1a9a7660-075b-4d31-91da-c017877d3d77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player\State">
+      <UniqueIdentifier>{07182893-84d4-493a-b9b8-14cb44323865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player\State\00. PlayerState_Base">
+      <UniqueIdentifier>{3d38f81e-3750-4bc3-a092-fc21bbc9b2e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player\State\01. PlayerState_Idle">
+      <UniqueIdentifier>{4f85e5a9-4052-43b0-b17a-66bd501520ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player\State\02. PlayerState_Jog">
+      <UniqueIdentifier>{746d33b3-1235-4b28-b441-d7cd8e614b2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player\State\03. PlayerState_Sprint">
+      <UniqueIdentifier>{58fb744d-0798-43c4-96a6-6c3c2dcefaf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player\State\05. PlayerState_Attack">
+      <UniqueIdentifier>{4947652d-dcd0-4fda-b241-22cc93c50f32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Player\State\04. PlayerState_Avoid">
+      <UniqueIdentifier>{3ef2ea5d-24fb-4784-a39c-b2f0551af820}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\2. ToolColliderObj">
+      <UniqueIdentifier>{9db4c5a9-80e3-4486-9561-e6867fbf2c19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -201,11 +201,8 @@
     <ClInclude Include="..\Public\Main_Camera.h">
       <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\State_Base.h">
-      <Filter>03. State\00. State_Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Idle.h">
-      <Filter>03. State\01. Player_State\01. PlayerState_Idle</Filter>
+      <Filter>02. GameObjects\02. Player\State\01. PlayerState_Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Defines.h">
       <Filter>02. GameObjects\02. Player\Define</Filter>
@@ -217,13 +214,13 @@
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Base.h">
-      <Filter>03. State\01. Player_State\00. PlayerState_Base</Filter>
+      <Filter>02. GameObjects\02. Player\State\00. PlayerState_Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Jog.h">
-      <Filter>03. State\01. Player_State\02. PlayerState_Jog</Filter>
+      <Filter>02. GameObjects\02. Player\State\02. PlayerState_Jog</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Sprint.h">
-      <Filter>03. State\01. Player_State\03. PlayerState_Sprint</Filter>
+      <Filter>02. GameObjects\02. Player\State\03. PlayerState_Sprint</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
       <Filter>02. GameObjects\04. Weapon</Filter>
@@ -232,10 +229,16 @@
       <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Attack.h">
-      <Filter>03. State\01. Player_State\05. PlayerState_Attack</Filter>
+      <Filter>02. GameObjects\02. Player\State\05. PlayerState_Attack</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Function.h">
       <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\State_Base.h">
+      <Filter>03. State</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolColliderObj.h">
+      <Filter>02. GameObjects\99. ToolObject\2. ToolColliderObj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -296,23 +299,20 @@
     <ClCompile Include="..\Private\Main_Camera.cpp">
       <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\State_Base.cpp">
-      <Filter>03. State\00. State_Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Idle.cpp">
-      <Filter>03. State\01. Player_State\01. PlayerState_Idle</Filter>
+      <Filter>02. GameObjects\02. Player\State\01. PlayerState_Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Base.cpp">
-      <Filter>03. State\01. Player_State\00. PlayerState_Base</Filter>
+      <Filter>02. GameObjects\02. Player\State\00. PlayerState_Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Jog.cpp">
-      <Filter>03. State\01. Player_State\02. PlayerState_Jog</Filter>
+      <Filter>02. GameObjects\02. Player\State\02. PlayerState_Jog</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolAnimObj.cpp">
       <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Sprint.cpp">
-      <Filter>03. State\01. Player_State\03. PlayerState_Sprint</Filter>
+      <Filter>02. GameObjects\02. Player\State\03. PlayerState_Sprint</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
       <Filter>02. GameObjects\04. Weapon</Filter>
@@ -321,7 +321,13 @@
       <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Attack.cpp">
-      <Filter>03. State\01. Player_State\05. PlayerState_Attack</Filter>
+      <Filter>02. GameObjects\02. Player\State\05. PlayerState_Attack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\State_Base.cpp">
+      <Filter>03. State</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolColliderObj.cpp">
+      <Filter>02. GameObjects\99. ToolObject\2. ToolColliderObj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

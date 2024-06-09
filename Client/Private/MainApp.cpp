@@ -76,6 +76,18 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CTransform::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_AABB"),
+		CAABB::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_OBB"),
+		COBB::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Sphere"),
+		CSphere::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(Ready_Prototype_Shader()))
 		return E_FAIL;
 	

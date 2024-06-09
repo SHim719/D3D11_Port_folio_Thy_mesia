@@ -56,7 +56,7 @@ HRESULT CWeapon::Render()
 	if (FAILED(m_pShader->Begin(0)))
 		return E_FAIL;
 
-	
+
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -125,11 +125,8 @@ CGameObject* CWeapon::Clone(void* pArg)
 
 void CWeapon::Free()
 {
-	__super::Free();
-
-	Safe_Release(m_pShader);
-	Safe_Release(m_pModel);
 	Safe_Release(m_WeaponDesc.pSocketBone);
 	Safe_Release(m_WeaponDesc.pParentTransform);
-
+	Safe_Release(m_pShader);
+	Safe_Release(m_pModel);
 }

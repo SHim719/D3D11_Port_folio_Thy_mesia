@@ -12,6 +12,12 @@
 #include <d3dx11effect.h>
 #include <directxtk/DDSTextureLoader.h>
 #include <directxtk/WICTextureLoader.h>
+#include <directxtk/PrimitiveBatch.h>
+#include <directxtk/VertexTypes.h>
+#include <directxtk/Effects.h>
+#include <directxtk/SpriteBatch.h>
+#include <directxtk/SpriteFont.h>
+#include <DirectXCollision.h>
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -32,6 +38,7 @@ using namespace DirectX;
 
 
 #include "Engine_Enums.h"
+
 #define TEXTURE_TYPE_MAX TextureType_TRANSMISSION
 
 

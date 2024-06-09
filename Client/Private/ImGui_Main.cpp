@@ -36,7 +36,7 @@ HRESULT CImGui_Main::Initialize()
     m_ToolStates[ANIM] = CAnim_Tool::Create(m_pDevice, m_pContext);
     m_ToolStates[TESTPLAY] = CTestPlay_Tool::Create(m_pDevice, m_pContext);
 
-    m_eToolState = TESTPLAY;
+    m_eToolState = ANIM;
     m_ToolStates[m_eToolState]->Start_Tool();
     return S_OK;
 }

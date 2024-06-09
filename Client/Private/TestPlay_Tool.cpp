@@ -37,6 +37,8 @@ void CTestPlay_Tool::Start_Tool()
 
     Safe_AddRef(m_pPlayer);
     Safe_AddRef(m_pMain_Camera);
+
+    m_pGameInstance->Add_Clone(LEVEL_TOOL, L"TestGround", L"Prototype_TestGround");
 }
 
 void CTestPlay_Tool::Tick(_float fTimeDelta)

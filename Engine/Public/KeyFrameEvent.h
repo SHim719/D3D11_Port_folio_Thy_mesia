@@ -22,7 +22,8 @@ public:
 		m_CallBackFunc = std::move(CallBackFunc); 
 	}
 	void Execute() {
-		m_CallBackFunc(); 
+		if (m_CallBackFunc)
+			m_CallBackFunc(); 
 	}
 
 	const string& Get_EventName() const { return m_strEventName; }

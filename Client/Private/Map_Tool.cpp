@@ -159,30 +159,9 @@ void CMap_Tool::TabBar()
 
 void CMap_Tool::Transform_View()
 {
-    ImGui::SetCursorPos(ImVec2(97, 78));
-    ImGui::PushItemWidth(200);
     ImGui::InputFloat3("##Position", &m_vPosition.x);
-    ImGui::PopItemWidth();
-
-    ImGui::SetCursorPos(ImVec2(26, 81));
-    ImGui::Text("Position");
-
-    ImGui::SetCursorPos(ImVec2(26, 114));
-    ImGui::Text("Rotation");
-
-    ImGui::SetCursorPos(ImVec2(97, 112));
-    ImGui::PushItemWidth(200);
     ImGui::InputFloat3("##Rotation", &m_vRotation.x);
-    ImGui::PopItemWidth();
-
-    ImGui::SetCursorPos(ImVec2(34, 145));
-    ImGui::Text("Scale");
-
-    ImGui::SetCursorPos(ImVec2(97, 143));
-    ImGui::PushItemWidth(200);
     ImGui::InputFloat3("##Scale", &m_vScale.x);
-    ImGui::PopItemWidth();
-}
 
 void CMap_Tool::Object_Child_Window()
 {

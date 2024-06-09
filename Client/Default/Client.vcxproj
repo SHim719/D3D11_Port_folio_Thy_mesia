@@ -196,6 +196,7 @@
     <ClInclude Include="..\Public\TestGround.h" />
     <ClInclude Include="..\Public\TestPlay_Tool.h" />
     <ClInclude Include="..\Public\ToolAnimObj.h" />
+    <ClInclude Include="..\Public\ToolColliderObj.h" />
     <ClInclude Include="..\Public\ToolMapObj.h" />
     <ClInclude Include="..\Public\ToolState.h" />
     <ClInclude Include="..\Public\Weapon.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="..\Private\TestGround.cpp" />
     <ClCompile Include="..\Private\TestPlay_Tool.cpp" />
     <ClCompile Include="..\Private\ToolAnimObj.cpp" />
+    <ClCompile Include="..\Private\ToolColliderObj.cpp" />
     <ClCompile Include="..\Private\ToolMapObj.cpp" />
     <ClCompile Include="..\Private\ToolState.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
