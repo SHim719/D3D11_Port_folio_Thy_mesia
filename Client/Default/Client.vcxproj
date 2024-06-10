@@ -169,7 +169,7 @@
     <ClInclude Include="..\Public\Anim_Tool.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Client_Components.h" />
-    <ClInclude Include="..\Public\Client_Function.h" />
+    <ClInclude Include="..\Public\Client_Functions.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />

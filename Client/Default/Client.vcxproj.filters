@@ -231,14 +231,14 @@
     <ClInclude Include="..\Public\PlayerState_Attack.h">
       <Filter>02. GameObjects\02. Player\State\05. PlayerState_Attack</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Client_Function.h">
-      <Filter>99. Defines</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\State_Base.h">
       <Filter>03. State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolColliderObj.h">
       <Filter>02. GameObjects\99. ToolObject\2. ToolColliderObj</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Functions.h">
+      <Filter>99. Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,11 +34,14 @@ private:
 	void Destroy_MapObjects();
 	void Transform_View();
 	void Placable_Object();
+	void Object_ListBox();
 private:
-	vector<CToolMapObj*>						m_MapObjects;
 	vector<string>								m_strPlacable_Objects;
+	vector<CToolMapObj*>						m_MapObjects;
+	vector<string>								m_strCreatedObjects;
 	unordered_multimap<string, CToolMapObj*>	m_MapLayers; // 나중에 얘 데이터로 저장할거임.
 
+	_int m_iSelPlacableObj = 0;
 	_int m_iSelObj = -1;
 	_bool m_bMouseUsed = false;
 
@@ -46,6 +49,8 @@ private:
 	_float3 m_vPosition = {};
 	_float3 m_vRotation = {};
 	_float3 m_vScale = {};
+
+	void Reset_Transform(_fmatrix WorldMatrix);
 #pragma endregion
 
 #pragma region Gizmo
@@ -76,9 +81,8 @@ private:
 
 	ID3D11Texture2D*		m_pPickingTexture = nullptr;
 
-	_int Picking_Object();
-
 	void Picking();
+	_int Picking_Object();
 #pragma endregion
 
 

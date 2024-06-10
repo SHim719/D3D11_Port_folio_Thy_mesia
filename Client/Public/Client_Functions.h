@@ -10,7 +10,7 @@ namespace Client
 
    _matrix Get_LookTo(_fvector vLook);
 
-	   
+   _vector To_EulerAngle(_fvector vQuat);
    
 };
 

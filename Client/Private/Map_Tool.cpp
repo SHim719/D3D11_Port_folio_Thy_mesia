@@ -42,22 +42,22 @@ HRESULT CMap_Tool::Ready_Picking()
     TextureDesc.SampleDesc.Quality = 0;
     TextureDesc.SampleDesc.Count = 1;
 
-    TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
+    TextureDesc.Usage = D3D11_USAGE_DEFAULT;
     TextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
-    TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    TextureDesc.CPUAccessFlags = 0;
     TextureDesc.MiscFlags = 0;
 
     if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pColorTexture)))
         return E_FAIL;
 
     if (FAILED(m_pDevice->CreateRenderTargetView(m_pColorTexture, nullptr, &m_pColorRTV)))
-        return E_FAIL;
+        return E_FAIL; 
 
     TextureDesc.Width = 1;
     TextureDesc.Height = 1;
     TextureDesc.Usage = D3D11_USAGE_STAGING;
     TextureDesc.BindFlags = 0;
-    TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
 
     if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pPickingTexture)))
         return E_FAIL;
@@ -68,7 +68,6 @@ HRESULT CMap_Tool::Ready_Picking()
 void CMap_Tool::Main_Window()
 {
     ImGui::Begin("Main_Window", (bool*)0, ImGuiWindowFlags_MenuBar);
-    Picking();
     Menu_Bar();
     TabBar();
     ImGui::End();
@@ -90,13 +89,16 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
    
    for (const fs::directory_entry& entry : fs::directory_iterator(folderPath))
    {
+       if (entry.is_directory())
+           continue;
+
        fs::path fileName = entry.path().filename();
        fs::path fileTitle = fileName.stem();
       
        wstring wstrPrototypeTag = L"Prototype_Model_";
        wstrPrototypeTag += fileTitle.c_str();
        if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel::Create(m_pDevice, m_pContext
-           ,entry.path().parent_path().generic_string(), entry.path().filename().generic_string()))))
+           ,entry.path().parent_path().generic_string() + "/", entry.path().filename().generic_string()))))
            return E_FAIL;
 
        m_strPlacable_Objects.push_back(fileTitle.generic_string());
@@ -139,19 +141,18 @@ wstring CMap_Tool::Get_FolderPath()
 
 HRESULT CMap_Tool::Create_ObjectInLevel()
 {
-    wstring strModelPrototypeTag = L"Prototype_Model_" + Convert_StrToWStr(m_strPlacable_Objects[m_iSelObj]);
+    wstring strModelPrototypeTag = L"Prototype_Model_" + Convert_StrToWStr(m_strPlacable_Objects[m_iSelPlacableObj]);
 
     CToolMapObj* pObj = static_cast<CToolMapObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"MapObject", L"Prototype_ToolMapObj", &strModelPrototypeTag));
     if (nullptr == pObj)
         return E_FAIL;
 
     m_MapObjects.emplace_back(pObj);
-    m_MapLayers.insert({ m_strPlacable_Objects[m_iSelObj], pObj });
+    m_strCreatedObjects.emplace_back(m_strPlacable_Objects[m_iSelPlacableObj]);
+    m_MapLayers.emplace(m_strPlacable_Objects[m_iSelPlacableObj], pObj);
 
     return S_OK;
 }
-
-
 
 void CMap_Tool::Menu_Bar()
 {
@@ -159,6 +160,7 @@ void CMap_Tool::Menu_Bar()
     {
         if (ImGui::BeginMenu("File"))
         {
+            m_bMouseUsed = true;
             if (ImGui::MenuItem("Open Meshes"))
             {
                 Open_MeshesByFolder();
@@ -186,9 +188,10 @@ void CMap_Tool::TabBar()
     {
         if (ImGui::BeginTabItem("Object"))
         {
+            Transform_Gizmo();
             Transform_View();
             Placable_Object();
-            
+            Object_ListBox();
 
             ImGui::EndTabItem();
         }
@@ -200,8 +203,7 @@ void CMap_Tool::TabBar()
 
 void CMap_Tool::Destroy_MapObjects()
 {
-    vector<string>::iterator strIter = m_strPlacable_Objects.begin();
-
+    vector<string>::iterator strIter = m_strCreatedObjects.begin();
 
     for (auto it = m_MapLayers.begin(); it != m_MapLayers.end();)
     {
@@ -216,7 +218,7 @@ void CMap_Tool::Destroy_MapObjects()
         if ((*it)->Is_Destroyed())
         {
             it = m_MapObjects.erase(it);
-            strIter = m_strPlacable_Objects.erase(strIter);
+            strIter = m_strCreatedObjects.erase(strIter);
         }
         else
         {
@@ -226,13 +228,37 @@ void CMap_Tool::Destroy_MapObjects()
     }
 
 }
-
 void CMap_Tool::Transform_View()
 {
     ImGui::SeparatorText("Transform");
-    ImGui::InputFloat3("Position", &m_vPosition.x);
-    ImGui::InputFloat3("Rotation", &m_vRotation.x);
-    ImGui::InputFloat3("Scale", &m_vScale.x);
+    if (ImGui::InputFloat3("Position", &m_vPosition.x))
+    {
+        m_bMouseUsed = true;
+        m_MapObjects[m_iSelObj]->Get_Transform()->Set_Position(XMLoadFloat3(&m_vPosition));
+    }
+
+    if (ImGui::InputFloat3("Rotation", &m_vRotation.x))
+    {
+        m_bMouseUsed = true;
+        _vector vQuat = XMQuaternionRotationRollPitchYaw(m_vRotation.x, m_vRotation.y, m_vRotation.z);
+        m_MapObjects[m_iSelObj]->Get_Transform()->Rotation_Quaternion(vQuat);
+    }
+
+    if (ImGui::InputFloat3("Scale", &m_vScale.x))
+    {
+        m_bMouseUsed = true;
+        m_MapObjects[m_iSelObj]->Get_Transform()->Set_Scale(m_vScale);
+    }
+}
+
+void CMap_Tool::Reset_Transform(_fmatrix WorldMatrix)
+{
+    _vector vScale, vPosition, vQuaternion;
+    XMMatrixDecompose(&vScale, &vQuaternion, &vPosition, WorldMatrix);
+
+    XMStoreFloat3(&m_vScale, vScale);
+    XMStoreFloat3(&m_vPosition, vPosition);
+    XMStoreFloat3(&m_vRotation, To_EulerAngle(vQuaternion));
 }
 
 void CMap_Tool::Transform_Gizmo()
@@ -270,26 +296,19 @@ void CMap_Tool::Transform_Gizmo()
             m_tGizmoDesc.CurrentGizmoMode = m_tGizmoDesc.CurrentGizmoMode == ImGuizmo::LOCAL ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
     }
 #pragma endregion 
-
+    
     _float4x4 WorldMatrix = m_MapObjects[m_iSelObj]->Get_Transform()->Get_WorldFloat4x4();
-
     if (ImGuizmo::Manipulate(*ViewMatrix.m, *ProjMatrix.m
         , m_tGizmoDesc.CurrentGizmoOperation
         , m_tGizmoDesc.CurrentGizmoMode
         , *WorldMatrix.m, NULL, m_tGizmoDesc.bUseSnap ? &m_tGizmoDesc.snap[0] : NULL, m_tGizmoDesc.boundSizing ? m_tGizmoDesc.bounds : NULL
         , m_tGizmoDesc.boundSizingSnap ? m_tGizmoDesc.boundsSnap : NULL))
-    {
+    {   
         m_bMouseUsed = true;
-        
-        _vector vScale, vPosition, vQuaternion;
-        XMMatrixDecompose(&vScale, &vQuaternion, &vPosition, XMLoadFloat4x4(&WorldMatrix));
-
-        XMStoreFloat3(&m_vScale, vScale);
-        XMStoreFloat3(&m_vPosition, vPosition);
-        XMStoreFloat3(&m_vRotation, To_EulerAngle(vQuaternion));
+        Reset_Transform(XMLoadFloat4x4(&WorldMatrix));
+        m_MapObjects[m_iSelObj]->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
     }
-
-    m_MapObjects[m_iSelObj]->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+    
 }
 
 
@@ -298,34 +317,52 @@ void CMap_Tool::Placable_Object()
     ImGui::SeparatorText("Models");
     const _char** szPlacables = new const _char * [m_strPlacable_Objects.size()];
 
-    ImGui::ListBox("##Placble_ListBox", &m_iSelObj, szPlacables, (_int)m_strPlacable_Objects.size(), 10);
+    for (size_t i = 0; i < m_strPlacable_Objects.size(); ++i)
+        szPlacables[i] = m_strPlacable_Objects[i].c_str();
+
+    if (ImGui::ListBox("##Placble_ListBox", &m_iSelPlacableObj, szPlacables, (_int)m_strPlacable_Objects.size(), 10))
+        m_bMouseUsed = true;
+    
 
     if (ImGui::Button("Create"))
     {
-        wstring wstrModelName = Convert_StrToWStr(szPlacables[m_iSelObj]);
-        CToolMapObj* pObj = static_cast<CToolMapObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, wstrModelName,
-            L"Prototype_Model_" + wstrModelName, nullptr));
-
-        string strObject = szPlacables[m_iSelObj];
-
-        m_MapObjects.emplace_back(pObj);
-        m_strPlacable_Objects.emplace_back(strObject);
-
-        m_MapLayers.emplace(strObject, pObj);
+        m_bMouseUsed = true;
+        Create_ObjectInLevel();
     }
 
     Safe_Delete_Array(szPlacables);
 }
 
+void CMap_Tool::Object_ListBox()
+{
+    ImGui::SeparatorText("Created Objects");
+    const _char** szObjects = new const _char * [m_strCreatedObjects.size()];
+
+    for (size_t i = 0; i < m_strCreatedObjects.size(); ++i)
+        szObjects[i] = m_strCreatedObjects[i].c_str();
+
+    if (ImGui::ListBox("##CreatedObj_ListBox", &m_iSelObj, szObjects, (_int)m_strCreatedObjects.size(), 10))
+    {
+        m_bMouseUsed = true;
+        _float4x4 WorldMatrix = m_MapObjects[m_iSelObj]->Get_Transform()->Get_WorldFloat4x4();
+        Reset_Transform(XMLoadFloat4x4(&WorldMatrix));
+    }
+       
+    Safe_Delete_Array(szObjects);
+}
+
 void CMap_Tool::Picking()
 {
-    if (m_MapObjects.empty() || m_bMouseUsed)
+    if (m_MapObjects.empty() || m_bMouseUsed || g_hWnd != GetFocus() )
         return;
+
     if (KEY_DOWN(eKeyCode::LButton))
     {
         _int iPickingIdx = Picking_Object();
         if (-1 == iPickingIdx)
             return;
+        else
+            m_iSelObj = iPickingIdx;
     }
 }
 
@@ -344,12 +381,14 @@ _int CMap_Tool::Picking_Object()
         return -1;
 
     ID3D11RenderTargetView* pBackRTV = nullptr;
-    m_pContext->OMGetRenderTargets(1, &pBackRTV, nullptr);
-    m_pContext->OMSetRenderTargets(1, &m_pColorRTV, nullptr);
+    ID3D11DepthStencilView* pBackDSV = nullptr;
+    m_pContext->OMGetRenderTargets(1, &pBackRTV, &pBackDSV);
+    m_pContext->OMSetRenderTargets(1, &m_pColorRTV, pBackDSV);
 
     _float vClearColor[4] = { 1.f, 1.f, 1.f, 1.f };
 
     m_pContext->ClearRenderTargetView(m_pColorRTV, vClearColor);
+    m_pContext->ClearDepthStencilView(pBackDSV, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
     _int iIndex = 0;
     for (CToolMapObj* pObj : m_MapObjects)
@@ -370,6 +409,7 @@ _int CMap_Tool::Picking_Object()
     D3D11_MAPPED_SUBRESOURCE ms;
     m_pContext->Map(m_pPickingTexture, 0, D3D11_MAP_READ, 0, &ms);
 
+
     memcpy(pickColor, ms.pData, sizeof(_ubyte) * 4);
 
     m_pContext->Unmap(m_pPickingTexture, 0);
@@ -377,7 +417,10 @@ _int CMap_Tool::Picking_Object()
     iResult = 0;
     iResult += (_int)pickColor[0];
 
+    m_pContext->OMSetRenderTargets(1, &pBackRTV, pBackDSV);
+
     Safe_Release(pBackRTV);
+    Safe_Release(pBackDSV);
 
     return iResult;
 }
@@ -405,5 +448,7 @@ void CMap_Tool::Free()
     
     Safe_Release(m_pPickingTexture);
 }
+
+
 
 
