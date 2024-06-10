@@ -34,5 +34,24 @@ namespace Client
 		);
 	}
 
+	_vector To_EulerAngle(_fvector vQuat)
+	{
+		_vector vEulerAngle;
+
+		_float sinr_cosp = 2.f * (vQuat.m128_f32[3] * vQuat.m128_f32[0] + vQuat.m128_f32[1] * vQuat.m128_f32[2]);
+		_float cosr_cosp = 1.f - 2.f * (vQuat.m128_f32[0] * vQuat.m128_f32[0] + vQuat.m128_f32[1] * vQuat.m128_f32[1]);
+		vEulerAngle.m128_f32[0] = atan2(sinr_cosp, cosr_cosp);
+
+		_float sinp = std::sqrt(1.f + 2.f * (vQuat.m128_f32[3] * vQuat.m128_f32[1] - vQuat.m128_f32[0] * vQuat.m128_f32[2]));
+		_float cosp = std::sqrt(1.f - 2.f * (vQuat.m128_f32[3] * vQuat.m128_f32[1] - vQuat.m128_f32[0] * vQuat.m128_f32[2]));
+		vEulerAngle.m128_f32[1] = 2.f * atan2(sinp, cosp) - 3.14159265f / 2.f;
+
+		_float siny_cosp = 2.f * (vQuat.m128_f32[3] * vQuat.m128_f32[2] + vQuat.m128_f32[0] * vQuat.m128_f32[1]);
+		_float cosy_cosp = 1.f - 2.f * (vQuat.m128_f32[1] * vQuat.m128_f32[1] + vQuat.m128_f32[2] * vQuat.m128_f32[2]);
+		vEulerAngle.m128_f32[2] = atan2(siny_cosp, cosy_cosp);
+
+		return vEulerAngle;
+	}
+
 
 }

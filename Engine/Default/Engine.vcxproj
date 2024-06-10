@@ -221,6 +221,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\Public\PhysX_Manager.h" />
     <ClInclude Include="..\Public\PipeLine.h" />
     <ClInclude Include="..\public\Renderer.h" />
+    <ClInclude Include="..\Public\RenderTarget.h" />
     <ClInclude Include="..\Public\Shader.h" />
     <ClInclude Include="..\Public\Sound.h" />
     <ClInclude Include="..\Public\Sound_Manager.h" />
@@ -262,6 +263,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClCompile Include="..\Private\PhysX_Manager.cpp" />
     <ClCompile Include="..\Private\PipeLine.cpp" />
     <ClCompile Include="..\private\Renderer.cpp" />
+    <ClCompile Include="..\Private\RenderTarget.cpp" />
     <ClCompile Include="..\Private\Shader.cpp" />
     <ClCompile Include="..\Private\Sound.cpp" />
     <ClCompile Include="..\Private\Sound_Manager.cpp" />

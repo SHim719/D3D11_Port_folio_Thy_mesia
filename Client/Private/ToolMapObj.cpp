@@ -1,6 +1,5 @@
 #include "ToolMapObj.h"
 
-_float CToolMapObj::s_fNextPickingRed = 0.f;
 
 
 CToolMapObj::CToolMapObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -11,8 +10,6 @@ CToolMapObj::CToolMapObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 CToolMapObj::CToolMapObj(const CToolMapObj& rhs)
 	: CGameObject(rhs)
 {
-	m_vPickingColor.r = s_fNextPickingRed / 10000.f;
-	s_fNextPickingRed += 1.f;
 }
 
 HRESULT CToolMapObj::Initialize_Prototype()
@@ -64,6 +61,49 @@ HRESULT CToolMapObj::Render()
 			return E_FAIL;
 	}
 	
+	return S_OK;
+}
+
+HRESULT CToolMapObj::Render_Picking(_int iSelectIdx)
+{
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+		return E_FAIL;
+
+
+	float arrPickingColor[4] = {};
+	_float4 vPickingColor = { 0.f, 0.f, 0.f, 0.f };
+
+	for (_uint i = 0; i < 4; ++i)
+	{
+		if (iSelectIdx < 0)
+			break;
+
+		arrPickingColor[i] = ((_float)iSelectIdx / 255) >= 1 ? 1.f : (_float)iSelectIdx / 255;
+		iSelectIdx -= 255;
+	}
+
+	vPickingColor.x = arrPickingColor[0];
+	vPickingColor.y = arrPickingColor[1];
+	vPickingColor.z = arrPickingColor[2];
+	vPickingColor.w = arrPickingColor[3];
+
+	if (FAILED(m_pShader->Set_RawValue("g_vPickingColor", &vPickingColor, sizeof(_float4))))
+		return E_FAIL;
+
+	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
+
+	for (_uint j = 0; j < iNumMeshes; ++j)
+	{
+		if (FAILED(m_pModel->Render(m_pShader, j, 1)))
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 

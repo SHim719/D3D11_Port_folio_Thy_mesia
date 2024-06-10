@@ -7,6 +7,8 @@ matrix			g_SocketMatrix;
 texture2D		g_DiffuseTexture;
 texture2D		g_NormalTexture;
 
+float4			g_vPickingColor;
+
 struct VS_IN
 {
 	float3		vPosition : POSITION;
@@ -49,28 +51,6 @@ VS_OUT VS_MAIN(VS_IN In)
 	return Out;
 }
 
-VS_OUT VS_MAIN_SOCKET(VS_IN In)
-{
-	VS_OUT		Out = (VS_OUT)0;
-
-	matrix		matVP;
-
-	
-	matVP = mul(g_ViewMatrix, g_ProjMatrix);
-
-	vector		vPosition = mul(float4(In.vPosition, 1.f), g_WorldMatrix);
-	vPosition = mul(vPosition, g_SocketMatrix);
-	vPosition = mul(vPosition, matVP);
-
-	Out.vPosition = vPosition;
-	Out.vNormal = mul(vector(In.vNormal, 0.f), g_WorldMatrix).xyz;
-	Out.vTexUV = In.vTexUV;
-	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
-
-	return Out;
-}
-
-
 struct PS_IN
 {
 	float4		vPosition : SV_POSITION;
@@ -111,11 +91,49 @@ PS_OUT PS_MAIN(PS_IN In)
 	return Out;
 }
 
+struct VS_OUT_PICKING
+{
+    float4 vPosition : SV_POSITION;
+};
+
+VS_OUT_PICKING VS_MAIN_PICKING(VS_IN In)
+{
+    VS_OUT_PICKING Out = (VS_OUT_PICKING) 0;
+
+    matrix matWV, matWVP;
+
+    matWV = mul(g_WorldMatrix, g_ViewMatrix);
+    matWVP = mul(matWV, g_ProjMatrix);
+
+    Out.vPosition = mul(vector(In.vPosition, 1.f), matWVP);
+
+    return Out;
+}
+
+struct PS_IN_PICKING
+{
+    float4 vPosition : SV_POSITION;
+};
+
+struct PS_OUT_PICKING
+{
+    float4 vColor : SV_TARGET0;
+};
+
+PS_OUT_PICKING PS_MAIN_PICKING(PS_IN_PICKING In)
+{
+    PS_OUT_PICKING Out = (PS_OUT_PICKING) 0;
+
+    Out.vColor = g_vPickingColor;
+
+    return Out;
+}
+
 
 
 technique11 DefaultTechinque
 {
-	pass Default
+	pass Default // 0
 	{
 		SetBlendState(BS_None, vector(1.f, 1.f, 1.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_Default, 0);
@@ -126,15 +144,15 @@ technique11 DefaultTechinque
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}	
 
-	pass Socket
+	pass Picking // 1
 	{
 		SetBlendState(BS_None, vector(1.f, 1.f, 1.f, 1.f), 0xffffffff);
 		SetDepthStencilState(DSS_Default, 0);
 		SetRasterizerState(RS_Default);
 
-		VertexShader = compile vs_5_0 VS_MAIN_SOCKET();
+		VertexShader = compile vs_5_0 VS_MAIN_PICKING();
 		GeometryShader = NULL;
-		PixelShader = compile ps_5_0 PS_MAIN();
+		PixelShader = compile ps_5_0 PS_MAIN_PICKING();
 	}
 	
 }

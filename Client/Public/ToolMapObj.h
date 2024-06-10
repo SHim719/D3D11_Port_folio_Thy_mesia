@@ -18,13 +18,11 @@ public:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
+	HRESULT Render_Picking(_int iSelectIdx);
+
 private:
 	CShader*	m_pShader = nullptr;
 	CModel*		m_pModel = nullptr;
-
-private:
-	static _float s_fNextPickingRed;
-	_float4	m_vPickingColor = { 0.f, 0.f, 0.f, 0.f };
 
 private:
 	HRESULT Ready_Components(void* pArg);

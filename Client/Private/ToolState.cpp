@@ -26,6 +26,10 @@ void CToolState::Tick(_float fTimeDelta)
 {
 }
 
+void CToolState::LateTick(_float fTimeDelta)
+{
+}
+
 void CToolState::Camera_Window()
 {
     ImGui::Begin("Camera_State", (bool*)0);

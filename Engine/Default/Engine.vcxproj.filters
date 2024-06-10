@@ -130,6 +130,9 @@
     <Filter Include="01.Utility\03. Components\06. Collider\DebugDraw">
       <UniqueIdentifier>{355c08dd-0b8f-4ac3-8753-a8f134d864de}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\07. RenderTarget">
+      <UniqueIdentifier>{7922820a-6027-4b03-92bc-439c7dc9d344}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -270,6 +273,9 @@
     <ClInclude Include="..\Public\DebugDraw.h">
       <Filter>01.Utility\03. Components\06. Collider\DebugDraw</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\RenderTarget.h">
+      <Filter>01.Utility\07. RenderTarget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -388,6 +394,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\DebugDraw.cpp">
       <Filter>01.Utility\03. Components\06. Collider\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\RenderTarget.cpp">
+      <Filter>01.Utility\07. RenderTarget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

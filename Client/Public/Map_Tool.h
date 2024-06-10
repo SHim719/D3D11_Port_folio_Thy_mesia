@@ -12,8 +12,12 @@ protected:
 	virtual ~CMap_Tool() = default;
 
 public:
-	HRESULT Initialize(void* pArg)	override;
-	void Tick(_float fTimeDelta)	override;
+	HRESULT Initialize(void* pArg)		override;
+	void Tick(_float fTimeDelta)		override;
+	void LateTick(_float fTimeDelta)	override;
+
+private:
+	HRESULT Ready_Picking();
 
 private:
 	void Main_Window();
@@ -27,14 +31,16 @@ private:
 	void Menu_Bar();
 	void TabBar();
 
+	void Destroy_MapObjects();
 	void Transform_View();
-	void Object_Child_Window();
-	void Models_ListBox();
+	void Placable_Object();
 private:
-	unordered_map<_float, CToolMapObj*> m_PickableObjects; 
+	vector<CToolMapObj*>						m_MapObjects;
+	vector<string>								m_strPlacable_Objects;
+	unordered_multimap<string, CToolMapObj*>	m_MapLayers; // 나중에 얘 데이터로 저장할거임.
 
-	vector<CToolMapObj*> m_MapObjects;
-	vector<string>	m_strPlacable_Objects;
+	_int m_iSelObj = -1;
+	_bool m_bMouseUsed = false;
 
 #pragma region Transform_View
 	_float3 m_vPosition = {};
@@ -42,10 +48,39 @@ private:
 	_float3 m_vScale = {};
 #pragma endregion
 
-#pragma region Scenes_View
-	_int m_iSelModelObj = 0;
+#pragma region Gizmo
+private:
 
+	typedef struct tagGizmoDesc
+	{
+		ImGuizmo::MODE CurrentGizmoMode = ImGuizmo::LOCAL;
+		ImGuizmo::OPERATION CurrentGizmoOperation = ImGuizmo::TRANSLATE;
+		bool bUseSnap = false;
+		float snap[3] = { 0.5f, 0.5f, 0.5f };
+		float bounds[6] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
+		float boundsSnap[3] = { 0.1f, 0.1f, 0.1f };
+		bool boundSizing = false;
+		bool boundSizingSnap = false;
+	}GIZMODESC;
+
+	GIZMODESC m_tGizmoDesc;
+
+	void Transform_Gizmo();
 #pragma endregion
+
+#pragma region Picking
+private:
+
+	ID3D11Texture2D*		m_pColorTexture = nullptr;
+	ID3D11RenderTargetView* m_pColorRTV = nullptr;
+
+	ID3D11Texture2D*		m_pPickingTexture = nullptr;
+
+	_int Picking_Object();
+
+	void Picking();
+#pragma endregion
+
 
 public:
 	static CMap_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);

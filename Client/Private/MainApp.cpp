@@ -47,6 +47,7 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 
 	m_pImGui_Main->Tick(fTimeDelta);
+	m_pImGui_Main->LateTick(fTimeDelta);
 }
 
 HRESULT CMainApp::Render()

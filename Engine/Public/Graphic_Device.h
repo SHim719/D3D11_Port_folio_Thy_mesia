@@ -17,14 +17,14 @@ public:
 	HRESULT Present();
 
 private:
-	ID3D11Device*			m_pDevice;
-	ID3D11DeviceContext*	m_pDeviceContext;
-	IDXGISwapChain*			m_pSwapChain;
-
-	ID3D11RenderTargetView*	m_pBackBufferRTV;
-
-	ID3D11Texture2D*		m_pDSBuffer;
-	ID3D11DepthStencilView*	m_pDSView;
+	ID3D11Device*			m_pDevice		 = nullptr;
+	ID3D11DeviceContext*	m_pDeviceContext = nullptr;
+	IDXGISwapChain*			m_pSwapChain	 = nullptr;
+											
+	ID3D11RenderTargetView*	m_pBackBufferRTV = nullptr;
+											 
+	ID3D11Texture2D*		m_pDSBuffer		 = nullptr;
+	ID3D11DepthStencilView*	m_pDSView		 = nullptr;
 	
 	_uint					m_iNumQualityLevel;
 

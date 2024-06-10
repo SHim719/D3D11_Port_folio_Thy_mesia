@@ -17,7 +17,6 @@ CImGui_Main::CImGui_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CImGui_Main::Initialize()
 {
-
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -36,7 +35,7 @@ HRESULT CImGui_Main::Initialize()
     m_ToolStates[ANIM] = CAnim_Tool::Create(m_pDevice, m_pContext);
     m_ToolStates[TESTPLAY] = CTestPlay_Tool::Create(m_pDevice, m_pContext);
 
-    m_eToolState = ANIM;
+    m_eToolState = TESTPLAY;
     m_ToolStates[m_eToolState]->Start_Tool();
     return S_OK;
 }
@@ -51,6 +50,12 @@ void CImGui_Main::Tick(_float fTimeDelta)
     if (m_ToolStates[m_eToolState])
         m_ToolStates[m_eToolState]->Tick(fTimeDelta);
 
+}
+
+void CImGui_Main::LateTick(_float fTimeDelta)
+{
+    if (m_ToolStates[m_eToolState])
+        m_ToolStates[m_eToolState]->LateTick(fTimeDelta);
 }
 
 void CImGui_Main::Render()
