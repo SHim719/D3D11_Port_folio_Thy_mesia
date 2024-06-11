@@ -1,12 +1,13 @@
 #pragma once
+
 #include "State_Base.h"
 #include "Player.h"
+#include "PlayerStat.h"
 #include "Main_Camera.h"
 
 BEGIN(Client)
 class CPlayerState_Base : public CState_Base
 {
-
 protected:
 	CPlayerState_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPlayerState_Base() = default;
@@ -24,12 +25,13 @@ protected:
 	_bool Check_StateChange(PlayerState eState);
 	
 protected:
-	CPlayer*		m_pPlayer = nullptr;
-	CMain_Camera*	m_pMain_Camera = nullptr;
+	CPlayer*			m_pPlayer = { nullptr };
+	CMain_Camera*		m_pMain_Camera = { nullptr };
+	CPlayerStat*		m_pPlayerStat = { nullptr };
 
-	_float			m_fRotRate = 15.f;
-	_float			m_fJogSpeed = 5.f;
-	_float			m_fSprintSpeed = 8.f;
+	_float				m_fRotRate = 10.f;
+	_float				m_fJogSpeed = 5.f;
+	_float				m_fSprintSpeed = 8.f;
 
 public:
 	void Free() override;

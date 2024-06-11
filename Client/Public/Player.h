@@ -2,25 +2,17 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
-#include "Player_Defines.h"
+#include "Player_Enums.h"
 
 BEGIN(Engine)
 class CModel;
 class CShader;
-class CTexture;
-class CCollider;
-class CRenderer;
-class CTransform;
-class CNavigation;
-class CHierarchyNode;
 END
 
 BEGIN(Client)
 
 class CPlayer final : public CGameObject
 {
-public:
-//	enum COLLIDERTYPE { COLLIDERTYPE_AABB, COLLIDERTYPE_OBB, COLLIDERTYPE_SPHERE, COLLILDERTYPE_END };
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
@@ -34,17 +26,29 @@ public:
 	HRESULT Render()					override;
 
 private:
-	CShader*	m_pShader = nullptr;
-	CModel*		m_pModel = nullptr;
-	//CCollider* m_pColliderCom[COLLILDERTYPE_END] = { nullptr };
-	//CNavigation* m_pNavigationCom = nullptr;
+	CShader*	m_pShader = { nullptr };
+	CModel*		m_pModel = { nullptr };
 
 private:
-	PlayerState			m_eState = PlayerState::State_End;
+	PlayerState			m_eState = { PlayerState::State_End };
 	class CState_Base*	m_States[(_uint)PlayerState::State_End] = {};
 
+	class CPlayerStat*	m_pStats = { nullptr };
 public:
 	void Change_State(PlayerState eState);
+
+	CPlayerStat* Get_PlayerStat() const { 
+		return m_pStats; }
+
+private:
+	class CWeapon*	m_pDagger = { nullptr };
+	class CWeapon*	m_pSaber = { nullptr };
+
+private:
+	void Active_Weapons();
+	void InActive_Weapons();
+	void Active_Claw();
+	void InActive_Claw();
 
 private:
 	HRESULT Ready_Components();

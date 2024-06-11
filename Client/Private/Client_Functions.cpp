@@ -1,16 +1,20 @@
 #include "Client_Functions.h"
 
+#include <codecvt>
+#include <locale> 
 
 namespace Client
 {
 	wstring Convert_StrToWStr(const string& str)
 	{
-		return wstring().assign(str.begin(), str.end());
+		wstring_convert<codecvt_utf8<_tchar>> converter;
+		return converter.from_bytes(str);
 	}
 
 	string Convert_WStrToStr(const wstring& wstr)
 	{
-		return string().assign(wstr.begin(), wstr.end());
+		wstring_convert<codecvt_utf8<_tchar>> converter;
+		return converter.to_bytes(wstr);
 	}
 
 

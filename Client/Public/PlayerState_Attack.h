@@ -16,11 +16,14 @@ public:
 
 private:
 	void Enable_NextAttack();
+	void Disable_NextAttack();
+	void Disable_Rotation();
 
 private:
 	_bool			m_bCanNextAttack = false;
-	_uint			m_iMaxComboCnt = 5;
+	_bool			m_bCanRotation = true;
 	_uint			m_iNowComboCnt = 0;
+
 public:
 	static CPlayerState_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

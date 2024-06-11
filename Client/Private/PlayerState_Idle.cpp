@@ -28,6 +28,9 @@ void CPlayerState_Idle::OnGoing(_float fTimeDelta)
 		else
 			m_pPlayer->Change_State(PlayerState::State_Jog);
 	}
+
+	if (Check_StateChange(PlayerState::State_Attack))
+		m_pPlayer->Change_State(PlayerState::State_Attack);
 }
 
 void CPlayerState_Idle::OnState_End()

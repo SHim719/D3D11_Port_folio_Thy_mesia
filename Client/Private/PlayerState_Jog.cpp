@@ -40,7 +40,6 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 
 	if (Check_StateChange(PlayerState::State_Attack))
 	{
-		m_pOwnerTransform->LookTo(vNewLook);
 		m_pPlayer->Change_State(PlayerState::State_Attack);
 		return;
 	}

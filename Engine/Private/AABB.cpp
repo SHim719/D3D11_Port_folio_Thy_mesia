@@ -116,4 +116,8 @@ CComponent* CAABB::Clone(void* pArg)
 
 void CAABB::Free()
 {
+	__super::Free();
+
+	Safe_Delete(m_pOriginal_AABB);
+	Safe_Delete(m_pAABB);
 }

@@ -12,15 +12,21 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pModel->Bind_Func("Enable_NextAttack", bind(&CPlayerState_Attack::Enable_NextAttack, this));
+	m_pModel->Bind_Func("Disable_NextAttack", bind(&CPlayerState_Attack::Disable_NextAttack, this));
+	m_pModel->Bind_Func("Disable_AttackRotation", bind(&CPlayerState_Attack::Disable_Rotation, this));
 
 	return S_OK;
 }
 
 void CPlayerState_Attack::OnState_Start()
 {
-	//_float fBlendingTime = m_iNowComboCnt == 0 ? 0.02f : 0.f;
-	m_pModel->Change_Animation((_uint)(Corvus_SD_LAttack1 + m_iNowComboCnt), 0.f);
+	if (3 == m_iNowComboCnt && 5 == m_pPlayerStat->Get_MaxAttackCnt())
+		++m_iNowComboCnt;
+
+	
+	m_pModel->Change_Animation(_uint(Corvus_SD_LAttack1 + m_iNowComboCnt), 0.f);
 	m_bCanNextAttack = false;
+	m_bCanRotation = true;
 }
 
 void CPlayerState_Attack::OnGoing(_float fTimeDelta)
@@ -30,19 +36,24 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 		m_pPlayer->Change_State(PlayerState::State_Idle);
 		return;
 	}
-		
-	if (m_bCanNextAttack && m_iNowComboCnt < m_iMaxComboCnt)
+	if (m_bCanNextAttack && m_iNowComboCnt < m_pPlayerStat->Get_MaxAttackCnt())
 	{
 		if (KEY_PUSHING(eKeyCode::LButton))
 		{
 			m_iNowComboCnt++;
 			OnState_Start();
 		}
-			
 	}
 
+	if (m_bCanRotation)
+	{
+		_vector vNewLook = Calc_NewLook();
 
-	m_pOwnerTransform->Go_Root(m_pModel->Get_DeltaRootPos(), m_pOwnerTransform->Get_MoveLook());
+		if (0.f != vNewLook.m128_f32[0] || 0.f != vNewLook.m128_f32[1])
+			Rotate_To_Look(vNewLook, fTimeDelta);
+	}
+	
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
 }
 
 void CPlayerState_Attack::OnState_End()
@@ -54,6 +65,18 @@ void CPlayerState_Attack::Enable_NextAttack()
 {
 	m_bCanNextAttack = true;
 }
+
+void CPlayerState_Attack::Disable_NextAttack()
+{
+	m_bCanNextAttack = false;
+}
+
+
+void CPlayerState_Attack::Disable_Rotation()
+{
+	m_bCanRotation = false;
+}
+
 
 CPlayerState_Attack* CPlayerState_Attack::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {

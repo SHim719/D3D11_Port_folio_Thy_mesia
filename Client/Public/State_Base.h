@@ -22,10 +22,10 @@ public:
 	virtual void OnState_End();
 
 protected:
-	ID3D11Device* m_pDevice = nullptr;
-	ID3D11DeviceContext* m_pContext = nullptr;
+	ID3D11Device*			m_pDevice = nullptr;
+	ID3D11DeviceContext*	m_pContext = nullptr;
 
-	CGameInstance* m_pGameInstance = nullptr;
+	CGameInstance*			m_pGameInstance = nullptr;
 
 protected:
 	CModel*			m_pModel = nullptr;

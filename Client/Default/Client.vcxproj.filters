@@ -124,6 +124,9 @@
     <Filter Include="02. GameObjects\99. ToolObject\2. ToolColliderObj">
       <UniqueIdentifier>{9db4c5a9-80e3-4486-9561-e6867fbf2c19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Player\PlayerStat">
+      <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -204,9 +207,6 @@
     <ClInclude Include="..\Public\PlayerState_Idle.h">
       <Filter>02. GameObjects\02. Player\State\01. PlayerState_Idle</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Player_Defines.h">
-      <Filter>02. GameObjects\02. Player\Define</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Player_States.h">
       <Filter>02. GameObjects\02. Player\Define</Filter>
     </ClInclude>
@@ -239,6 +239,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\Client_Functions.h">
       <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerStat.h">
+      <Filter>02. GameObjects\02. Player\PlayerStat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Player_Enums.h">
+      <Filter>02. GameObjects\02. Player\Define</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +334,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\ToolColliderObj.cpp">
       <Filter>02. GameObjects\99. ToolObject\2. ToolColliderObj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerStat.cpp">
+      <Filter>02. GameObjects\02. Player\PlayerStat</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

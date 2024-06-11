@@ -1,8 +1,11 @@
 #include "Player.h"
 
 #include "Player_States.h"
+#include "PlayerStat.h"
 
 #include "Weapon.h"
+
+
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -102,6 +105,26 @@ void CPlayer::Change_State(PlayerState eState)
 	m_States[(_uint)eState]->OnState_Start();
 }
 
+void CPlayer::Active_Weapons()
+{
+	m_pDagger->Set_Active(true);
+	m_pSaber->Set_Active(true);
+}
+
+void CPlayer::InActive_Weapons()
+{
+	m_pDagger->Set_Active(false);
+	m_pSaber->Set_Active(false);
+}
+
+void CPlayer::Active_Claw()
+{
+}
+
+void CPlayer::InActive_Claw()
+{
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORMDESC		TransformDesc;
@@ -124,6 +147,8 @@ HRESULT CPlayer::Ready_Components()
 
 HRESULT CPlayer::Ready_States()
 {
+	m_pStats = CPlayerStat::Create();
+
 	m_States[(_uint)PlayerState::State_Idle] = CPlayerState_Idle::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Jog] = CPlayerState_Jog::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Sprint] = CPlayerState_Sprint::Create(m_pDevice, m_pContext, this);
@@ -140,15 +165,17 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
 	XMStoreFloat4x4(&WeaponDesc.PivotMatrix, m_pModel->Get_PivotMatrix());
 
-	CGameObject* pDagger = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
-	if (nullptr == pDagger)
+	m_pDagger = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_pDagger)
 		return E_FAIL;
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
-	CGameObject* pSaber = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
-	if (nullptr == pDagger)
+	m_pSaber = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_pSaber)
 		return E_FAIL;
+
+	// Claw ¼ÕÅé»ý¼º
 
 	return S_OK;
 }
@@ -187,7 +214,8 @@ void CPlayer::Free()
 	for (_uint i = 0; i < (_uint)PlayerState::State_End; ++i)
 		Safe_Release(m_States[i]);
 
-	Safe_Release(m_pModel);
+	Safe_Release(m_pStats);
 
+	Safe_Release(m_pModel);
 	Safe_Release(m_pShader);
 }
