@@ -19,7 +19,7 @@ HRESULT CMap_Tool::Initialize(void* pArg)
 
 void CMap_Tool::Tick(_float fTimeDelta)
 {
-    m_bMouseUsed = false;
+    Key_Input();
     Main_Window();
     Camera_Window();
 }
@@ -63,6 +63,12 @@ HRESULT CMap_Tool::Ready_Picking()
         return E_FAIL;
 
     return S_OK;
+}
+
+void CMap_Tool::Key_Input()
+{
+    if (KEY_DOWN(eKeyCode::P))
+        m_bCanPick = !m_bCanPick;
 }
 
 void CMap_Tool::Main_Window()
@@ -160,7 +166,6 @@ void CMap_Tool::Menu_Bar()
     {
         if (ImGui::BeginMenu("File"))
         {
-            m_bMouseUsed = true;
             if (ImGui::MenuItem("Open Meshes"))
             {
                 Open_MeshesByFolder();
@@ -233,20 +238,23 @@ void CMap_Tool::Transform_View()
     ImGui::SeparatorText("Transform");
     if (ImGui::InputFloat3("Position", &m_vPosition.x))
     {
-        m_bMouseUsed = true;
-        m_MapObjects[m_iSelObj]->Get_Transform()->Set_Position(XMLoadFloat3(&m_vPosition));
+        if (-1 == m_iSelObj)
+            return;
+        m_MapObjects[m_iSelObj]->Get_Transform()->Set_Position(XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
     }
 
     if (ImGui::InputFloat3("Rotation", &m_vRotation.x))
     {
-        m_bMouseUsed = true;
+        if (-1 == m_iSelObj)
+            return;
         _vector vQuat = XMQuaternionRotationRollPitchYaw(m_vRotation.x, m_vRotation.y, m_vRotation.z);
         m_MapObjects[m_iSelObj]->Get_Transform()->Rotation_Quaternion(vQuat);
     }
 
     if (ImGui::InputFloat3("Scale", &m_vScale.x))
     {
-        m_bMouseUsed = true;
+        if (-1 == m_iSelObj)
+            return;
         m_MapObjects[m_iSelObj]->Get_Transform()->Set_Scale(m_vScale);
     }
 }
@@ -294,6 +302,9 @@ void CMap_Tool::Transform_Gizmo()
 
         if (m_pGameInstance->GetKeyDown(eKeyCode::T))
             m_tGizmoDesc.CurrentGizmoMode = m_tGizmoDesc.CurrentGizmoMode == ImGuizmo::LOCAL ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
+
+        if (m_pGameInstance->GetKeyDown(eKeyCode::Y))
+            m_tGizmoDesc.bUseSnap = !m_tGizmoDesc.bUseSnap;
     }
 #pragma endregion 
     
@@ -304,7 +315,6 @@ void CMap_Tool::Transform_Gizmo()
         , *WorldMatrix.m, NULL, m_tGizmoDesc.bUseSnap ? &m_tGizmoDesc.snap[0] : NULL, m_tGizmoDesc.boundSizing ? m_tGizmoDesc.bounds : NULL
         , m_tGizmoDesc.boundSizingSnap ? m_tGizmoDesc.boundsSnap : NULL))
     {   
-        m_bMouseUsed = true;
         Reset_Transform(XMLoadFloat4x4(&WorldMatrix));
         m_MapObjects[m_iSelObj]->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
     }
@@ -315,22 +325,51 @@ void CMap_Tool::Transform_Gizmo()
 void CMap_Tool::Placable_Object()
 {
     ImGui::SeparatorText("Models");
+
+    ImVec2 vStartPos = ImGui::GetCursorPos();
+    vStartPos.x += 240.f;
+
     const _char** szPlacables = new const _char * [m_strPlacable_Objects.size()];
 
     for (size_t i = 0; i < m_strPlacable_Objects.size(); ++i)
         szPlacables[i] = m_strPlacable_Objects[i].c_str();
 
-    if (ImGui::ListBox("##Placble_ListBox", &m_iSelPlacableObj, szPlacables, (_int)m_strPlacable_Objects.size(), 10))
-        m_bMouseUsed = true;
-    
+    ImGui::ListBox("##Placble_ListBox", &m_iSelPlacableObj, szPlacables, (_int)m_strPlacable_Objects.size(), 10);
+
+    ImVec2 vNowCursorPos = ImGui::GetCursorPos();
+
+    ForObject_Buttons(vStartPos);
+
+    ImGui::SetCursorPos(vNowCursorPos);
+  
+    Safe_Delete_Array(szPlacables);
+}
+
+void CMap_Tool::ForObject_Buttons(ImVec2 vNowCursorPos)
+{
+    _float yOffset = 30.f;
+    ImGui::SetCursorPos(vNowCursorPos);
 
     if (ImGui::Button("Create"))
-    {
-        m_bMouseUsed = true;
         Create_ObjectInLevel();
-    }
 
-    Safe_Delete_Array(szPlacables);
+    vNowCursorPos.y += yOffset;
+    ImGui::SetCursorPos(vNowCursorPos);
+    
+    ImGui::Checkbox("Picking?", &m_bCanPick);
+
+    vNowCursorPos.y += yOffset;
+    ImGui::SetCursorPos(vNowCursorPos);
+
+    ImGui::Checkbox("Snap?", &m_tGizmoDesc.bUseSnap);
+
+    vNowCursorPos.y += yOffset;
+    ImGui::SetCursorPos(vNowCursorPos);
+
+    _bool bIsLocalMode = m_tGizmoDesc.CurrentGizmoMode == ImGuizmo::LOCAL;
+    if (ImGui::Checkbox("Local?", &bIsLocalMode))
+        m_tGizmoDesc.CurrentGizmoMode = bIsLocalMode ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
+    
 }
 
 void CMap_Tool::Object_ListBox()
@@ -343,7 +382,6 @@ void CMap_Tool::Object_ListBox()
 
     if (ImGui::ListBox("##CreatedObj_ListBox", &m_iSelObj, szObjects, (_int)m_strCreatedObjects.size(), 10))
     {
-        m_bMouseUsed = true;
         _float4x4 WorldMatrix = m_MapObjects[m_iSelObj]->Get_Transform()->Get_WorldFloat4x4();
         Reset_Transform(XMLoadFloat4x4(&WorldMatrix));
     }
@@ -353,7 +391,7 @@ void CMap_Tool::Object_ListBox()
 
 void CMap_Tool::Picking()
 {
-    if (m_MapObjects.empty() || m_bMouseUsed || g_hWnd != GetFocus() )
+    if (m_MapObjects.empty() || g_hWnd != GetFocus() || !m_bCanPick )
         return;
 
     if (KEY_DOWN(eKeyCode::LButton))
@@ -408,7 +446,6 @@ _int CMap_Tool::Picking_Object()
 
     D3D11_MAPPED_SUBRESOURCE ms;
     m_pContext->Map(m_pPickingTexture, 0, D3D11_MAP_READ, 0, &ms);
-
 
     memcpy(pickColor, ms.pData, sizeof(_ubyte) * 4);
 

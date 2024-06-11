@@ -20,6 +20,7 @@ private:
 	HRESULT Ready_Picking();
 
 private:
+	void Key_Input();
 	void Main_Window();
 	void Camera_Window() override;
 
@@ -34,6 +35,7 @@ private:
 	void Destroy_MapObjects();
 	void Transform_View();
 	void Placable_Object();
+	void ForObject_Buttons(ImVec2 vNowCursorPos);
 	void Object_ListBox();
 private:
 	vector<string>								m_strPlacable_Objects;
@@ -43,7 +45,6 @@ private:
 
 	_int m_iSelPlacableObj = 0;
 	_int m_iSelObj = -1;
-	_bool m_bMouseUsed = false;
 
 #pragma region Transform_View
 	_float3 m_vPosition = {};
@@ -81,8 +82,10 @@ private:
 
 	ID3D11Texture2D*		m_pPickingTexture = nullptr;
 
+	_bool					m_bCanPick = false;
 	void Picking();
 	_int Picking_Object();
+
 #pragma endregion
 
 
