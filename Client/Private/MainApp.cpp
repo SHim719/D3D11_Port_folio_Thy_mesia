@@ -1,11 +1,9 @@
 #include "..\Public\MainApp.h"
 
 #include "GameInstance.h"
-
 #include "Levels_Header.h"
-
 #include "Background.h"
-
+#include "UI_Manager.h"
 #include "ImGui_Main.h"
 
 
@@ -73,6 +71,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 		CVIBuffer_Rect::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Point"),
+		CVIBuffer_Point::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Transform"),
 		CTransform::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -108,6 +110,12 @@ HRESULT CMainApp::Ready_Prototype_Shader()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxAnim.hlsl"), VTXANIMMODEL_DECLARATION::Elements, VTXANIMMODEL_DECLARATION::iNumElements))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Shader_UI"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_UI.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
@@ -128,13 +136,14 @@ void CMainApp::Free()
 {	
 	__super::Free();
 
-	Safe_Release(m_pImGui_Main);
+	CUI_Manager::Destroy_Instance();
 
+	Safe_Release(m_pImGui_Main);
+	
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 	Safe_Release(m_pGameInstance);	
 
 	CGameInstance::Release_Engine();
-
 }
 

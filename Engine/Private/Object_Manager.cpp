@@ -144,6 +144,25 @@ CLayer* CObject_Manager::Find_Layer(_uint iLevelIndex, const wstring& strLayerTa
 	return iter->second;
 }
 
+void CObject_Manager::Insert_GameObject(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pObj)
+{
+	CLayer* pLayer = Find_Layer(iLevelIndex, strLayerTag);
+
+	if (nullptr == pLayer)
+	{
+		pLayer = CLayer::Create();
+		if (nullptr == pLayer)
+			return;
+
+		pLayer->Add_GameObject(pObj);
+
+		m_pLayers[iLevelIndex].emplace(strLayerTag, pLayer);
+	}
+	else
+		pLayer->Add_GameObject(pObj);
+
+}
+
 CGameObject * CObject_Manager::Find_Prototype(const wstring & strPrototypeTag)
 {
 	auto	iter = m_Prototypes.find(strPrototypeTag);

@@ -23,10 +23,13 @@ namespace Client
 		size_t iPathLength = wstrFileFullPath.rfind(L'\\') + 1;
 		return wstrFileFullPath.substr(0, iPathLength);
 	}
+}
 
-	_matrix Get_LookTo(_fvector vNewLook)
+namespace JoMath
+{
+	_matrix LookTo(_fvector vTargetLook)
 	{
-		_fvector		vLook = vNewLook;
+		_fvector		vLook = vTargetLook;
 		_fvector		vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
 		_fvector		vUp = XMVector3Cross(vLook, vRight);
 
@@ -34,11 +37,23 @@ namespace Client
 			vRight,
 			vUp,
 			vLook,
-			XMVectorSet(0.f, 0.f, 0.f, 1.f)
-		);
+			XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	}
 
-	_vector To_EulerAngle(_fvector vQuat)
+	_matrix LookAt(_fvector vSrc, _fvector vDst)
+	{
+		_fvector		vLook = XMVector3Normalize(vDst - vSrc);
+		_fvector		vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
+		_fvector		vUp = XMVector3Cross(vLook, vRight);
+
+		return _matrix(
+			vRight,
+			vUp,
+			vLook,
+			XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	}
+
+	_vector ToEulerAngle(_fvector vQuat)
 	{
 		_vector vEulerAngle;
 
@@ -56,6 +71,4 @@ namespace Client
 
 		return vEulerAngle;
 	}
-
-
 }

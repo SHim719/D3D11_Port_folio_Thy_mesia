@@ -25,7 +25,7 @@ void CPlayerState_Sprint::OnGoing(_float fTimeDelta)
 {
 	if (KEY_NONE(eKeyCode::W) && KEY_NONE(eKeyCode::A) && KEY_NONE(eKeyCode::S) && KEY_NONE(eKeyCode::D))
 	{
-		m_pPlayer->Change_State(PlayerState::State_Idle);
+		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;
 	}
 
@@ -37,7 +37,7 @@ void CPlayerState_Sprint::OnGoing(_float fTimeDelta)
 	if (Check_StateChange(PlayerState::State_Attack))
 	{
 		m_pOwnerTransform->LookTo(vNewLook);
-		m_pPlayer->Change_State(PlayerState::State_Attack);
+		m_pPlayer->Change_State((_uint)PlayerState::State_Attack);
 		return;
 	}
 

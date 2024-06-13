@@ -3,14 +3,6 @@
 #include "Client_Defines.h"
 #include "GameObject.h"
 
-BEGIN(Engine)
-class CShader;
-class CTexture;
-class CRenderer;
-class CTransform;
-class CVIBuffer_Rect;
-END
-
 BEGIN(Client)
 
 class CBackground final : public CGameObject
@@ -30,7 +22,7 @@ public:
 private:
 	CShader*		m_pShader		= nullptr;
 	CTexture*		m_pTexture		= nullptr;
-	CVIBuffer_Rect* m_pVIBuffer		= nullptr;
+	CVIBuffer*		m_pVIBuffer		= nullptr;
 
 private:
 	_float					m_fX, m_fY, m_fSizeX, m_fSizeY;

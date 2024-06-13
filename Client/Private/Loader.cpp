@@ -76,9 +76,6 @@ HRESULT CLoader::Loading_Tool()
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_Enemy"), CEnemy::Create(m_pDevice, m_pContext))))
-		return E_FAIL;
-
 
 	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
 

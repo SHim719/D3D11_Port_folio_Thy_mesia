@@ -22,6 +22,7 @@ public:
 public:
 	class CComponent* Find_Component(const wstring& strComponentTag, _uint iIndex);
 	class CGameObject* Find_GameObject(_uint iIndex);
+	class CGameObject* Find_Target(_fvector vPlayerPos, _fmatrix CameraWorldMatrix);
 
 private:
 	list<class CGameObject*>			m_GameObjects;

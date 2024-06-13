@@ -266,7 +266,7 @@ void CMap_Tool::Reset_Transform(_fmatrix WorldMatrix)
 
     XMStoreFloat3(&m_vScale, vScale);
     XMStoreFloat3(&m_vPosition, vPosition);
-    XMStoreFloat3(&m_vRotation, To_EulerAngle(vQuaternion));
+    XMStoreFloat3(&m_vRotation, JoMath::ToEulerAngle(vQuaternion));
 }
 
 void CMap_Tool::Transform_Gizmo()

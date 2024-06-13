@@ -26,6 +26,15 @@ public:
 	HRESULT Draw();
 	void Clear();
 
+	void Set_UIShaderEffect(ID3DX11Effect* pEffect);
+
+private:
+	void Draw_Objects(_uint iGroup);
+
+	void Render_NonBlend();
+	void Render_Blend();
+	void Render_UI();
+
 private:
 	list<class CGameObject*>			m_RenderObjects[RENDER_END];
 

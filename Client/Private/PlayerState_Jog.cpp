@@ -24,13 +24,13 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 {
 	if (KEY_NONE(eKeyCode::W) && KEY_NONE(eKeyCode::A) && KEY_NONE(eKeyCode::S) && KEY_NONE(eKeyCode::D))
 	{
-		m_pPlayer->Change_State(PlayerState::State_Idle);
+		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;
 	}
 
 	if (KEY_PUSHING(eKeyCode::LShift))
 	{
-		m_pPlayer->Change_State(PlayerState::State_Sprint);
+		m_pPlayer->Change_State((_uint)PlayerState::State_Sprint);
 	}
 
 	_vector vNewLook = Calc_NewLook();
@@ -40,7 +40,7 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 
 	if (Check_StateChange(PlayerState::State_Attack))
 	{
-		m_pPlayer->Change_State(PlayerState::State_Attack);
+		m_pPlayer->Change_State((_uint)PlayerState::State_Attack);
 		return;
 	}
 		

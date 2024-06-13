@@ -7,10 +7,14 @@ namespace Client
    wstring Convert_StrToWStr(const string& str);
    string Convert_WStrToStr(const wstring& wstr);
    wstring Get_Path(const wstring& wstrFileFullPath);
-
-   _matrix Get_LookTo(_fvector vLook);
-
-   _vector To_EulerAngle(_fvector vQuat);
-   
 };
+
+namespace JoMath
+{
+	_matrix LookTo(_fvector vTargetLook);
+	_matrix LookAt(_fvector vSrc, _fvector vDst);
+
+
+	_vector ToEulerAngle(_fvector vQuat);
+}
 

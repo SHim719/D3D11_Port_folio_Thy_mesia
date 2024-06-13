@@ -33,7 +33,7 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
-		m_pPlayer->Change_State(PlayerState::State_Idle);
+		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;
 	}
 	if (m_bCanNextAttack && m_iNowComboCnt < m_pPlayerStat->Get_MaxAttackCnt())

@@ -24,13 +24,13 @@ void CPlayerState_Idle::OnGoing(_float fTimeDelta)
 	if (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
 	{
 		if (KEY_PUSHING(eKeyCode::LShift))
-			m_pPlayer->Change_State(PlayerState::State_Sprint);
+			m_pPlayer->Change_State((_uint)PlayerState::State_Sprint);
 		else
-			m_pPlayer->Change_State(PlayerState::State_Jog);
+			m_pPlayer->Change_State((_uint)PlayerState::State_Jog);
 	}
 
 	if (Check_StateChange(PlayerState::State_Attack))
-		m_pPlayer->Change_State(PlayerState::State_Attack);
+		m_pPlayer->Change_State((_uint)PlayerState::State_Attack);
 }
 
 void CPlayerState_Idle::OnState_End()

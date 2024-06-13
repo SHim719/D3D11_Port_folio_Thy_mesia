@@ -58,6 +58,10 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+void CGameObject::Change_State(_uint eState)
+{
+}
+
 
 HRESULT CGameObject::Add_Component(_uint iPrototoypeLevelIndex, const wstring& strPrototypeTag, const wstring& strComponentTag, CComponent** ppOut, void* pArg)
 {

@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "Transform.h"
 #include "VIBuffer_Rect.h"
+#include "VIBuffer_Point.h"
 #include "Model.h"
 
 #include "AABB.h"

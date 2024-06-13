@@ -3,6 +3,7 @@
 #include "Main_Camera.h"
 #include "Player.h"
 
+
 CTestPlay_Tool::CTestPlay_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CToolState(pDevice, pContext)
 {
@@ -31,14 +32,17 @@ void CTestPlay_Tool::Start_Tool()
 
     m_pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 1.f, 1.f));
     
-    m_pMain_Camera->Set_Target(m_pPlayer);
-    m_pMain_Camera->Init_TargetPos();
+    m_pMain_Camera->Set_Player(m_pPlayer);
     m_pMain_Camera->Set_Active(false);
 
     Safe_AddRef(m_pPlayer);
     Safe_AddRef(m_pMain_Camera);
 
     m_pGameInstance->Add_Clone(LEVEL_TOOL, L"TestGround", L"Prototype_TestGround");
+
+    CGameObject* pOdur = m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Enemy", L"Prototype_Odur");
+    pOdur->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 5.f, 1.f));
+    pOdur->Get_Transform()->LookAt2D(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 }
 
 void CTestPlay_Tool::Tick(_float fTimeDelta)

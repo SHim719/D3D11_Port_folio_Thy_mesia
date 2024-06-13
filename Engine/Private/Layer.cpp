@@ -92,6 +92,36 @@ CGameObject* CLayer::Find_GameObject(_uint iIndex)
 	return (*iter);
 }
 
+CGameObject* CLayer::Find_Target(_fvector vPlayerPos, _fmatrix CameraWorldMatrix)
+{
+	_float fMinDist = 999999.f;
+	CGameObject* pTarget = nullptr;
+
+	_vector vCameraLook = XMVector3Normalize((XMVectorSetY(CameraWorldMatrix.r[2], 0.f)));
+	_vector vCameraPos = CameraWorldMatrix.r[3];
+
+	for (auto& pGameObject : m_GameObjects)
+	{
+		_vector vTargetPos = pGameObject->Get_Transform()->Get_Position();
+
+		_float fDist = XMVector3Length(vTargetPos - vPlayerPos).m128_f32[0];
+
+		if (fDist < fMinDist)
+		{
+			// 각도 체크(카메라와 타겟이 이루는 각이 둔각일 경우 락온하지않는다.)
+			_vector vCameraToTarget = XMVector3Normalize((XMVectorSetY(vTargetPos - vCameraPos, 0.f)));
+
+			if (XMVector3Dot(vCameraLook, vCameraToTarget).m128_f32[0] < 0.f)
+				continue;
+
+			fMinDist = fDist;
+			pTarget = pGameObject;
+		}
+	}
+
+	return pTarget;
+}
+
 CLayer * CLayer::Create()
 {
 	return new CLayer();

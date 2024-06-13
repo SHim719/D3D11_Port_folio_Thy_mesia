@@ -33,6 +33,8 @@ public:
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, _uint iIndex);
 	class CLayer* Find_Layer(_uint iLevelIndex, const wstring& strLayerTag);
 
+	void Insert_GameObject(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pObj);
+
 private:
 	map<const wstring, class CGameObject*>			m_Prototypes;
 

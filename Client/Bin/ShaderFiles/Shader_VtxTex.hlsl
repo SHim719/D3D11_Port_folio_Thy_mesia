@@ -53,8 +53,8 @@ PS_OUT PS_MAIN(PS_IN In)
     ////Out.vColor.a = 1.f;
     //Out.vColor.a = Out.vColor.a * g_fAhlpaScale;
 	//
-	///*if (Out.vColor.a < 0.1f)
-	//discard;*/
+	if (Out.vColor.a < 0.1f)
+	    discard;
 
     return Out;
 }

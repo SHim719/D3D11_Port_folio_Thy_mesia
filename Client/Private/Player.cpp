@@ -53,6 +53,11 @@ void CPlayer::Tick(_float fTimeDelta)
 		m_States[(_uint)m_eState]->OnGoing(fTimeDelta);
 	}
 
+	if (m_bLockOn)
+	{
+		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
+	}
+
 	m_pModel->Play_Animation(fTimeDelta);
 }
 
@@ -63,7 +68,6 @@ void CPlayer::LateTick(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
-
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -90,17 +94,14 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pModel->Render(m_pShader, j, 0)))
 			return E_FAIL;
 	}
-	
-	
-
 	return S_OK;
 }
 
-void CPlayer::Change_State(PlayerState eState)
+void CPlayer::Change_State(_uint eState)
 {
 	m_States[(_uint)m_eState]->OnState_End();
 
-	m_eState = eState;
+	m_eState = (PlayerState)eState;
 
 	m_States[(_uint)eState]->OnState_Start();
 }
@@ -123,6 +124,17 @@ void CPlayer::Active_Claw()
 
 void CPlayer::InActive_Claw()
 {
+}
+
+void CPlayer::Toggle_LockOn(CTransform* pTargetTransform)
+{
+	m_bLockOn = !m_bLockOn;
+
+	Safe_Release(m_pTargetTransform);
+
+	m_pTargetTransform = pTargetTransform;
+
+	Safe_AddRef(m_pTargetTransform);
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -163,7 +175,6 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
-	XMStoreFloat4x4(&WeaponDesc.PivotMatrix, m_pModel->Get_PivotMatrix());
 
 	m_pDagger = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_pDagger)
@@ -210,6 +221,8 @@ CGameObject* CPlayer::Clone(void* pArg)
 void CPlayer::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pTargetTransform);
 
 	for (_uint i = 0; i < (_uint)PlayerState::State_End; ++i)
 		Safe_Release(m_States[i]);

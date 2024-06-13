@@ -127,6 +127,33 @@
     <Filter Include="02. GameObjects\02. Player\PlayerStat">
       <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\03. Enemy\Boss">
+      <UniqueIdentifier>{a89a7117-4c15-432e-a54c-1960327a5d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Enemy\Boss\Odur">
+      <UniqueIdentifier>{f4250b3e-f360-4fd3-98fb-a10599e54be8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Enemy\Boss\Odur\State">
+      <UniqueIdentifier>{3e83f096-1b05-4522-9de4-21f0c3e8b2fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Enemy\Boss\Odur\State\01. OdurState_Idle">
+      <UniqueIdentifier>{5b9cab58-b3bf-4e1c-bb76-8a0b5e78ef2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Enemy\Boss\Odur\State\00. OdurState_Base">
+      <UniqueIdentifier>{37dd4bf1-1966-4d5f-ba3d-952f4abdd755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Enemy\Boss\Odur\Define">
+      <UniqueIdentifier>{c814f354-7456-47db-928e-a7d1bda2fa2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\UI_LockOn">
+      <UniqueIdentifier>{cd881789-e140-49b4-9b5d-22889b88dc1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\Define">
+      <UniqueIdentifier>{4c8b1b45-18f3-48e2-a62c-459d032d96bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\Manager">
+      <UniqueIdentifier>{49b2b2bd-e722-453c-a364-a1e51d4201ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -246,6 +273,33 @@
     <ClInclude Include="..\Public\Player_Enums.h">
       <Filter>02. GameObjects\02. Player\Define</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Odur.h">
+      <Filter>02. GameObjects\03. Enemy\Boss\Odur</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Odur_Enums.h">
+      <Filter>02. GameObjects\03. Enemy\Boss\Odur\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Odur_States.h">
+      <Filter>02. GameObjects\03. Enemy\Boss\Odur\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Idle.h">
+      <Filter>02. GameObjects\03. Enemy\Boss\Odur\State\01. OdurState_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Base.h">
+      <Filter>02. GameObjects\03. Enemy\Boss\Odur\State\00. OdurState_Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI.h">
+      <Filter>04. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_LockOn.h">
+      <Filter>04. UI\UI_LockOn</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Headers.h">
+      <Filter>04. UI\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Manager.h">
+      <Filter>04. UI\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -271,9 +325,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Free_Camera.cpp">
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Enemy.cpp">
-      <Filter>02. GameObjects\03. Enemy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Tool.cpp">
       <Filter>01. Levels\03. Tool</Filter>
@@ -338,6 +389,27 @@
     <ClCompile Include="..\Private\PlayerStat.cpp">
       <Filter>02. GameObjects\02. Player\PlayerStat</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Odur.cpp">
+      <Filter>02. GameObjects\03. Enemy\Boss\Odur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy.cpp">
+      <Filter>02. GameObjects\03. Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_Idle.cpp">
+      <Filter>02. GameObjects\03. Enemy\Boss\Odur\State\01. OdurState_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_Base.cpp">
+      <Filter>02. GameObjects\03. Enemy\Boss\Odur\State\00. OdurState_Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI.cpp">
+      <Filter>04. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_LockOn.cpp">
+      <Filter>04. UI\UI_LockOn</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Manager.cpp">
+      <Filter>04. UI\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -365,6 +437,9 @@
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNonAnim.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

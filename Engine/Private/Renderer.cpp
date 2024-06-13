@@ -28,27 +28,9 @@ HRESULT CRenderer::Add_RenderObject(RENDERGROUP eRenderGroup, CGameObject * pRen
 
 HRESULT CRenderer::Draw()
 {
-	for (_uint i = 0; i < RENDER_END; ++i)
-	{
-		//if (i == RENDER_BLEND)
-		//{
-		//	m_RenderObjects[i].sort([](CGameObject* pSour, CGameObject* pDest)
-		//		{
-		//			return pSour->Get_CamDistance() > pDest->Get_CamDistance();
-		//		});
-		//
-		//	// sort(m_RenderObjects[i].begin(), m_RenderObjects[i].end(), 
-		//}
-
-		for (auto& pRenderObject : m_RenderObjects[i])
-		{
-			if (nullptr != pRenderObject)
-				pRenderObject->Render();
-
-			Safe_Release(pRenderObject);
-		}
-		m_RenderObjects[i].clear();
-	}
+	Render_NonBlend();
+	Render_Blend();
+	Render_UI();
 
 	return S_OK;
 }
@@ -62,6 +44,37 @@ void CRenderer::Clear()
 		RenderObjects.clear();
 	}
 }
+
+void CRenderer::Draw_Objects(_uint iGroup)
+{
+	for (auto& pRenderObject : m_RenderObjects[iGroup])
+	{
+		if (nullptr != pRenderObject)
+			pRenderObject->Render();
+
+		Safe_Release(pRenderObject);
+	}
+	m_RenderObjects[iGroup].clear();
+}
+
+void CRenderer::Render_NonBlend()
+{
+	Draw_Objects(RENDER_NONBLEND);
+}
+
+void CRenderer::Render_Blend()
+{
+	//Alpha Sorting
+
+	Draw_Objects(RENDER_BLEND);
+}
+
+void CRenderer::Render_UI()
+{
+
+	Draw_Objects(RENDER_UI);
+}
+
 
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

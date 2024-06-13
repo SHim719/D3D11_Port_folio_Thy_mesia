@@ -35,7 +35,7 @@ public:
 
 public:
 	HRESULT Initialize(ifstream& fin, class CModel* pModel);
-	void Set_CombinedTransformation(const vector<CBone*>& Bones);
+	void Set_CombinedTransformation(const vector<CBone*>& Bones, _fmatrix PivotMatrix);
 	void Set_OffsetMatrix(_fmatrix OffsetMatrix) {
 		XMStoreFloat4x4(&m_OffsetMatrix, OffsetMatrix);
 	}

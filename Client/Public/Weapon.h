@@ -20,7 +20,6 @@ public:
 		CBone* pSocketBone = nullptr;
 		CTransform* pParentTransform = nullptr;
 		wstring wstrModelTag = L"";
-		_float4x4 PivotMatrix;
 	} WEAPONDESC;
 
 private:

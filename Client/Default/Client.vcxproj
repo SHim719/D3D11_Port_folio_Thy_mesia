@@ -184,6 +184,11 @@
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Main_Camera.h" />
     <ClInclude Include="..\Public\Map_Tool.h" />
+    <ClInclude Include="..\Public\Odur.h" />
+    <ClInclude Include="..\Public\OdurState_Base.h" />
+    <ClInclude Include="..\Public\OdurState_Idle.h" />
+    <ClInclude Include="..\Public\Odur_Enums.h" />
+    <ClInclude Include="..\Public\Odur_States.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerStat.h" />
     <ClInclude Include="..\Public\PlayerState_Attack.h" />
@@ -200,6 +205,10 @@
     <ClInclude Include="..\Public\ToolColliderObj.h" />
     <ClInclude Include="..\Public\ToolMapObj.h" />
     <ClInclude Include="..\Public\ToolState.h" />
+    <ClInclude Include="..\Public\UI.h" />
+    <ClInclude Include="..\Public\UI_Headers.h" />
+    <ClInclude Include="..\Public\UI_LockOn.h" />
+    <ClInclude Include="..\Public\UI_Manager.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -220,6 +229,9 @@
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Main_Camera.cpp" />
     <ClCompile Include="..\Private\Map_Tool.cpp" />
+    <ClCompile Include="..\Private\Odur.cpp" />
+    <ClCompile Include="..\Private\OdurState_Base.cpp" />
+    <ClCompile Include="..\Private\OdurState_Idle.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerStat.cpp" />
     <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
@@ -234,6 +246,9 @@
     <ClCompile Include="..\Private\ToolColliderObj.cpp" />
     <ClCompile Include="..\Private\ToolMapObj.cpp" />
     <ClCompile Include="..\Private\ToolState.cpp" />
+    <ClCompile Include="..\Private\UI.cpp" />
+    <ClCompile Include="..\Private\UI_LockOn.cpp" />
+    <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -254,6 +269,10 @@
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxAnim.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

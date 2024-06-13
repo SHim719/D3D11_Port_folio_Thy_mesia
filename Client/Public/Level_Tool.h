@@ -17,6 +17,10 @@ public:
 	void Tick(_float fTimeDelta)	override;
 	HRESULT Render()				override;
 
+private:
+	HRESULT Ready_UIResource();
+	HRESULT Ready_UI();
+
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

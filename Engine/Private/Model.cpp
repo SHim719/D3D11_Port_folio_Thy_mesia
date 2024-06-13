@@ -114,8 +114,7 @@ HRESULT CModel::SetUp_BoneMatrices(CShader* pShader)
 	for (_uint i = 0; i < m_iNumBones; ++i)
 	{
 		XMStoreFloat4x4(&BoneMatrices[i], XMMatrixTranspose(m_Bones[m_BoneIndices[i]]->Get_OffSetMatrix()
-			* m_Bones[m_BoneIndices[i]]->Get_CombinedTransformation()
-			* XMLoadFloat4x4(&m_PivotMatrix)));
+			* m_Bones[m_BoneIndices[i]]->Get_CombinedTransformation()));
 	}
 
 	return pShader->Set_RawValue("g_BoneMatrices", BoneMatrices, sizeof(_float4x4) * 256);
@@ -134,7 +133,10 @@ void CModel::Calc_DeltaRootPos()
 {
 	if (m_bPreview)
 		return;
-	_vector vNowRootPos = Organize_RootPos(m_Bones[m_iRootBoneIdx]->Get_Tranformation().r[3]);
+
+	_vector vNowRootPos = m_Bones[m_iRootBoneIdx]->Get_Tranformation().r[3];
+
+	vNowRootPos = Organize_RootPos(vNowRootPos);
 
 	XMStoreFloat4(&m_vDeltaRootPos, (vNowRootPos - XMLoadFloat4(&m_vPrevRootPos)));
 
@@ -163,7 +165,7 @@ void CModel::Play_Animation(_float fTimeDelta)
 
 	for (auto& pBone : m_Bones)
 	{
-		pBone->Set_CombinedTransformation(m_Bones);
+		pBone->Set_CombinedTransformation(m_Bones, XMLoadFloat4x4(&m_PivotMatrix));
 	}
 }
 

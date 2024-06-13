@@ -37,7 +37,7 @@ void CWeapon::Tick(_float fTimeDelta)
 
 void CWeapon::LateTick(_float fTimeDelta)
 {
-	_matrix SocketMatrix = m_WeaponDesc.pSocketBone->Get_CombinedTransformation() * XMLoadFloat4x4(&m_WeaponDesc.PivotMatrix);
+	_matrix SocketMatrix = m_WeaponDesc.pSocketBone->Get_CombinedTransformation();
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);

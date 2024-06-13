@@ -35,7 +35,7 @@ private:
 
 	class CPlayerStat*	m_pStats = { nullptr };
 public:
-	void Change_State(PlayerState eState);
+	void Change_State(_uint eState) override;
 
 	CPlayerStat* Get_PlayerStat() const { 
 		return m_pStats; }
@@ -49,6 +49,14 @@ private:
 	void InActive_Weapons();
 	void Active_Claw();
 	void InActive_Claw();
+
+private:
+	CTransform*		m_pTargetTransform = { nullptr };
+	_bool			m_bLockOn = { false };
+
+public:
+	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
+	_bool Is_LockOn() const { return m_bLockOn; }
 
 private:
 	HRESULT Ready_Components();

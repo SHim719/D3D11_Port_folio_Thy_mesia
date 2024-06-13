@@ -52,6 +52,10 @@ public:
 	class CComponent* Find_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0);
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, _uint iIndex = 0);
 	class CLayer* Find_Layer(_uint iLevelIndex, const wstring& strLayerTag);
+
+	void Insert_GameObject(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pObj);
+
+	CGameObject* Find_Target(_fvector vPlayerPos);
 #pragma endregion
 
 #pragma region COMPONENT_MANAGER

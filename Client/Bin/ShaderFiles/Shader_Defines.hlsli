@@ -27,6 +27,12 @@ DepthStencilState DSS_Default
 	DepthFunc = less_equal;
 };
 
+DepthStencilState DSS_NoZTest_And_Write
+{
+    DepthEnable = false;
+    DepthWriteMask = zero;
+};
+
 BlendState BS_None
 {
     BlendEnable[0] = false;

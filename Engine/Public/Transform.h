@@ -102,6 +102,7 @@ public:
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation_Quaternion(_fvector vQuat);
 	void LookAt(_fvector vAt);
+	void LookAt2D(_fvector vAt);
 	void LookTo(_fvector vTo);
 
 

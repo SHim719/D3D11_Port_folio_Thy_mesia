@@ -88,6 +88,14 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXANIMMODEL_DECLARATION;
 
+	typedef struct tagVertexPoint
+	{
+		XMFLOAT3		vPosition;
+	}VTXPOINT;
 
-	
+	typedef struct ENGINE_DLL tagVertexPoint_Declaration
+	{
+		static const unsigned int iNumElements = 1;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+	}VTXPOINT_DECLARATION;
 }

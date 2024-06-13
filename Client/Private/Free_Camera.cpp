@@ -36,32 +36,32 @@ void CFree_Camera::Tick(_float fTimeDelta)
 	{
 		if (m_pGameInstance->GetKey(eKeyCode::W))
 		{
-			m_pTransform->Go_Straight(fTimeDelta * 2.f);
+			m_pTransform->Go_Straight(fTimeDelta * 4.f);
 		}
 
 		if (m_pGameInstance->GetKey(eKeyCode::S))
 		{
-			m_pTransform->Go_Backward(fTimeDelta * 2.f);
+			m_pTransform->Go_Backward(fTimeDelta * 4.f);
 		}
 
 		if (m_pGameInstance->GetKey(eKeyCode::A))
 		{
-			m_pTransform->Go_Left(fTimeDelta * 2.f);
+			m_pTransform->Go_Left(fTimeDelta * 4.f);
 		}
 
 		if (m_pGameInstance->GetKey(eKeyCode::D))
 		{
-			m_pTransform->Go_Right(fTimeDelta * 2.f);
+			m_pTransform->Go_Right(fTimeDelta * 4.f);
 		}
 
 		if (m_pGameInstance->GetKey(eKeyCode::E))
 		{
-			m_pTransform->Go_Up(fTimeDelta * 2.f);
+			m_pTransform->Go_Up(fTimeDelta * 4.f);
 		}
 
 		if (m_pGameInstance->GetKey(eKeyCode::Q))
 		{
-			m_pTransform->Go_Down(fTimeDelta * 2.f);
+			m_pTransform->Go_Down(fTimeDelta * 4.f);
 		}
 		Rotation_By_Mouse();
 	}

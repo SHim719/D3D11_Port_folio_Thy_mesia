@@ -61,9 +61,9 @@ void CPlayerState_Base::Rotate_To_Look(_vector vNewLook, _float fTimeDelta)
 {
 	_vector vPlayerLook = m_pOwnerTransform->Get_Look();
 
-	_vector StartQuat = XMQuaternionRotationMatrix(Get_LookTo(vPlayerLook));
-	_vector EndQuat = XMQuaternionRotationMatrix(Get_LookTo(vNewLook));
-
+	_vector StartQuat = XMQuaternionRotationMatrix(JoMath::LookTo(vPlayerLook));
+	_vector EndQuat = XMQuaternionRotationMatrix(JoMath::LookTo(vNewLook));
+	
 	m_pOwnerTransform->Rotation_Quaternion(XMQuaternionSlerp(StartQuat, EndQuat, m_fRotRate * fTimeDelta));
 }
 

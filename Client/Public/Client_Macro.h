@@ -7,7 +7,9 @@
 
 
 #define GET_CURLEVEL m_pGameInstance->Get_CurrentLevelID()
+#define Get_Inst(TYPE) TYPE::Get_Instance()
 
+#define UIMGR Get_Inst(CUI_Manager)
 
 #define YAXIS XMVectorSet(0.f, 1.f, 0.f, 0.f)
  

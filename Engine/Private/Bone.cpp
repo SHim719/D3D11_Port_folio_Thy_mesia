@@ -29,12 +29,12 @@ HRESULT CBone::Initialize(ifstream& fin, CModel* pModel)
 	return S_OK;
 }
 
-void CBone::Set_CombinedTransformation(const vector<CBone*>& Bones)
+void CBone::Set_CombinedTransformation(const vector<CBone*>& Bones, _fmatrix PivotMatrix)
 {
 	if (m_iParentBoneIdx >= 0)
 		XMStoreFloat4x4(&m_CombinedTransformation, XMLoadFloat4x4(&m_Transformation) * XMLoadFloat4x4(&Bones[m_iParentBoneIdx]->m_CombinedTransformation));
 	else
-		m_CombinedTransformation = m_Transformation;
+		XMStoreFloat4x4(&m_CombinedTransformation,  XMLoadFloat4x4(&m_Transformation) * PivotMatrix);
 }
 
 

@@ -1,5 +1,6 @@
 #include "..\Public\GameInstance.h"
 
+#include "Layer.h"
 
 IMPLEMENT_SINGLETON(CGameInstance)
 
@@ -217,6 +218,27 @@ CLayer* CGameInstance::Find_Layer(_uint iLevelIndex, const wstring& strLayerTag)
 		return nullptr;
 
 	return m_pObject_Manager->Find_Layer(iLevelIndex, strLayerTag);
+}
+void CGameInstance::Insert_GameObject(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pObj)
+{
+	if (nullptr == m_pObject_Manager)
+		return;
+
+	m_pObject_Manager->Insert_GameObject(iLevelIndex, strLayerTag, pObj);
+}
+
+
+CGameObject* CGameInstance::Find_Target(_fvector vPlayerPos)
+{
+	CLayer* pEnemyLayer = m_pObject_Manager->Find_Layer(Get_CurrentLevelID(), L"Enemy");
+
+	if (nullptr == pEnemyLayer)
+		return nullptr;
+
+	_matrix CameraWorldMatrix = m_pPipeLine->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
+	CameraWorldMatrix = XMMatrixInverse(nullptr, CameraWorldMatrix);
+
+	return pEnemyLayer->Find_Target(vPlayerPos, CameraWorldMatrix);
 }
 #pragma endregion
 
