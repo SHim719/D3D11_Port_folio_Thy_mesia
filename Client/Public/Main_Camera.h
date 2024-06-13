@@ -30,7 +30,6 @@ public:
 	HRESULT Initialize(void* pArg)			override;
 	void OnActive()							override;
 	void OnInActive()						override;
-	void PriorityTick(_float fTimeDelta)	override;
 	void Tick(_float fTimeDelta)			override;
 	void LateTick(_float fTimeDelta)		override;
 

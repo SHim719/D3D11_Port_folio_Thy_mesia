@@ -54,9 +54,8 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 
 	if (m_bLockOn)
-	{
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
-	}
+
 
 	m_pModel->Play_Animation(fTimeDelta);
 }
@@ -165,6 +164,7 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Jog] = CPlayerState_Jog::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Sprint] = CPlayerState_Sprint::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Attack] = CPlayerState_Attack::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_LockOn] = CPlayerState_LockOn::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }

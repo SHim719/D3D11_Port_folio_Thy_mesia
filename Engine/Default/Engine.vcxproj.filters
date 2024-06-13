@@ -10,23 +10,11 @@
     <Filter Include="01.Utility">
       <UniqueIdentifier>{4964a1e7-5206-4b22-881f-246564302202}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\06. Sound">
-      <UniqueIdentifier>{af6849f4-ee1b-4557-91aa-bcb35d8b9e89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\06. Sound\Manager">
-      <UniqueIdentifier>{c813cf1c-528d-4e90-aa28-8d56621bcfbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\06. Sound\FMOD">
-      <UniqueIdentifier>{30d00783-636b-4a1b-84b2-59726c1faaa7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\97. Frustum">
       <UniqueIdentifier>{73f10387-e9b9-46da-be7f-1ebc12c68f2a}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\01. Levels">
       <UniqueIdentifier>{6810cfc5-c0a5-44e0-82b7-57b222979270}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\01. Levels\Manager">
-      <UniqueIdentifier>{df62200c-a86e-4a2e-b15c-8352da367415}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\00. System">
       <UniqueIdentifier>{35ee513f-5aac-4af2-905b-5f95977862bb}</UniqueIdentifier>
@@ -40,17 +28,8 @@
     <Filter Include="01.Utility\02. GameObjects">
       <UniqueIdentifier>{a155947e-e048-4b20-82fc-d304513b65f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\02. GameObjects\Manager">
-      <UniqueIdentifier>{039fa198-1304-44b3-abe1-927e23066f89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\02. GameObjects\Manager\Layer">
-      <UniqueIdentifier>{7bd5b2e1-f914-4816-9262-9d0a6cb7703b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03. Components">
       <UniqueIdentifier>{478a57c7-b399-455e-8fe6-f4ec8279fde0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\03. Components\Manager">
-      <UniqueIdentifier>{35bfdb27-6307-4d7b-be3d-c3a304089719}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\03. Components\02. Texture">
       <UniqueIdentifier>{39ddbaff-0892-459f-87ae-269edbb2cf87}</UniqueIdentifier>
@@ -91,9 +70,6 @@
     <Filter Include="01.Utility\02. GameObjects\Camera">
       <UniqueIdentifier>{edd2a21d-0e21-4f15-932d-8fe1e44f849f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\05. KeyBoard">
-      <UniqueIdentifier>{8c00bd9b-15e4-4992-9767-c9168ab48ee1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03. Components\05. Model\VTF">
       <UniqueIdentifier>{a8dfdc55-476f-4ac5-9201-7c40b827fb78}</UniqueIdentifier>
     </Filter>
@@ -130,11 +106,44 @@
     <Filter Include="01.Utility\03. Components\06. Collider\DebugDraw">
       <UniqueIdentifier>{355c08dd-0b8f-4ac3-8753-a8f134d864de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\07. RenderTarget">
-      <UniqueIdentifier>{7922820a-6027-4b03-92bc-439c7dc9d344}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\03. Components\03. VIBuffer\01. Point">
       <UniqueIdentifier>{28ec2a4b-1abd-47b4-a215-bf85fb1fbc66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers">
+      <UniqueIdentifier>{7d38d95a-08f0-481f-9521-972d1d711017}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\01. Level_Manager">
+      <UniqueIdentifier>{79f0aac4-6b35-40e9-ab9a-e9bce1a38974}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\02. Object_Manager">
+      <UniqueIdentifier>{c2b3dcf0-52db-49a1-a575-3ff052b08eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\03. Component_Manager">
+      <UniqueIdentifier>{267dbde0-afad-461a-8254-34304da8a2e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\04. Key_Manager">
+      <UniqueIdentifier>{9e947c6c-483f-43ac-85b7-f8bf45420a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\05. Sound_Manager">
+      <UniqueIdentifier>{7f64dab8-29de-4ad0-9d7c-b8b1bb151ead}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\06. Target_Manager">
+      <UniqueIdentifier>{b3eb5494-9a80-47e3-9418-6cd260dfb81b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\02. GameObjects\Layer">
+      <UniqueIdentifier>{7bd5b2e1-f914-4816-9262-9d0a6cb7703b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\07. Collision_Manager">
+      <UniqueIdentifier>{c0063b74-9ffe-4d54-8b94-b85647c1db49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04. Sound">
+      <UniqueIdentifier>{af6849f4-ee1b-4557-91aa-bcb35d8b9e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04. Sound\FMOD">
+      <UniqueIdentifier>{30d00783-636b-4a1b-84b2-59726c1faaa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05. RenderTarget">
+      <UniqueIdentifier>{7922820a-6027-4b03-92bc-439c7dc9d344}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -152,9 +161,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Struct.h">
       <Filter>99.Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Level_Manager.h">
-      <Filter>01.Utility\01. Levels\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Engine_Macro.h">
       <Filter>99.Defines</Filter>
@@ -174,29 +180,17 @@
     <ClInclude Include="..\public\GameObject.h">
       <Filter>01.Utility\02. GameObjects</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Object_Manager.h">
-      <Filter>01.Utility\02. GameObjects\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\public\Layer.h">
-      <Filter>01.Utility\02. GameObjects\Manager\Layer</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Component_Manager.h">
-      <Filter>01.Utility\03. Components\Manager</Filter>
+      <Filter>01.Utility\02. GameObjects\Layer</Filter>
     </ClInclude>
     <ClInclude Include="..\public\Component.h">
       <Filter>01.Utility\03. Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Key_Manager.h">
-      <Filter>01.Utility\05. KeyBoard</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Sound_Manager.h">
-      <Filter>01.Utility\06. Sound\Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Sound.h">
-      <Filter>01.Utility\06. Sound</Filter>
+      <Filter>01.Utility\04. Sound</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FMOD_Core.h">
-      <Filter>01.Utility\06. Sound\FMOD</Filter>
+      <Filter>01.Utility\04. Sound\FMOD</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level.h">
       <Filter>01.Utility\01. Levels</Filter>
@@ -277,10 +271,25 @@
       <Filter>01.Utility\03. Components\06. Collider\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\RenderTarget.h">
-      <Filter>01.Utility\07. RenderTarget</Filter>
+      <Filter>01.Utility\05. RenderTarget</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VIBuffer_Point.h">
       <Filter>01.Utility\03. Components\03. VIBuffer\01. Point</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Level_Manager.h">
+      <Filter>01.Utility\99. Managers\01. Level_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Object_Manager.h">
+      <Filter>01.Utility\99. Managers\02. Object_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Component_Manager.h">
+      <Filter>01.Utility\99. Managers\03. Component_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Key_Manager.h">
+      <Filter>01.Utility\99. Managers\04. Key_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Sound_Manager.h">
+      <Filter>01.Utility\99. Managers\05. Sound_Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -296,41 +305,26 @@
     <ClCompile Include="..\private\Level.cpp">
       <Filter>01.Utility\01. Levels</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Level_Manager.cpp">
-      <Filter>01.Utility\01. Levels\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Timer.cpp">
       <Filter>01.Utility\00. System\01. Timers</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Timer_Manager.cpp">
       <Filter>01.Utility\00. System\01. Timers\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\private\Object_Manager.cpp">
-      <Filter>01.Utility\02. GameObjects\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\Layer.cpp">
-      <Filter>01.Utility\02. GameObjects\Manager\Layer</Filter>
-    </ClCompile>
-    <ClCompile Include="..\private\Component_Manager.cpp">
-      <Filter>01.Utility\03. Components\Manager</Filter>
+      <Filter>01.Utility\02. GameObjects\Layer</Filter>
     </ClCompile>
     <ClCompile Include="..\private\Component.cpp">
       <Filter>01.Utility\03. Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Key_Manager.cpp">
-      <Filter>01.Utility\05. KeyBoard</Filter>
-    </ClCompile>
     <ClCompile Include="..\private\GameObject.cpp">
       <Filter>01.Utility\02. GameObjects</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Sound_Manager.cpp">
-      <Filter>01.Utility\06. Sound\Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Sound.cpp">
-      <Filter>01.Utility\06. Sound</Filter>
+      <Filter>01.Utility\04. Sound</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FMOD_Core.cpp">
-      <Filter>01.Utility\06. Sound\FMOD</Filter>
+      <Filter>01.Utility\04. Sound\FMOD</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Shader.cpp">
       <Filter>01.Utility\03. Components\04. Shader</Filter>
@@ -402,10 +396,25 @@
       <Filter>01.Utility\03. Components\06. Collider\DebugDraw</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\RenderTarget.cpp">
-      <Filter>01.Utility\07. RenderTarget</Filter>
+      <Filter>01.Utility\05. RenderTarget</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Point.cpp">
       <Filter>01.Utility\03. Components\03. VIBuffer\01. Point</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Level_Manager.cpp">
+      <Filter>01.Utility\99. Managers\01. Level_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Object_Manager.cpp">
+      <Filter>01.Utility\99. Managers\02. Object_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\Component_Manager.cpp">
+      <Filter>01.Utility\99. Managers\03. Component_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Key_Manager.cpp">
+      <Filter>01.Utility\99. Managers\04. Key_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Sound_Manager.cpp">
+      <Filter>01.Utility\99. Managers\05. Sound_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

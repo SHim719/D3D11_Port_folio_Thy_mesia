@@ -48,6 +48,9 @@ void CUI_LockOn::On_UIActive(void* pArg)
 
 	Safe_AddRef(m_pTargetTransform);
 	Safe_AddRef(m_pTargetBone);
+
+	m_bDestroyed = false;
+	m_bCreatedThisFrame = true;
 }
 
 void CUI_LockOn::Tick(_float fTimeDelta)

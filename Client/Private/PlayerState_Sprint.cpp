@@ -11,6 +11,8 @@ HRESULT CPlayerState_Sprint::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_LockOn, PlayerState::State_Attack };
+
 
 	return S_OK;
 }
@@ -23,29 +25,19 @@ void CPlayerState_Sprint::OnState_Start()
 
 void CPlayerState_Sprint::OnGoing(_float fTimeDelta)
 {
-	if (KEY_NONE(eKeyCode::W) && KEY_NONE(eKeyCode::A) && KEY_NONE(eKeyCode::S) && KEY_NONE(eKeyCode::D))
+	_vector vNewLook = Calc_MoveLook(true);
+
+	if (0.f != vNewLook.m128_f32[0] || 0.f != vNewLook.m128_f32[1])
 	{
-		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
-		return;
+		m_pOwnerTransform->Set_MoveLook(vNewLook);
+
+		Rotate_To_Look(vNewLook, fTimeDelta);
+
+		m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);
 	}
 
-	_vector vNewLook = Calc_NewLook();
 
-	if (0.f == vNewLook.m128_f32[0] && 0.f == vNewLook.m128_f32[1])
-		return;
-
-	if (Check_StateChange(PlayerState::State_Attack))
-	{
-		m_pOwnerTransform->LookTo(vNewLook);
-		m_pPlayer->Change_State((_uint)PlayerState::State_Attack);
-		return;
-	}
-
-	m_pOwnerTransform->Set_MoveLook(vNewLook);
-
-	Rotate_To_Look(vNewLook, fTimeDelta);
-
-	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);
+	Decide_State();
 }
 
 void CPlayerState_Sprint::OnState_End()

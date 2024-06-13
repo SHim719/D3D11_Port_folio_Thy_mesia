@@ -34,22 +34,51 @@ void CPlayerState_Base::OnState_End()
 {
 }
 
-_vector CPlayerState_Base::Calc_NewLook()
+_vector CPlayerState_Base::Calc_MoveLook(_bool IsCamOriented)
 {
-	CTransform* pCameraTransform = m_pMain_Camera->Get_Transform();
-	_vector vCameraLook = pCameraTransform->Get_GroundLook();
-	_vector vCameraRight = pCameraTransform->Get_GroundRight();
+	_vector vLook, vRight;
+	if (IsCamOriented)
+	{
+		CTransform* pCameraTransform = m_pMain_Camera->Get_Transform();
+		vLook = pCameraTransform->Get_GroundLook();
+		vRight = pCameraTransform->Get_GroundRight();
+	}
+	else
+	{
+		vLook = m_pOwnerTransform->Get_GroundLook();
+		vRight = m_pOwnerTransform->Get_GroundRight();
+	}
 	
+
 	_vector vNewLook = XMVectorZero();
 
+	m_vMoveAxis.x = 0.f;
+	m_vMoveAxis.y = 0.f;
+
 	if (KEY_PUSHING(eKeyCode::W))
-		vNewLook += vCameraLook;
+	{
+		vNewLook += vLook;
+		m_vMoveAxis.y = 1.f;
+	}
+
 	if (KEY_PUSHING(eKeyCode::S))
-		vNewLook -= vCameraLook;
+	{
+		vNewLook -= vLook;
+		m_vMoveAxis.y = -1.f;
+	}
+
 	if (KEY_PUSHING(eKeyCode::D))
-		vNewLook += vCameraRight;
+	{
+		vNewLook += vRight;
+		m_vMoveAxis.x = 1.f;
+	}
+
 	if (KEY_PUSHING(eKeyCode::A))
-		vNewLook -= vCameraRight;
+	{
+		vNewLook -= vRight;
+		m_vMoveAxis.x = -1.f;
+	}
+		
 
 	if (XMVectorGetX(XMVector3Length(vNewLook)) < FLT_EPSILON)
 		return XMVectorZero();
@@ -86,11 +115,30 @@ _bool CPlayerState_Base::Check_StateChange(PlayerState eState)
 	case PlayerState::State_Attack:
 		bStateChange = KEY_PUSHING(eKeyCode::LButton);
 		break;
+	case PlayerState::State_LockOn:
+		bStateChange = (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
+			&& m_pPlayer->Is_LockOn();
+		break;
+
 	case PlayerState::State_End:
 		break;
 	}
 
 	return bStateChange;
+}
+
+void CPlayerState_Base::Decide_State()
+{
+	PlayerState eFinalState = PlayerState::State_End;
+
+	for (PlayerState& State : m_PossibleStates)
+	{
+		if (Check_StateChange(State))
+			eFinalState = State;
+	}
+
+	if (PlayerState::State_End != eFinalState)
+		m_pPlayer->Change_State((_uint)eFinalState);
 }
 
 void CPlayerState_Base::Free()

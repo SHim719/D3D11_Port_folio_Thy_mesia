@@ -59,6 +59,7 @@ public:
 protected:
 	_bool m_bDestroyed = { false };
 	_bool m_bActive = { true };
+	_bool m_bCreatedThisFrame = { true };
 public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
 	_bool Is_Destroyed() { return m_bDestroyed; }
@@ -66,6 +67,7 @@ public:
 	void Set_Active(_bool b);
 	_bool Is_Active() { return m_bActive; }
 
+	_bool Is_CreatedThisFrame() const { return m_bCreatedThisFrame; }
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

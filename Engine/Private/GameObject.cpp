@@ -43,6 +43,8 @@ void CGameObject::OnInActive()
 
 void CGameObject::PriorityTick(_float fTimeDelta)
 {
+	if (m_bCreatedThisFrame)
+		m_bCreatedThisFrame = false;
 }
 
 void CGameObject::Tick(_float fTimeDelta)

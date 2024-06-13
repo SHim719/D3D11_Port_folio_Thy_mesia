@@ -36,10 +36,6 @@ void CMain_Camera::OnInActive()
 {
 }
 
-void CMain_Camera::PriorityTick(_float fTimeDelta)
-{
-	
-}
 
 void CMain_Camera::Tick(_float fTimeDelta)
 {
@@ -171,10 +167,10 @@ void CMain_Camera::LockOn_State(_float fTimeDelta)
 	vTargetLookTo.r[1] = XMVector3TransformNormal(vTargetLookTo.r[1], ExtraRotationMatrix);
 	vTargetLookTo.r[2] = XMVector3TransformNormal(vTargetLookTo.r[2], ExtraRotationMatrix);
 
-	_vector vQuatTargetLook = XMQuaternionRotationMatrix(vTargetLookTo);
-	_vector vQuatCurrentLook = XMQuaternionRotationMatrix(m_pTransform->Get_WorldMatrix());
+	_vector vTargetQuat = XMQuaternionRotationMatrix(vTargetLookTo);
+	_vector vCurrentQuat = XMQuaternionRotationMatrix(m_pTransform->Get_WorldMatrix());
 
-	_vector vLerpedQuat = XMQuaternionSlerp(vQuatCurrentLook, vQuatTargetLook, 5.f * fTimeDelta);
+	_vector vLerpedQuat = XMQuaternionSlerp(vCurrentQuat, vTargetQuat, 5.f * fTimeDelta);
 
 	m_pTransform->Rotation_Quaternion(vLerpedQuat);
 

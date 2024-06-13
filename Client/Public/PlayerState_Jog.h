@@ -15,7 +15,6 @@ public:
 	void OnGoing(_float fTimeDelta)	override;
 	void OnState_End()				override;
 
-
 public:
 	static CPlayerState_Jog* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

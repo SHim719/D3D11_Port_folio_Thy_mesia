@@ -36,6 +36,7 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;
 	}
+
 	if (m_bCanNextAttack && m_iNowComboCnt < m_pPlayerStat->Get_MaxAttackCnt())
 	{
 		if (KEY_PUSHING(eKeyCode::LButton))
@@ -47,7 +48,7 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 
 	if (m_bCanRotation)
 	{
-		_vector vNewLook = Calc_NewLook();
+		_vector vNewLook = Calc_MoveLook(true);
 
 		if (0.f != vNewLook.m128_f32[0] || 0.f != vNewLook.m128_f32[1])
 			Rotate_To_Look(vNewLook, fTimeDelta);

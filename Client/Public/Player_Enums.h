@@ -294,5 +294,6 @@ enum class PlayerState
 	State_Jog,
 	State_Sprint,
 	State_Attack,
+	State_LockOn,
 	State_End,
 };

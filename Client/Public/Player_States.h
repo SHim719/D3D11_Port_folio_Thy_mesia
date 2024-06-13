@@ -4,4 +4,5 @@
 #include "PlayerState_Jog.h"
 #include "PlayerState_Sprint.h"
 #include "PlayerState_Attack.h"
+#include "PlayerState_LockOn.h"
 

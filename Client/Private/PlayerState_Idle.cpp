@@ -11,6 +11,8 @@ HRESULT CPlayerState_Idle::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_Sprint, PlayerState::State_LockOn, PlayerState::State_Attack };
+
 	return S_OK;
 }
 
@@ -21,21 +23,13 @@ void CPlayerState_Idle::OnState_Start()
 
 void CPlayerState_Idle::OnGoing(_float fTimeDelta)
 {
-	if (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
-	{
-		if (KEY_PUSHING(eKeyCode::LShift))
-			m_pPlayer->Change_State((_uint)PlayerState::State_Sprint);
-		else
-			m_pPlayer->Change_State((_uint)PlayerState::State_Jog);
-	}
-
-	if (Check_StateChange(PlayerState::State_Attack))
-		m_pPlayer->Change_State((_uint)PlayerState::State_Attack);
+	Decide_State();
 }
 
 void CPlayerState_Idle::OnState_End()
 {
 }
+
 
 CPlayerState_Idle* CPlayerState_Idle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {

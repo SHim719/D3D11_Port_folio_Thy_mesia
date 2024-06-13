@@ -154,6 +154,9 @@
     <Filter Include="04. UI\Manager">
       <UniqueIdentifier>{49b2b2bd-e722-453c-a364-a1e51d4201ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Player\State\06. PlayerState_LockOn">
+      <UniqueIdentifier>{4b45c3b8-7213-4b21-aa2a-6d26764e5051}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -300,6 +303,9 @@
     <ClInclude Include="..\Public\UI_Manager.h">
       <Filter>04. UI\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_LockOn.h">
+      <Filter>02. GameObjects\02. Player\State\06. PlayerState_LockOn</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -409,6 +415,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\UI_Manager.cpp">
       <Filter>04. UI\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_LockOn.cpp">
+      <Filter>02. GameObjects\02. Player\State\06. PlayerState_LockOn</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
