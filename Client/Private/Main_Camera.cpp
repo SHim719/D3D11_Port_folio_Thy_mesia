@@ -54,6 +54,7 @@ void CMain_Camera::Tick(_float fTimeDelta)
 		{
 			SetState_LockOn();
 			m_pPlayer->Toggle_LockOn(m_pTargetTransform);
+			m_fFollowingSpeed = 4.f;
 		}
 		else
 		{
@@ -63,6 +64,8 @@ void CMain_Camera::Tick(_float fTimeDelta)
 			UIMGR->InActive_UI("UI_LockOn");
 
 			m_pPlayer->Toggle_LockOn();
+
+			m_fFollowingSpeed = 2.5f;
 
 			m_eState = DEFAULT;
 		}
@@ -99,13 +102,11 @@ void CMain_Camera::Set_Player(CGameObject* pPlayer)
 
 	_vector vPlayerPos = m_pPlayerTransform->Get_Position();
 
-	m_pTransform->Set_Position(Calc_OriginCameraPos(vPlayerPos));
+	_vector vCameraPos = vPlayerPos + m_pPlayerTransform->Get_Look() * m_vOffset.z + YAXIS * m_vOffset.y;
 
-	XMStoreFloat4(&m_vPrevTargetPos, m_pPlayerTransform->Get_Position()); 
+	m_pTransform->Set_Position(vCameraPos);
 
-	m_pTransform->LookAt(Get_PlayerNeckPos(vPlayerPos));
-
-	m_fOriginArmLength = XMVector3Length(XMLoadFloat4(&m_vOffset)).m128_f32[0];
+	XMStoreFloat4(&m_vPrevTargetPos, m_pPlayerTransform->Get_Position());
 }
 
 void CMain_Camera::SetState_LockOn()
@@ -153,40 +154,33 @@ CBone* CMain_Camera::Find_TargetBone(CModel* pModel)
 void CMain_Camera::Default_State(_float fTimeDelta)
 {
 	Rotate_By_Mouse(fTimeDelta);
-	_vector vLerpedTargetPos = Get_LerpedTargetPos(m_pPlayerTransform->Get_Position(), fTimeDelta);
-
-	XMStoreFloat4(&m_vPrevTargetPos, vLerpedTargetPos);
-
-	_vector vAt = vLerpedTargetPos + XMLoadFloat4(&m_vPlayerNeckOffset);
-
-	m_pTransform->Set_Position(XMVectorSetW(vAt + XMLoadFloat4(&m_vCameraArmDist), 1.f));
+	Follow_Target(fTimeDelta);
 }
 
 void CMain_Camera::LockOn_State(_float fTimeDelta)
 {
-	_matrix TargetMatrix = m_pTargetBone->Get_CombinedTransformation() * m_pTargetTransform->Get_WorldMatrix();
+	_vector vPlayerPos = m_pPlayerTransform->Get_Position();
+	_vector vTargetPos = m_pTargetTransform->Get_Position();
+	_vector vCameraLook = XMVector3Normalize(vTargetPos - vPlayerPos);
 
-	_vector vLerpedTargetPos = Get_LerpedTargetPos(m_pPlayerTransform->Get_Position(), fTimeDelta);
-	XMStoreFloat4(&m_vPrevTargetPos, vLerpedTargetPos);
+	_matrix vTargetLookTo = JoMath::LookTo(vCameraLook);
 
-	_vector vCamPos = Calc_OriginCameraPos(vLerpedTargetPos);
-	_vector vAt = vLerpedTargetPos + Get_PlayerNeckPos(vLerpedTargetPos);
-	XMStoreFloat4(&m_vCameraArmDist, vCamPos - vAt);
+	_matrix ExtraRotationMatrix = XMMatrixRotationAxis(vTargetLookTo.r[0], XMConvertToRadians(25.f));
 
-	m_pTransform->Set_Position(vCamPos);
-	m_pTransform->LookAt(TargetMatrix.r[3]);
+	vTargetLookTo.r[0] = XMVector3TransformNormal(vTargetLookTo.r[0], ExtraRotationMatrix);
+	vTargetLookTo.r[1] = XMVector3TransformNormal(vTargetLookTo.r[1], ExtraRotationMatrix);
+	vTargetLookTo.r[2] = XMVector3TransformNormal(vTargetLookTo.r[2], ExtraRotationMatrix);
+
+	_vector vQuatTargetLook = XMQuaternionRotationMatrix(vTargetLookTo);
+	_vector vQuatCurrentLook = XMQuaternionRotationMatrix(m_pTransform->Get_WorldMatrix());
+
+	_vector vLerpedQuat = XMQuaternionSlerp(vQuatCurrentLook, vQuatTargetLook, 5.f * fTimeDelta);
+
+	m_pTransform->Rotation_Quaternion(vLerpedQuat);
+
+	Follow_Target(fTimeDelta);
 }
 
-_vector CMain_Camera::Calc_OriginCameraPos(_vector vPlayerPos)
-{
-	_vector vPlayerNeckPos = Get_PlayerNeckPos(vPlayerPos);
-
-	_vector vCameraOffset = m_pPlayerTransform->Get_Right() * m_vOffset.x
-		+ m_pPlayerTransform->Get_Up() * m_vOffset.y - m_pPlayerTransform->Get_Look() * m_vOffset.z;
-	_vector vCameraPosition = vPlayerNeckPos + vCameraOffset;
-
-	return vCameraPosition;
-}
 
 _vector CMain_Camera::Get_LerpedTargetPos(_fvector vTargetPos, _float fTimeDelta)
 {
@@ -220,39 +214,29 @@ void CMain_Camera::Rotate_By_Mouse(_float fTimeDelta)
 	{
 		fDeltaTheta = MouseGap.x * fTimeDelta * 0.2f;
 		m_pTransform->Add_YAxisInput(fDeltaTheta);
-
-		Rotate_CameraArm(YAXIS, fDeltaTheta);
 	}
 	if (abs(MouseGap.y) > m_iSensitivity)
 	{
 		fDeltaTheta = MouseGap.y * fTimeDelta * 0.2f;
 		m_pTransform->Add_RollInput(fDeltaTheta);
-
-		Rotate_CameraArm(m_pTransform->Get_Right(), fDeltaTheta);
 	}
 
 	ClientToScreen(g_hWnd, &ptCenter);
 	SetCursorPos(ptCenter.x, ptCenter.y);
 }
 
-void CMain_Camera::Rotate_CameraArm(_fvector vAxis, _float fDeltaTheta)
+void CMain_Camera::Follow_Target(_float fTimeDelta)
 {
-	_vector vAt = XMLoadFloat4(&m_vPrevTargetPos) + XMLoadFloat4(&m_vPlayerNeckOffset);
+	_vector vLerpedTargetPos = Get_LerpedTargetPos(m_pPlayerTransform->Get_Position(), fTimeDelta);
 
-	_matrix	RotationMatrix = XMMatrixRotationAxis(vAxis, fDeltaTheta);
+	XMStoreFloat4(&m_vPrevTargetPos, vLerpedTargetPos);
 
-	_vector vDist = m_pTransform->Get_Position() - vAt;
-	vDist = XMVector3TransformCoord(vDist, RotationMatrix);
+	_vector vCameraOffset = YAXIS * m_vOffset.y + m_pTransform->Get_Look() * m_vOffset.z;
 
-	vDist = XMVector3Normalize(vDist) * m_fOriginArmLength;
+	_vector vCameraPos = vLerpedTargetPos + vCameraOffset;
 
-	XMStoreFloat4(&m_vCameraArmDist, vDist);
-
-	m_pTransform->Set_Position(XMVectorSetW(vAt + vDist, 1.f));
-
-	m_pTransform->LookAt(vAt);	
+	m_pTransform->Set_Position(XMVectorSetW(vCameraPos, 1.f));
 }
-
 
 CMain_Camera* CMain_Camera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
