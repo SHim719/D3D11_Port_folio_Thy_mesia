@@ -22,7 +22,7 @@ HRESULT CWeapon::Initialize(void* pArg)
 {
 	m_WeaponDesc = *(WEAPONDESC*)pArg;
 
-	if (FAILED(Ready_Components(m_WeaponDesc.wstrModelTag)))
+	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
 	Safe_AddRef(m_WeaponDesc.pSocketBone);
@@ -43,6 +43,9 @@ void CWeapon::LateTick(_float fTimeDelta)
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
 	m_pTransform->Set_WorldMatrix(SocketMatrix * m_WeaponDesc.pParentTransform->Get_WorldMatrix());
+
+	if (m_pCollider)
+		m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
@@ -80,10 +83,13 @@ HRESULT CWeapon::Render()
 			return E_FAIL;
 	}
 
+	if (m_pCollider)
+		m_pCollider->Render();
+
 	return S_OK;
 }
 
-HRESULT CWeapon::Ready_Components(const wstring& wstrModelTag)
+HRESULT CWeapon::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, nullptr)))
 		return E_FAIL;
@@ -91,8 +97,23 @@ HRESULT CWeapon::Ready_Components(const wstring& wstrModelTag)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), m_WeaponDesc.wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
 		return E_FAIL;
+
+
+	if (nullptr != m_WeaponDesc.pColliderDesc)
+	{
+		wstring wstrColliderTag = L"";
+		if (CCollider::OBB == m_WeaponDesc.pColliderDesc->eType)
+			wstrColliderTag = L"Prototype_OBB";
+		else if (CCollider::SPHERE == m_WeaponDesc.pColliderDesc->eType)
+			wstrColliderTag = L"Prototype_Sphere";
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, wstrColliderTag, TEXT("Collider"), (CComponent**)&m_pCollider, 
+			m_WeaponDesc.pColliderDesc)))
+			return E_FAIL;
+	}
+	
 
 	return S_OK;
 }
@@ -131,5 +152,6 @@ void CWeapon::Free()
 	Safe_Release(m_pModel);
 	Safe_Release(m_WeaponDesc.pSocketBone);
 	Safe_Release(m_WeaponDesc.pParentTransform);
+	Safe_Release(m_pCollider);
 
 }

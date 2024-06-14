@@ -34,7 +34,9 @@ private:
 	unordered_map<UINT64, bool> m_CollisionInfo;
 
 private:
-	void Execute_Collision(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eCollisionType);
+	void Execute_Collision(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eType);
+	void Push_Object(CCollider* pDstCollider, CCollider* pSrcCollider, class CTransform* pDstTransform);
+
 
 public:
 	static CCollision_Manager* Create();

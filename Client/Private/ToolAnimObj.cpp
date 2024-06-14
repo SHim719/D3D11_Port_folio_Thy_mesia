@@ -24,9 +24,19 @@ HRESULT CToolAnimObj::Initialize(void* pArg)
 	switch (*pType)
 	{
 	case Corvus:
+	{
 		if (FAILED(Ready_Corvus()))
 			return E_FAIL;
 		break;
+	}
+		
+	case Odur:
+	{
+		if (FAILED(Ready_Odur()))
+			return E_FAIL;
+		break;
+	}
+		
 	}
 
 
@@ -108,6 +118,41 @@ HRESULT CToolAnimObj::Ready_Corvus()
 	CGameObject* pSaber = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
 	if (nullptr == pSaber)
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CToolAnimObj::Ready_Odur()
+{
+	CTransform::TRANSFORMDESC		TransformDesc;
+	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
+
+	TransformDesc.fSpeedPerSec = 5.f;
+	TransformDesc.fRotationPerSec = To_Radian(90.0f);
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, &TransformDesc)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_Odur", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_Cane");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Cane";
+	WeaponDesc.pColliderDesc = nullptr;
+
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l_Sword");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Sword";
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Sword");
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
 
 	return S_OK;
 }

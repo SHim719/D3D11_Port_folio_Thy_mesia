@@ -28,6 +28,7 @@ public:
 protected:
 	CShader*	m_pShader = { nullptr };
 	CModel*		m_pModel = { nullptr };
+	CCollider*	m_pCollider = { nullptr };
 
 public:
 	void Free() override;

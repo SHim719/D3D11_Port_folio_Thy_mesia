@@ -53,6 +53,8 @@ HRESULT CCollider::Initialize(void* pArg)
 	COLLIDERDESC* pDesc = (COLLIDERDESC*)pArg;
 	m_pOwner = pDesc->pOwner;
 
+	m_bActive = pDesc->bActive;
+
 	return S_OK;
 }
 
@@ -62,6 +64,15 @@ void CCollider::Update(_fmatrix WorldMatrix)
 
 void CCollider::Render()
 {
+#ifdef _DEBUG
+	if (false == m_bActive)
+		return;
+
+	if (m_bIsColl)
+		m_vColor = _float4(1.f, 0.f, 0.f, 1.f);
+	else
+		m_vColor = _float4(0.f, 1.f, 0.f, 1.f);
+
 	m_pEffect->SetWorld(XMMatrixIdentity());
 
 	m_pEffect->SetView(m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW));
@@ -70,6 +81,7 @@ void CCollider::Render()
 	m_pEffect->Apply(m_pContext);
 
 	m_pContext->IASetInputLayout(m_pInputLayout);
+#endif
 }
 
 _matrix CCollider::Remove_Rotation(_fmatrix Matrix)

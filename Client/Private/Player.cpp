@@ -33,6 +33,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Weapons()))
 		return E_FAIL;
 
+
+	Bind_KeyFrames();
+
+
 	m_pTransform->Set_MoveLook(m_pTransform->Get_Look());
 
 	m_pModel->Set_AnimPlay();
@@ -40,28 +44,25 @@ HRESULT CPlayer::Initialize(void* pArg)
 	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);
 	m_eState = PlayerState::State_Idle;
 
-	//Change_State(PlayerState::State_SprintStart);
-
 
 	return S_OK;
 }
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	if (m_pGameInstance->GetKeyNone(eKeyCode::RButton))
-	{
-		m_States[(_uint)m_eState]->OnGoing(fTimeDelta);
-	}
-
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
+	if (m_pGameInstance->GetKeyNone(eKeyCode::RButton))
+		m_States[(_uint)m_eState]->OnGoing(fTimeDelta);
 
 	m_pModel->Play_Animation(fTimeDelta);
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
@@ -93,7 +94,17 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pModel->Render(m_pShader, j, 0)))
 			return E_FAIL;
 	}
+
+	m_pCollider->Render();
+
 	return S_OK;
+}
+
+void CPlayer::Bind_KeyFrames()
+{
+	m_pModel->Bind_Func("Active_SaberCollider", bind(&CWeapon::Active_Collider, m_pSaber));
+	m_pModel->Bind_Func("Inactive_SaberCollider", bind(&CWeapon::Inactive_Collider, m_pSaber));
+	m_pModel->Bind_Func("Enable_Parry", bind(&CPlayer::Enable_Parry, this));
 }
 
 void CPlayer::Change_State(_uint eState)
@@ -153,6 +164,19 @@ HRESULT CPlayer::Ready_Components()
 	if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), TEXT("Prototype_Model_Player"), TEXT("Model"), (CComponent**)&m_pModel)))
 		return E_FAIL;
 
+
+	CCollider::COLLIDERDESC Desc;
+	Desc.eType = CCollider::SPHERE;
+	Desc.pOwner = this;
+	Desc.vCenter = { 0.f, 1.f, 0.f };
+	Desc.vSize = { 1.f, 0.f, 0.f };
+	Desc.vRotation = { 0.f, 0.f, 0.f };
+	Desc.bActive = true;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("Collider"), (CComponent**)&m_pCollider, &Desc)))
+		return E_FAIL;
+
+
 	return S_OK;
 }
 
@@ -175,18 +199,28 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
+	WeaponDesc.pColliderDesc = nullptr;
 
-	m_pDagger = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_pDagger = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_pDagger)
 		return E_FAIL;
 
+	CCollider::COLLIDERDESC ColliderDesc = {};
+	ColliderDesc.eType = CCollider::OBB;
+	ColliderDesc.pOwner = this;
+	ColliderDesc.vCenter = { 0.6f, 0.f, -0.01f };
+	ColliderDesc.vSize = { 1.f, 0.01f, 0.05f };
+	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
+	ColliderDesc.bActive = false;
+
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
-	m_pSaber = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc));
+	WeaponDesc.pColliderDesc = &ColliderDesc;
+	m_pSaber = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_pSaber)
 		return E_FAIL;
 
-	// Claw 손톱생성
+	// Claw 손톱콜라이더생성
 
 	return S_OK;
 }
@@ -231,4 +265,5 @@ void CPlayer::Free()
 
 	Safe_Release(m_pModel);
 	Safe_Release(m_pShader);
+	Safe_Release(m_pCollider);
 }

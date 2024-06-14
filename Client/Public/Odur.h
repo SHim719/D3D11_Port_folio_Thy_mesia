@@ -8,6 +8,7 @@ BEGIN(Engine)
 class CModel;
 class CShader;
 class CCollider;
+class CBone;
 END
 
 BEGIN(Client)
@@ -27,9 +28,14 @@ public:
 	HRESULT Render()					override;
 
 private:
-	CShader*	m_pShader = nullptr;
-	CModel*		m_pModel = nullptr;
+	void Bind_KeyFrames()				override;
 
+
+private:
+	CBone* m_pSwapBone = { nullptr };
+
+	class CWeapon* m_pOdurCane = { nullptr };
+	class CWeapon* m_pOdurSword = { nullptr };
 
 private:
 	HRESULT Ready_Components();

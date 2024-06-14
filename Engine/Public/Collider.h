@@ -17,6 +17,7 @@ public:
 		_float3				vRotation = { 0.f, 0.f, 0.f };
 		class CGameObject*	pOwner = nullptr;
 		ColliderType		eType = Collider_End;
+		_bool				bActive = false;
 	}COLLIDERDESC;
 
 protected:
@@ -52,6 +53,8 @@ public:
 
 	ColliderType Get_ColliderType() const { 
 		return m_eColliderType; }
+
+	void Set_IsColl(_bool b) { m_bIsColl = b; }
 
 protected:
 	PrimitiveBatch<VertexPositionColor>*	m_pBatch = nullptr;

@@ -27,6 +27,9 @@ public:
 
 	virtual void Change_State(_uint eState);
 protected:
+	virtual void Bind_KeyFrames();
+
+protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
 
@@ -51,10 +54,6 @@ public:
 	virtual void OnCollisionEnter(CGameObject* pOther) {}
 	virtual void OnCollisionStay(CGameObject* pOther) {}
 	virtual void OnCollisionExit(CGameObject* pOther) {}
-
-	virtual void OnTriggerEnter(CGameObject* pOther) {}
-	virtual void OnTriggerStay(CGameObject* pOther) {}
-	virtual void OnTriggerExit(CGameObject* pOther) {}
 
 protected:
 	_bool m_bDestroyed = { false };

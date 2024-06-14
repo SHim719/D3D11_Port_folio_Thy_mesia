@@ -32,24 +32,14 @@ HRESULT CLevel_Tool::Initialize()
 	
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_BG_Texture", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/Thymesia.jpg"));
 	m_pGameInstance->Add_Prototype(L"Prototype_TestGround", CTestGround::Create(m_pDevice, m_pContext));
-
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player", CModel::Create(m_pDevice, m_pContext, 
-		"../../Resources/Models/Corvus/", "Corvus_No1.dat", "../../Resources/KeyFrame/Player/"));
-	
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player_Dagger", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/", "Corvus_Dagger.dat"));
-
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player_Saber", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/", "Corvus_Saber.dat"));
-
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Odur", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Odur/", "Odur.dat"));
-
-
-	m_pGameInstance->Add_Prototype(L"Prototype_Player", CPlayer::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_Weapon", CWeapon::Create(m_pDevice, m_pContext));
 
-	m_pGameInstance->Add_Prototype(L"Prototype_Odur", COdur::Create(m_pDevice, m_pContext));
+	if (FAILED(Ready_Player()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Odur()))
+		return E_FAIL;
+
 
 	CCamera::CAMERADESC camDesc{};
 	camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
@@ -80,6 +70,38 @@ void CLevel_Tool::Tick(_float fTimeDelta)
 HRESULT CLevel_Tool::Render()
 {
 	
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Player()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/", "Corvus_No1.dat", "../../Resources/KeyFrame/Player/"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player_Dagger", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/", "Corvus_Dagger.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player_Saber", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/", "Corvus_Saber.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Player", CPlayer::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Odur()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Odur", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Odur/", "Odur.dat", "../../Resources/KeyFrame/Odur/"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Odur_Cane", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Odur/", "Odur_Cane.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Odur_Sword", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Odur/", "Odur_Sword.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Odur", COdur::Create(m_pDevice, m_pContext));
+
 	return S_OK;
 }
 

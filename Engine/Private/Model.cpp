@@ -379,6 +379,7 @@ HRESULT CModel::Import_KeyFrameEvents(const string& strKeyFramefolderPath)
 
 		while (true)
 		{
+			memset(szEvent, 0, MAX_PATH);
 			fin.read((_char*)&iKeyFrame, sizeof(_int));
 			fin.read((_char*)&iEventLength, sizeof(_int));
 			fin.read(szEvent, iEventLength);

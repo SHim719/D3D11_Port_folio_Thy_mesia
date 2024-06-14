@@ -1,5 +1,7 @@
 #include "Odur.h"
 #include "Odur_States.h"
+#include "Weapon.h"
+#include "Bone.h"
 
 COdur::COdur(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -19,10 +21,18 @@ HRESULT COdur::Initialize_Prototype()
 HRESULT COdur::Initialize(void* pArg)
 {
 	//Ready_States()
-	//Ready_Weapons()
 
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
+
+	if (FAILED(Ready_Weapons()))
+		return E_FAIL;
+
+	Bind_KeyFrames();
+
+
+	m_pSwapBone = m_pModel->Get_Bone("weapon_l_Sword");
+	Safe_AddRef(m_pSwapBone);
 
 	m_pModel->Change_Animation(Magician_Idle, 0.f);
 
@@ -37,6 +47,8 @@ void COdur::Tick(_float fTimeDelta)
 
 void COdur::LateTick(_float fTimeDelta)
 {
+	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
@@ -71,7 +83,15 @@ HRESULT COdur::Render()
 			return E_FAIL;
 	}
 
+	m_pCollider->Render();
+
 	return S_OK;
+}
+
+void COdur::Bind_KeyFrames()
+{
+	m_pModel->Bind_Func("Active_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_pOdurCane));
+	m_pModel->Bind_Func("inactive_Odur_Cane_Collider", bind(&CWeapon::Inactive_Collider, m_pOdurCane));
 }
 
 HRESULT COdur::Ready_Components()
@@ -91,6 +111,17 @@ HRESULT COdur::Ready_Components()
 	if (FAILED(__super::Add_Component(GET_CURLEVEL, TEXT("Prototype_Model_Odur"), TEXT("Model"), (CComponent**)&m_pModel)))
 		return E_FAIL;
 
+	CCollider::COLLIDERDESC Desc;
+	Desc.eType = CCollider::SPHERE;
+	Desc.pOwner = this;
+	Desc.vCenter = { 0.f, 1.3f, 0.f };
+	Desc.vSize = { 1.f, 0.f, 0.f };
+	Desc.vRotation = { 0.f, 0.f, 0.f };
+	Desc.bActive = true;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("Collider"), (CComponent**)&m_pCollider, &Desc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -101,6 +132,36 @@ HRESULT COdur::Ready_States()
 
 HRESULT COdur::Ready_Weapons()
 {
+	CCollider::COLLIDERDESC ColliderDesc = {};
+	ColliderDesc.eType = CCollider::OBB;
+	ColliderDesc.pOwner = this;
+	ColliderDesc.vCenter = { 0.f, 0.f, 0.2f };
+	ColliderDesc.vSize = { 0.1f, 0.1f, 0.9f };
+	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_Cane");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Cane";
+	WeaponDesc.pColliderDesc = &ColliderDesc;
+
+	m_pOdurCane = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_pOdurCane)
+		return E_FAIL;
+
+	ColliderDesc.eType = CCollider::OBB;
+	ColliderDesc.pOwner = this;
+	ColliderDesc.vCenter = { 0.5f, 0.f, 0.f };
+	ColliderDesc.vSize = { 1.f, 0.05f, 0.05f };
+	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Sword");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Sword";
+	WeaponDesc.pColliderDesc = &ColliderDesc;
+	m_pOdurSword = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_pOdurSword)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -135,6 +196,8 @@ CGameObject* COdur::Clone(void* pArg)
 void COdur::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pSwapBone);
 
 	Safe_Release(m_pModel);
 	Safe_Release(m_pShader);

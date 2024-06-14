@@ -34,9 +34,6 @@
     <Filter Include="01. Levels\03. Tool">
       <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\00. Loading\01. Title">
-      <UniqueIdentifier>{9fcdbdf1-7ee1-4737-94a5-7e51ca840b9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="100. IMGUI\00. ImGui_Main">
       <UniqueIdentifier>{a254e204-3881-4607-8094-9dc2d0a7ee29}</UniqueIdentifier>
     </Filter>
@@ -156,6 +153,9 @@
     </Filter>
     <Filter Include="02. GameObjects\02. Player\State\06. PlayerState_LockOn">
       <UniqueIdentifier>{4b45c3b8-7213-4b21-aa2a-6d26764e5051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\01. Title">
+      <UniqueIdentifier>{ed0f00ae-1f6c-491f-aba4-8aa13c98d29f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

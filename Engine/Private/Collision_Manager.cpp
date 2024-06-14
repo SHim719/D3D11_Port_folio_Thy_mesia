@@ -6,7 +6,6 @@
 CCollision_Manager::CCollision_Manager()
 	: m_pGameInstance(CGameInstance::Get_Instance())
 {
-	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CCollision_Manager::Initialize()
@@ -16,13 +15,18 @@ HRESULT CCollision_Manager::Initialize()
 
 void CCollision_Manager::Update()
 {
-	Execute_Collision(m_pGameInstance->Get_CurrentLevelID(), L"Player", L"Enemy", CollisionType::Collision);
+	Execute_Collision(m_pGameInstance->Get_CurrentLevelID(), L"Player", L"Enemy", COLLISION);
+	Execute_Collision(m_pGameInstance->Get_CurrentLevelID(), L"Player_Weapon", L"Enemy", TRIGGER);
+	Execute_Collision(m_pGameInstance->Get_CurrentLevelID(), L"Enemy_Weapon", L"Player", TRIGGER);
 
 }
 
 
-void CCollision_Manager::Execute_Collision(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eCollisionType)
+void CCollision_Manager::Execute_Collision(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eType)
 {
+	if (iLevel < 2)
+		return;
+
 	CLayer* pDstLayer = m_pGameInstance->Find_Layer(iLevel, strDstLayer);
 	CLayer* pSrcLayer = m_pGameInstance->Find_Layer(iLevel, strSrcLayer);
 	
@@ -34,20 +38,18 @@ void CCollision_Manager::Execute_Collision(_uint iLevel, const wstring& strDstLa
 	
 	for (auto DstIt = DstObjects.begin(); DstIt != DstObjects.end(); ++DstIt)
 	{
-		if ((*DstIt)->Is_Destroyed() || false == (*DstIt)->Is_Active())
-			continue;
 		CCollider* pDstCollider = static_cast<CCollider*>((*DstIt)->Find_Component(L"Collider"));
 
-		if (nullptr == pDstCollider || false == pDstCollider->Is_Active())
+		if (nullptr == pDstCollider)
 			continue;
 
 		for (auto SrcIt = SrcObjects.begin(); SrcIt != SrcObjects.end(); ++SrcIt)
 		{
-			if (*SrcIt == *DstIt || (*SrcIt)->Is_Destroyed() || false == (*SrcIt)->Is_Active())
+			if (*SrcIt == *DstIt)
 				continue;
 	
 			CCollider* pSrcCollider = static_cast<CCollider*>((*SrcIt)->Find_Component(L"Collider"));
-			if (nullptr == pSrcCollider || false == pSrcCollider->Is_Active())
+			if (nullptr == pSrcCollider)
 				continue;
 	
 			CollisionID id;
@@ -60,54 +62,80 @@ void CCollision_Manager::Execute_Collision(_uint iLevel, const wstring& strDstLa
 	
 			it = m_CollisionInfo.find(id.id);
 	
-			_float3 fDist;
+			if (false == (*DstIt)->Is_Active() || false == pDstCollider->Is_Active() || (*DstIt)->Is_Destroyed() ||
+				(*SrcIt)->Is_Destroyed() || false == (*SrcIt)->Is_Active() || false == pSrcCollider->Is_Active())
+			{
+				if (it->second)
+				{
+					(*DstIt)->OnCollisionExit(*SrcIt);
+					(*SrcIt)->OnCollisionExit(*DstIt);
+
+					pDstCollider->Set_IsColl(false);
+					pSrcCollider->Set_IsColl(false);
+
+					it->second = false;
+				}
+				continue;
+			}
+
+
 			if (pSrcCollider->Intersects(pDstCollider))
 			{
 				if (false == it->second)
 				{
-					if (Trigger == eCollisionType)
-					{
-						(*DstIt)->OnTriggerEnter(*SrcIt);
-						(*SrcIt)->OnTriggerEnter(*DstIt);
-					}
-
-					else
-					{
-						(*DstIt)->OnCollisionEnter(*SrcIt);
-						(*SrcIt)->OnCollisionEnter(*DstIt);
-					}
+					if (COLLISION == eType) 
+						Push_Object(pDstCollider, pSrcCollider, (*DstIt)->Get_Transform());
+					(*DstIt)->OnCollisionEnter(*SrcIt);
+					(*SrcIt)->OnCollisionEnter(*DstIt);
+					
 					it->second = true;
 				}
 
 				else
 				{
-					if (Trigger == eCollisionType)
-					{
-						(*DstIt)->OnTriggerStay(*SrcIt);
-						(*SrcIt)->OnTriggerStay(*DstIt);
-					}
-					else
-					{
-
-						(*DstIt)->OnCollisionStay(*SrcIt);
-						(*SrcIt)->OnCollisionStay(*DstIt);
-					}
+					if (COLLISION == eType) 
+						Push_Object(pDstCollider, pSrcCollider, (*DstIt)->Get_Transform());
+					(*DstIt)->OnCollisionStay(*SrcIt);
+					(*SrcIt)->OnCollisionStay(*DstIt);
+					
 				}
 			}
 			else if (it->second)
 			{
-				if (Trigger == eCollisionType)
-				{
-					(*DstIt)->OnTriggerExit(*SrcIt);
-					(*SrcIt)->OnTriggerExit(*DstIt);
-				}
-				else
-				{
-					(*DstIt)->OnCollisionExit(*SrcIt);
-					(*SrcIt)->OnCollisionExit(*DstIt);
-				}
+				(*DstIt)->OnCollisionExit(*SrcIt);
+				(*SrcIt)->OnCollisionExit(*DstIt);
+				
 				it->second = false;
 			}
+		}
+	}
+}
+
+void CCollision_Manager::Push_Object(CCollider* pDstCollider, CCollider* pSrcCollider, CTransform* pDstTransform)
+{
+	CCollider::ColliderType eDstCollType = pDstCollider->Get_ColliderType();
+	CCollider::ColliderType eSrcCollType = pDstCollider->Get_ColliderType();
+
+	if (CCollider::SPHERE == eDstCollType)
+	{
+		if (CCollider::SPHERE == eSrcCollType)
+		{
+			BoundingSphere* pDstSphere = static_cast<CSphere*>(pDstCollider)->Get_Collider();
+			BoundingSphere* pSrcSphere = static_cast<CSphere*>(pSrcCollider)->Get_Collider();
+
+			_vector vDstCenter = XMLoadFloat3(&(pDstSphere->Center));
+			_vector vSrcCenter = XMLoadFloat3(&(pSrcSphere->Center));
+
+			_float vDstRadius = pDstSphere->Radius;
+			_float vSrcRadius = pDstSphere->Radius;
+
+			_vector vPushDir = vDstCenter - vSrcCenter;
+			
+			_float fDist = vDstRadius + vSrcRadius - XMVectorGetX(XMVector3Length(vPushDir));
+
+			vPushDir = XMVector3Normalize(XMVectorSetY(vPushDir, 0.f));
+
+			pDstTransform->Add_Position(vPushDir, fDist);
 		}
 	}
 }
@@ -128,6 +156,4 @@ CCollision_Manager* CCollision_Manager::Create()
 void CCollision_Manager::Free()
 {
 	__super::Free();
-
-	Safe_Release(m_pGameInstance);
 }

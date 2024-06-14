@@ -64,7 +64,7 @@ void CToolColliderObj::LateTick(_float fTimeDelta)
 {
 	if (m_pAttachBone)
 	{
-		_matrix SocketMatrix = m_pAttachBone->Get_CombinedTransformation() * m_pOwnerModel->Get_PivotMatrix();
+		_matrix SocketMatrix = m_pAttachBone->Get_CombinedTransformation();
 		SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 		SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 		SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);

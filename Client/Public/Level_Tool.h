@@ -18,6 +18,9 @@ public:
 	HRESULT Render()				override;
 
 private:
+	HRESULT Ready_Player();
+	HRESULT Ready_Odur();
+
 	HRESULT Ready_UIResource();
 	HRESULT Ready_UI();
 

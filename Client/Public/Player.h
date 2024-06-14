@@ -26,8 +26,12 @@ public:
 	HRESULT Render()					override;
 
 private:
+	void Bind_KeyFrames()	override;
+
+private:
 	CShader*	m_pShader = { nullptr };
 	CModel*		m_pModel = { nullptr };
+	CCollider*	m_pCollider = { nullptr };
 
 private:
 	PlayerState			m_eState = { PlayerState::State_End };
@@ -53,10 +57,13 @@ private:
 private:
 	CTransform*		m_pTargetTransform = { nullptr };
 	_bool			m_bLockOn = { false };
+	_bool			m_bCanParry = { true };
 
 public:
 	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
 	_bool Is_LockOn() const { return m_bLockOn; }
+	void Enable_Parry() { m_bCanParry = true; }
+	void Disable_Parry() { m_bCanParry = false; }
 
 private:
 	HRESULT Ready_Components();

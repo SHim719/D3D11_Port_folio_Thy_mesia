@@ -24,10 +24,9 @@ public:
 	void Update(_fmatrix TransformMatrix)						override;
 	
 														
-#ifdef _DEBUG
 public:
 	void Render() override;
-#endif 
+
 
 private:
 	BoundingOrientedBox* m_pOBB = nullptr;

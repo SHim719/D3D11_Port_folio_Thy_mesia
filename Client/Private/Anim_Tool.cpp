@@ -15,9 +15,9 @@ HRESULT CAnim_Tool::Initialize(void* pArg)
     if (FAILED(__super::Initialize(pArg)))
         return E_FAIL;
 
-    m_strModelLists.reserve(1);
+    m_strModelLists.reserve(10);
     m_strModelLists.emplace_back("Prototype_Model_Player");
-
+    m_strModelLists.emplace_back("Prototype_Model_Odur");
 
     Load_KeyFrameNames();
 
@@ -118,7 +118,9 @@ HRESULT CAnim_Tool::Load_KeyFrameData(const _tchar* pPath)
     fin.read(szAnimName, iAnimNameLength);
 
     while (true)
-    {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               fin.read((_char*)&iKeyFrame, sizeof(_int));
+    {   
+        memset(szEvent, 0, MAX_PATH);
+        fin.read((_char*)&iKeyFrame, sizeof(_int));
         fin.read((_char*)&iEventLength, sizeof(_int));
         fin.read(szEvent, iEventLength);
         if (fin.eof())
@@ -211,9 +213,17 @@ void CAnim_Tool::KeyFrame_Window()
     ImGui::Text("Now KeyFrame: %d", iNowKeyFrame);
 
     if (ImGui::SliderInt("##KeyFrameController", &iNowKeyFrame, 0, iNumKeyFrames))
-    {
         Animations[m_iSelAnimIdx]->Set_CurrentKeyFrames((_uint)iNowKeyFrame);
-    }
+
+    if (ImGui::Button("U"))
+
+        Animations[m_iSelAnimIdx]->Set_CurrentKeyFrames((_uint)(++iNowKeyFrame));
+    ImGui::SameLine();
+
+    if (ImGui::Button("D"))
+        Animations[m_iSelAnimIdx]->Set_CurrentKeyFrames((_uint)(iNowKeyFrame = iNowKeyFrame == 0 ? 0 : --iNowKeyFrame));
+    
+        
 
     ImGui::SeparatorText("Event");
     KeyFrameEvent_ComboBox();
@@ -245,8 +255,6 @@ void CAnim_Tool::KeyFrameEvent_ListBox()
 {
     ImGui::SeparatorText("Now KeyFrames");
 
-    m_fKeyFrameButtonStartCursorY = ImGui::GetCursorPosY() + 10.f;
-
     string* strKeyFrames = new string[m_KeyFrameEvents[m_iSelAnimIdx].size()];
     for (size_t i = 0; i < m_KeyFrameEvents[m_iSelAnimIdx].size(); ++i)
         strKeyFrames[i] = "<" + to_string(m_KeyFrameEvents[m_iSelAnimIdx][i].first) + " , " + m_KeyFrameEvents[m_iSelAnimIdx][i].second + ">";
@@ -255,8 +263,9 @@ void CAnim_Tool::KeyFrameEvent_ListBox()
     for (size_t i = 0; i < m_KeyFrameEvents[m_iSelAnimIdx].size(); ++i)
         szKeyFrames[i] = strKeyFrames[i].c_str();
 
-    ImGui::PushItemWidth(150);
+    ImGui::PushItemWidth(220);
     ImGui::ListBox("##KeyFrame_ListBox", &m_iSelKeyFrameIdx, szKeyFrames, (_int)m_KeyFrameEvents[m_iSelAnimIdx].size(), 10);
+    ImGui::PopItemWidth();
 
     Safe_Delete_Array(strKeyFrames);
     Safe_Delete_Array(szKeyFrames);
@@ -264,19 +273,14 @@ void CAnim_Tool::KeyFrameEvent_ListBox()
 
 void CAnim_Tool::KeyFrameEvent_Button()
 {
-    _float fCursorY = m_fAnimListBoxStartCursorY;
-    _float fKeyFrameButtonCursorX = 165.f;
-    ImGui::SetCursorPos(ImVec2(fKeyFrameButtonCursorX, fCursorY));
-    if (ImGui::Button("Add KeyFrameEvent"))
+    if (ImGui::Button("Add"))
     {
         auto Anims = m_pModel->Get_Animations();
         _int iNowKeyFrame = (_int)Anims[m_iSelAnimIdx]->Get_NowKeyFrame();
        m_KeyFrameEvents[m_iSelAnimIdx].emplace_back(iNowKeyFrame, m_strEventNames[m_iSelEventName]);
     }
-
-    fCursorY = ImGui::GetCursorPosY() + 10.f;
-    ImGui::SetCursorPos(ImVec2(fKeyFrameButtonCursorX, fCursorY));
-    if (ImGui::Button("Delete KeyFrameEvent"))
+    ImGui::SameLine();
+    if (ImGui::Button("Delete"))
     {
         m_KeyFrameEvents[m_iSelAnimIdx].erase(m_KeyFrameEvents[m_iSelAnimIdx].begin() + m_iSelKeyFrameIdx);
         m_iSelKeyFrameIdx = 0;
@@ -310,6 +314,8 @@ void CAnim_Tool::Collider_ListBox()
 
     ImGui::PushItemWidth(150);
     ImGui::ListBox("##Collider_ListBox", &m_iSelColliderIdx, szColliders, (_int)m_Colliders.size(), 5);
+
+    Safe_Delete_Array(szColliders);
 }
 
 void CAnim_Tool::ColliderType_CheckBox()
@@ -352,6 +358,7 @@ void CAnim_Tool::Collider_Buttons()
         desc.vRotation.z = To_Radian(m_ColliderDesc.vRotation.z);
         desc.pOwner = m_pAnimObj;
         desc.eType = (CCollider::ColliderType)m_iTypeIdx;
+        desc.bActive = true;
 
         CToolColliderObj* pObj = static_cast<CToolColliderObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"ToolObject", L"Prototype_ToolColliderObj", &desc));
         m_Colliders.push_back(pObj);
@@ -380,7 +387,7 @@ void CAnim_Tool::Menu_Bar()
 {
     if (ImGui::BeginMenuBar())
     {
-        if (ImGui::BeginMenu("File"))
+        if (ImGui::BeginMenu("KeyFrame"))
         {
             if (ImGui::MenuItem("Load KeyFrame"))
             {
@@ -397,6 +404,7 @@ void CAnim_Tool::Menu_Bar()
             ImGui::EndMenu();
             
         }
+
         ImGui::EndMenuBar();
     }
 }
@@ -470,6 +478,8 @@ void CAnim_Tool::Model_Button()
 
         auto& Bones = m_pModel->Get_Bones();
 
+        Safe_Delete_Array(m_szBoneNames);
+
         m_szBoneNames = new const _char * [Bones.size()];
         for (size_t i = 0; i < Bones.size(); ++i)
             m_szBoneNames[i] = Bones[i]->Get_Name();
@@ -535,5 +545,4 @@ void CAnim_Tool::Free()
 	__super::Free();
 
     Safe_Delete_Array(m_szBoneNames);
- 
 }

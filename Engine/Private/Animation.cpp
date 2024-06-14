@@ -153,6 +153,9 @@ _uint CAnimation::Get_NumKeyFrames() const
 
 void CAnimation::Set_CurrentKeyFrames(_uint iKeyFrame)
 {
+	if (iKeyFrame >= Get_NumKeyFrames())
+		return;
+
 	m_fPlayTime = m_Channels[0]->Get_FrameGap() * (_float)iKeyFrame;
 
 	for (auto& pChannel : m_Channels)

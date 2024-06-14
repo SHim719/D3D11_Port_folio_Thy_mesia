@@ -103,11 +103,6 @@ public:
 #pragma endregion
 
 
-#pragma region EVENT_MANAGER
-
-
-#pragma endregion
-
 
 private:
 	CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -116,7 +111,7 @@ private:
 	CObject_Manager*		m_pObject_Manager = { nullptr };
 	CComponent_Manager*		m_pComponent_Manager = { nullptr };
 	CKey_Manager*			m_pKey_Manager = { nullptr };
-	//CCollision_Manager*	m_pCollision_Manager = { nullptr };
+	CCollision_Manager*		m_pCollision_Manager = { nullptr };
 	CSound_Manager*			m_pSound_Manager = { nullptr };
 	//CFrustum*				m_pFrustum = { nullptr };
 	CRenderer*				m_pRenderer = { nullptr };

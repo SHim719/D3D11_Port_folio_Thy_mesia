@@ -28,8 +28,8 @@ enum TextureType
 
 enum CollisionType
 {
-    Trigger,
-    Collision,
+    TRIGGER,
+    COLLISION,
 };
 
 

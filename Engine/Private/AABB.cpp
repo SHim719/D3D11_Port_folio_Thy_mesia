@@ -40,6 +40,9 @@ HRESULT CAABB::Initialize(void* pArg)
 
 void CAABB::Update(_fmatrix TransformMatrix)
 {
+	if (false == m_bActive)
+		return;
+
 	m_pOriginal_AABB->Transform(*m_pAABB, Remove_Rotation(TransformMatrix));
 }
 
@@ -80,6 +83,10 @@ void CAABB::Remake_Collider(COLLIDERDESC* pColliderDesc)
 
 void CAABB::Render()
 {
+#ifdef _DEBUG
+	if (false == m_bActive)
+		return;
+
 	__super::Render();
 
 	m_pBatch->Begin();
@@ -87,7 +94,7 @@ void CAABB::Render()
 	DX::Draw(m_pBatch, *m_pAABB, XMLoadFloat4(&m_vColor));
 
 	m_pBatch->End();
-
+#endif
 }
 
 CAABB* CAABB::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

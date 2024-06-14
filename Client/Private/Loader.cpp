@@ -61,13 +61,6 @@ HRESULT CLoader::Loading_Tool()
 {
 	lstrcpy(m_szLoadingText, TEXT("Load Model."));
 
-	//_matrix		PivotMatrix = XMMatrixIdentity();
-	//
-	//PivotMatrix = XMMatrixScaling(0.01f, 0.01f, 0.01f) * XMMatrixRotationY(To_Radian(-90.f));
-	//if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_GAMEPLAY, TEXT("Prototype_Model_Puppetwstring"),
-	//	CModel::Create(m_pDevice, m_pContext, CModel::TYPE_SKELETALMESH, "../../Resources/Models/Player/", "Puppetwstring.fbx", PivotMatrix))))
-	//	return E_FAIL;
-
 	lstrcpy(m_szLoadingText, TEXT("Load Prototype."));
 
 	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_Free_Camera"), CFree_Camera::Create(m_pDevice, m_pContext))))

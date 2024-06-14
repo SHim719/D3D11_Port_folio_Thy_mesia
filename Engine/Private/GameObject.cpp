@@ -64,6 +64,11 @@ void CGameObject::Change_State(_uint eState)
 {
 }
 
+void CGameObject::Bind_KeyFrames()
+{
+
+}
+
 
 HRESULT CGameObject::Add_Component(_uint iPrototoypeLevelIndex, const wstring& strPrototypeTag, const wstring& strComponentTag, CComponent** ppOut, void* pArg)
 {

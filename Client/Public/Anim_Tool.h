@@ -63,7 +63,6 @@ private:
 
 	vector<vector<pair<_int, string>>>	m_KeyFrameEvents;
 	_int								m_iSelKeyFrameIdx = 0;
-	_float								m_fKeyFrameButtonStartCursorY;
 
 	const char**				m_szBoneNames = nullptr;
 	_int						m_iNumBones = 0;

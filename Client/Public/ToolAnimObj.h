@@ -9,7 +9,7 @@ BEGIN(Client)
 class CToolAnimObj final : public CGameObject
 {
 public:
-	enum PrototypeCharacter { Corvus, };
+	enum PrototypeCharacter { Corvus, Odur};
 
 private:
 	CToolAnimObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -29,6 +29,7 @@ private:
 
 private:
 	HRESULT Ready_Corvus();
+	HRESULT Ready_Odur();
 
 public:
 	CModel* Get_Model() const { return m_pModel; }

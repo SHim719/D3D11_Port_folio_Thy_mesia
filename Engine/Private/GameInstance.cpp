@@ -35,9 +35,9 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (nullptr == m_pComponent_Manager)
 		return E_FAIL;
 
-	//m_pCollision_Manager = CCollision_Manager::Create();
-	//if (nullptr == m_pComponent_Manager)
-	//	return E_FAIL;
+	m_pCollision_Manager = CCollision_Manager::Create();
+	if (nullptr == m_pComponent_Manager)
+		return E_FAIL;
 
 	m_pSound_Manager = CSound_Manager::Create();
 	if (nullptr == m_pSound_Manager)
@@ -71,7 +71,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->PriorityTick(fTimeDelta * m_fTimeScale);
 	m_pObject_Manager->Tick(fTimeDelta * m_fTimeScale);
 
-	//m_pCollision_Manager->Tick();
+	m_pCollision_Manager->Update();
 
 	//m_pFrustum->Tick();
 
@@ -397,7 +397,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pTimer_Manager);
 	Safe_Release(m_pLevel_Manager);
 	Safe_Release(m_pKey_Manager);
-	//Safe_Release(m_pCollision_Manager);
+	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pSound_Manager);
 	//Safe_Release(m_pFrustum);
 	Safe_Release(m_pPipeLine);

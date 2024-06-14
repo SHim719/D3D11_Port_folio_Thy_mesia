@@ -48,6 +48,9 @@ HRESULT COBB::Initialize(void* pArg)
 
 void COBB::Update(_fmatrix TransformMatrix)
 {
+	if (false == m_bActive)
+		return;
+
 	m_pOriginal_OBB->Transform(*m_pOBB, TransformMatrix);
 }
 
@@ -97,6 +100,10 @@ void COBB::Remake_Collider(COLLIDERDESC* pColliderDesc)
 
 void COBB::Render()
 {
+#ifdef _DEBUG
+	if (false == m_bActive)
+		return;
+
 	__super::Render();
 
 	m_pBatch->Begin();
@@ -104,7 +111,7 @@ void COBB::Render()
 	DX::Draw(m_pBatch, *m_pOBB, XMLoadFloat4(&m_vColor));
 
 	m_pBatch->End();
-
+#endif 
 }
 
 

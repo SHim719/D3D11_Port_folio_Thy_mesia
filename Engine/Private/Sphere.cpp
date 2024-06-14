@@ -41,6 +41,9 @@ HRESULT CSphere::Initialize(void* pArg)
 
 void CSphere::Update(_fmatrix TransformMatrix)
 {
+	if (false == m_bActive)
+		return;
+
 	m_pOriginal_Sphere->Transform(*m_pSphere, TransformMatrix);
 }
 
@@ -81,6 +84,10 @@ void CSphere::Remake_Collider(COLLIDERDESC* pColliderDesc)
 
 void CSphere::Render()
 {
+#ifdef _DEBUG
+	if (false == m_bActive)
+		return;
+
 	__super::Render();
 
 	m_pBatch->Begin();
@@ -88,7 +95,7 @@ void CSphere::Render()
 	DX::Draw(m_pBatch, *m_pSphere, XMLoadFloat4(&m_vColor));
 
 	m_pBatch->End();
-
+#endif
 }
 
 

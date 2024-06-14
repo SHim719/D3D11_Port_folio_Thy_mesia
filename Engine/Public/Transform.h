@@ -55,8 +55,12 @@ public:
 		return Get_State(STATE_POSITION);
 	}
 
-	void Set_Position(_vector vPosition) {
+	void Set_Position(_fvector vPosition) {
 		Set_State(STATE_POSITION, vPosition);
+	}
+
+	void Add_Position(_fvector vDir, _float fDist) {
+		Set_Position(Get_Position() + vDir * fDist);
 	}
 
 	_vector Get_Right() const {
