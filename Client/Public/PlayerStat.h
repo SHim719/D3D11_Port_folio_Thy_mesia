@@ -9,9 +9,11 @@ private:
 	CPlayerStat();
 	virtual ~CPlayerStat() = default;
 
-private:
-	_bool			m_bAttackUpgraded = false;
-	
+private: 
+	_bool			m_bAttackUpgraded = true;
+
+	_int			m_iHp;
+	_int			m_iMaxHp;
 public:
 	void Upgrade_Attack() { 
 		m_bAttackUpgraded = true; }

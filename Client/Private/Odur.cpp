@@ -15,14 +15,16 @@ COdur::COdur(const COdur& rhs)
 
 HRESULT COdur::Initialize_Prototype()
 {
+	m_iTag = (_uint)TAG_ENEMY;
 	return S_OK;
 }
 
 HRESULT COdur::Initialize(void* pArg)
 {
-	//Ready_States()
-
 	if (FAILED(Ready_Components()))
+		return E_FAIL;
+
+	if (FAILED(Ready_States()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Weapons()))
@@ -30,17 +32,18 @@ HRESULT COdur::Initialize(void* pArg)
 
 	Bind_KeyFrames();
 
-
 	m_pSwapBone = m_pModel->Get_Bone("weapon_l_Sword");
 	Safe_AddRef(m_pSwapBone);
 
-	m_pModel->Change_Animation(Magician_Idle, 0.f);
+	Change_State((_uint)OdurState::State_Idle);
+	m_pModel->Set_AnimPlay();
 
 	return S_OK;
 }
 
 void COdur::Tick(_float fTimeDelta)
 {
+	m_States[m_iState]->OnGoing(fTimeDelta);
 
 	m_pModel->Play_Animation(fTimeDelta);
 }
@@ -48,6 +51,7 @@ void COdur::Tick(_float fTimeDelta)
 void COdur::LateTick(_float fTimeDelta)
 {
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
@@ -67,7 +71,8 @@ HRESULT COdur::Render()
 	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
-	m_pModel->SetUp_BoneMatrices(m_pShader);
+	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
+		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
@@ -84,6 +89,7 @@ HRESULT COdur::Render()
 	}
 
 	m_pCollider->Render();
+	m_pHitBoxCollider->Render();
 
 	return S_OK;
 }
@@ -91,7 +97,26 @@ HRESULT COdur::Render()
 void COdur::Bind_KeyFrames()
 {
 	m_pModel->Bind_Func("Active_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_pOdurCane));
-	m_pModel->Bind_Func("inactive_Odur_Cane_Collider", bind(&CWeapon::Inactive_Collider, m_pOdurCane));
+	m_pModel->Bind_Func("Inactive_Odur_Cane_Collider", bind(&CWeapon::Inactive_Collider, m_pOdurCane));
+}
+
+
+void COdur::OnCollisionEnter(CGameObject* pOther)
+{
+	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
+	{
+		cout << "Enter" << endl;
+		m_States[m_iState]->OnHit(nullptr);
+	}
+
+}
+
+void COdur::OnCollisionExit(CGameObject* pOther)
+{
+	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
+	{
+		cout << "Exit" << endl;
+	}
 }
 
 HRESULT COdur::Ready_Components()
@@ -122,11 +147,28 @@ HRESULT COdur::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("Collider"), (CComponent**)&m_pCollider, &Desc)))
 		return E_FAIL;
 
+	Desc.eType = CCollider::SPHERE;
+	Desc.pOwner = this;
+	Desc.vCenter = { 0.f, 1.3f, 0.f };
+	Desc.vSize = { 1.5f, 0.f, 0.0f };
+	Desc.vRotation = { 0.f, 0.f, 0.f };
+	Desc.strCollisionLayer = "HitBox";
+	Desc.bActive = true;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT COdur::Ready_States()
 {
+	m_States.resize((_uint)OdurState::State_End);
+
+	m_States[(_uint)OdurState::State_Idle] = COdurState_Idle::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Hit] = COdurState_Hit::Create(m_pDevice, m_pContext, this);
+
+
 	return S_OK;
 }
 
@@ -140,6 +182,7 @@ HRESULT COdur::Ready_Weapons()
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
 
 	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.iTag = (_uint)TAG_ENEMY_WEAPON;
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_Cane");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Cane";
@@ -198,8 +241,5 @@ void COdur::Free()
 	__super::Free();
 
 	Safe_Release(m_pSwapBone);
-
-	Safe_Release(m_pModel);
-	Safe_Release(m_pShader);
-
+	Safe_Release(m_pHitBoxCollider);
 }

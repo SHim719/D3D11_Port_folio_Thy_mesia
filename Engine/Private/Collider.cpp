@@ -55,11 +55,16 @@ HRESULT CCollider::Initialize(void* pArg)
 
 	m_bActive = pDesc->bActive;
 
+	if (pDesc->strCollisionLayer != "")
+		m_pGameInstance->Add_ColliderToLayer(pDesc->strCollisionLayer, this);
+
 	return S_OK;
 }
 
 void CCollider::Update(_fmatrix WorldMatrix)
 {
+
+	
 }
 
 void CCollider::Render()

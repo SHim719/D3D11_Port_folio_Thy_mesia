@@ -20,13 +20,18 @@ HRESULT CWeapon::Initialize_Prototype()
 
 HRESULT CWeapon::Initialize(void* pArg)
 {
-	m_WeaponDesc = *(WEAPONDESC*)pArg;
+	WEAPONDESC* pWeaponDesc = (WEAPONDESC*)pArg;
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components(pWeaponDesc)))
 		return E_FAIL;
 
-	Safe_AddRef(m_WeaponDesc.pSocketBone);
-	Safe_AddRef(m_WeaponDesc.pParentTransform);
+	m_iTag = pWeaponDesc->iTag;
+
+	m_pSocketBone = pWeaponDesc->pSocketBone;
+	m_pParentTransform = pWeaponDesc->pParentTransform;
+
+	Safe_AddRef(m_pSocketBone);
+	Safe_AddRef(m_pParentTransform);
 
 	return S_OK;
 }
@@ -37,12 +42,12 @@ void CWeapon::Tick(_float fTimeDelta)
 
 void CWeapon::LateTick(_float fTimeDelta)
 {
-	_matrix SocketMatrix = m_WeaponDesc.pSocketBone->Get_CombinedTransformation();
+	_matrix SocketMatrix = m_pSocketBone->Get_CombinedTransformation();
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
-	m_pTransform->Set_WorldMatrix(SocketMatrix * m_WeaponDesc.pParentTransform->Get_WorldMatrix());
+	m_pTransform->Set_WorldMatrix(SocketMatrix * m_pParentTransform->Get_WorldMatrix());
 
 	if (m_pCollider)
 		m_pCollider->Update(m_pTransform->Get_WorldMatrix());
@@ -89,7 +94,7 @@ HRESULT CWeapon::Render()
 	return S_OK;
 }
 
-HRESULT CWeapon::Ready_Components()
+HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, nullptr)))
 		return E_FAIL;
@@ -97,20 +102,21 @@ HRESULT CWeapon::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), m_WeaponDesc.wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
+	if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), pDesc->wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
 		return E_FAIL;
 
-
-	if (nullptr != m_WeaponDesc.pColliderDesc)
+	if (nullptr != pDesc->pColliderDesc)
 	{
 		wstring wstrColliderTag = L"";
-		if (CCollider::OBB == m_WeaponDesc.pColliderDesc->eType)
+		if (CCollider::OBB == pDesc->pColliderDesc->eType)
 			wstrColliderTag = L"Prototype_OBB";
-		else if (CCollider::SPHERE == m_WeaponDesc.pColliderDesc->eType)
+		else if (CCollider::SPHERE == pDesc->pColliderDesc->eType)
 			wstrColliderTag = L"Prototype_Sphere";
 
+		pDesc->pColliderDesc->pOwner = this;
+
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, wstrColliderTag, TEXT("Collider"), (CComponent**)&m_pCollider, 
-			m_WeaponDesc.pColliderDesc)))
+			pDesc->pColliderDesc)))
 			return E_FAIL;
 	}
 	
@@ -148,10 +154,10 @@ void CWeapon::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pSocketBone);
+	Safe_Release(m_pParentTransform);
 	Safe_Release(m_pShader);
 	Safe_Release(m_pModel);
-	Safe_Release(m_WeaponDesc.pSocketBone);
-	Safe_Release(m_WeaponDesc.pParentTransform);
 	Safe_Release(m_pCollider);
 
 }

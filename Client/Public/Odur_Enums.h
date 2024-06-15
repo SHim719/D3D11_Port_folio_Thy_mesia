@@ -79,3 +79,10 @@ enum OdurAnim
 	Magician_WalkRDisappear,
 	MagicianLV1_Seq_BossFightStart,
 };
+
+enum class OdurState
+{
+	State_Idle,
+	State_Hit,
+	State_End,
+};

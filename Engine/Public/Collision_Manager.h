@@ -31,10 +31,15 @@ public:
 private:
 	CGameInstance* m_pGameInstance = nullptr;
 
-	unordered_map<UINT64, bool> m_CollisionInfo;
+	unordered_map<UINT64, bool>					m_CollisionInfo;
+	unordered_map<string, list<CCollider*>>		m_CollisionLayer;
+
+public:
+	void Add_ColliderToLayer(const string& strLayer, CCollider* pCollider);
 
 private:
 	void Execute_Collision(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eType);
+	void Execute_Collision(const string& strDstLayer, const string& strSrcLayer, CollisionType eType);
 	void Push_Object(CCollider* pDstCollider, CCollider* pSrcCollider, class CTransform* pDstTransform);
 
 

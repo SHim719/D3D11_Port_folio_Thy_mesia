@@ -49,6 +49,9 @@ void CSphere::Update(_fmatrix TransformMatrix)
 
 _bool CSphere::Intersects(CCollider* pTargetCollider)
 {
+	if (false == m_bActive)
+		return false;
+
 	ColliderType		eType = pTargetCollider->Get_ColliderType();
 
 	m_bIsColl = false;

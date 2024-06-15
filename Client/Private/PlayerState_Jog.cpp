@@ -16,7 +16,7 @@ HRESULT CPlayerState_Jog::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPlayerState_Jog::OnState_Start()
+void CPlayerState_Jog::OnState_Start(void* pArg)
 {
 	m_pModel->Change_Animation(Corvus_SD_RunF_24);
 	m_pOwnerTransform->Set_Speed(m_fJogSpeed);

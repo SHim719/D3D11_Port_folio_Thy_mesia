@@ -10,10 +10,12 @@ HRESULT COdurState_Base::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pOdur = (COdur*)pArg;
+
 	return S_OK;
 }
 
-void COdurState_Base::OnState_Start()
+void COdurState_Base::OnState_Start(void* pArg)
 {
 }
 

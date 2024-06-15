@@ -130,9 +130,6 @@
     <Filter Include="01.Utility\02. GameObjects\Layer">
       <UniqueIdentifier>{7bd5b2e1-f914-4816-9262-9d0a6cb7703b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\99. Managers\07. Collision_Manager">
-      <UniqueIdentifier>{c0063b74-9ffe-4d54-8b94-b85647c1db49}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\04. Sound">
       <UniqueIdentifier>{af6849f4-ee1b-4557-91aa-bcb35d8b9e89}</UniqueIdentifier>
     </Filter>
@@ -141,6 +138,9 @@
     </Filter>
     <Filter Include="01.Utility\05. RenderTarget">
       <UniqueIdentifier>{7922820a-6027-4b03-92bc-439c7dc9d344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\07. Collision_Manager">
+      <UniqueIdentifier>{1578386f-92e5-4659-903d-84063dd8188b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

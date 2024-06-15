@@ -30,7 +30,7 @@ HRESULT CState_Base::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CState_Base::OnState_Start()
+void CState_Base::OnState_Start(void* pArg)
 {
 }
 
@@ -39,6 +39,10 @@ void CState_Base::OnGoing(_float fTimeDelta)
 }
 
 void CState_Base::OnState_End()
+{
+}
+
+void CState_Base::OnHit(void* pArg)
 {
 }
 

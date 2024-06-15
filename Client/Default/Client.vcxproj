@@ -168,6 +168,7 @@
   <ItemGroup>
     <ClInclude Include="..\Public\Anim_Tool.h" />
     <ClInclude Include="..\Public\Background.h" />
+    <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\Client_Components.h" />
     <ClInclude Include="..\Public\Client_Functions.h" />
     <ClInclude Include="..\Public\Client_Macro.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="..\Public\Map_Tool.h" />
     <ClInclude Include="..\Public\Odur.h" />
     <ClInclude Include="..\Public\OdurState_Base.h" />
+    <ClInclude Include="..\Public\OdurState_Hit.h" />
     <ClInclude Include="..\Public\OdurState_Idle.h" />
     <ClInclude Include="..\Public\Odur_Enums.h" />
     <ClInclude Include="..\Public\Odur_States.h" />
@@ -219,6 +221,7 @@
   <ItemGroup>
     <ClCompile Include="..\Private\Anim_Tool.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\Client_Functions.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
     <ClCompile Include="..\Private\Free_Camera.cpp" />
@@ -232,6 +235,7 @@
     <ClCompile Include="..\Private\Map_Tool.cpp" />
     <ClCompile Include="..\Private\Odur.cpp" />
     <ClCompile Include="..\Private\OdurState_Base.cpp" />
+    <ClCompile Include="..\Private\OdurState_Hit.cpp" />
     <ClCompile Include="..\Private\OdurState_Idle.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerStat.cpp" />

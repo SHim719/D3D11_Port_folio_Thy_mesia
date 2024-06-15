@@ -70,12 +70,11 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->PriorityTick(fTimeDelta * m_fTimeScale);
 	m_pObject_Manager->Tick(fTimeDelta * m_fTimeScale);
+	m_pObject_Manager->LateTick(fTimeDelta * m_fTimeScale);
 
 	m_pCollision_Manager->Update();
 
 	//m_pFrustum->Tick();
-
-	m_pObject_Manager->LateTick(fTimeDelta * m_fTimeScale);
 
 	m_pPipeLine->Update();
 
@@ -271,8 +270,21 @@ HRESULT CGameInstance::Add_RenderObject(CRenderer::RENDERGROUP eRenderGroup, CGa
 }
 #pragma endregion
 
+#pragma region COLLISION_MANAGER
+
+void CGameInstance::Add_ColliderToLayer(const string& strLayer, CCollider* pCollider)
+{
+	if (nullptr == m_pCollision_Manager)
+		return;
+
+	m_pCollision_Manager->Add_ColliderToLayer(strLayer, pCollider);
+}
+
+#pragma endregion
+
 
 #pragma region SOUND_MANAGER
+
 HRESULT CGameInstance::Create_Sound(const string& strPath, const wstring& strSoundTag)
 {
 	if (nullptr == m_pSound_Manager)

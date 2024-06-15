@@ -17,9 +17,11 @@ protected:
 
 public:
 	virtual HRESULT Initialize(void* pArg);
-	virtual void OnState_Start();
+	virtual void OnState_Start(void* pArg = nullptr);
 	virtual void OnGoing(_float fTimeDelta);
 	virtual void OnState_End();
+
+	virtual void OnHit(void* pArg);
 
 protected:
 	ID3D11Device*			m_pDevice = nullptr;

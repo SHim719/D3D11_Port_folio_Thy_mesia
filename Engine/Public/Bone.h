@@ -21,7 +21,7 @@ public:
 		return m_iDepth;
 	}
 
-	_matrix Get_Tranformation(){
+	_matrix Get_Transformation(){
 		return XMLoadFloat4x4(&m_Transformation);
 	}
 

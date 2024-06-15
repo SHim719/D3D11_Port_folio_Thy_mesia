@@ -18,7 +18,7 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPlayerState_Attack::OnState_Start()
+void CPlayerState_Attack::OnState_Start(void* pArg)
 {
 	m_pModel->Change_Animation(_uint(Corvus_SD_LAttack1 + m_iNowComboCnt), 0.f);
 	m_bCanNextAttack = false;
@@ -33,15 +33,6 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 		return;
 	}
 
-	if (m_bCanNextAttack && m_iNowComboCnt < m_pPlayerStat->Get_MaxAttackCnt() - 1)
-	{
-		if (KEY_PUSHING(eKeyCode::LButton))
-		{
-			++m_iNowComboCnt;
-			OnState_Start();
-		}
-	}
-
 	if (m_bCanRotation)
 	{
 		_vector vNewLook = Calc_MoveLook(true);
@@ -51,6 +42,15 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 	}
 	
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+
+	if (m_bCanNextAttack && m_iNowComboCnt < m_pPlayerStat->Get_MaxAttackCnt() - 1)
+	{
+		if (Check_StateChange(PlayerState::State_Attack))
+		{
+			++m_iNowComboCnt;
+			OnState_Start(nullptr);
+		}
+	}
 }
 
 void CPlayerState_Attack::OnState_End()

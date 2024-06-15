@@ -14,7 +14,6 @@ namespace JoMath
 	_matrix LookTo(_fvector vTargetLook);
 	_matrix LookAt(_fvector vSrc, _fvector vDst);
 
-
 	_vector ToEulerAngle(_fvector vQuat);
 }
 

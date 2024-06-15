@@ -1,18 +1,15 @@
 #pragma once
 
-#include "Client_Defines.h"
-#include "GameObject.h"
+#include "Character.h"
 #include "Player_Enums.h"
-
-BEGIN(Engine)
-class CModel;
-class CShader;
-END
 
 BEGIN(Client)
 
-class CPlayer final : public CGameObject
+class CPlayer final : public CCharacter
 {
+private:
+	enum PLAYER_WEAPON { SABER, DAGGER, CLAW_L, CLAW_R, WEAPON_END};
+
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CPlayer(const CPlayer& rhs);
@@ -29,26 +26,17 @@ private:
 	void Bind_KeyFrames()	override;
 
 private:
-	CShader*	m_pShader = { nullptr };
-	CModel*		m_pModel = { nullptr };
-	CCollider*	m_pCollider = { nullptr };
-
-private:
-	PlayerState			m_eState = { PlayerState::State_End };
-	class CState_Base*	m_States[(_uint)PlayerState::State_End] = {};
-
 	class CPlayerStat*	m_pStats = { nullptr };
 public:
-	void Change_State(_uint eState) override;
-
 	CPlayerStat* Get_PlayerStat() const { 
 		return m_pStats; }
 
 private:
-	class CWeapon*	m_pDagger = { nullptr };
-	class CWeapon*	m_pSaber = { nullptr };
+	class CWeapon* m_Weapons[WEAPON_END] = {};
 
 private:
+	void Update_AttackDesc(const ATTACKDESC& Desc);
+
 	void Active_Weapons();
 	void InActive_Weapons();
 	void Active_Claw();

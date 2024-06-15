@@ -79,6 +79,7 @@ public:
 
 
 #pragma region COLLISION_MANAGER
+	void Add_ColliderToLayer(const string& strLayer, CCollider* pCollider);
 #pragma endregion
 
 #pragma region SOUND_MANAGER

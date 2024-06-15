@@ -15,6 +15,7 @@ public:
 		_float3				vCenter = { 0.f, 0.f, 0.f };
 		_float3				vSize = { 0.f, 0.f, 0.f };
 		_float3				vRotation = { 0.f, 0.f, 0.f };
+		string				strCollisionLayer = "";
 		class CGameObject*	pOwner = nullptr;
 		ColliderType		eType = Collider_End;
 		_bool				bActive = false;
@@ -54,7 +55,12 @@ public:
 	ColliderType Get_ColliderType() const { 
 		return m_eColliderType; }
 
-	void Set_IsColl(_bool b) { m_bIsColl = b; }
+	void Set_IsColl(_bool b) { 
+		m_bIsColl = b; }
+
+	CGameObject* Get_Owner() const {
+		return m_pOwner;
+	}
 
 protected:
 	PrimitiveBatch<VertexPositionColor>*	m_pBatch = nullptr;

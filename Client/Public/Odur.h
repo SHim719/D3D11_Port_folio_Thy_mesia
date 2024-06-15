@@ -1,13 +1,9 @@
 #pragma once
 
-#include "Client_Defines.h"
 #include "Enemy.h"
 #include "Odur_Enums.h"
 
 BEGIN(Engine)
-class CModel;
-class CShader;
-class CCollider;
 class CBone;
 END
 
@@ -30,17 +26,20 @@ public:
 private:
 	void Bind_KeyFrames()				override;
 
-
 private:
 	CBone* m_pSwapBone = { nullptr };
 
 	class CWeapon* m_pOdurCane = { nullptr };
 	class CWeapon* m_pOdurSword = { nullptr };
+private:
+	void OnCollisionEnter(CGameObject* pOther)	override;
+	void OnCollisionExit(CGameObject* pOther)	override;
 
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_States();
 	HRESULT Ready_Weapons();
+
 
 public:
 	static COdur* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

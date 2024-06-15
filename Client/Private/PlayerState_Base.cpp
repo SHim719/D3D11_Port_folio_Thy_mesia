@@ -22,7 +22,7 @@ HRESULT CPlayerState_Base::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPlayerState_Base::OnState_Start()
+void CPlayerState_Base::OnState_Start(void* pArg)
 {
 }
 

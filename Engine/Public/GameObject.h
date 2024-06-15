@@ -25,10 +25,6 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 	virtual HRESULT Render();
 
-	virtual void Change_State(_uint eState);
-protected:
-	virtual void Bind_KeyFrames();
-
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
@@ -59,6 +55,8 @@ protected:
 	_bool m_bDestroyed = { false };
 	_bool m_bActive = { true };
 	_bool m_bCreatedThisFrame = { true };
+
+	_uint m_iTag = 0;
 public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
 	_bool Is_Destroyed() { return m_bDestroyed; }
@@ -67,6 +65,8 @@ public:
 	_bool Is_Active() { return m_bActive; }
 
 	_bool Is_CreatedThisFrame() const { return m_bCreatedThisFrame; }
+
+	_uint Get_Tag() const { return m_iTag; }
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

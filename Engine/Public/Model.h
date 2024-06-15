@@ -70,7 +70,8 @@ public:
 	}
 
 	_vector Organize_RootPos(_fvector OriginRootPos) {
-		return XMVectorSet(OriginRootPos.m128_f32[0] * 0.01f, OriginRootPos.m128_f32[1] * 0.01f, -OriginRootPos.m128_f32[2] * 0.01f, 1.f);
+		//return XMVectorSet(OriginRootPos.m128_f32[0] * 0.01f, OriginRootPos.m128_f32[1] * 0.01f, -OriginRootPos.m128_f32[2] * 0.01f, 1.f);
+		return XMVectorSet(OriginRootPos.m128_f32[0], OriginRootPos.m128_f32[2], -OriginRootPos.m128_f32[1], 1.f);
 	}
 
 	void Reset_RootPos() {

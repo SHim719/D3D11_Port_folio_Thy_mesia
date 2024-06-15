@@ -134,9 +134,11 @@ void CModel::Calc_DeltaRootPos()
 	if (m_bPreview)
 		return;
 
-	_vector vNowRootPos = m_Bones[m_iRootBoneIdx]->Get_Tranformation().r[3];
+	//_vector vNowRootPos = m_Bones[m_iRootBoneIdx]->Get_Tranformation().r[3];
 
-	vNowRootPos = Organize_RootPos(vNowRootPos);
+	_matrix TransformMatrix = m_Bones[m_iRootBoneIdx]->Get_Transformation() * XMLoadFloat4x4(&m_PivotMatrix);
+
+	_vector vNowRootPos = Organize_RootPos(TransformMatrix.r[3]);//Organize_RootPos(vNowRootPos);
 
 	XMStoreFloat4(&m_vDeltaRootPos, (vNowRootPos - XMLoadFloat4(&m_vPrevRootPos)));
 

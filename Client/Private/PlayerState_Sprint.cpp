@@ -17,7 +17,7 @@ HRESULT CPlayerState_Sprint::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPlayerState_Sprint::OnState_Start()
+void CPlayerState_Sprint::OnState_Start(void* pArg)
 {
 	m_pOwnerTransform->Set_Speed(m_fSprintSpeed);
 	m_pModel->Change_Animation(Corvus_SD1_Sprint);

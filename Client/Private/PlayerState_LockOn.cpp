@@ -15,7 +15,7 @@ HRESULT CPlayerState_LockOn::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPlayerState_LockOn::OnState_Start()
+void CPlayerState_LockOn::OnState_Start(void* pArg)
 {
 	m_pOwnerTransform->Set_Speed(m_fJogSpeed);
 }

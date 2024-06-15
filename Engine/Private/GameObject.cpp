@@ -2,6 +2,8 @@
 #include "GameInstance.h"
 
 
+
+
 CGameObject::CGameObject(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice { pDevice }
 	, m_pContext { pContext }
@@ -60,16 +62,6 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
-void CGameObject::Change_State(_uint eState)
-{
-}
-
-void CGameObject::Bind_KeyFrames()
-{
-
-}
-
-
 HRESULT CGameObject::Add_Component(_uint iPrototoypeLevelIndex, const wstring& strPrototypeTag, const wstring& strComponentTag, CComponent** ppOut, void* pArg)
 {
 	if (nullptr != Find_Component(strComponentTag))
@@ -97,6 +89,7 @@ CComponent* CGameObject::Find_Component(const wstring& strComponentTag)
 
 	return iter->second;
 }
+
 
 void CGameObject::Set_Active(_bool b)
 {

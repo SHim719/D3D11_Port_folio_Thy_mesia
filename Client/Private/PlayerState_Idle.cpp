@@ -16,7 +16,7 @@ HRESULT CPlayerState_Idle::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPlayerState_Idle::OnState_Start()
+void CPlayerState_Idle::OnState_Start(void* pArg)
 {
 	m_pModel->Change_Animation(Corvus_SD_Idle);
 }

@@ -12,7 +12,7 @@ END
 BEGIN(Client)
 class CImGui_Main :  public CBase
 {
-enum ToolState { MAP, ANIM, EFFECT, CUTSCENE,TESTPLAY, TOOL_END};
+enum ToolState { MAP, ANIM, EFFECT, CUTSCENE, TESTPLAY, TOOL_END};
 
 private:
 	CImGui_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

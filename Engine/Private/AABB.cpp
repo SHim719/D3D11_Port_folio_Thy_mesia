@@ -48,8 +48,10 @@ void CAABB::Update(_fmatrix TransformMatrix)
 
 _bool CAABB::Intersects(CCollider* pTargetCollider)
 {
-	CCollider::ColliderType	eType = pTargetCollider->Get_ColliderType();
+	if (false == m_bActive)
+		return false;
 
+	CCollider::ColliderType	eType = pTargetCollider->Get_ColliderType();
 
 	switch (eType)
 	{

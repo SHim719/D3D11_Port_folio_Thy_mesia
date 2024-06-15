@@ -3,14 +3,10 @@
 #include "../Default/stdafx.h"
 #include <process.h>
 
-
 #include "Client_Components.h"
 #include "Client_Struct.h"
-#include "Client_Functions.h"
 #include "Client_Macro.h"
-#include "Client_MathUtils.h"
-
-
+#include "Client_Functions.h"
 
 /* 클라이언트에서 제작하는 모든 클래스들이 공통적으로 자주 사용하는 정의들을 모아둔다. */
 namespace Client
@@ -23,6 +19,15 @@ namespace Client
 		LEVEL_GAMEPLAY,
 		LEVEL_TOOL,
 		LEVEL_END };
+
+	enum TAG
+	{
+		TAG_PLAYER = 0,
+		TAG_PLAYER_WEAPON,
+		TAG_ENEMY,
+		TAG_ENEMY_WEAPON,
+		TAG_END,
+	};
 }
 
 extern HWND				g_hWnd;
