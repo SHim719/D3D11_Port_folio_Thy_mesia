@@ -15,14 +15,17 @@ public:
 	void OnState_End()				override;
 
 private:
-	void Enable_NextAttack();
-	void Disable_NextAttack();
-	void Disable_Rotation();
+	_bool			m_bNextAttack = { false };
+	_uint			m_iNowComboCnt = 0;
 
 private:
-	_bool			m_bCanNextAttack = false;
-	_bool			m_bCanRotation = true;
-	_uint			m_iNowComboCnt = 0;
+	void Enable_NextAttack() {
+		m_bNextAttack = true;
+	}
+
+	void Disable_NextAttack() {
+		m_bNextAttack = false;
+	}
 
 public:
 	static CPlayerState_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

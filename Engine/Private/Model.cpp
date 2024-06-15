@@ -192,6 +192,7 @@ void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 		m_Animations[m_iCurrentAnimIndex]->Reset();
 
 	m_iCurrentAnimIndex = iAnimIdx;
+	m_bComplete = false;
 
 	Reset_RootPos();
 

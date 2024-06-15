@@ -45,13 +45,33 @@ private:
 private:
 	CTransform*		m_pTargetTransform = { nullptr };
 	_bool			m_bLockOn = { false };
-	_bool			m_bCanParry = { true };
+
+	_bool			m_bCanNextState = { false };
+	_bool			m_bCanRotation = { true };
 
 public:
 	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
 	_bool Is_LockOn() const { return m_bLockOn; }
-	void Enable_Parry() { m_bCanParry = true; }
-	void Disable_Parry() { m_bCanParry = false; }
+
+	_bool Can_NextState() const { return m_bCanNextState; }
+	_bool Can_Rotation() const { return m_bCanRotation; }
+
+public:
+	void Enable_NextState() {
+  		m_bCanNextState = true;
+	}
+
+	void Disable_NextState() {
+		m_bCanNextState = false;
+	}
+
+	void Disable_Rotation() {
+		m_bCanRotation = false;
+	}
+
+	void Enable_Rotation() {
+		m_bCanRotation = true;
+	}
 
 private:
 	HRESULT Ready_Components();

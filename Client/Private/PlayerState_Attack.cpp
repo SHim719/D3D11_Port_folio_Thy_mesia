@@ -13,16 +13,19 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 
 	m_pModel->Bind_Func("Enable_NextAttack", bind(&CPlayerState_Attack::Enable_NextAttack, this));
 	m_pModel->Bind_Func("Disable_NextAttack", bind(&CPlayerState_Attack::Disable_NextAttack, this));
-	m_pModel->Bind_Func("Disable_AttackRotation", bind(&CPlayerState_Attack::Disable_Rotation, this));
+
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
 }
 
 void CPlayerState_Attack::OnState_Start(void* pArg)
 {
+	m_bNextAttack = false;
+	m_pPlayer->Disable_NextState();
+	m_pPlayer->Enable_Rotation();
+
 	m_pModel->Change_Animation(_uint(Corvus_SD_LAttack1 + m_iNowComboCnt), 0.f);
-	m_bCanNextAttack = false;
-	m_bCanRotation = true;
 }
 
 void CPlayerState_Attack::OnGoing(_float fTimeDelta)
@@ -33,7 +36,7 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 		return;
 	}
 
-	if (m_bCanRotation)
+	if (m_pPlayer->Can_Rotation() && false == m_pPlayer->Is_LockOn())
 	{
 		_vector vNewLook = Calc_MoveLook(true);
 
@@ -43,35 +46,28 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 	
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
 
-	if (m_bCanNextAttack && m_iNowComboCnt < m_pPlayerStat->Get_MaxAttackCnt() - 1)
+	PlayerState ePlayerState = Decide_State();
+	if (PlayerState::State_End != ePlayerState)
 	{
-		if (Check_StateChange(PlayerState::State_Attack))
+		if (PlayerState::State_Attack == ePlayerState)
 		{
-			++m_iNowComboCnt;
-			OnState_Start(nullptr);
+			if (true == m_bNextAttack && m_iNowComboCnt < m_pPlayerStat->Get_MaxAttackCnt() - 1)
+			{
+				++m_iNowComboCnt;
+				OnState_Start(nullptr);
+			}
+		}
+		else
+		{
+			m_pPlayer->Change_State((_uint)ePlayerState);
 		}
 	}
+		
 }
 
 void CPlayerState_Attack::OnState_End()
 {
 	m_iNowComboCnt = 0;
-}
-
-void CPlayerState_Attack::Enable_NextAttack()
-{
-	m_bCanNextAttack = true;
-}
-
-void CPlayerState_Attack::Disable_NextAttack()
-{
-	m_bCanNextAttack = false;
-}
-
-
-void CPlayerState_Attack::Disable_Rotation()
-{
-	m_bCanRotation = false;
 }
 
 

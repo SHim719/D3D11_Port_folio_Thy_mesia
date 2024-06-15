@@ -11,19 +11,26 @@ HRESULT CPlayerState_Idle::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_Sprint, PlayerState::State_LockOn, PlayerState::State_Attack };
+	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_Sprint, PlayerState::State_LockOn, PlayerState::State_Attack,
+	PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
 }
 
 void CPlayerState_Idle::OnState_Start(void* pArg)
 {
+	m_pPlayer->Enable_NextState();
+	m_pPlayer->Enable_Rotation();
+
 	m_pModel->Change_Animation(Corvus_SD_Idle);
 }
 
 void CPlayerState_Idle::OnGoing(_float fTimeDelta)
 {
-	Decide_State();
+	
+	PlayerState ePlayerState = Decide_State();
+	if (PlayerState::State_End != ePlayerState)
+		m_pPlayer->Change_State((_uint)ePlayerState);
 }
 
 void CPlayerState_Idle::OnState_End()

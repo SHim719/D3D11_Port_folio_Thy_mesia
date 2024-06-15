@@ -23,7 +23,6 @@ public:
 
 	void Reset();
 
-	
 private:
 	string						m_strAnimName = "";
 	_uint						m_iNumChannels = 0;

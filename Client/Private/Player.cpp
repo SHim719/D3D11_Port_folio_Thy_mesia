@@ -38,8 +38,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pModel->Set_AnimPlay();
 
+	Change_State((_uint)PlayerState::State_Idle);
 	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);
-	m_iState = (_uint)PlayerState::State_Idle;
 
 	return S_OK;
 }
@@ -100,7 +100,10 @@ void CPlayer::Bind_KeyFrames()
 {
 	m_pModel->Bind_Func("Active_SaberCollider", bind(&CWeapon::Active_Collider, m_Weapons[SABER]));
 	m_pModel->Bind_Func("Inactive_SaberCollider", bind(&CWeapon::Inactive_Collider, m_Weapons[SABER]));
-	m_pModel->Bind_Func("Enable_Parry", bind(&CPlayer::Enable_Parry, this));
+	m_pModel->Bind_Func("Enable_NextState", bind(&CPlayer::Enable_NextState, this));
+	m_pModel->Bind_Func("Disable_NextState", bind(&CPlayer::Disable_NextState, this));
+	m_pModel->Bind_Func("Disable_Rotation", bind(&CPlayer::Disable_Rotation, this));
+
 }
 
 
@@ -183,8 +186,11 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Idle] = CPlayerState_Idle::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Jog] = CPlayerState_Jog::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Sprint] = CPlayerState_Sprint::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Avoid] = CPlayerState_Avoid::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Attack] = CPlayerState_Attack::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_LockOn] = CPlayerState_LockOn::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Parry] = CPlayerState_Parry::Create(m_pDevice, m_pContext, this);
+	//m_States[(_uint)PlayerState::State_ParrySuccess] = CPlayerState_ParrySuccess::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }
@@ -204,7 +210,6 @@ HRESULT CPlayer::Ready_Weapons()
 
 	CCollider::COLLIDERDESC ColliderDesc = {};
 	ColliderDesc.eType = CCollider::OBB;
-	//ColliderDesc.eType = CCollider::SPHERE;
 	ColliderDesc.strCollisionLayer = "Player_Weapon";
 	ColliderDesc.pOwner = this;
 	ColliderDesc.vCenter = { 0.7f, 0.f, 0.f };

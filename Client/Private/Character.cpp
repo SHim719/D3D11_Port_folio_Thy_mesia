@@ -17,7 +17,9 @@ void CCharacter::Bind_KeyFrames()
 
 void CCharacter::Change_State(_uint eState, void* pArg)
 {
-	m_States[m_iState]->OnState_End();
+	m_iPrevState = m_iState;
+
+	m_States[m_iPrevState]->OnState_End();
 
 	m_iState = eState;
 

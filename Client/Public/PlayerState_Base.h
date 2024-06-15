@@ -24,7 +24,7 @@ protected:
 	void Rotate_To_Look(_vector vNewLook, _float fTimeDelta);
 
 	_bool Check_StateChange(PlayerState eState);
-	virtual void Decide_State();
+	PlayerState Decide_State();
 protected:
 	CPlayer*			m_pPlayer = { nullptr };
 	CMain_Camera*		m_pMain_Camera = { nullptr };
@@ -33,10 +33,9 @@ protected:
 
 	_float2				m_vMoveAxis = { 0.f, 0.f };
 
-	_float				m_fRotRate = 10.f;
-	_float				m_fJogSpeed = 5.f;
-	_float				m_fSprintSpeed = 8.f;
-
+	_float				m_fRotRate = { 10.f };
+	_float				m_fJogSpeed = { 5.f };
+	_float				m_fSprintSpeed = { 7.f };
 public:
 	void Free() override;
 };

@@ -17,9 +17,11 @@ protected:
 protected:
 	vector<class CState_Base*>	m_States;
 	_uint						m_iState = { 0 };
+	_uint						m_iPrevState = { 0 };
 
 public:
 	void Change_State(_uint eState, void* pArg = nullptr);
+	_uint Get_PrevState() const { return m_iPrevState; }
 	virtual void Hit(void* pArg);
 
 protected:

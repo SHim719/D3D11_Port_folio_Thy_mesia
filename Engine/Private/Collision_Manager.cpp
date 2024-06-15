@@ -15,11 +15,9 @@ HRESULT CCollision_Manager::Initialize()
 
 void CCollision_Manager::Update()
 {
-	Execute_Collision(m_pGameInstance->Get_CurrentLevelID(), L"Player", L"Enemy", COLLISION);
-	//Execute_Collision(m_pGameInstance->Get_CurrentLevelID(), L"Player_Weapon", L"Enemy", TRIGGER);
-	//Execute_Collision(m_pGameInstance->Get_CurrentLevelID(), L"Enemy_Weapon", L"Player", TRIGGER);
-	Execute_Collision("Player_Weapon", "HitBox", TRIGGER);
-	
+	Execute_Collision("Player", "Enemy", COLLISION);
+	Execute_Collision("Enemy_HitBox", "Player_Weapon", TRIGGER);
+	Execute_Collision("Player_HitBox", "Enemy_Weapon", TRIGGER);
 
 }
 

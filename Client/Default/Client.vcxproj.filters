@@ -163,6 +163,12 @@
     <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\Define">
       <UniqueIdentifier>{c814f354-7456-47db-928e-a7d1bda2fa2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry">
+      <UniqueIdentifier>{1e47503b-6be9-436f-9217-1b3daea8b3e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess">
+      <UniqueIdentifier>{c4dcbed1-7899-422e-ad3c-9deda5c43459}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -318,6 +324,15 @@
     <ClInclude Include="..\Public\Character.h">
       <Filter>02. GameObjects\02. Character</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Avoid.h">
+      <Filter>02. GameObjects\02. Character\02. Player\State\04. PlayerState_Avoid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Parry.h">
+      <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_ParrySuccess.h">
+      <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -436,6 +451,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Character.cpp">
       <Filter>02. GameObjects\02. Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Avoid.cpp">
+      <Filter>02. GameObjects\02. Character\02. Player\State\04. PlayerState_Avoid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Parry.cpp">
+      <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_ParrySuccess.cpp">
+      <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

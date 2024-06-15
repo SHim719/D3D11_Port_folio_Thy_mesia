@@ -293,7 +293,10 @@ enum class PlayerState
 	State_Idle,
 	State_Jog,
 	State_Sprint,
+	State_Avoid,
 	State_Attack,
 	State_LockOn,
+	State_Parry,
+	State_ParrySuccess,
 	State_End,
 };
