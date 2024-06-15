@@ -35,9 +35,10 @@ HRESULT COdur::Initialize(void* pArg)
 	m_pSwapBone = m_pModel->Get_Bone("weapon_l_Sword");
 	Safe_AddRef(m_pSwapBone);
 
-	Change_State((_uint)OdurState::State_Idle);
+	Change_State((_uint)OdurState::State_CaneAttack1);
 	m_pModel->Set_AnimPlay();
 
+	m_pModel->Set_Preview(true);
 	return S_OK;
 }
 
@@ -96,8 +97,12 @@ HRESULT COdur::Render()
 
 void COdur::Bind_KeyFrames()
 {
-	m_pModel->Bind_Func("Active_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_pOdurCane));
-	m_pModel->Bind_Func("Inactive_Odur_Cane_Collider", bind(&CWeapon::Inactive_Collider, m_pOdurCane));
+	m_pModel->Bind_Func("Active_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_Weapons[CANE]));
+	m_pModel->Bind_Func("Inactive_Odur_Cane_Collider", bind(&CWeapon::Inactive_Collider, m_Weapons[CANE]));
+	m_pModel->Bind_Func("Active_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_Weapons[SWORD]));
+	m_pModel->Bind_Func("Inactive_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_Weapons[SWORD]));
+	m_pModel->Bind_Func("Active_Odur_Foot_Collider", bind(&CWeapon::Active_Collider, m_Weapons[FOOT]));
+	m_pModel->Bind_Func("Inactive_Odur_Foot_Collider", bind(&CWeapon::Inactive_Collider, m_Weapons[FOOT]));
 }
 
 
@@ -105,7 +110,6 @@ void COdur::OnCollisionEnter(CGameObject* pOther)
 {
 	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
 	{
-		cout << "Enter" << endl;
 		m_States[m_iState]->OnHit(nullptr);
 	}
 
@@ -113,10 +117,7 @@ void COdur::OnCollisionEnter(CGameObject* pOther)
 
 void COdur::OnCollisionExit(CGameObject* pOther)
 {
-	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
-	{
-		cout << "Exit" << endl;
-	}
+
 }
 
 HRESULT COdur::Ready_Components()
@@ -167,6 +168,7 @@ HRESULT COdur::Ready_States()
 
 	m_States[(_uint)OdurState::State_Idle] = COdurState_Idle::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_Hit] = COdurState_Hit::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_CaneAttack1] = COdurState_CaneAttack1::Create(m_pDevice, m_pContext, this);
 
 
 	return S_OK;
@@ -174,6 +176,8 @@ HRESULT COdur::Ready_States()
 
 HRESULT COdur::Ready_Weapons()
 {
+	m_Weapons.resize(WEAPON_END);
+
 	CCollider::COLLIDERDESC ColliderDesc = {};
 	ColliderDesc.eType = CCollider::OBB;
 	ColliderDesc.pOwner = this;
@@ -188,21 +192,36 @@ HRESULT COdur::Ready_Weapons()
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Cane";
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 
-	m_pOdurCane = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
-	if (nullptr == m_pOdurCane)
+	m_Weapons[CANE] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_Weapons[CANE])
 		return E_FAIL;
 
 	ColliderDesc.eType = CCollider::OBB;
 	ColliderDesc.pOwner = this;
 	ColliderDesc.vCenter = { 0.5f, 0.f, 0.f };
-	ColliderDesc.vSize = { 1.f, 0.05f, 0.05f };
+	ColliderDesc.vSize = { 1.f, 0.1f, 0.1f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Sword");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Sword";
 	WeaponDesc.pColliderDesc = &ColliderDesc;
-	m_pOdurSword = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
-	if (nullptr == m_pOdurSword)
+	m_Weapons[SWORD] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_Weapons[SWORD])
+		return E_FAIL;
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("ball_l");
+	WeaponDesc.wstrModelTag = L"";
+	WeaponDesc.pColliderDesc = &ColliderDesc;
+
+	ColliderDesc.eType = CCollider::SPHERE;
+	ColliderDesc.pOwner = this;
+	ColliderDesc.vCenter = { 0.f, 0.f, 0.f };
+	ColliderDesc.vSize = { 0.8f, 0.f, 0.f };
+	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
+	
+
+	m_Weapons[FOOT] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_Weapons[FOOT])
 		return E_FAIL;
 
 	return S_OK;
@@ -241,5 +260,5 @@ void COdur::Free()
 	__super::Free();
 
 	Safe_Release(m_pSwapBone);
-	Safe_Release(m_pHitBoxCollider);
+	
 }

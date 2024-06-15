@@ -169,6 +169,9 @@
     <Filter Include="02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess">
       <UniqueIdentifier>{c4dcbed1-7899-422e-ad3c-9deda5c43459}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\03. OdurState_CaneAttack1">
+      <UniqueIdentifier>{8a129262-2927-4f57-a494-e9865cf9bec0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -333,6 +336,9 @@
     <ClInclude Include="..\Public\PlayerState_ParrySuccess.h">
       <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\OdurState_CaneAttack1.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\03. OdurState_CaneAttack1</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -460,6 +466,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_ParrySuccess.cpp">
       <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_CaneAttack1.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\03. OdurState_CaneAttack1</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

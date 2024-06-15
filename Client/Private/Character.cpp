@@ -40,4 +40,5 @@ void CCharacter::Free()
 	Safe_Release(m_pShader);
 	Safe_Release(m_pModel);
 	Safe_Release(m_pCollider);
+	Safe_Release(m_pHitBoxCollider);
 }

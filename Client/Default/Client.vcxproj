@@ -187,6 +187,7 @@
     <ClInclude Include="..\Public\Map_Tool.h" />
     <ClInclude Include="..\Public\Odur.h" />
     <ClInclude Include="..\Public\OdurState_Base.h" />
+    <ClInclude Include="..\Public\OdurState_CaneAttack1.h" />
     <ClInclude Include="..\Public\OdurState_Hit.h" />
     <ClInclude Include="..\Public\OdurState_Idle.h" />
     <ClInclude Include="..\Public\Odur_Enums.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="..\Private\Map_Tool.cpp" />
     <ClCompile Include="..\Private\Odur.cpp" />
     <ClCompile Include="..\Private\OdurState_Base.cpp" />
+    <ClCompile Include="..\Private\OdurState_CaneAttack1.cpp" />
     <ClCompile Include="..\Private\OdurState_Hit.cpp" />
     <ClCompile Include="..\Private\OdurState_Idle.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />

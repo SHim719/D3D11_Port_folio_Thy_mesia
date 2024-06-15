@@ -84,5 +84,6 @@ enum class OdurState
 {
 	State_Idle,
 	State_Hit,
+	State_CaneAttack1,
 	State_End,
 };

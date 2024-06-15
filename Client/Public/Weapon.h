@@ -40,6 +40,11 @@ private:
 	CBone*			m_pSocketBone = { nullptr };
 	CTransform*		m_pParentTransform = { nullptr };
 
+public:
+	CBone* Swap_SocketBone(CBone*& pBone) {
+		swap(m_pSocketBone, pBone);
+	}
+
 private:
 	ATTACKDESC		m_AttackDesc;
 

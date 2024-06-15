@@ -59,7 +59,16 @@ HRESULT CWeapon::Render()
 {
 	if (nullptr == m_pModel ||
 		nullptr == m_pShader)
+	{
+		if (m_pCollider)
+		{
+			m_pCollider->Render();
+			return S_OK;
+		}
+
 		return E_FAIL;
+	}
+		
 
 	if (FAILED(m_pShader->Begin(0)))
 		return E_FAIL;
@@ -90,7 +99,6 @@ HRESULT CWeapon::Render()
 
 	if (m_pCollider)
 		m_pCollider->Render();
-
 	return S_OK;
 }
 
@@ -102,9 +110,12 @@ HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), pDesc->wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
-		return E_FAIL;
-
+	if (L"" != pDesc->wstrModelTag)
+	{
+		if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), pDesc->wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
+			return E_FAIL;
+	}
+	
 	if (nullptr != pDesc->pColliderDesc)
 	{
 		wstring wstrColliderTag = L"";

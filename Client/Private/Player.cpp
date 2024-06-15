@@ -144,6 +144,14 @@ void CPlayer::Toggle_LockOn(CTransform* pTargetTransform)
 	Safe_AddRef(m_pTargetTransform);
 }
 
+void CPlayer::OnCollisionEnter(CGameObject* pOther)
+{
+	if (TAG_ENEMY_WEAPON == pOther->Get_Tag())
+	{
+		m_States[m_iState]->OnHit(nullptr);
+	}
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORMDESC		TransformDesc;
@@ -169,10 +177,21 @@ HRESULT CPlayer::Ready_Components()
 	Desc.vSize = { 1.f, 0.f, 0.f };
 	Desc.vRotation = { 0.f, 0.f, 0.f };
 	Desc.bActive = true;
+	Desc.strCollisionLayer = "Player";
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("Collider"), (CComponent**)&m_pCollider, &Desc)))
 		return E_FAIL;
 
+	Desc.eType = CCollider::SPHERE;
+	Desc.pOwner = this;
+	Desc.vCenter = { 0.f, 1.f, 0.f };
+	Desc.vSize = { 1.f, 0.f, 0.f };
+	Desc.vRotation = { 0.f, 0.f, 0.f };
+	Desc.bActive = true;
+	Desc.strCollisionLayer = "Player_HitBox";
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pCollider, &Desc)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -197,6 +216,8 @@ HRESULT CPlayer::Ready_States()
 
 HRESULT CPlayer::Ready_Weapons()
 {
+	m_Weapons.resize(WEAPON_END);
+
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.iTag = (_uint)TAG_PLAYER_WEAPON;
 	WeaponDesc.pParentTransform = m_pTransform;

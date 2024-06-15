@@ -25,6 +25,9 @@ public:
 	virtual void Hit(void* pArg);
 
 protected:
+	vector<class CWeapon*>		m_Weapons;
+
+protected:
 	CShader*	m_pShader = { nullptr };
 	CModel*		m_pModel = { nullptr };
 	CCollider*	m_pCollider = { nullptr };

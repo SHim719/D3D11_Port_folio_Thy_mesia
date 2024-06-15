@@ -32,9 +32,6 @@ public:
 		return m_pStats; }
 
 private:
-	class CWeapon* m_Weapons[WEAPON_END] = {};
-
-private:
 	void Update_AttackDesc(const ATTACKDESC& Desc);
 
 	void Active_Weapons();
@@ -72,6 +69,9 @@ public:
 	void Enable_Rotation() {
 		m_bCanRotation = true;
 	}
+
+private:
+	void OnCollisionEnter(CGameObject* pOther) override;
 
 private:
 	HRESULT Ready_Components();
