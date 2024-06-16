@@ -88,6 +88,8 @@ HRESULT CAnimation::Initialize(const CModel::KEYFRAMEEVENTS& Events, const ANIME
 
 _bool CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool bPlay)
 {
+	Check_KeyFrameEvent();
+
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta * (_float)bPlay;
 
 	if (m_fPlayTime >= m_fDuration)
@@ -103,20 +105,14 @@ _bool CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool
 		m_ChannelKeyFrames[iChannelIndex++] = pChannel->Update_Transformation(m_fPlayTime, m_ChannelKeyFrames[iChannelIndex],
 			Bones[m_BoneIndices[iChannelIndex]]);
 	}
-	
-	_int iNowKeyFrame = (_int)Get_NowKeyFrame();
-	auto Pair = m_KeyFrameEvents.equal_range(iNowKeyFrame);
-	if (m_KeyFrameEvents.end() != Pair.first)
-	{
-		for (auto it = Pair.first; it != Pair.second; ++it)
-			it->second->Execute();
-	}
 
 	return false;
 }
 
 _bool CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones, _bool bPlay)
 {
+	Check_KeyFrameEvent();
+
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta * (_float)bPlay;
 
 	_float fRatio = m_fPlayTime / m_fBlendingTime;
@@ -144,6 +140,8 @@ void CAnimation::Reset()
 		for (auto& iCurrentKeyFrame : m_ChannelKeyFrames)
 			iCurrentKeyFrame = 0;
 	}
+
+	Reset_KeyFrameEvents();
 }
 
 _uint CAnimation::Get_NumKeyFrames() const
@@ -169,6 +167,23 @@ void CAnimation::Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent)
 {
 	m_KeyFrameEvents.insert({ iKeyFrame, pEvent }); 
 	Safe_AddRef(pEvent);
+}
+
+void CAnimation::Reset_KeyFrameEvents()
+{
+	for (auto it = m_KeyFrameEvents.begin(); it != m_KeyFrameEvents.end(); ++it)
+		it->second->Reset();
+}
+
+void CAnimation::Check_KeyFrameEvent()
+{
+	_int iNowKeyFrame = (_int)Get_NowKeyFrame();
+	auto Pair = m_KeyFrameEvents.equal_range(iNowKeyFrame);
+	if (m_KeyFrameEvents.end() != Pair.first)
+	{
+		for (auto it = Pair.first; it != Pair.second; ++it)
+			it->second->Execute(iNowKeyFrame);
+	}
 }
 
 CAnimation* CAnimation::Create(ifstream& fin)

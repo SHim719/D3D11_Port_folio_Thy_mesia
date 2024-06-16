@@ -21,8 +21,11 @@ void COdurState_Hit::OnState_Start(void* pArg)
 void COdurState_Hit::OnGoing(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
-		m_pOdur->Change_State((_uint)OdurState::State_Idle);
-
+	{
+		Decide_State();
+		return;
+	}
+		
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
 }
 
@@ -51,4 +54,5 @@ COdurState_Hit* COdurState_Hit::Create(ID3D11Device* pDevice, ID3D11DeviceContex
 
 void COdurState_Hit::Free()
 {
+	__super::Free();
 }

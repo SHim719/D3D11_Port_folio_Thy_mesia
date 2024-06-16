@@ -71,6 +71,20 @@ namespace JoMath
 
 		return vEulerAngle;
 	}
+	_vector Slerp_TargetLook(_fvector vNowLook, _fvector vTargetLook, _float fRotRate)
+	{
+		_vector StartQuat = XMQuaternionRotationMatrix(JoMath::LookTo(vNowLook));
+		_vector EndQuat = XMQuaternionRotationMatrix(JoMath::LookTo(vTargetLook));
+
+		return XMQuaternionSlerp(StartQuat, EndQuat, fRotRate);
+	}
+	_vector Calc_GroundLook(_fvector vSrc, _fvector vDst)
+	{
+		_vector vGroundLook = XMVectorSetY(vDst - vSrc, 0.f);
+		vGroundLook = XMVector3Normalize(vDst - vSrc);
+
+		return vGroundLook;
+	}
 }
 
 namespace JoRandom

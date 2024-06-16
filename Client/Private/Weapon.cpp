@@ -26,6 +26,7 @@ HRESULT CWeapon::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_iTag = pWeaponDesc->iTag;
+	m_bAlphaBlend = pWeaponDesc->bAlphaBlend;
 
 	m_pSocketBone = pWeaponDesc->pSocketBone;
 	m_pParentTransform = pWeaponDesc->pParentTransform;
@@ -68,12 +69,10 @@ HRESULT CWeapon::Render()
 
 		return E_FAIL;
 	}
+
+	_uint iPassIndex = m_bAlphaBlend == true ? 2 : 0;
 		
 
-	if (FAILED(m_pShader->Begin(0)))
-		return E_FAIL;
-
-	
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -83,6 +82,12 @@ HRESULT CWeapon::Render()
 	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
+	if (m_bAlphaBlend)
+	{
+		if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+			return E_FAIL;
+	}
+		
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
@@ -92,8 +97,7 @@ HRESULT CWeapon::Render()
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
 
-
-		if (FAILED(m_pModel->Render(m_pShader, i)))
+		if (FAILED(m_pModel->Render(m_pShader, i, iPassIndex)))
 			return E_FAIL;
 	}
 

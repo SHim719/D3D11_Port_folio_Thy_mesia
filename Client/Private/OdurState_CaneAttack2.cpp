@@ -26,8 +26,8 @@ void COdurState_CaneAttack2::OnGoing(_float fTimeDelta)
 		return;
 	}
 		
-	
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+	if (false == m_pOdur->Is_CollPlayer())
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
 }
 
 void COdurState_CaneAttack2::OnState_End()

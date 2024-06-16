@@ -123,13 +123,20 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 	list<CCollider*>& DstColliders = DstLayerIt->second;
 	list<CCollider*>& SrcColliders = SrcLayerIt->second;
 
-	for (auto DstIt = DstColliders.begin(); DstIt != DstColliders.end(); ++DstIt)
+	for (auto DstIt = DstColliders.begin(); DstIt != DstColliders.end(); )
 	{
 		CCollider* pDstCollider = *DstIt;
 		if (nullptr == pDstCollider)
 			continue;
 
-		for (auto SrcIt = SrcColliders.begin(); SrcIt != SrcColliders.end(); ++SrcIt)
+		CGameObject* pDstObj = pDstCollider->Get_Owner();
+		if (pDstObj->Is_Destroyed())
+		{
+			DstIt = DstColliders.erase(DstIt);
+			continue;
+		}
+			
+		for (auto SrcIt = SrcColliders.begin(); SrcIt != SrcColliders.end(); )
 		{
 			if (*SrcIt == *DstIt)
 				continue;
@@ -138,7 +145,6 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 			if (nullptr == pSrcCollider)
 				continue;
 
-			CGameObject* pDstObj = pDstCollider->Get_Owner();
 			CGameObject* pSrcObj = pSrcCollider->Get_Owner();
 
 			CollisionID id;
@@ -151,22 +157,28 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 
 			it = m_CollisionInfo.find(id.id);
 
-			//if (false == pDstCollider->Is_Active() || false == pSrcCollider->Is_Active() ||
-			//	false == pDstObj->Is_Active() || false == pSrcObj->Is_Active() ||
-			//	pDstObj->Is_Destroyed() || pSrcObj->Is_Destroyed())
-			//{
-			//	if (it->second)
-			//	{
-			//		pDstObj->OnCollisionExit(pSrcObj);
-			//		pSrcObj->OnCollisionExit(pDstObj);
-			//
-			//		pDstCollider->Set_IsColl(false);
-			//		pSrcCollider->Set_IsColl(false);
-			//
-			//		it->second = false;
-			//	}
-			//	continue;
-			//}
+			if (false == pDstCollider->Is_Active() || false == pSrcCollider->Is_Active() ||
+				false == pDstObj->Is_Active() || false == pSrcObj->Is_Active() ||
+				pDstObj->Is_Destroyed() || pSrcObj->Is_Destroyed())
+			{
+				if (it->second)
+				{
+					pDstObj->OnCollisionExit(pSrcObj);
+					pSrcObj->OnCollisionExit(pDstObj);
+			
+					pDstCollider->Set_IsColl(false);
+					pSrcCollider->Set_IsColl(false);
+			
+					it->second = false;
+				}
+
+				if (pDstObj->Is_Destroyed())
+					SrcIt = SrcColliders.erase(SrcIt);
+				else
+					++SrcIt;
+
+				continue;
+			}
 
 
 			if (pSrcCollider->Intersects(pDstCollider))
@@ -197,9 +209,13 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 
 				it->second = false;
 			}
-		}
-	}
 
+			++SrcIt;
+		}
+
+		++DstIt;
+	}
+	
 }
 
 void CCollision_Manager::Push_Object(CCollider* pDstCollider, CCollider* pSrcCollider, CTransform* pDstTransform)

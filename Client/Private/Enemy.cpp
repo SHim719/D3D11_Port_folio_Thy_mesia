@@ -13,6 +13,18 @@ CEnemy::CEnemy(const CEnemy& rhs)
 }
 
 
+void CEnemy::OnCollisionEnter(CGameObject* pOther)
+{
+	if (TAG_PLAYER == pOther->Get_Tag())
+		m_bCollPlayer = true;
+}
+
+void CEnemy::OnCollisionExit(CGameObject* pOther)
+{
+	if (TAG_PLAYER == pOther->Get_Tag())
+		m_bCollPlayer = false;
+}
+
 void CEnemy::Free()
 {
 	__super::Free();

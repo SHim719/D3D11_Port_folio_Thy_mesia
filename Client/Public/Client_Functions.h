@@ -15,6 +15,9 @@ namespace JoMath
 	_matrix LookAt(_fvector vSrc, _fvector vDst);
 
 	_vector ToEulerAngle(_fvector vQuat);
+
+	_vector Slerp_TargetLook(_fvector vNowLook, _fvector vTargetLook, _float fRotRate);
+	_vector Calc_GroundLook(_fvector vSrc, _fvector vDst);
 }
 
 namespace JoRandom

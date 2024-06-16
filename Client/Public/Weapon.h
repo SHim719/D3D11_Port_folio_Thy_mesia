@@ -21,6 +21,7 @@ public:
 		CBone* pSocketBone = nullptr;
 		CTransform* pParentTransform = nullptr;
 		wstring wstrModelTag = L"";
+		_bool bAlphaBlend = false;
 		CCollider::COLLIDERDESC* pColliderDesc = nullptr;
 	} WEAPONDESC;
 
@@ -41,7 +42,7 @@ private:
 	CTransform*		m_pParentTransform = { nullptr };
 
 public:
-	CBone* Swap_SocketBone(CBone*& pBone) {
+	void Swap_SocketBone(CBone*& pBone) {
 		swap(m_pSocketBone, pBone);
 	}
 
@@ -56,6 +57,14 @@ public:
 	const ATTACKDESC& Get_AttackDesc() const {
 		return m_AttackDesc;
 	}
+
+private:
+	_bool			m_bAlphaBlend = { false };
+	_float			m_fAlpha = { 1.f };
+
+public:
+	void Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
+
 
 private:
 	CShader*	m_pShader = nullptr;

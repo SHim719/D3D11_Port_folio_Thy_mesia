@@ -47,4 +47,5 @@ COdurState_Idle* COdurState_Idle::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 
 void COdurState_Idle::Free()
 {
+	__super::Free();
 }

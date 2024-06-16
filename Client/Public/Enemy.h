@@ -25,7 +25,7 @@ public:
 
 protected:
 	_bool m_bLookTarget = { true };
-	_bool m_bKeyFrameAnimChanged = { false };
+	_bool m_bCollPlayer = { false };
 
 public:
 	void Enable_LookTarget() {
@@ -34,6 +34,13 @@ public:
 	void Disable_LookTarget() {
 		m_bLookTarget = false;
 	}
+
+	_bool Is_CollPlayer() const { return m_bCollPlayer; }
+
+protected:
+	void OnCollisionEnter(CGameObject* pOther)	override;
+	void OnCollisionExit(CGameObject* pOther)	override;
+	
 
 public:
 	void Free() override;

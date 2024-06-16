@@ -18,6 +18,14 @@ HRESULT CKeyFrameEvent::Initialize(void* pArg)
     return S_OK;
 }
 
+void CKeyFrameEvent::Execute(_int iNowKeyFrame)
+{
+	if (m_CallBackFunc && (m_iLastKeyFrame != iNowKeyFrame)) {
+		m_CallBackFunc();
+		m_iLastKeyFrame = iNowKeyFrame;
+	}
+}
+
 CKeyFrameEvent* CKeyFrameEvent::Create(void* pArg)
 {
     CKeyFrameEvent* pInstance = new CKeyFrameEvent;

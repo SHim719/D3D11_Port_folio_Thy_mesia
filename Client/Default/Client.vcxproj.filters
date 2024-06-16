@@ -172,14 +172,29 @@
     <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\03. OdurState_Hit">
       <UniqueIdentifier>{a863063d-f990-4382-a5ec-f7c3fc6078f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_CaneAttack1">
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack">
+      <UniqueIdentifier>{0eb1a668-191d-44dc-939c-54b8297d4651}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\05. OdurState_DisappearWalk">
+      <UniqueIdentifier>{10f68389-bbe9-481f-8c7b-8976510ad524}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\06. OdurState_DisappearMove">
+      <UniqueIdentifier>{41fba9d0-531b-429b-acd6-9a272e7d292c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\07. OdurState_Appear">
+      <UniqueIdentifier>{61339d3b-762e-4c70-af71-e9323946bd1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_CaneAttack1">
       <UniqueIdentifier>{8a129262-2927-4f57-a494-e9865cf9bec0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\05. OdurState_CaneAttack2">
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_CaneAttack2">
       <UniqueIdentifier>{744aa43e-0d0b-4b98-8fa7-f5f821bc9609}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\06. OdurState_CaneAttack3">
-      <UniqueIdentifier>{d07750dc-8993-41eb-a61e-dbd70a97a471}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_KickCombo">
+      <UniqueIdentifier>{29cabfaf-bf09-4318-a7ef-50a8f12fff22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\08. OdurState_Parry">
+      <UniqueIdentifier>{689bbd23-feac-492a-a87c-d13e161e81b9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -346,16 +361,28 @@
       <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_CaneAttack1.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_CaneAttack1</Filter>
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_CaneAttack1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Walk.h">
       <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\02. OdurState_Walk</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_CaneAttack2.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\05. OdurState_CaneAttack2</Filter>
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_CaneAttack2</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\OdurState_CaneAttack3.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\06. OdurState_CaneAttack3</Filter>
+    <ClInclude Include="..\Public\OdurState_DisappearWalk.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\05. OdurState_DisappearWalk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_DisappearMove.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\06. OdurState_DisappearMove</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Appear.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\07. OdurState_Appear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_KickCombo.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_KickCombo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Parry.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\08. OdurState_Parry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -486,16 +513,28 @@
       <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_CaneAttack1.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_CaneAttack1</Filter>
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_CaneAttack1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Walk.cpp">
       <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\02. OdurState_Walk</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_CaneAttack2.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\05. OdurState_CaneAttack2</Filter>
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_CaneAttack2</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\OdurState_CaneAttack3.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\06. OdurState_CaneAttack3</Filter>
+    <ClCompile Include="..\Private\OdurState_DisappearWalk.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\05. OdurState_DisappearWalk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_DisappearMove.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\06. OdurState_DisappearMove</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_Appear.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\07. OdurState_Appear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_KickCombo.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\04. OdurState_Attack\OdurState_KickCombo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_Parry.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\08. OdurState_Parry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

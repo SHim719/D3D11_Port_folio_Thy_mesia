@@ -62,6 +62,7 @@ void CPlayer::Tick(_float fTimeDelta)
 void CPlayer::LateTick(_float fTimeDelta)
 {
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
@@ -96,6 +97,7 @@ HRESULT CPlayer::Render()
 	}
 
 	m_pCollider->Render();
+	m_pHitBoxCollider->Render();
 
 	return S_OK;
 }
@@ -190,7 +192,7 @@ HRESULT CPlayer::Ready_Components()
 	Desc.bActive = true;
 	Desc.strCollisionLayer = "Player_HitBox";
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pCollider, &Desc)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
 		return E_FAIL;
 
 	return S_OK;

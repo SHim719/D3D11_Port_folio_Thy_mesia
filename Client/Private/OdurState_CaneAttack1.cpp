@@ -20,7 +20,11 @@ void COdurState_CaneAttack1::OnState_Start(void* pArg)
 
 void COdurState_CaneAttack1::OnGoing(_float fTimeDelta)
 {
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+	if (m_pModel->Is_AnimComplete())
+		m_pOdur->Change_State((_uint)OdurState::State_Walk);
+
+	if (false == m_pOdur->Is_CollPlayer())
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
 }
 
 void COdurState_CaneAttack1::OnState_End()

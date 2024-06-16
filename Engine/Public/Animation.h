@@ -48,6 +48,9 @@ public:
 	void Set_CurrentKeyFrames(_uint iKeyFrame);
 
 	void Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent);
+	void Reset_KeyFrameEvents();
+private:
+	void Check_KeyFrameEvent();
 
 public:
 	static CAnimation* Create(ifstream& fin);
