@@ -25,7 +25,23 @@ public:
 	virtual void Hit(void* pArg);
 
 protected:
+	_bool						m_bStanced = { false };
+
+public:
+	void Enable_Stanced() {
+		m_bStanced = true;
+	}
+
+	void Disable_Stanced() {
+		m_bStanced = false;
+	}
+
+protected:
 	vector<class CWeapon*>		m_Weapons;
+
+protected:
+	void Update_AttackDesc(const ATTACKDESC& Desc);
+
 
 protected:
 	CShader*	m_pShader = { nullptr };

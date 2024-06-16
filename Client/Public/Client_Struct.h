@@ -2,20 +2,16 @@
 
 namespace Client
 {
-	enum ATTACKDIR
-	{
-		LEFT,
-		RIGHT,
-	};
-
 	enum ATTACKTYPE
 	{
-
+		WEAK,
+		NORMAL,
+		KNOCKBACK,
 	};
 
 	typedef struct tagAttackDesc
 	{
-		ATTACKDIR eDir;
+		ATTACKTYPE eAttackType;
 
 	}ATTACKDESC;
 }

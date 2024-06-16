@@ -204,6 +204,13 @@ void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 	
 }
 
+void CModel::Set_NowAnimKeyFrame(_uint iKeyFrame)
+{
+	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrames(iKeyFrame);
+	Calc_DeltaRootPos();
+	XMStoreFloat4(&m_vDeltaRootPos, XMVectorZero());
+}
+
 HRESULT CModel::Bind_Func(const string& strEventName, function<void()> pFunc)
 {
 	auto it = m_AllKeyFrameEvents.find(strEventName);

@@ -17,7 +17,11 @@ public:
 	void OnState_End()								override;
 
 protected:
-	COdur* m_pOdur = { nullptr };
+	COdur*			m_pOdur = { nullptr };
+	CTransform*		m_pTargetTransform = { nullptr };
+
+protected:
+	void Decide_State();
 
 public:
 	void Free() override;

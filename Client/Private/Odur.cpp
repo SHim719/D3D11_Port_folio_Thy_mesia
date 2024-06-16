@@ -35,15 +35,19 @@ HRESULT COdur::Initialize(void* pArg)
 	m_pSwapBone = m_pModel->Get_Bone("weapon_l_Sword");
 	Safe_AddRef(m_pSwapBone);
 
-	Change_State((_uint)OdurState::State_CaneAttack1);
+	Change_State((_uint)OdurState::State_Idle);
 	m_pModel->Set_AnimPlay();
-
-	m_pModel->Set_Preview(true);
 	return S_OK;
 }
 
 void COdur::Tick(_float fTimeDelta)
 {
+	if (KEY_DOWN(eKeyCode::T))
+		Change_State((_uint)OdurState::State_Walk);
+
+	if (m_bLookTarget)
+		m_pTransform->LookAt2D(s_pTarget->Get_Transform()->Get_Position());
+
 	m_States[m_iState]->OnGoing(fTimeDelta);
 
 	m_pModel->Play_Animation(fTimeDelta);
@@ -86,7 +90,7 @@ HRESULT COdur::Render()
 
 
 		if (FAILED(m_pModel->Render(m_pShader, i)))
-			return E_FAIL;
+			return E_FAIL;  
 	}
 
 	m_pCollider->Render();
@@ -103,8 +107,11 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Inactive_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_Weapons[SWORD]));
 	m_pModel->Bind_Func("Active_Odur_Foot_Collider", bind(&CWeapon::Active_Collider, m_Weapons[FOOT]));
 	m_pModel->Bind_Func("Inactive_Odur_Foot_Collider", bind(&CWeapon::Inactive_Collider, m_Weapons[FOOT]));
+	m_pModel->Bind_Func("Enable_LookTarget", bind(&CEnemy::Enable_LookTarget, this));
+	m_pModel->Bind_Func("Disable_LookTarget", bind(&CEnemy::Disable_LookTarget, this));
+	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Enable_Stanced, this));
+	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Disable_Stanced, this));
 }
-
 
 void COdur::OnCollisionEnter(CGameObject* pOther)
 {
@@ -167,9 +174,10 @@ HRESULT COdur::Ready_States()
 	m_States.resize((_uint)OdurState::State_End);
 
 	m_States[(_uint)OdurState::State_Idle] = COdurState_Idle::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Walk] = COdurState_Walk::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_Hit] = COdurState_Hit::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_CaneAttack1] = COdurState_CaneAttack1::Create(m_pDevice, m_pContext, this);
-
+	m_States[(_uint)OdurState::State_CaneAttack2] = COdurState_CaneAttack2::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }
@@ -184,6 +192,8 @@ HRESULT COdur::Ready_Weapons()
 	ColliderDesc.vCenter = { 0.f, 0.f, 0.2f };
 	ColliderDesc.vSize = { 0.1f, 0.1f, 0.9f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
+	ColliderDesc.bActive = false;
+	ColliderDesc.strCollisionLayer = "Enemy_Weapon";
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.iTag = (_uint)TAG_ENEMY_WEAPON;
@@ -197,14 +207,12 @@ HRESULT COdur::Ready_Weapons()
 		return E_FAIL;
 
 	ColliderDesc.eType = CCollider::OBB;
-	ColliderDesc.pOwner = this;
 	ColliderDesc.vCenter = { 0.5f, 0.f, 0.f };
 	ColliderDesc.vSize = { 1.f, 0.1f, 0.1f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Sword");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Sword";
-	WeaponDesc.pColliderDesc = &ColliderDesc;
 	m_Weapons[SWORD] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[SWORD])
 		return E_FAIL;
@@ -214,7 +222,6 @@ HRESULT COdur::Ready_Weapons()
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 
 	ColliderDesc.eType = CCollider::SPHERE;
-	ColliderDesc.pOwner = this;
 	ColliderDesc.vCenter = { 0.f, 0.f, 0.f };
 	ColliderDesc.vSize = { 0.8f, 0.f, 0.f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };

@@ -72,3 +72,30 @@ namespace JoMath
 		return vEulerAngle;
 	}
 }
+
+namespace JoRandom
+{
+	_int Random_Int(_int _iMin, _int _iMax)
+	{
+		std::random_device RD;
+		std::mt19937 gen(RD());
+
+		std::uniform_int_distribution<_int> dis(_iMin, _iMax);
+
+		return dis(gen);
+	}
+
+	_float Random_Float(_float _fMin, _float _fMax)
+	{
+		std::random_device RD;
+		std::mt19937 gen(RD());
+
+		std::uniform_real_distribution<_float> dis(_fMin, _fMax);
+
+		return dis(gen);
+	}
+
+
+}
+
+

@@ -100,30 +100,33 @@ _bool CPlayerState_Base::Check_StateChange(PlayerState eState)
 {
 	_bool bStateChange = false;
 
+	if (false == m_pPlayer->Can_NextState())
+		return false;
+
 	switch (eState)
 	{
 	case PlayerState::State_Idle:
 		bStateChange = KEY_NONE(eKeyCode::W) && KEY_NONE(eKeyCode::A) && KEY_NONE(eKeyCode::S) && KEY_NONE(eKeyCode::D);
 		break;
 	case PlayerState::State_Jog:
-		bStateChange = KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D);
+		bStateChange = (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D));
+		break;
+	case PlayerState::State_Sprint:
+		bStateChange = ((KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
+			&& KEY_PUSHING(eKeyCode::LShift));
 		break;
 	case PlayerState::State_LockOn:
 		bStateChange = (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
 			&& m_pPlayer->Is_LockOn();
 		break;
-	case PlayerState::State_Sprint:
-		bStateChange = (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D)) 
-			&& KEY_PUSHING(eKeyCode::LShift);
-		break;
 	case PlayerState::State_Attack:
-		bStateChange = m_pPlayer->Can_NextState() && KEY_PUSHING(eKeyCode::LButton);
+		bStateChange = KEY_PUSHING(eKeyCode::LButton);
 		break;
 	case PlayerState::State_Avoid:
-		bStateChange = m_pPlayer->Can_NextState() && KEY_PUSHING(eKeyCode::Space);
+		bStateChange = KEY_PUSHING(eKeyCode::Space);
 		break;
 	case PlayerState::State_Parry:
-		bStateChange = m_pPlayer->Can_NextState() && KEY_PUSHING(eKeyCode::F);
+		bStateChange =  KEY_PUSHING(eKeyCode::F);
 		break;
 	case PlayerState::State_End:
 		break;

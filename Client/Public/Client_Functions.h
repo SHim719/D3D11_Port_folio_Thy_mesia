@@ -17,3 +17,9 @@ namespace JoMath
 	_vector ToEulerAngle(_fvector vQuat);
 }
 
+namespace JoRandom
+{
+	_int Random_Int(_int _iMin, _int _iMax);
+	_float Random_Float(_float _fMin, _float _fMax);
+}
+

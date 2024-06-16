@@ -14,11 +14,13 @@ public:
 	void OnGoing(_float fTimeDelta)	override;
 	void OnState_End()				override;
 
+	void OnHit(void* pArg)			override;
 private:
 	_bool m_bOneMore = { false };
 
 public:
-	void Enable_Avoid() { m_bOneMore = true; }
+	void Enable_Avoid() { 
+		m_bOneMore = true; }
 
 private:
 	void Decide_Animation();

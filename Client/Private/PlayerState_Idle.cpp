@@ -11,7 +11,7 @@ HRESULT CPlayerState_Idle::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_Sprint, PlayerState::State_LockOn, PlayerState::State_Attack,
+	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_Attack,
 	PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
@@ -19,6 +19,14 @@ HRESULT CPlayerState_Idle::Initialize(void* pArg)
 
 void CPlayerState_Idle::OnState_Start(void* pArg)
 {
+	PlayerState ePlayerState = Decide_State();
+	if (PlayerState::State_End != ePlayerState)
+	{
+		m_pPlayer->Change_State((_uint)ePlayerState);
+		return;
+	}
+		
+
 	m_pPlayer->Enable_NextState();
 	m_pPlayer->Enable_Rotation();
 
@@ -27,7 +35,6 @@ void CPlayerState_Idle::OnState_Start(void* pArg)
 
 void CPlayerState_Idle::OnGoing(_float fTimeDelta)
 {
-	
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
 		m_pPlayer->Change_State((_uint)ePlayerState);

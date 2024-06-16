@@ -83,7 +83,9 @@ enum OdurAnim
 enum class OdurState
 {
 	State_Idle,
+	State_Walk,
 	State_Hit,
 	State_CaneAttack1,
+	State_CaneAttack2,
 	State_End,
 };

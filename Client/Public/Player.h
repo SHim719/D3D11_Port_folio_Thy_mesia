@@ -32,8 +32,6 @@ public:
 		return m_pStats; }
 
 private:
-	void Update_AttackDesc(const ATTACKDESC& Desc);
-
 	void Active_Weapons();
 	void InActive_Weapons();
 	void Active_Claw();
@@ -45,6 +43,7 @@ private:
 
 	_bool			m_bCanNextState = { false };
 	_bool			m_bCanRotation = { true };
+	_bool			m_bInvincible = { false };
 
 public:
 	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
@@ -52,7 +51,9 @@ public:
 
 	_bool Can_NextState() const { return m_bCanNextState; }
 	_bool Can_Rotation() const { return m_bCanRotation; }
+	_bool Is_Invincible() const { return m_bInvincible; }
 
+#pragma region KEYFRAMEEVENT
 public:
 	void Enable_NextState() {
   		m_bCanNextState = true;
@@ -69,6 +70,15 @@ public:
 	void Enable_Rotation() {
 		m_bCanRotation = true;
 	}
+
+	void Set_Invincible() {
+		m_bInvincible = true;
+	}
+	
+	void Set_Vulnerable() {
+		m_bInvincible = false;
+	}
+#pragma endregion
 
 private:
 	void OnCollisionEnter(CGameObject* pOther) override;

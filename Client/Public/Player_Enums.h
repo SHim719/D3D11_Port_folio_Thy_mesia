@@ -181,7 +181,6 @@ enum PlayerAnimName
 	Corvus_SD_M01_SneakAttack_Suc,
 	Corvus_SD_ParryDefance,
 	Corvus_SD_ParryDeflect_L,
-	Corvus_SD_ParryDeflect_Large,
 	Corvus_SD_ParryDeflect_LUp,
 	Corvus_SD_ParryDeflect_LUP_AI,
 	Corvus_SD_ParryDeflect_R,

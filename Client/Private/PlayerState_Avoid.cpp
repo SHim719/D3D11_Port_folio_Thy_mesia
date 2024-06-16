@@ -12,7 +12,7 @@ HRESULT CPlayerState_Avoid::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_fRotRate = 30.f;
-	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_Avoid};
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_Parry, PlayerState::State_Avoid};
 	return S_OK;
 }
 
@@ -20,6 +20,8 @@ void CPlayerState_Avoid::OnState_Start(void* pArg)
 {	
 	m_pPlayer->Disable_NextState();
 	m_pPlayer->Enable_Rotation();
+
+	m_pPlayer->Set_Invincible();
 
 	Decide_Animation();
 }
@@ -60,6 +62,13 @@ void CPlayerState_Avoid::OnState_End()
 {
 	m_vMoveAxis.x = 0.f;
 	m_vMoveAxis.y = 0.f;
+}
+
+void CPlayerState_Avoid::OnHit(void* pArg)
+{
+	if (m_pPlayer->Is_Invincible())
+		m_bOneMore = true;
+	//else Hit;
 }
 
 void CPlayerState_Avoid::Decide_Animation()

@@ -14,6 +14,8 @@ public:
 	void OnGoing(_float fTimeDelta)	override;
 	void OnState_End()				override;
 
+	void OnHit(void* pArg)			override;
+
 public:
 	static CPlayerState_ParrySuccess* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

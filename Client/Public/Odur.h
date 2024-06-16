@@ -32,7 +32,6 @@ private:
 private:
 	CBone* m_pSwapBone = { nullptr };
 
-
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 	void OnCollisionExit(CGameObject* pOther)	override;

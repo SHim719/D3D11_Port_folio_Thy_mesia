@@ -20,6 +20,12 @@ HRESULT CPlayerState_Sprint::Initialize(void* pArg)
 
 void CPlayerState_Sprint::OnState_Start(void* pArg)
 {
+	if (m_pPlayer->Is_LockOn())
+	{
+		m_pPlayer->Change_State((_uint)PlayerState::State_LockOn);
+		return;
+	}
+
 	m_pPlayer->Enable_NextState();
 	m_pPlayer->Enable_Rotation();
 

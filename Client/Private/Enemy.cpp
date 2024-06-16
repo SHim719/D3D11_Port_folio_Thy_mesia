@@ -1,5 +1,6 @@
 #include "Enemy.h"
 
+CGameObject* CEnemy::s_pTarget = nullptr;
 
 CEnemy::CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)

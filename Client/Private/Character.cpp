@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "State_Base.h"
+#include "Weapon.h"
 
 CCharacter::CCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -24,6 +25,13 @@ void CCharacter::Change_State(_uint eState, void* pArg)
 	m_iState = eState;
 
 	m_States[m_iState]->OnState_Start(pArg);
+}
+
+
+void CCharacter::Update_AttackDesc(const ATTACKDESC & Desc)
+{
+	for (size_t i = 0; i < m_Weapons.size(); ++i)
+		m_Weapons[i]->Set_AttackDesc(Desc);
 }
 
 void CCharacter::Hit(void* pArg)

@@ -19,6 +19,19 @@ HRESULT CPlayerState_Jog::Initialize(void* pArg)
 
 void CPlayerState_Jog::OnState_Start(void* pArg)
 {
+	if (m_pPlayer->Is_LockOn())
+	{
+		m_pPlayer->Change_State((_uint)PlayerState::State_LockOn);
+		return;
+	}
+
+	if (Check_StateChange(PlayerState::State_Sprint))
+	{
+		m_pPlayer->Change_State((_uint)PlayerState::State_Sprint);
+		return;
+	}
+
+
 	m_pPlayer->Enable_NextState();
 	m_pPlayer->Enable_Rotation();
 

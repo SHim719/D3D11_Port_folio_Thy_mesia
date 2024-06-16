@@ -33,6 +33,9 @@ protected:
 	CModel*			m_pModel = nullptr;
 	CTransform*		m_pOwnerTransform = nullptr;
 
+protected:
+	_float			m_fPatternTime = { 0.f };
+
 public:
 	void Free() override;
 };

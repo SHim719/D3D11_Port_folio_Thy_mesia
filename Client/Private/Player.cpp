@@ -5,6 +5,8 @@
 
 #include "Weapon.h"
 
+#include "Enemy.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)
 {
@@ -33,6 +35,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	Bind_KeyFrames();
+
+	CEnemy::Set_Target(this);
 
 	m_pTransform->Set_MoveLook(m_pTransform->Get_Look());
 
@@ -103,15 +107,11 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_NextState", bind(&CPlayer::Enable_NextState, this));
 	m_pModel->Bind_Func("Disable_NextState", bind(&CPlayer::Disable_NextState, this));
 	m_pModel->Bind_Func("Disable_Rotation", bind(&CPlayer::Disable_Rotation, this));
+	m_pModel->Bind_Func("Set_Vulnerable", bind(&CPlayer::Set_Vulnerable, this));
 
 }
 
 
-void CPlayer::Update_AttackDesc(const ATTACKDESC& Desc)
-{
-	for (_int i = 0; i < WEAPON_END; ++i)
-		m_Weapons[i]->Set_AttackDesc(Desc);
-}
 
 void CPlayer::Active_Weapons()
 {
@@ -209,7 +209,7 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Attack] = CPlayerState_Attack::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_LockOn] = CPlayerState_LockOn::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Parry] = CPlayerState_Parry::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)PlayerState::State_ParrySuccess] = CPlayerState_ParrySuccess::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_ParrySuccess] = CPlayerState_ParrySuccess::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }

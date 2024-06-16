@@ -20,13 +20,13 @@ void COdurState_CaneAttack1::OnState_Start(void* pArg)
 
 void COdurState_CaneAttack1::OnGoing(_float fTimeDelta)
 {
-	//m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
 }
 
 void COdurState_CaneAttack1::OnState_End()
 {
-}
 
+}
 
 COdurState_CaneAttack1* COdurState_CaneAttack1::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {
@@ -43,4 +43,5 @@ COdurState_CaneAttack1* COdurState_CaneAttack1::Create(ID3D11Device* pDevice, ID
 
 void COdurState_CaneAttack1::Free()
 {
+	__super::Free();
 }
