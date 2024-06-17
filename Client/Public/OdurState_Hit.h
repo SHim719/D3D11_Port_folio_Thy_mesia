@@ -19,6 +19,7 @@ public:
 
 private:
 	_int	m_iHitCount = { 0 };
+	_int	m_iMaxHitCount = { 8 };
 
 public:
 	static COdurState_Hit* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

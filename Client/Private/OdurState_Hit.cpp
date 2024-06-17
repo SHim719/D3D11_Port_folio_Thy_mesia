@@ -35,8 +35,14 @@ void COdurState_Hit::OnState_End()
 
 void COdurState_Hit::OnHit(void* pArg)
 {
-	++m_iHitCount;
-	OnState_Start(nullptr);
+	m_iHitCount = (m_iHitCount + 1) % (m_iMaxHitCount + 1);
+	
+	_int iRandNum = JoRandom::Random_Int(0, m_iMaxHitCount);
+	
+	if (iRandNum <= m_iHitCount)
+		m_pOdur->Change_State((_uint)OdurState::State_Parry);
+	else
+		OnState_Start(nullptr);
 }
 
 COdurState_Hit* COdurState_Hit::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

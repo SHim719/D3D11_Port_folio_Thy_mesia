@@ -196,6 +196,21 @@
     <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\08. OdurState_Parry">
       <UniqueIdentifier>{689bbd23-feac-492a-a87c-d13e161e81b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Player\State\08. PlayerState_Hit">
+      <UniqueIdentifier>{c3034d36-d3c4-4832-8b2b-159ee2ee1b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Player\State\09. PlayerState_Parried">
+      <UniqueIdentifier>{c46328e2-54e0-44cc-aaab-fb307396d834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Elite">
+      <UniqueIdentifier>{b7bae545-b60c-4eb6-8818-80e8580f1c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Normal">
+      <UniqueIdentifier>{c5dbf081-bd20-4e28-9660-c69f5205a1bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Stats">
+      <UniqueIdentifier>{58435bba-5ebc-4e65-ad6a-9fc346159b58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -384,6 +399,15 @@
     <ClInclude Include="..\Public\OdurState_Parry.h">
       <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\08. OdurState_Parry</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Hit.h">
+      <Filter>02. GameObjects\02. Character\02. Player\State\08. PlayerState_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Parried.h">
+      <Filter>02. GameObjects\02. Character\02. Player\State\09. PlayerState_Parried</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EnemyStats.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Stats</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -535,6 +559,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Parry.cpp">
       <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\08. OdurState_Parry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Hit.cpp">
+      <Filter>02. GameObjects\02. Character\02. Player\State\08. PlayerState_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Parried.cpp">
+      <Filter>02. GameObjects\02. Character\02. Player\State\09. PlayerState_Parried</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EnemyStats.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Stats</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

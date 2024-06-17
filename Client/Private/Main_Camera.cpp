@@ -175,6 +175,8 @@ void CMain_Camera::LockOn_State(_float fTimeDelta)
 	m_pTransform->Rotation_Quaternion(vLerpedQuat);
 
 	Follow_Target(fTimeDelta);
+
+	Set_CursorToCenter(g_hWnd, g_iWinSizeX, g_iWinSizeY);
 }
 
 
@@ -199,10 +201,8 @@ _vector CMain_Camera::Get_LerpedTargetPos(_fvector vTargetPos, _float fTimeDelta
 void CMain_Camera::Rotate_By_Mouse(_float fTimeDelta)
 {
 	POINT ptCenter = { g_iWinSizeX >> 1, g_iWinSizeY >> 1 };
-	POINT ptMouse = {};
-	GetCursorPos(&ptMouse);
-	ScreenToClient(g_hWnd, &ptMouse);
-
+	POINT ptMouse = Get_ScreenCursorPos(g_hWnd);
+		
 	POINT MouseGap = { ptMouse.x - ptCenter.x, ptMouse.y - ptCenter.y };
 
 	_float fDeltaTheta = 0.f;

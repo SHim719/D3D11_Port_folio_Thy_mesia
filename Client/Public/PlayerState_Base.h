@@ -18,13 +18,16 @@ public:
 	void OnGoing(_float fTimeDelta)		override;
 	void OnState_End()					override;
 
-	
+	void OnHit(void* pArg)				override;
+
 protected:
 	_vector Calc_MoveLook(_bool IsCamOriented);
 	void Rotate_To_Look(_vector vNewLook, _float fTimeDelta);
 
 	_bool Check_StateChange(PlayerState eState);
 	PlayerState Decide_State();
+
+
 protected:
 	CPlayer*			m_pPlayer = { nullptr };
 	CMain_Camera*		m_pMain_Camera = { nullptr };

@@ -15,9 +15,10 @@ HRESULT COdurState_DisappearMove::Initialize(void* pArg)
 
 void COdurState_DisappearMove::OnState_Start(void* pArg)
 {
-	m_pOdur->Enable_LookTarget();
+	m_pOdur->Disable_LookTarget();
 	m_pOdur->Enable_Stanced();
-	m_pOdur->Set_Alpha_Decrease();
+
+	m_pOdur->Set_Alpha(0.f);
 
 	Decide_Animation();
 }
@@ -26,7 +27,7 @@ void COdurState_DisappearMove::OnGoing(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
-		m_pOdur->Change_State((_uint)OdurState::State_DisappearMove);
+		m_pOdur->Change_State((_uint)OdurState::State_Appear, &m_iDir);
 		return;
 	}
 
@@ -41,17 +42,52 @@ void COdurState_DisappearMove::OnState_End()
 
 void COdurState_DisappearMove::Decide_Animation()
 {
-	// 조건이 많음
-	//_float fDist = XMVector3Length(m_pTargetTransform->Get_Position() - m_pOwnerTransform->Get_Position()).m128_f32[0];
-	//if (fDist >= 6.f)
-	//	m_iDir = 1;
-	//else if (fDist <= 2.f)
-	//	m_iDir = 0;
-	//else
-	//	m_iDir = JoRandom::Random_Int(2, 3);
-	//
-	//m_pModel->Change_Animation(Magician_WalkBDisappear + m_iDir);
+	// 카드던지는 패턴 구분해서 만들기
+	m_iDir = 0;
+
+	if (m_bCardPattern)
+	{
+		m_iDir = JoRandom::Random_Int(1, 3);
+
+		switch (m_iDir)
+		{
+		case 1:
+			m_pModel->Change_Animation(Magician_DisappearMove_B);
+			break;
+		case 2:
+			m_pModel->Change_Animation(Magician_DisappearMove_L);
+			break;
+		case 3:
+			m_pModel->Change_Animation(Magician_DisappearMove_R);
+			break;
+		}
+	}
+	else
+	{
+		_float fDist = XMVector3Length(m_pTargetTransform->Get_Position() - m_pOwnerTransform->Get_Position()).m128_f32[0];
+		if (fDist >= 6.f)
+			m_pModel->Change_Animation(Magician_DisappearMove_F);
+		else
+		{
+			m_iDir = JoRandom::Random_Int(1, 3);
+
+			switch (m_iDir)
+			{
+			case 1:
+				m_pModel->Change_Animation(Magician_DisappearMove_B);
+				break;
+			case 2:
+				m_pModel->Change_Animation(Magician_DisappearMove_L);
+				break;
+			case 3:
+				m_pModel->Change_Animation(Magician_DisappearMove_R);
+				break;
+			}
+		}
+	}
+	
 }
+
 
 COdurState_DisappearMove* COdurState_DisappearMove::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {

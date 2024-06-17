@@ -8,4 +8,7 @@
 #include "PlayerState_LockOn.h"
 #include "PlayerState_Parry.h"
 #include "PlayerState_ParrySuccess.h"
+#include "PlayerState_Hit.h"
+#include "PlayerState_Parried.h"
+
 

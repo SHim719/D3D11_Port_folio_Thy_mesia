@@ -32,12 +32,6 @@ public:
 		return m_pStats; }
 
 private:
-	void Active_Weapons();
-	void InActive_Weapons();
-	void Active_Claw();
-	void InActive_Claw();
-
-private:
 	CTransform*		m_pTargetTransform = { nullptr };
 	_bool			m_bLockOn = { false };
 
@@ -47,11 +41,18 @@ private:
 
 public:
 	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
-	_bool Is_LockOn() const { return m_bLockOn; }
+	_bool Is_LockOn() const { 
+		return m_bLockOn; }
 
-	_bool Can_NextState() const { return m_bCanNextState; }
-	_bool Can_Rotation() const { return m_bCanRotation; }
-	_bool Is_Invincible() const { return m_bInvincible; }
+	_bool Can_NextState() const { 
+		return m_bCanNextState; }
+	_bool Can_Rotation() const { 
+		return m_bCanRotation; }
+	_bool Is_Invincible() const { 
+		return m_bInvincible; }
+
+	void SetState_Parried();
+	void Inactive_AllWeaponColliders();
 
 #pragma region KEYFRAMEEVENT
 public:
@@ -78,6 +79,13 @@ public:
 	void Set_Vulnerable() {
 		m_bInvincible = false;
 	}
+
+private:
+	void Active_Weapons();
+	void InActive_Weapons();
+	void Active_Claw();
+	void InActive_Claw();
+	
 #pragma endregion
 
 private:

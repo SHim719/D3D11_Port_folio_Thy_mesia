@@ -38,6 +38,7 @@ private:
 	_bool	m_bAlphaEnable = { false };
 	_bool	m_bAlphaIncrease = { false };
 
+	
 public:
 	void Swap_Bone();
 
@@ -49,8 +50,13 @@ public:
 		m_bAlphaIncrease = false; m_bAlphaEnable = true;
 	}
 
+	void Set_Alpha(_float fAlpha) {
+		m_fAlpha = fAlpha; Update_WeaponAlpha();
+	}
+
 private:
-	void Update_Alpha();
+	void Update_Alpha(_float fTimeDelta);
+	void Update_WeaponAlpha();
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;

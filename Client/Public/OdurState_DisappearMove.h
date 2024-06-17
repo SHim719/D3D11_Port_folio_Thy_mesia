@@ -16,6 +16,9 @@ public:
 	void OnState_End()					override;
 
 private:
+	_int m_iDir = { 0 };
+
+private:
 	void Decide_Animation();
 
 public:

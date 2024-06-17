@@ -43,7 +43,7 @@ HRESULT COdur::Initialize(void* pArg)
 void COdur::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::T))
-		Change_State((_uint)OdurState::State_Walk);
+		Change_State((_uint)OdurState::State_DisappearWalk);
 
 	if (m_bLookTarget)
 	{
@@ -60,7 +60,7 @@ void COdur::Tick(_float fTimeDelta)
 
 void COdur::LateTick(_float fTimeDelta)
 {
-	//Update_Alpha();
+	Update_Alpha(fTimeDelta);
 
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
@@ -124,6 +124,7 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_LookTarget", bind(&CEnemy::Disable_LookTarget, this));
 	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Enable_Stanced, this));
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Disable_Stanced, this));
+	m_pModel->Bind_Func("Add_AttackIdx", bind(&CCharacter::Add_AttackIdx, this));
 }
 
 void COdur::Swap_Bone()
@@ -131,8 +132,27 @@ void COdur::Swap_Bone()
 	m_Weapons[SWORD]->Swap_SocketBone(m_pSwapBone);
 }
 
-void COdur::Update_Alpha()
+void COdur::Update_Alpha(_float fTimeDelta)
 {
+	if (false == m_bAlphaEnable)
+		return;
+		
+	_float fDeltaSpeed = m_fDeltaAlphaSpeed * (m_bAlphaIncrease == false ? -1.f : 1.f);
+
+	m_fAlpha += fDeltaSpeed * fTimeDelta;
+
+	m_fAlpha = clamp(m_fAlpha, 0.f, 1.f);
+
+	if (1.f == m_fAlpha || 0.f == m_fAlpha)
+		m_bAlphaEnable = false;
+
+	Update_WeaponAlpha();
+}
+
+void COdur::Update_WeaponAlpha()
+{
+	for (auto pWeapon : m_Weapons)
+		pWeapon->Set_Alpha(m_fAlpha);
 }
 
 void COdur::OnCollisionEnter(CGameObject* pOther)
@@ -205,6 +225,10 @@ HRESULT COdur::Ready_States()
 	m_States[(_uint)OdurState::State_CaneAttack1] = COdurState_CaneAttack1::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_CaneAttack2] = COdurState_CaneAttack2::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_KickCombo] = COdurState_KickCombo::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Parry] = COdurState_Parry::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_DisappearWalk] = COdurState_DisappearWalk::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_DisappearMove] = COdurState_DisappearMove::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Appear] = COdurState_Appear::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }
@@ -216,8 +240,8 @@ HRESULT COdur::Ready_Weapons()
 	CCollider::COLLIDERDESC ColliderDesc = {};
 	ColliderDesc.eType = CCollider::OBB;
 	ColliderDesc.pOwner = this;
-	ColliderDesc.vCenter = { 0.f, 0.f, 0.2f };
-	ColliderDesc.vSize = { 0.1f, 0.1f, 0.9f };
+	ColliderDesc.vCenter = { 0.2f, 0.f, 0.f };
+	ColliderDesc.vSize = { 1.f, 0.1f, 0.1f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
 	ColliderDesc.bActive = false;
 	ColliderDesc.strCollisionLayer = "Enemy_Weapon";
@@ -227,6 +251,7 @@ HRESULT COdur::Ready_Weapons()
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_Cane");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Cane";
+	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 	WeaponDesc.bAlphaBlend = true;
 
@@ -262,6 +287,8 @@ HRESULT COdur::Ready_Weapons()
 	m_Weapons[FOOT_R] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[FOOT_R])
 		return E_FAIL;
+
+
 
 	return S_OK;
 }

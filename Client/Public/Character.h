@@ -22,6 +22,8 @@ protected:
 public:
 	void Change_State(_uint eState, void* pArg = nullptr);
 	_uint Get_PrevState() const { return m_iPrevState; }
+
+public:
 	virtual void Hit(void* pArg);
 
 protected:
@@ -39,8 +41,21 @@ public:
 protected:
 	vector<class CWeapon*>		m_Weapons;
 
-protected:
-	void Update_AttackDesc(const ATTACKDESC& Desc);
+	size_t	m_iAttackIdx = { 0 };
+public:
+	const ATTACKDESC& Get_NowAttackDesc(size_t iIdx);
+
+	size_t Get_AttackIdx() const {
+		return m_iAttackIdx;
+	}
+
+	void Add_AttackIdx() {
+		m_iAttackIdx++;
+	}
+
+	void Reset_AttackIdx() {
+		m_iAttackIdx = 0;
+	}
 
 
 protected:

@@ -26,9 +26,11 @@ void CPlayerState_LockOn::OnState_Start(void* pArg)
 void CPlayerState_LockOn::OnGoing(_float fTimeDelta)
 {
 	if (false == m_pPlayer->Is_LockOn())
+	{
 		m_pPlayer->Change_State((_uint)PlayerState::State_Jog);
-	
-
+		return;
+	}
+		
 	_vector vNewLook = Calc_MoveLook(false);
 
 	Change_WalkAnimation();

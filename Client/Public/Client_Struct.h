@@ -6,6 +6,7 @@ namespace Client
 	{
 		WEAK,
 		NORMAL,
+		SEMIKNOCKBACK,
 		KNOCKBACK,
 	};
 
@@ -14,4 +15,10 @@ namespace Client
 		ATTACKTYPE eAttackType;
 
 	}ATTACKDESC;
+
+
+	typedef struct tagEnemyDesc
+	{
+		int iMaxHp;
+	}ENEMYDESC;
 }

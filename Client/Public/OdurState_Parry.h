@@ -16,6 +16,11 @@ public:
 	void OnState_End()					override;
 
 private:
+	vector<ATTACKDESC> m_ParryAttackDescs[2];
+
+private:
+	void Init_AttackDesc()				override;
+
 	void Decide_Animation();
 
 public:

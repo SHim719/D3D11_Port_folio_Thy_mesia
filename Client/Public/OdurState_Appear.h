@@ -16,7 +16,7 @@ public:
 	void OnState_End()					override;
 
 private:
-	void Decide_Animation();
+	void Decide_Animation(void* pArg);
 
 public:
 	static COdurState_Appear* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

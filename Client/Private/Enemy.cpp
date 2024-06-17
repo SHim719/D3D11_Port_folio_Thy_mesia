@@ -1,5 +1,6 @@
 #include "Enemy.h"
 
+
 CGameObject* CEnemy::s_pTarget = nullptr;
 
 CEnemy::CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -11,7 +12,6 @@ CEnemy::CEnemy(const CEnemy& rhs)
 	: CCharacter(rhs)
 {
 }
-
 
 void CEnemy::OnCollisionEnter(CGameObject* pOther)
 {
@@ -28,4 +28,6 @@ void CEnemy::OnCollisionExit(CGameObject* pOther)
 void CEnemy::Free()
 {
 	__super::Free();
+
+	Safe_Release(m_pStats);
 }

@@ -24,6 +24,13 @@ public:
 	}
 
 protected:
+	class CEnemyStats* m_pStats = { nullptr };
+
+public:
+	CEnemyStats* Get_Stats() const { 
+		return m_pStats; }
+
+protected:
 	_bool m_bLookTarget = { true };
 	_bool m_bCollPlayer = { false };
 

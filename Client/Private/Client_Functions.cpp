@@ -23,6 +23,22 @@ namespace Client
 		size_t iPathLength = wstrFileFullPath.rfind(L'\\') + 1;
 		return wstrFileFullPath.substr(0, iPathLength);
 	}
+
+	POINT Get_ScreenCursorPos(HWND hWnd)
+	{
+		POINT ptMouse = {};
+		GetCursorPos(&ptMouse);
+		ScreenToClient(hWnd, &ptMouse);
+
+		return ptMouse;
+	}
+
+	void Set_CursorToCenter(HWND hWnd, _uint iWinCX, _uint iWinCY)
+	{
+		POINT ptCenter = { (_long)iWinCX >> 1, (_long)iWinCY >> 1 };
+		ClientToScreen(hWnd, &ptCenter);
+		SetCursorPos(ptCenter.x, ptCenter.y);
+	}
 }
 
 namespace JoMath

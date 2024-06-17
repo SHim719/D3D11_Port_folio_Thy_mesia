@@ -175,6 +175,7 @@
     <ClInclude Include="..\Public\Client_Struct.h" />
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\Public\Enemy.h" />
+    <ClInclude Include="..\Public\EnemyStats.h" />
     <ClInclude Include="..\Public\Free_Camera.h" />
     <ClInclude Include="..\Public\ImGui_Main.h" />
     <ClInclude Include="..\Public\Levels_Header.h" />
@@ -204,9 +205,11 @@
     <ClInclude Include="..\Public\PlayerState_Attack.h" />
     <ClInclude Include="..\Public\PlayerState_Avoid.h" />
     <ClInclude Include="..\Public\PlayerState_Base.h" />
+    <ClInclude Include="..\Public\PlayerState_Hit.h" />
     <ClInclude Include="..\Public\PlayerState_Jog.h" />
     <ClInclude Include="..\Public\PlayerState_LockOn.h" />
     <ClInclude Include="..\Public\PlayerState_Parry.h" />
+    <ClInclude Include="..\Public\PlayerState_Parried.h" />
     <ClInclude Include="..\Public\PlayerState_ParrySuccess.h" />
     <ClInclude Include="..\Public\PlayerState_Sprint.h" />
     <ClInclude Include="..\Public\Player_Enums.h" />
@@ -235,6 +238,7 @@
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\Client_Functions.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
+    <ClCompile Include="..\Private\EnemyStats.cpp" />
     <ClCompile Include="..\Private\Free_Camera.cpp" />
     <ClCompile Include="..\Private\ImGui_Main.cpp" />
     <ClCompile Include="..\Private\Level_GamePlay.cpp" />
@@ -261,10 +265,12 @@
     <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
     <ClCompile Include="..\Private\PlayerState_Avoid.cpp" />
     <ClCompile Include="..\Private\PlayerState_Base.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Hit.cpp" />
     <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_Jog.cpp" />
     <ClCompile Include="..\Private\PlayerState_LockOn.cpp" />
     <ClCompile Include="..\Private\PlayerState_Parry.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Parried.cpp" />
     <ClCompile Include="..\Private\PlayerState_ParrySuccess.cpp" />
     <ClCompile Include="..\Private\PlayerState_Sprint.cpp" />
     <ClCompile Include="..\Private\State_Base.cpp" />

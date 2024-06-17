@@ -16,6 +16,7 @@ HRESULT COdurState_Walk::Initialize(void* pArg)
 void COdurState_Walk::OnState_Start(void* pArg)
 {
 	m_pOdur->Enable_LookTarget();
+	m_pOdur->Disable_Stanced();
 
 	Decide_Animation();
 

@@ -16,19 +16,15 @@ private:
 private:
 	string				m_strEventName = "";
 	function<void()>	m_CallBackFunc = { nullptr };
-	_bool				m_bCalled = { false };
 
-	_int				m_iLastKeyFrame = { -1 };
 public:
 	void Bind_Func(function<void()> CallBackFunc) { 
 		m_CallBackFunc = std::move(CallBackFunc); 
 	}
 	
-	void Reset() {
-		m_iLastKeyFrame = -1;
+	void Execute() {
+		if (m_CallBackFunc) m_CallBackFunc();
 	}
-
-	void Execute(_int iNowKeyFrame);
 	
 	const string& Get_EventName() const { return m_strEventName; }
 														

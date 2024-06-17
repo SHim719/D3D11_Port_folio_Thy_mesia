@@ -26,7 +26,7 @@ protected:
 	_vector Convert_ScreenToWorld(_fvector vUIWorldPos);
 
 protected:
-	_float4x4 m_ViewportMatrix;
+	_float4x4	m_ViewportMatrix;
 
 
 protected:

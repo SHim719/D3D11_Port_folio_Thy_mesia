@@ -34,6 +34,13 @@ void CPlayerState_Base::OnState_End()
 {
 }
 
+void CPlayerState_Base::OnHit(void* pArg)
+{
+	// 체력감소 죽음상태 체크
+
+	m_pPlayer->Change_State((_uint)PlayerState::State_Hit, pArg);
+}
+
 _vector CPlayerState_Base::Calc_MoveLook(_bool IsCamOriented)
 {
 	_vector vLook, vRight;

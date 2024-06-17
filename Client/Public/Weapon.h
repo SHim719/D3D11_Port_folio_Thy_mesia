@@ -17,12 +17,13 @@ class CWeapon final : public CGameObject
 public:
 	typedef struct tagWeaponDesc
 	{
-		_uint iTag = 0;
-		CBone* pSocketBone = nullptr;
-		CTransform* pParentTransform = nullptr;
-		wstring wstrModelTag = L"";
-		_bool bAlphaBlend = false;
-		CCollider::COLLIDERDESC* pColliderDesc = nullptr;
+		_uint						iTag = 0;
+		CBone*						pSocketBone = nullptr;
+		CTransform*					pParentTransform = nullptr;
+		wstring						wstrModelTag = L"";
+		_bool						bAlphaBlend = false;
+		CGameObject*				pOwner = nullptr;
+		CCollider::COLLIDERDESC*	pColliderDesc = nullptr;
 	} WEAPONDESC;
 
 private:
@@ -38,12 +39,17 @@ public:
 	HRESULT Render()					override;
 
 private:
+	CGameObject*	m_pOwner = { nullptr };
 	CBone*			m_pSocketBone = { nullptr };
 	CTransform*		m_pParentTransform = { nullptr };
 
 public:
 	void Swap_SocketBone(CBone*& pBone) {
 		swap(m_pSocketBone, pBone);
+	}
+
+	CGameObject* Get_Owner() const {
+		return m_pOwner;
 	}
 
 private:
@@ -74,10 +80,12 @@ private:
 
 public:
 	void Active_Collider() {
-		m_pCollider->Set_Active(true);
+		if (m_pCollider)
+			m_pCollider->Set_Active(true);
 	}
 	void Inactive_Collider() {
-		m_pCollider->Set_Active(false);
+		if (m_pCollider)
+			m_pCollider->Set_Active(false);
 	}
 
 private:

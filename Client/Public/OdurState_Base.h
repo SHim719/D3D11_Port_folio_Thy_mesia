@@ -21,6 +21,9 @@ protected:
 	CTransform*		m_pTargetTransform = { nullptr };
 
 protected:
+	_bool			m_bCardPattern = { false };
+
+public:
 	void Decide_State();
 
 public:

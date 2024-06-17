@@ -297,5 +297,7 @@ enum class PlayerState
 	State_LockOn,
 	State_Parry,
 	State_ParrySuccess,
+	State_Hit,
+	State_Parried,
 	State_End,
 };

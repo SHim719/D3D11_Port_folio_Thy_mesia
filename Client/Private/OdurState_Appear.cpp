@@ -17,16 +17,16 @@ void COdurState_Appear::OnState_Start(void* pArg)
 {
 	m_pOdur->Enable_LookTarget();
 	m_pOdur->Enable_Stanced();
-	m_pOdur->Set_Alpha_Decrease();
+	m_pOdur->Set_Alpha_Increase();
 
-	Decide_Animation();
+	Decide_Animation(pArg);
 }
 
 void COdurState_Appear::OnGoing(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
-		m_pOdur->Change_State((_uint)OdurState::State_DisappearMove);
+		Decide_State();
 		return;
 	}
 
@@ -39,17 +39,25 @@ void COdurState_Appear::OnState_End()
 
 }
 
-void COdurState_Appear::Decide_Animation()
+void COdurState_Appear::Decide_Animation(void* pArg)
 {
-	//_float fDist = XMVector3Length(m_pTargetTransform->Get_Position() - m_pOwnerTransform->Get_Position()).m128_f32[0];
-	//if (fDist >= 6.f)
-	//	m_iDir = 1;
-	//else if (fDist <= 2.f)
-	//	m_iDir = 0;
-	//else
-	//	m_iDir = JoRandom::Random_Int(2, 3);
-	//
-	//m_pModel->Change_Animation(Magician_WalkBDisappear + m_iDir);
+	_int* iDir = (_int*)pArg;
+
+	switch (*iDir)
+	{
+	case 0:
+		m_pModel->Change_Animation(Magician_Appear_F, 0.f);
+		break;
+	case 1:
+		m_pModel->Change_Animation(Magician_Appear_B, 0.f);
+		break;
+	case 2:
+		m_pModel->Change_Animation(Magician_Appear_L, 0.f);
+		break;
+	case 3:
+		m_pModel->Change_Animation(Magician_Appear_R, 0.f);
+		break;
+	}
 }
 
 COdurState_Appear* COdurState_Appear::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

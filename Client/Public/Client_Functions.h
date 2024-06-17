@@ -7,6 +7,9 @@ namespace Client
    wstring Convert_StrToWStr(const string& str);
    string Convert_WStrToStr(const wstring& wstr);
    wstring Get_Path(const wstring& wstrFileFullPath);
+
+   POINT Get_ScreenCursorPos(HWND hWnd);
+   void  Set_CursorToCenter(HWND hWnd, _uint iWinCX, _uint iWinCY);
 };
 
 namespace JoMath

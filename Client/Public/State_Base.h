@@ -30,11 +30,21 @@ protected:
 	CGameInstance*			m_pGameInstance = nullptr;
 
 protected:
-	CModel*			m_pModel = nullptr;
-	CTransform*		m_pOwnerTransform = nullptr;
+	CModel*				m_pModel = nullptr;
+	CTransform*			m_pOwnerTransform = nullptr;
 
 protected:
-	_float			m_fPatternTime = { 0.f };
+	_float				m_fPatternTime = { 0.f };
+
+	vector<ATTACKDESC>	m_AttackDescs;
+
+public:
+	const ATTACKDESC& Get_NowAttackDesc(size_t iIdx) const {
+		return m_AttackDescs[iIdx];
+	}
+
+protected:
+	virtual void Init_AttackDesc();
 
 public:
 	void Free() override;

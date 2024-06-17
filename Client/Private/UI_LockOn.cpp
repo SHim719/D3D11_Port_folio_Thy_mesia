@@ -83,7 +83,7 @@ HRESULT CUI_LockOn::Render()
 	if (FAILED(m_pUITexture->Set_SRV(m_pShader, "g_DiffuseTexture", 0)))
 		return E_FAIL;
 
-	if (FAILED(m_pShader->Begin(0)))
+	if (FAILED(m_pShader->Begin(1)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))

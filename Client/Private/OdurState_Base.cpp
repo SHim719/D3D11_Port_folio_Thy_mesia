@@ -36,19 +36,20 @@ void COdurState_Base::OnState_End()
 void COdurState_Base::Decide_State()
 {
 	_int iRandNum = JoRandom::Random_Int(0, 1);
-
-	if (1)//0 == iRandNum)
+	
+	if (0 == iRandNum)
 	{
-		//iRandNum = JoRandom::Random_Int(0, 1);
-		//
-		//if (0 == iRandNum)
-		//	m_pOdur->Change_State((_uint)OdurState::State_CaneAttack1);
-		//else
-		//	m_pOdur->Change_State((_uint)OdurState::State_CaneAttack2);
+		iRandNum = JoRandom::Random_Int(0, 2);
 
-		m_pOdur->Change_State((_uint)OdurState::State_KickCombo);
+		if (0 == iRandNum)
+			m_pOdur->Change_State((_uint)OdurState::State_CaneAttack1);
+		else if (1 == iRandNum)
+			m_pOdur->Change_State((_uint)OdurState::State_CaneAttack2);
+		else
+			m_pOdur->Change_State((_uint)OdurState::State_KickCombo);
 	}
-
+	else
+		m_pOdur->Change_State((_uint)OdurState::State_Walk);
 }
 
 void COdurState_Base::Free()

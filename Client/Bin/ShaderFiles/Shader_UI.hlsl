@@ -4,7 +4,7 @@ matrix  g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D g_DiffuseTexture;
 
 float4  g_vColor;
-float   g_fAlphaScale;
+float   g_fAlpha;
 
 struct VS_IN
 {
@@ -72,8 +72,6 @@ void GS_MAIN(point GS_IN In[1], inout TriangleStream<GS_OUT> OutputStream)
     OutputStream.Append(Out);
 }
 
-
-
 struct PS_IN
 {
     float4 vPosition : SV_POSITION;
@@ -86,6 +84,17 @@ struct PS_OUT
 };
 
 PS_OUT PS_MAIN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    Out.vColor.a = Out.vColor.a * g_fAlpha;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_REDTOALPHA(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
@@ -118,7 +127,7 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
-    pass NONALPHA //1
+    pass REDTOALPHA //1
     {
         SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_NoZTest_And_Write, 0);
@@ -128,7 +137,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = compile gs_5_0 GS_MAIN();
-        PixelShader = compile ps_5_0 PS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_REDTOALPHA();
     }
 
 	

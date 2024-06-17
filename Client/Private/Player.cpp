@@ -114,7 +114,6 @@ void CPlayer::Bind_KeyFrames()
 }
 
 
-
 void CPlayer::Active_Weapons()
 {
 	m_Weapons[DAGGER]->Set_Active(true);
@@ -135,6 +134,15 @@ void CPlayer::InActive_Claw()
 {
 }
 
+void CPlayer::Inactive_AllWeaponColliders()
+{
+	for (auto pWeapon : m_Weapons)
+	{
+		if (pWeapon)
+			pWeapon->Inactive_Collider();
+	}
+}
+
 void CPlayer::Toggle_LockOn(CTransform* pTargetTransform)
 {
 	m_bLockOn = !m_bLockOn;
@@ -146,11 +154,21 @@ void CPlayer::Toggle_LockOn(CTransform* pTargetTransform)
 	Safe_AddRef(m_pTargetTransform);
 }
 
+void CPlayer::SetState_Parried()
+{
+	Change_State((_uint)PlayerState::State_Parried);
+}
+
 void CPlayer::OnCollisionEnter(CGameObject* pOther)
 {
 	if (TAG_ENEMY_WEAPON == pOther->Get_Tag())
 	{
-		m_States[m_iState]->OnHit(nullptr);
+		CWeapon* pEnemyWeapon = static_cast<CWeapon*>(pOther);
+		CEnemy* pOwner = static_cast<CEnemy*>(pEnemyWeapon->Get_Owner());
+
+		ATTACKDESC AtkDesc = pOwner->Get_NowAttackDesc(pOwner->Get_AttackIdx());
+
+		m_States[m_iState]->OnHit(&AtkDesc);
 	}
 }
 
@@ -212,19 +230,22 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_LockOn] = CPlayerState_LockOn::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Parry] = CPlayerState_Parry::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_ParrySuccess] = CPlayerState_ParrySuccess::Create(m_pDevice, m_pContext, this);
-
+	m_States[(_uint)PlayerState::State_Hit] = CPlayerState_Hit::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Parried] = CPlayerState_Parried::Create(m_pDevice, m_pContext, this);
+	
 	return S_OK;
 }
 
 HRESULT CPlayer::Ready_Weapons()
 {
-	m_Weapons.resize(WEAPON_END);
+	m_Weapons.resize(WEAPON_END, nullptr);
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.iTag = (_uint)TAG_PLAYER_WEAPON;
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
+	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = nullptr;
 
 	m_Weapons[DAGGER] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));

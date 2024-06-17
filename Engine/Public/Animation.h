@@ -32,11 +32,14 @@ private:
 	_float						m_fPlayTime = 0.f;
 	_float						m_fBlendingTime = 0.f;
 	_float						m_fPlayRate = 1.f;
+	_int						m_iPrevKeyFrame = 0;
 
 private:
 	vector<_uint>									m_ChannelKeyFrames;
 	vector<_uint>									m_BoneIndices;
 	unordered_multimap<_int, class CKeyFrameEvent*>	m_KeyFrameEvents;
+
+	_bool*											m_bCheckKeyFrames = { nullptr };
 
 public:
 	const string& Get_AnimName() { return m_strAnimName; }
@@ -48,7 +51,6 @@ public:
 	void Set_CurrentKeyFrames(_uint iKeyFrame);
 
 	void Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent);
-	void Reset_KeyFrameEvents();
 private:
 	void Check_KeyFrameEvent();
 

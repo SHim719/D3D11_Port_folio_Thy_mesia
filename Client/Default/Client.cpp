@@ -36,7 +36,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #ifdef _DEBUG
     #ifdef UNICODE
         #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
-    #else
+    #else 
         #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
     #endif
 #endif

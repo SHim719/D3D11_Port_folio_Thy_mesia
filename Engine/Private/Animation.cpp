@@ -80,6 +80,11 @@ HRESULT CAnimation::Initialize(const CModel::KEYFRAMEEVENTS& Events, const ANIME
 		Safe_AddRef(Pair.second);
 	}
 
+	m_bCheckKeyFrames = new _bool[Get_NumKeyFrames()];
+	if (nullptr == m_bCheckKeyFrames)
+		return E_FAIL;
+
+	ZeroMemory(m_bCheckKeyFrames, Get_NumKeyFrames());
 
 	return S_OK;
 }
@@ -134,6 +139,7 @@ _bool CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones,
 void CAnimation::Reset()
 {
 	m_fPlayTime = 0.f;
+	m_iPrevKeyFrame = 0;
 
 	for (auto& pChannel : m_Channels)
 	{
@@ -141,7 +147,7 @@ void CAnimation::Reset()
 			iCurrentKeyFrame = 0;
 	}
 
-	Reset_KeyFrameEvents();
+	ZeroMemory(m_bCheckKeyFrames, Get_NumKeyFrames());
 }
 
 _uint CAnimation::Get_NumKeyFrames() const
@@ -153,6 +159,8 @@ void CAnimation::Set_CurrentKeyFrames(_uint iKeyFrame)
 {
 	if (iKeyFrame >= Get_NumKeyFrames())
 		return;
+
+	m_iPrevKeyFrame = iKeyFrame;
 
 	m_fPlayTime = m_Channels[0]->Get_FrameGap() * (_float)iKeyFrame;
 
@@ -169,21 +177,32 @@ void CAnimation::Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent)
 	Safe_AddRef(pEvent);
 }
 
-void CAnimation::Reset_KeyFrameEvents()
-{
-	for (auto it = m_KeyFrameEvents.begin(); it != m_KeyFrameEvents.end(); ++it)
-		it->second->Reset();
-}
+
 
 void CAnimation::Check_KeyFrameEvent()
 {
 	_int iNowKeyFrame = (_int)Get_NowKeyFrame();
-	auto Pair = m_KeyFrameEvents.equal_range(iNowKeyFrame);
-	if (m_KeyFrameEvents.end() != Pair.first)
+
+	for (_int i = m_iPrevKeyFrame; i <= iNowKeyFrame; ++i)
 	{
-		for (auto it = Pair.first; it != Pair.second; ++it)
-			it->second->Execute(iNowKeyFrame);
+		if (true == m_bCheckKeyFrames[i])
+			continue;
+
+		if (m_strAnimName == "Magician_ParryAttack01")
+		{
+			cout << "i:" << i << "PrevKeyFrame: " << m_iPrevKeyFrame << "NowKeyFrame: " << iNowKeyFrame << endl;
+		}
+		auto Pair = m_KeyFrameEvents.equal_range(i);
+		if (m_KeyFrameEvents.end() != Pair.first)
+		{
+			for (auto it = Pair.first; it != Pair.second; ++it)
+				it->second->Execute();
+		}
+
+		m_bCheckKeyFrames[i] = true;
 	}
+
+	m_iPrevKeyFrame = iNowKeyFrame;
 }
 
 CAnimation* CAnimation::Create(ifstream& fin)
@@ -223,4 +242,6 @@ void CAnimation::Free()
 		Safe_Release(Pair.second);
 
 	m_KeyFrameEvents.clear();
+
+	Safe_Delete_Array(m_bCheckKeyFrames);
 }

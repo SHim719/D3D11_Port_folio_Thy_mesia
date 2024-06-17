@@ -26,6 +26,7 @@ void COdurState_DisappearWalk::OnGoing(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
+		m_bCardPattern = false;
 		m_pOdur->Change_State((_uint)OdurState::State_DisappearMove);
 		return;
 	}

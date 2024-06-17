@@ -28,6 +28,7 @@ HRESULT CWeapon::Initialize(void* pArg)
 	m_iTag = pWeaponDesc->iTag;
 	m_bAlphaBlend = pWeaponDesc->bAlphaBlend;
 
+	m_pOwner = pWeaponDesc->pOwner;
 	m_pSocketBone = pWeaponDesc->pSocketBone;
 	m_pParentTransform = pWeaponDesc->pParentTransform;
 

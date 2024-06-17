@@ -54,13 +54,17 @@ private:
 	void Default_State(_float fTimeDelta);
 	void LockOn_State(_float fTimeDelta);
 
+private:
 	_vector Get_LerpedTargetPos(_fvector vTargetPos, _float fTimeDelta);
 
 	void Rotate_By_Mouse(_float fTimeDelta);
 	void Follow_Target(_float fTimeDelta);
 
+private:
 	CBone* Find_TargetBone(CModel* pModel);
+
 	void SetState_LockOn();
+
 public:
 	static CMain_Camera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg) override;

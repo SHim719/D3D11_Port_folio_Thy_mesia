@@ -27,6 +27,8 @@ HRESULT CState_Base::Initialize(void* pArg)
 	if (nullptr == m_pOwnerTransform)
 		return E_FAIL;
 
+	Init_AttackDesc();
+
 	return S_OK;
 }
 
@@ -43,6 +45,10 @@ void CState_Base::OnState_End()
 }
 
 void CState_Base::OnHit(void* pArg)
+{
+}
+
+void CState_Base::Init_AttackDesc()
 {
 }
 
