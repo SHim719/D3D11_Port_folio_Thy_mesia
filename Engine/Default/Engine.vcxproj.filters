@@ -106,6 +106,18 @@
     <Filter Include="01.Utility\03. Components\03. VIBuffer\01. Point">
       <UniqueIdentifier>{28ec2a4b-1abd-47b4-a215-bf85fb1fbc66}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02. GameObjects\Layer">
+      <UniqueIdentifier>{7bd5b2e1-f914-4816-9262-9d0a6cb7703b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04. Sound">
+      <UniqueIdentifier>{af6849f4-ee1b-4557-91aa-bcb35d8b9e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04. Sound\FMOD">
+      <UniqueIdentifier>{30d00783-636b-4a1b-84b2-59726c1faaa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\05. RenderTarget">
+      <UniqueIdentifier>{7922820a-6027-4b03-92bc-439c7dc9d344}</UniqueIdentifier>
+    </Filter>
     <Filter Include="01.Utility\99. Managers">
       <UniqueIdentifier>{7d38d95a-08f0-481f-9521-972d1d711017}</UniqueIdentifier>
     </Filter>
@@ -126,18 +138,6 @@
     </Filter>
     <Filter Include="01.Utility\99. Managers\06. Target_Manager">
       <UniqueIdentifier>{b3eb5494-9a80-47e3-9418-6cd260dfb81b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\02. GameObjects\Layer">
-      <UniqueIdentifier>{7bd5b2e1-f914-4816-9262-9d0a6cb7703b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04. Sound">
-      <UniqueIdentifier>{af6849f4-ee1b-4557-91aa-bcb35d8b9e89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04. Sound\FMOD">
-      <UniqueIdentifier>{30d00783-636b-4a1b-84b2-59726c1faaa7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\05. RenderTarget">
-      <UniqueIdentifier>{7922820a-6027-4b03-92bc-439c7dc9d344}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Utility\99. Managers\07. Collision_Manager">
       <UniqueIdentifier>{1578386f-92e5-4659-903d-84063dd8188b}</UniqueIdentifier>

@@ -11,6 +11,7 @@
 #include "Weapon.h"
 
 #include "Odur.h"
+#include "Odur_Card.h"
 
 #include "UI_Headers.h"
 #include "UI_Manager.h"
@@ -27,29 +28,19 @@ HRESULT CLevel_Tool::Initialize()
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolMapObj", CToolMapObj::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolAnimObj", CToolAnimObj::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolColliderObj", CToolColliderObj::Create(m_pDevice, m_pContext));
-	m_pGameInstance->Add_Prototype(L"Prototype_Free_Camera", CFree_Camera::Create(m_pDevice, m_pContext));
-	m_pGameInstance->Add_Prototype(L"Prototype_Main_Camera", CMain_Camera::Create(m_pDevice, m_pContext));
-	
+
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_BG_Texture", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/Thymesia.jpg"));
 	m_pGameInstance->Add_Prototype(L"Prototype_TestGround", CTestGround::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_Weapon", CWeapon::Create(m_pDevice, m_pContext));
+	
+	if (FAILED(Ready_Camera()))
+		return E_FAIL;
 
 	if (FAILED(Ready_Player()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Odur()))
 		return E_FAIL;
-
-
-	CCamera::CAMERADESC camDesc{};
-	camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	camDesc.fNear = 0.1f;
-	camDesc.fFar = 300.f;
-	camDesc.fFovy = 60.f;
-	camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
-	camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
-
-	m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Camera", L"Prototype_Free_Camera", &camDesc);
 
 	if (FAILED(Ready_UIResource()))
 		return E_FAIL;
@@ -70,6 +61,24 @@ void CLevel_Tool::Tick(_float fTimeDelta)
 HRESULT CLevel_Tool::Render()
 {
 	
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Camera()
+{
+	m_pGameInstance->Add_Prototype(L"Prototype_Free_Camera", CFree_Camera::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_Main_Camera", CMain_Camera::Create(m_pDevice, m_pContext));
+
+	CCamera::CAMERADESC camDesc{};
+	camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+	camDesc.fNear = 0.1f;
+	camDesc.fFar = 300.f;
+	camDesc.fFovy = 60.f;
+	camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
+	camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
+
+	m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Camera", L"Prototype_Free_Camera", &camDesc);
+
 	return S_OK;
 }
 
@@ -99,6 +108,11 @@ HRESULT CLevel_Tool::Ready_Odur()
 
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Odur_Sword", CModel::Create(m_pDevice, m_pContext,
 		"../../Resources/Models/Odur/", "Odur_Sword.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Odur_Card", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Odur/", "Odur_Card.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Odur_Card", COdur_Card::Create(m_pDevice, m_pContext));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Odur", COdur::Create(m_pDevice, m_pContext));
 

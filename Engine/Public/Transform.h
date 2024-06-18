@@ -119,6 +119,8 @@ public:
 	void Set_MoveLook(_fvector vLook) { XMStoreFloat4(&m_vMoveLook, vLook); }
 	_vector Get_MoveLook() const { return XMLoadFloat4(&m_vMoveLook); }
 	
+	void Attach_To_Bone(class CBone* pBone, CTransform* pParentTransform, _fmatrix PivotMatrix = XMMatrixIdentity(), _bool bOnlyPosition = false);
+
 private:
 	_float4x4				m_WorldMatrix;
 	TRANSFORMDESC			m_TransformDesc; 

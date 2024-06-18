@@ -10,5 +10,9 @@
 #include "OdurState_DisappearMove.h"
 #include "OdurState_Appear.h"
 #include "OdurState_Parry.h"
+#include "OdurState_ThrowCard.h"
+#include "OdurState_Execute.h"
+#include "OdurState_ReadyExecution.h"
+//#include "OdurState_Finished.h"
 
 

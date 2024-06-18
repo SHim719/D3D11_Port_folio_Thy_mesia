@@ -94,7 +94,7 @@ namespace JoMath
 
 		return XMQuaternionSlerp(StartQuat, EndQuat, fRotRate);
 	}
-	_vector Calc_GroundLook(_fvector vSrc, _fvector vDst)
+	_vector Calc_GroundLook(_fvector vDst, _fvector vSrc)
 	{
 		_vector vGroundLook = XMVectorSetY(vDst - vSrc, 0.f);
 		vGroundLook = XMVector3Normalize(vDst - vSrc);

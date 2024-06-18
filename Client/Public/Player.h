@@ -52,7 +52,9 @@ public:
 		return m_bInvincible; }
 
 	void SetState_Parried();
+	void SetState_Executed(void* pArg);
 	void Inactive_AllWeaponColliders();
+
 
 #pragma region KEYFRAMEEVENT
 public:

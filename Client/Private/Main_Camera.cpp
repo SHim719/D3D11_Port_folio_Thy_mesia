@@ -83,6 +83,7 @@ void CMain_Camera::LateTick(_float fTimeDelta)
 		LockOn_State(fTimeDelta);
 		break;
 	case CMain_Camera::CUTSCENE:
+		Cutscene_State(fTimeDelta);
 		break;
 	case CMain_Camera::UI:
 		break;
@@ -127,8 +128,30 @@ void CMain_Camera::SetState_LockOn()
 
 	UIMGR->Active_UI("UI_LockOn", &Desc);
 
-	
 	m_eState = LOCKON;
+}
+
+void CMain_Camera::SetState_Cutscene(const ATTACHDESC& Desc)
+{
+	m_pCutsceneTargetTransform = Desc.pParentTransform;
+	m_pCutsceneBone = Desc.pAttachBone;
+
+	Safe_AddRef(m_pCutsceneTargetTransform);
+	Safe_AddRef(m_pCutsceneBone);
+
+	m_eState = CUTSCENE;
+}
+
+void CMain_Camera::Reset_State()
+{
+	Safe_Release(m_pCutsceneTargetTransform);
+	Safe_Release(m_pCutsceneBone);
+
+	if (nullptr != m_pTargetBone)
+		m_eState = LOCKON;
+	else
+		m_eState = DEFAULT;
+
 }
 
 CBone* CMain_Camera::Find_TargetBone(CModel* pModel)
@@ -177,6 +200,14 @@ void CMain_Camera::LockOn_State(_float fTimeDelta)
 	Follow_Target(fTimeDelta);
 
 	Set_CursorToCenter(g_hWnd, g_iWinSizeX, g_iWinSizeY);
+}
+
+void CMain_Camera::Cutscene_State(_float fTimeDelta)
+{
+	_matrix PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f));
+	PivotMatrix *= XMMatrixRotationAxis(PivotMatrix.r[1], XMConvertToRadians(90.f));
+
+	m_pTransform->Attach_To_Bone(m_pCutsceneBone, m_pCutsceneTargetTransform, PivotMatrix);
 }
 
 
@@ -270,5 +301,7 @@ void CMain_Camera::Free()
 	Safe_Release(m_pPlayerTransform);
 	Safe_Release(m_pTargetTransform);
 	Safe_Release(m_pTargetBone);
-	
+
+	Safe_Release(m_pCutsceneTargetTransform);
+	Safe_Release(m_pCutsceneBone);
 }

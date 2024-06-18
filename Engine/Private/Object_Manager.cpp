@@ -69,12 +69,25 @@ CGameObject* CObject_Manager::Add_Clone(_uint iLevelIndex, const wstring & strLa
 	return pGameObject;
 }
 
-void CObject_Manager::Destroy_Objects()
+CGameObject* CObject_Manager::Clone_GameObject(const wstring& strPrototypeTag, void* pArg)
+{
+	CGameObject* pPrototype = Find_Prototype(strPrototypeTag);
+	if (nullptr == pPrototype)
+		return nullptr;
+
+	CGameObject* pGameObject = pPrototype->Clone(pArg);
+	if (nullptr == pGameObject)
+		return nullptr;
+
+	return pGameObject;
+}
+
+void CObject_Manager::Manage_LifeCycle()
 {
 	for (size_t i = 0; i < m_iNumLevels; i++)
 	{
 		for (auto& Pair : m_pLayers[i])
-			Pair.second->Destroy_Objects();
+			Pair.second->Manage_LifeCycle();
 	}
 }
 
@@ -160,6 +173,8 @@ void CObject_Manager::Insert_GameObject(_uint iLevelIndex, const wstring& strLay
 	}
 	else
 		pLayer->Add_GameObject(pObj);
+
+	Safe_AddRef(pObj);
 
 }
 

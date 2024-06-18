@@ -1,4 +1,5 @@
 #include "Transform.h"
+#include "Bone.h"
 
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -106,9 +107,7 @@ void CTransform::Go_Root(_fvector vDeltaRoot, _fvector vLook)
 void CTransform::Move_Root(_fvector vDeltaRoot)
 {
 	_vector vPos = Get_Position();
-
 	vPos += XMVectorGetX(vDeltaRoot) * Get_Right() + XMVectorGetY(vDeltaRoot) * Get_Up() + XMVectorGetZ(vDeltaRoot) * Get_Look();
-
 	Set_Position(vPos);
 }
 
@@ -258,6 +257,32 @@ void CTransform::Add_YAxisInput(_float fRadian)
 	Set_State(STATE_RIGHT, vRight);
 	Set_State(STATE_UP, vUp);
 	Set_State(STATE_LOOK, vLook);
+}
+
+void CTransform::Attach_To_Bone(CBone* pBone, CTransform* pParentTransform, _fmatrix PivotMatrix, _bool bOnlyPosition)
+{
+	_matrix SocketMatrix =  pBone->Get_CombinedTransformation();
+	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+	SocketMatrix = PivotMatrix * SocketMatrix * pParentTransform->Get_WorldMatrix();
+
+	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
+
+	WorldMatrix.r[3] = SocketMatrix.r[3];
+
+	if (bOnlyPosition)
+	{
+		XMStoreFloat4x4(&m_WorldMatrix, SocketMatrix);
+		return;
+	}
+	
+	WorldMatrix.r[0] = SocketMatrix.r[0];
+	WorldMatrix.r[1] = SocketMatrix.r[1];
+	WorldMatrix.r[2] = SocketMatrix.r[2];
+
+	XMStoreFloat4x4(&m_WorldMatrix, SocketMatrix);
 }
 
 

@@ -211,6 +211,30 @@
     <Filter Include="02. GameObjects\02. Character\03. Enemy\Stats">
       <UniqueIdentifier>{58435bba-5ebc-4e65-ad6a-9fc346159b58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\09. OdurState_ThrowCard">
+      <UniqueIdentifier>{6437b6db-fbc3-4022-80b0-6c6ebb639cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\Card">
+      <UniqueIdentifier>{efbeaa55-c1cc-41b9-8915-deace3b9e3f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Player\State\98. PlayerState_Executed">
+      <UniqueIdentifier>{9f58949f-a326-42fb-8bde-feacdf319462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Player\State\99. PlayerState_Cutscene">
+      <UniqueIdentifier>{dfaac50f-ceee-44fb-b441-2ceb73289741}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Player\State\97. PlayerState_Finish">
+      <UniqueIdentifier>{f771ba8d-7a6c-4a71-b6f4-6367e081ba84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\10. OdurState_Execute">
+      <UniqueIdentifier>{836b4406-3f56-4c53-87f6-77095a72c157}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\11. OdurState_Finished">
+      <UniqueIdentifier>{d0873048-d6db-47c3-bf58-a1dd3db8f270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\10. OdurState_Execute\OdurState_ReadyExecution">
+      <UniqueIdentifier>{38425856-a3a2-4e4b-8270-f6fda4a01ceb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -408,6 +432,27 @@
     <ClInclude Include="..\Public\EnemyStats.h">
       <Filter>02. GameObjects\02. Character\03. Enemy\Stats</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\OdurState_ThrowCard.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\09. OdurState_ThrowCard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Odur_Card.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\Card</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Cutscene.h">
+      <Filter>02. GameObjects\02. Character\02. Player\State\99. PlayerState_Cutscene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Finish.h">
+      <Filter>02. GameObjects\02. Character\02. Player\State\97. PlayerState_Finish</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Executed.h">
+      <Filter>02. GameObjects\02. Character\02. Player\State\98. PlayerState_Executed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Execute.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\10. OdurState_Execute</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_ReadyExecution.h">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\10. OdurState_Execute\OdurState_ReadyExecution</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -497,9 +542,6 @@
     <ClCompile Include="..\Private\PlayerStat.cpp">
       <Filter>02. GameObjects\02. Character\02. Player\PlayerStat</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Odur.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Enemy.cpp">
       <Filter>02. GameObjects\02. Character\03. Enemy</Filter>
     </ClCompile>
@@ -568,6 +610,30 @@
     </ClCompile>
     <ClCompile Include="..\Private\EnemyStats.cpp">
       <Filter>02. GameObjects\02. Character\03. Enemy\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_ThrowCard.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\09. OdurState_ThrowCard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Odur_Card.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\Card</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Odur.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Cutscene.cpp">
+      <Filter>02. GameObjects\02. Character\02. Player\State\99. PlayerState_Cutscene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Finish.cpp">
+      <Filter>02. GameObjects\02. Character\02. Player\State\97. PlayerState_Finish</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Executed.cpp">
+      <Filter>02. GameObjects\02. Character\02. Player\State\98. PlayerState_Executed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_Execute.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\10. OdurState_Execute</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_ReadyExecution.cpp">
+      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\Odur\State\10. OdurState_Execute\OdurState_ReadyExecution</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -27,7 +27,6 @@ protected:
 	_bool Check_StateChange(PlayerState eState);
 	PlayerState Decide_State();
 
-
 protected:
 	CPlayer*			m_pPlayer = { nullptr };
 	CMain_Camera*		m_pMain_Camera = { nullptr };

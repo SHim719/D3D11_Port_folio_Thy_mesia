@@ -299,5 +299,8 @@ enum class PlayerState
 	State_ParrySuccess,
 	State_Hit,
 	State_Parried,
+	State_Executed,
+	State_Finish,
+	State_Cutscene,
 	State_End,
 };

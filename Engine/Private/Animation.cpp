@@ -188,10 +188,6 @@ void CAnimation::Check_KeyFrameEvent()
 		if (true == m_bCheckKeyFrames[i])
 			continue;
 
-		if (m_strAnimName == "Magician_ParryAttack01")
-		{
-			cout << "i:" << i << "PrevKeyFrame: " << m_iPrevKeyFrame << "NowKeyFrame: " << iNowKeyFrame << endl;
-		}
 		auto Pair = m_KeyFrameEvents.equal_range(i);
 		if (m_KeyFrameEvents.end() != Pair.first)
 		{

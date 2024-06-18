@@ -57,6 +57,17 @@ public:
 		m_iAttackIdx = 0;
 	}
 
+	void Active_Colliders() {
+		m_pCollider->Set_Active(true);
+		m_pHitBoxCollider->Set_Active(true);
+	}
+
+	void Inactive_Colliders() {
+		m_pCollider->Set_Active(false);
+		m_pHitBoxCollider->Set_Active(false);
+	}
+
+
 
 protected:
 	CShader*	m_pShader = { nullptr };

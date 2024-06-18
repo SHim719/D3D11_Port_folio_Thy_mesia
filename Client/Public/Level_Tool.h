@@ -18,6 +18,7 @@ public:
 	HRESULT Render()				override;
 
 private:
+	HRESULT Ready_Camera();
 	HRESULT Ready_Player();
 	HRESULT Ready_Odur();
 

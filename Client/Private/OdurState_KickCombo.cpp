@@ -26,7 +26,6 @@ void COdurState_KickCombo::OnGoing(_float fTimeDelta)
 	{
 		m_pOdur->Swap_Bone();
 		//m_pOdur->Change_State((_uint)OdurState::State_DisappearMove);
-		m_pOdur->Change_State((_uint)OdurState::State_Walk);
 		return;
 	}
 

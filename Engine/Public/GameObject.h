@@ -18,13 +18,20 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
+
 	virtual void OnActive();
 	virtual void OnInActive();
+
 	virtual void PriorityTick(_float fTimeDelta);
 	virtual void Tick(_float fTimeDelta);
 	virtual void LateTick(_float fTimeDelta);
-	virtual HRESULT Render();
 
+	virtual HRESULT Render();
+public:
+	HRESULT Add_PoolingObject_To_Layer(const wstring& wstrLayer, void* pArg);
+	virtual HRESULT OnEnter_Layer(void* pArg);
+
+	
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
@@ -56,17 +63,31 @@ protected:
 	_bool m_bActive = { true };
 	_bool m_bCreatedThisFrame = { true };
 
+	_bool m_bReturnToPool = { false }; // For Object Pool
+
 	_uint m_iTag = 0;
 public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
-	_bool Is_Destroyed() { return m_bDestroyed; }
+	_bool Is_Destroyed() { 
+		return m_bDestroyed; }
 
 	void Set_Active(_bool b);
-	_bool Is_Active() { return m_bActive; }
+	_bool Is_Active() { 
+		return m_bActive; }
 
-	_bool Is_CreatedThisFrame() const { return m_bCreatedThisFrame; }
+	_bool Is_CreatedThisFrame() const { 
+		return m_bCreatedThisFrame; }
 
 	_uint Get_Tag() const { return m_iTag; }
+
+	_bool Is_OutOfLayer() const {
+		return m_bDestroyed || m_bReturnToPool;
+	}
+
+	_bool Is_ReturnToPool() const {
+		return m_bReturnToPool;
+	}
+
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	virtual void Free() override;

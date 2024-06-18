@@ -23,8 +23,8 @@ protected:
 protected:
 	_bool			m_bCardPattern = { false };
 
-public:
-	void Decide_State();
+protected:
+	virtual void Decide_State();
 
 public:
 	void Free() override;

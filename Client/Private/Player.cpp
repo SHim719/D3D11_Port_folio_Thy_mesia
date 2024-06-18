@@ -53,6 +53,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
+
 	if (m_pGameInstance->GetKeyNone(eKeyCode::RButton))
 		m_States[m_iState]->OnGoing(fTimeDelta);
 
@@ -143,6 +144,7 @@ void CPlayer::Inactive_AllWeaponColliders()
 	}
 }
 
+
 void CPlayer::Toggle_LockOn(CTransform* pTargetTransform)
 {
 	m_bLockOn = !m_bLockOn;
@@ -157,6 +159,11 @@ void CPlayer::Toggle_LockOn(CTransform* pTargetTransform)
 void CPlayer::SetState_Parried()
 {
 	Change_State((_uint)PlayerState::State_Parried);
+}
+
+void CPlayer::SetState_Executed(void* pArg)
+{
+	Change_State((_uint)PlayerState::State_Executed, pArg);
 }
 
 void CPlayer::OnCollisionEnter(CGameObject* pOther)
@@ -209,7 +216,7 @@ HRESULT CPlayer::Ready_Components()
 	Desc.vRotation = { 0.f, 0.f, 0.f };
 	Desc.bActive = true;
 	Desc.strCollisionLayer = "Player_HitBox";
-
+	
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
 		return E_FAIL;
 
@@ -232,6 +239,8 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_ParrySuccess] = CPlayerState_ParrySuccess::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Hit] = CPlayerState_Hit::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Parried] = CPlayerState_Parried::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Executed] = CPlayerState_Executed::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Finish] = CPlayerState_Finish::Create(m_pDevice, m_pContext, this);
 	
 	return S_OK;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Character.h"
+#include "EnemyStats.h"
 
 BEGIN(Client)
 

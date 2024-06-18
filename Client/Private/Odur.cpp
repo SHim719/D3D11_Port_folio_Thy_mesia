@@ -43,13 +43,13 @@ HRESULT COdur::Initialize(void* pArg)
 void COdur::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::T))
-		Change_State((_uint)OdurState::State_DisappearWalk);
+		Change_State((_uint)OdurState::State_ReadyExecution);
 
 	if (m_bLookTarget)
 	{
 		m_pTransform->Rotation_Quaternion(
 			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
-				, JoMath::Calc_GroundLook(m_pTransform->Get_Position(), s_pTarget->Get_Transform()->Get_Position())
+				, JoMath::Calc_GroundLook(s_pTarget->Get_Transform()->Get_Position(), m_pTransform->Get_Position())
 				, m_fRotRate * fTimeDelta));
 	}
 
@@ -155,6 +155,7 @@ void COdur::Update_WeaponAlpha()
 		pWeapon->Set_Alpha(m_fAlpha);
 }
 
+
 void COdur::OnCollisionEnter(CGameObject* pOther)
 {
 	__super::OnCollisionEnter(pOther);
@@ -163,6 +164,8 @@ void COdur::OnCollisionEnter(CGameObject* pOther)
 	{
 		if (false == m_bStanced)
 			m_States[m_iState]->OnHit(nullptr);
+
+
 	}
 
 }
@@ -229,6 +232,9 @@ HRESULT COdur::Ready_States()
 	m_States[(_uint)OdurState::State_DisappearWalk] = COdurState_DisappearWalk::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_DisappearMove] = COdurState_DisappearMove::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_Appear] = COdurState_Appear::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_ThrowCard] = COdurState_ThrowCard::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_ReadyExecution] = COdurState_ReadyExecution::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Execute] = COdurState_Execute::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }

@@ -31,14 +31,13 @@ private:
 
 private:
 	CBone*	m_pSwapBone = { nullptr };
-	_float	m_fRotRate = { 15.f };
+	_float	m_fRotRate = { 8.f };
 
 	_float	m_fAlpha = { 1.f };
 	_float	m_fDeltaAlphaSpeed = { 2.f };
 	_bool	m_bAlphaEnable = { false };
 	_bool	m_bAlphaIncrease = { false };
 
-	
 public:
 	void Swap_Bone();
 
@@ -57,6 +56,7 @@ public:
 private:
 	void Update_Alpha(_float fTimeDelta);
 	void Update_WeaponAlpha();
+
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;

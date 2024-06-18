@@ -1,5 +1,12 @@
 #pragma once
 
+namespace Engine
+{
+	class CBone;
+	class CTransform;
+}
+
+
 namespace Client
 {
 	enum ATTACKTYPE
@@ -8,6 +15,8 @@ namespace Client
 		NORMAL,
 		SEMIKNOCKBACK,
 		KNOCKBACK,
+		BIG_HIT,
+		VERY_BIG_HIT,
 	};
 
 	typedef struct tagAttackDesc
@@ -21,4 +30,17 @@ namespace Client
 	{
 		int iMaxHp;
 	}ENEMYDESC;
+
+	typedef struct tagAttachDesc
+	{
+		Engine::CBone*			pAttachBone = nullptr;
+		Engine::CTransform*		pParentTransform = nullptr;
+	}ATTACHDESC;
+
+
+	typedef struct tagExecutedDesc
+	{
+		tagAttachDesc			AttachDesc;
+		unsigned int			iExecutedAnimIndex = 0;
+	}EXECUTEDDESC;
 }

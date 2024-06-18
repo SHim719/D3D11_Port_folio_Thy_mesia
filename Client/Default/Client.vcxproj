@@ -191,6 +191,9 @@
     <ClInclude Include="..\Public\OdurState_Base.h" />
     <ClInclude Include="..\Public\OdurState_CaneAttack1.h" />
     <ClInclude Include="..\Public\OdurState_CaneAttack2.h" />
+    <ClInclude Include="..\Public\OdurState_Execute.h" />
+    <ClInclude Include="..\Public\OdurState_ReadyExecution.h" />
+    <ClInclude Include="..\Public\OdurState_ThrowCard.h" />
     <ClInclude Include="..\Public\OdurState_DisappearMove.h" />
     <ClInclude Include="..\Public\OdurState_DisappearWalk.h" />
     <ClInclude Include="..\Public\OdurState_Hit.h" />
@@ -198,6 +201,7 @@
     <ClInclude Include="..\Public\OdurState_KickCombo.h" />
     <ClInclude Include="..\Public\OdurState_Parry.h" />
     <ClInclude Include="..\Public\OdurState_Walk.h" />
+    <ClInclude Include="..\Public\Odur_Card.h" />
     <ClInclude Include="..\Public\Odur_Enums.h" />
     <ClInclude Include="..\Public\Odur_States.h" />
     <ClInclude Include="..\Public\Player.h" />
@@ -205,6 +209,9 @@
     <ClInclude Include="..\Public\PlayerState_Attack.h" />
     <ClInclude Include="..\Public\PlayerState_Avoid.h" />
     <ClInclude Include="..\Public\PlayerState_Base.h" />
+    <ClInclude Include="..\Public\PlayerState_Cutscene.h" />
+    <ClInclude Include="..\Public\PlayerState_Executed.h" />
+    <ClInclude Include="..\Public\PlayerState_Finish.h" />
     <ClInclude Include="..\Public\PlayerState_Hit.h" />
     <ClInclude Include="..\Public\PlayerState_Jog.h" />
     <ClInclude Include="..\Public\PlayerState_LockOn.h" />
@@ -253,6 +260,9 @@
     <ClCompile Include="..\Private\OdurState_Base.cpp" />
     <ClCompile Include="..\Private\OdurState_CaneAttack1.cpp" />
     <ClCompile Include="..\Private\OdurState_CaneAttack2.cpp" />
+    <ClCompile Include="..\Private\OdurState_Execute.cpp" />
+    <ClCompile Include="..\Private\OdurState_ReadyExecution.cpp" />
+    <ClCompile Include="..\Private\OdurState_ThrowCard.cpp" />
     <ClCompile Include="..\Private\OdurState_DisappearMove.cpp" />
     <ClCompile Include="..\Private\OdurState_DisappearWalk.cpp" />
     <ClCompile Include="..\Private\OdurState_Hit.cpp" />
@@ -260,11 +270,15 @@
     <ClCompile Include="..\Private\OdurState_KickCombo.cpp" />
     <ClCompile Include="..\Private\OdurState_Parry.cpp" />
     <ClCompile Include="..\Private\OdurState_Walk.cpp" />
+    <ClCompile Include="..\Private\Odur_Card.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerStat.cpp" />
     <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
     <ClCompile Include="..\Private\PlayerState_Avoid.cpp" />
     <ClCompile Include="..\Private\PlayerState_Base.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Cutscene.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Executed.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Finish.cpp" />
     <ClCompile Include="..\Private\PlayerState_Hit.cpp" />
     <ClCompile Include="..\Private\PlayerState_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_Jog.cpp" />

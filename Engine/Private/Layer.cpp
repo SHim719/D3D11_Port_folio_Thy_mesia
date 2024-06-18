@@ -14,13 +14,13 @@ HRESULT CLayer::Add_GameObject(CGameObject * pGameObject)
 	return S_OK;
 }
 
-void CLayer::Destroy_Objects()
+void CLayer::Manage_LifeCycle()
 {
 	for (auto it = m_GameObjects.begin(); it != m_GameObjects.end(); )
 	{
 		if (nullptr != *it)
 		{
-			if ((*it)->Is_Destroyed())
+			if ((*it)->Is_OutOfLayer())
 			{
 				Safe_Release(*it);
 				it = m_GameObjects.erase(it);

@@ -43,6 +43,13 @@ void CGameObject::OnInActive()
 {
 }
 
+HRESULT CGameObject::OnEnter_Layer(void* pArg)
+{
+	m_bReturnToPool = false;
+
+	return S_OK;
+}
+
 void CGameObject::PriorityTick(_float fTimeDelta)
 {
 	if (m_bCreatedThisFrame)
@@ -62,6 +69,18 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+HRESULT CGameObject::Add_PoolingObject_To_Layer(const wstring& wstrLayer, void* pArg)
+{
+	if (FAILED(OnEnter_Layer(pArg)))
+		return E_FAIL;
+
+	m_bReturnToPool = false;
+
+	m_pGameInstance->Insert_GameObject(m_pGameInstance->Get_CurrentLevelID(), wstrLayer, this);
+
+	return S_OK;
+}
+
 HRESULT CGameObject::Add_Component(_uint iPrototoypeLevelIndex, const wstring& strPrototypeTag, const wstring& strComponentTag, CComponent** ppOut, void* pArg)
 {
 	if (nullptr != Find_Component(strComponentTag))
@@ -73,9 +92,11 @@ HRESULT CGameObject::Add_Component(_uint iPrototoypeLevelIndex, const wstring& s
 
 	m_Components.emplace(strComponentTag, pComponent);
 
-	*ppOut = pComponent;
-
-	Safe_AddRef(pComponent);
+	if (nullptr != ppOut)
+	{
+		*ppOut = pComponent;
+		Safe_AddRef(pComponent);
+	}
 
 	return S_OK;
 }

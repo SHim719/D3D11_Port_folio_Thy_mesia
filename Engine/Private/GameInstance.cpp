@@ -64,7 +64,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 		nullptr == m_pObject_Manager)
 		return;
 	
-	m_pObject_Manager->Destroy_Objects();
+	m_pObject_Manager->Manage_LifeCycle();
 
 	m_pKey_Manager->Update();
 
@@ -193,6 +193,14 @@ CGameObject* CGameInstance::Add_Clone(_uint iLevelIndex, const wstring & strLaye
 		return nullptr;
 
 	return m_pObject_Manager->Add_Clone(iLevelIndex, strLayerTag, strPrototypeTag, pArg);
+}
+
+CGameObject* CGameInstance::Clone_GameObject(const wstring& strPrototypeTag, void* pArg)
+{
+	if (nullptr == m_pObject_Manager)
+		return nullptr;
+
+	return m_pObject_Manager->Clone_GameObject(strPrototypeTag, pArg);
 }
 
 CComponent* CGameInstance::Find_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex)
