@@ -83,11 +83,11 @@ void CAABB::Remake_Collider(COLLIDERDESC* pColliderDesc)
 	m_pAABB = new BoundingBox(*m_pOriginal_AABB);
 }
 
-void CAABB::Render()
+HRESULT CAABB::Render()
 {
 #ifdef _DEBUG
 	if (false == m_bActive)
-		return;
+		return E_FAIL;
 
 	__super::Render();
 
@@ -97,6 +97,7 @@ void CAABB::Render()
 
 	m_pBatch->End();
 #endif
+	return S_OK;
 }
 
 CAABB* CAABB::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

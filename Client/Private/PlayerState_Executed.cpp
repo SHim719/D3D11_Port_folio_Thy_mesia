@@ -49,13 +49,9 @@ void CPlayerState_Executed::OnGoing(_float fTimeDelta)
 		return;
 	}
 
-	//LocalMat *= XMMatrixRotationX(XMConvertToRadians(-90.f));
-	//LocalMat *= XMMatrixRotationAxis(LocalMat.r[1], XMConvertToRadians(90.f));
-	_matrix PivotMatrix = XMMatrixRotationX(To_Radian(-90.f));
-	//PivotMatrix *= XMMatrixRotationAxis(PivotMatrix.r[1], To_Radian(.f));
+	_matrix CutsceneOffsetMatrix = XMMatrixRotationX(To_Radian(-90.f));
 
-
-	m_pOwnerTransform->Attach_To_Bone(m_ExecutedDesc.AttachDesc.pAttachBone, m_ExecutedDesc.AttachDesc.pParentTransform, PivotMatrix);
+	m_pOwnerTransform->Attach_To_Bone(m_ExecutedDesc.AttachDesc.pAttachBone, m_ExecutedDesc.AttachDesc.pParentTransform, CutsceneOffsetMatrix);
 }
 
 

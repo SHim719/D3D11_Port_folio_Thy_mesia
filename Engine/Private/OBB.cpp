@@ -101,11 +101,11 @@ void COBB::Remake_Collider(COLLIDERDESC* pColliderDesc)
 }
 
 
-void COBB::Render()
+HRESULT COBB::Render()
 {
 #ifdef _DEBUG
 	if (false == m_bActive)
-		return;
+		return E_FAIL;
 
 	__super::Render();
 
@@ -115,6 +115,8 @@ void COBB::Render()
 
 	m_pBatch->End();
 #endif 
+
+	return S_OK;
 }
 
 

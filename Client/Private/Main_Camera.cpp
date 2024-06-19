@@ -23,7 +23,12 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) 
 		return E_FAIL;
 
-	
+	_matrix OffsetMatrix = XMMatrixRotationX(To_Radian(-90.f));
+	OffsetMatrix *= XMMatrixRotationAxis(OffsetMatrix.r[1], To_Radian(90.f));
+
+	XMStoreFloat4x4(&m_CutsceneOffsetMatrix, OffsetMatrix);
+
+
 	return S_OK;
 }
 
@@ -204,10 +209,7 @@ void CMain_Camera::LockOn_State(_float fTimeDelta)
 
 void CMain_Camera::Cutscene_State(_float fTimeDelta)
 {
-	_matrix PivotMatrix = XMMatrixRotationX(XMConvertToRadians(-90.f));
-	PivotMatrix *= XMMatrixRotationAxis(PivotMatrix.r[1], XMConvertToRadians(90.f));
-
-	m_pTransform->Attach_To_Bone(m_pCutsceneBone, m_pCutsceneTargetTransform, PivotMatrix);
+	m_pTransform->Attach_To_Bone(m_pCutsceneBone, m_pCutsceneTargetTransform, XMLoadFloat4x4(&m_CutsceneOffsetMatrix));
 }
 
 

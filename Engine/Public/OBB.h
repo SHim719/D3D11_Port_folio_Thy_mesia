@@ -25,7 +25,7 @@ public:
 	
 														
 public:
-	void Render() override;
+	HRESULT Render() override;
 
 
 private:

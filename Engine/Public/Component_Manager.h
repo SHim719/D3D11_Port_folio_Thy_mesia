@@ -8,7 +8,11 @@
 #include "Transform.h"
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Point.h"
+#include "VIBuffer_Cell.h"
+#include "VIBuffer_Sphere.h"
 #include "Model.h"
+
+#include "Navigation.h"
 
 #include "AABB.h"
 #include "OBB.h"

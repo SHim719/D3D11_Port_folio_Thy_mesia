@@ -38,6 +38,7 @@ private:
 	_bool	m_bAlphaEnable = { false };
 	_bool	m_bAlphaIncrease = { false };
 
+	_bool  m_bCardPattern = { false };
 public:
 	void Swap_Bone();
 
@@ -51,6 +52,14 @@ public:
 
 	void Set_Alpha(_float fAlpha) {
 		m_fAlpha = fAlpha; Update_WeaponAlpha();
+	}
+
+	_bool Is_CardPattern() const {
+		return m_bCardPattern;
+	}
+
+	void Set_CardPattern(_bool bCardPattern) {
+		m_bCardPattern = m_bCardPattern;
 	}
 
 private:

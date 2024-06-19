@@ -14,12 +14,14 @@ protected:
 public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
+	virtual HRESULT Render();
 
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
-
 	_bool					m_bIsCloned = false;
+
+	class CGameInstance*	m_pGameInstance = nullptr;
 
 public:	
 	virtual CComponent* Clone(void* pArg) = 0;	

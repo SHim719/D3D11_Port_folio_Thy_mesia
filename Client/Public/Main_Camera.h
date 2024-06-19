@@ -36,6 +36,7 @@ private:
 
 	CBone*				m_pCutsceneBone = { nullptr };
 	CTransform*			m_pCutsceneTargetTransform = { nullptr };
+	_float4x4			m_CutsceneOffsetMatrix;
 	
 	_float4				m_vOffset = { 0.f, 2.0f, -2.8f, 0.f };
 	_float4				m_vPrevTargetPos = {};

@@ -20,6 +20,7 @@ public:
 
 	HRESULT Render_Picking(_int iSelectIdx);
 
+	_bool Ray_Cast(_fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist);
 private:
 	CShader*	m_pShader = nullptr;
 	CModel*		m_pModel = nullptr;

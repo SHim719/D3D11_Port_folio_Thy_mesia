@@ -2,6 +2,8 @@
 #include "Model.h"
 #include "Bone.h"
 
+#include "Transform.h"
+
 CMeshContainer::CMeshContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVIBuffer(pDevice, pContext)
 {
@@ -51,6 +53,34 @@ HRESULT CMeshContainer::Initialize(ifstream& fin, CModel::TYPE eType)
 #pragma endregion 
 
 	return S_OK;
+}
+
+_bool CMeshContainer::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
+{
+	// Static Model에대해서만진행
+	//m_pModelVertices
+	//m_pIndices
+
+	_vector vRayStartLocalPos = XMVector3TransformCoord(vRayStartPos, InvWorldMat);
+	_vector vRayLocalDir = XMVector3TransformNormal(vRayDir, InvWorldMat);
+
+	for (_uint i = 0; i < m_iNumPrimitives; ++i)
+	{
+		_bool bResult = DirectX::TriangleTests::Intersects(vRayStartLocalPos, vRayLocalDir
+			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._0].vPosition), 1.f)
+			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._1].vPosition), 1.f)
+			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._2].vPosition), 1.f)
+			, fDist);
+
+		if (bResult)
+		{
+			_vector _vPickedPos = vRayStartPos + vRayDir * fDist;
+			XMStoreFloat4(&vPickedPos, _vPickedPos);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 

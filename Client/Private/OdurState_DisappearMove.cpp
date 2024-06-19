@@ -45,7 +45,11 @@ void COdurState_DisappearMove::Decide_Animation()
 	// 카드던지는 패턴 구분해서 만들기
 	m_iDir = 0;
 
-	if (m_bCardPattern)
+	_bool bCardPattern = (_bool)JoRandom::Random_Int(0, 1);
+
+	m_pOdur->Set_CardPattern(bCardPattern);
+
+	if (bCardPattern)
 	{
 		m_iDir = JoRandom::Random_Int(1, 3);
 

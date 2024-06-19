@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+class CNavigation;
+
 class ENGINE_DLL CTransform final : public CComponent
 {
 public:
@@ -89,15 +91,15 @@ public:
 	HRESULT Initialize(void* pArg = nullptr)	override;
 
 public:
-	void Go_Straight(_float fTimeDelta);
-	void Go_Backward(_float fTimeDelta);
-	void Go_Left(_float fTimeDelta);
-	void Go_Right(_float fTimeDelta);
+	void Go_Straight(_float fTimeDelta, CNavigation* pNavigation = nullptr);
+	void Go_Backward(_float fTimeDelta, CNavigation* pNavigation = nullptr);
+	void Go_Left(_float fTimeDelta, CNavigation* pNavigation = nullptr);
+	void Go_Right(_float fTimeDelta, CNavigation* pNavigation = nullptr);
 	void Go_Up(_float fTimeDelta);
 	void Go_Down(_float fTimeDelta);
-	void Go_Dir(_fvector vDir, _float fTimeDelta);
-	void Go_Root(_fvector vDeltaRoot, _fvector vLook);
-	void Move_Root(_fvector vDeltaRoot);
+	void Go_Dir(_fvector vDir, _float fTimeDelta, CNavigation* pNavigation = nullptr);
+	void Go_Root(_fvector vDeltaRoot, _fvector vLook, CNavigation* pNavigation = nullptr);
+	void Move_Root(_fvector vDeltaRoot, CNavigation* pNavigation = nullptr);
 
 	void Set_Scale(_float3 vScale);
 	_float3 Get_Scale() const;
@@ -119,7 +121,7 @@ public:
 	void Set_MoveLook(_fvector vLook) { XMStoreFloat4(&m_vMoveLook, vLook); }
 	_vector Get_MoveLook() const { return XMLoadFloat4(&m_vMoveLook); }
 	
-	void Attach_To_Bone(class CBone* pBone, CTransform* pParentTransform, _fmatrix PivotMatrix = XMMatrixIdentity(), _bool bOnlyPosition = false);
+	void Attach_To_Bone(class CBone* pBone, CTransform* pParentTransform, _fmatrix OffsetMatrix = XMMatrixIdentity(), _bool bOnlyPosition = false);
 
 private:
 	_float4x4				m_WorldMatrix;
@@ -128,8 +130,8 @@ private:
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CComponent* Clone(void* pArg = nullptr) override;
-	virtual void Free() override;
+	CComponent* Clone(void* pArg = nullptr) override;
+	void Free() override;
 };
 
 END

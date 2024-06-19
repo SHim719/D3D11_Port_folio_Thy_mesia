@@ -20,7 +20,6 @@ private:
 	HRESULT Ready_Picking();
 
 private:
-	void Key_Input();
 	void Main_Window();
 	void Camera_Window() override;
 
@@ -32,16 +31,20 @@ private:
 	void Menu_Bar();
 	void TabBar();
 
+#pragma region MapTool
+	void Map_Tool();
+	void Key_Input();
 	void Destroy_MapObjects();
 	void Transform_View();
 	void Placable_Object();
 	void ForObject_Buttons(ImVec2 vNowCursorPos);
 	void Object_ListBox();
+
 private:
-	vector<string>								m_strPlacable_Objects;
-	vector<CToolMapObj*>						m_MapObjects;
-	vector<string>								m_strCreatedObjects;
-	unordered_multimap<string, CToolMapObj*>	m_MapLayers; // 나중에 얘 데이터로 저장할거임.
+	vector<string>										m_strPlacable_Objects;
+	vector<CToolMapObj*>								m_MapObjects;
+	vector<string>										m_strCreatedObjects;
+	unordered_multimap<string, CToolMapObj*>			m_MapLayers; // 나중에 얘 데이터로 저장할거임.
 
 	_int m_iSelPlacableObj = 0;
 	_int m_iSelObj = -1;
@@ -74,6 +77,25 @@ private:
 	void Transform_Gizmo();
 #pragma endregion
 
+#pragma endregion MapTool
+
+
+#pragma region NaviTool
+private:
+	void Navi_Tool();
+	void Navi_Tool_Options();
+	void Navi_ListBox();
+	void Navi_Picking();
+private:
+	_bool m_bPickingNaviMesh = { false };
+
+	vector<class CToolNaviCell*>	m_CreatedCells;
+	CToolNaviCell*					m_NowCreatingCell = { nullptr };
+	_int							m_iSelCellIdx = { 0 };
+
+#pragma endregion NaviTool
+
+
 #pragma region Picking
 private:
 
@@ -83,10 +105,14 @@ private:
 	ID3D11Texture2D*		m_pPickingTexture = nullptr;
 
 	_bool					m_bCanPick = false;
-	void Picking();
+	void Object_Picking();
 	_int Picking_Object();
 
 #pragma endregion
+
+
+private:
+	
 
 
 public:

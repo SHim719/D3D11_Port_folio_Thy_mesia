@@ -26,7 +26,7 @@ public:
 
 #ifdef _DEBUG
 public:
-	void Render() override;
+	HRESULT Render() override;
 #endif 
 
 private:

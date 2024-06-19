@@ -16,6 +16,8 @@ public:
 	void OnState_End()					override;
 
 private:
+	void Decide_State()					override;
+
 	void Decide_Animation(void* pArg);
 
 public:

@@ -27,16 +27,14 @@ protected:
 	virtual ~CCollider() = default;
 
 public:
-	virtual HRESULT Initialize_Prototype();
-	virtual HRESULT Initialize(void* pArg);
-	virtual void Update(_fmatrix TransformMatrix);
+	HRESULT Initialize_Prototype()		override;
+	HRESULT Initialize(void* pArg)		override;
+	HRESULT Render()					override;
 
-	virtual void Render();
+	virtual void Update(_fmatrix TransformMatrix);
 
 	virtual _bool Intersects(CCollider* pTargetCollider) PURE;
 	virtual void Remake_Collider(COLLIDERDESC* pColliderDesc) PURE;
-protected:
-	class CGameInstance* m_pGameInstance = { nullptr };
 
 protected:
 	static _uint		iCollisionID;

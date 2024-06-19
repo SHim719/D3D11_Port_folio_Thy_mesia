@@ -142,6 +142,18 @@
     <Filter Include="01.Utility\99. Managers\07. Collision_Manager">
       <UniqueIdentifier>{1578386f-92e5-4659-903d-84063dd8188b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03. Components\07. Navigation">
+      <UniqueIdentifier>{06a1b721-c2c1-4342-8152-6b255a95cf63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\07. Navigation\Cell">
+      <UniqueIdentifier>{d7b26047-6f23-43ab-9f09-9ec0b7bd98b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\03. VIBuffer\02. Cell">
+      <UniqueIdentifier>{78e79bdb-1e5a-47e6-8f13-292cd36324da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\03. VIBuffer\03. Sphere">
+      <UniqueIdentifier>{29a7eadd-6eb9-42cd-8650-2943ed572605}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -288,6 +300,18 @@
     <ClInclude Include="..\Public\Collision_Manager.h">
       <Filter>01.Utility\99. Managers\07. Collision_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Navigation.h">
+      <Filter>01.Utility\03. Components\07. Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cell.h">
+      <Filter>01.Utility\03. Components\07. Navigation\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Cell.h">
+      <Filter>01.Utility\03. Components\03. VIBuffer\02. Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Sphere.h">
+      <Filter>01.Utility\03. Components\03. VIBuffer\03. Sphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -412,6 +436,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\Collision_Manager.cpp">
       <Filter>01.Utility\99. Managers\07. Collision_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Navigation.cpp">
+      <Filter>01.Utility\03. Components\07. Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cell.cpp">
+      <Filter>01.Utility\03. Components\07. Navigation\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Cell.cpp">
+      <Filter>01.Utility\03. Components\03. VIBuffer\02. Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Sphere.cpp">
+      <Filter>01.Utility\03. Components\03. VIBuffer\03. Sphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

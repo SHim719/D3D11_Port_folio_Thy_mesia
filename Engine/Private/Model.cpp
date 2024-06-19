@@ -186,6 +186,17 @@ void CModel::Set_PivotMatrix(_fmatrix PivotMatrix)
 	XMStoreFloat4x4(&m_PivotMatrix, PivotMatrix);
 }
 
+_bool CModel::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
+{
+	for (auto& pMesh : m_Meshes)
+	{
+		if (true == pMesh->Picking(InvWorldMat, vRayStartPos, vRayDir, vPickedPos, fDist))
+			return true;
+	}
+		
+	return false;
+}
+
 void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 {
 	if (iAnimIdx < (_uint)m_Animations.size())

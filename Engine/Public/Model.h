@@ -42,6 +42,8 @@ public:
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 
 	void Set_PivotMatrix(_fmatrix PivotMatrix);
+
+	_bool Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist);
 private:
 	_float4x4					m_PivotMatrix;
 	TYPE						m_eModelType = TYPE_END;

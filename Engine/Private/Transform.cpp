@@ -1,6 +1,8 @@
 #include "Transform.h"
 #include "Bone.h"
 
+#include "Navigation.h"
+
 CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 	, m_TransformDesc{}
@@ -40,36 +42,40 @@ HRESULT CTransform::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CTransform::Go_Straight(_float fTimeDelta)
+void CTransform::Go_Straight(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vPos = Get_Position();
 	vPos += Get_Look() * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_Position(vPos);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos))
+		Set_State(STATE_POSITION, vPos);
 }
 
-void CTransform::Go_Backward(_float fTimeDelta)
+void CTransform::Go_Backward(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vPos = Get_Position();
 	vPos -= Get_Look() * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_Position(vPos);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos))
+		Set_State(STATE_POSITION, vPos);
 }
 
-void CTransform::Go_Left(_float fTimeDelta)
+void CTransform::Go_Left(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vPos = Get_Position();
 	vPos -= Get_Right() * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_Position(vPos);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos))
+		Set_State(STATE_POSITION, vPos);
 }
 
-void CTransform::Go_Right(_float fTimeDelta)
+void CTransform::Go_Right(_float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vPos = Get_Position();
 	vPos += Get_Right() * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_Position(vPos);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos))
+		Set_State(STATE_POSITION, vPos);
 }
 
 void CTransform::Go_Up(_float fTimeDelta)
@@ -88,27 +94,31 @@ void CTransform::Go_Down(_float fTimeDelta)
 	Set_Position(vPos);
 }
 
-void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta)
+void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta, CNavigation* pNavigation)
 {
 	_vector vPos = Get_Position();
 	vPos += vDir * m_TransformDesc.fSpeedPerSec * fTimeDelta;
 
-	Set_Position(vPos);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos))
+		Set_State(STATE_POSITION, vPos);
 }
 
-void CTransform::Go_Root(_fvector vDeltaRoot, _fvector vLook)
+void CTransform::Go_Root(_fvector vDeltaRoot, _fvector vLook, CNavigation* pNavigation)
 {
 	_vector vPos = Get_Position();
 	vPos += XMVectorGetZ(vDeltaRoot) * vLook;
 
-	Set_Position(vPos);
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos))
+		Set_State(STATE_POSITION, vPos);
 }
 
-void CTransform::Move_Root(_fvector vDeltaRoot)
+void CTransform::Move_Root(_fvector vDeltaRoot, CNavigation* pNavigation)
 {
 	_vector vPos = Get_Position();
 	vPos += XMVectorGetX(vDeltaRoot) * Get_Right() + XMVectorGetY(vDeltaRoot) * Get_Up() + XMVectorGetZ(vDeltaRoot) * Get_Look();
-	Set_Position(vPos);
+
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos))
+		Set_State(STATE_POSITION, vPos);
 }
 
 void CTransform::Set_Scale(_float3 vScale)
@@ -259,14 +269,14 @@ void CTransform::Add_YAxisInput(_float fRadian)
 	Set_State(STATE_LOOK, vLook);
 }
 
-void CTransform::Attach_To_Bone(CBone* pBone, CTransform* pParentTransform, _fmatrix PivotMatrix, _bool bOnlyPosition)
+void CTransform::Attach_To_Bone(CBone* pBone, CTransform* pParentTransform, _fmatrix OffsetMatrix, _bool bOnlyPosition)
 {
 	_matrix SocketMatrix =  pBone->Get_CombinedTransformation();
 	SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
 	SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
 	SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
 
-	SocketMatrix = PivotMatrix * SocketMatrix * pParentTransform->Get_WorldMatrix();
+	SocketMatrix = OffsetMatrix * SocketMatrix * pParentTransform->Get_WorldMatrix();
 
 	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
 

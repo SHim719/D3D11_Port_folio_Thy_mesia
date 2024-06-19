@@ -19,6 +19,7 @@ private:
 public:
 	HRESULT Initialize(ifstream& fin, CModel::TYPE eModelType);
 
+	_bool Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)	override;
 private:
 	char				m_szName[MAX_PATH] = "";
 	_uint				m_iMaterialIndex = 0;

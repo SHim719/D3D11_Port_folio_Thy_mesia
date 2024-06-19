@@ -19,7 +19,7 @@ public:
 	void Remake_Collider(COLLIDERDESC* pColliderDesc) override;
 #ifdef _DEBUG
 public:
-	void  Render() override;
+	HRESULT  Render() override;
 #endif 
 
 private:

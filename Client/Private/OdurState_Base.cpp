@@ -35,21 +35,26 @@ void COdurState_Base::OnState_End()
 
 void COdurState_Base::Decide_State()
 {
-	_int iRandNum = JoRandom::Random_Int(0, 1);
-	
-	if (0 == iRandNum)
-	{
-		iRandNum = JoRandom::Random_Int(0, 2);
+	_int iRandNum = JoRandom::Random_Int(0, 9);
 
-		if (0 == iRandNum)
-			m_pOdur->Change_State((_uint)OdurState::State_CaneAttack1);
-		else if (1 == iRandNum)
-			m_pOdur->Change_State((_uint)OdurState::State_CaneAttack2);
-		else
-			m_pOdur->Change_State((_uint)OdurState::State_KickCombo);
-	}
+	if (iRandNum < 5)
+		Decide_Attack();
+	else if (iRandNum < 8)
+		m_pOdur->Change_State((_uint)OdurState::State_DisappearMove);
 	else
 		m_pOdur->Change_State((_uint)OdurState::State_Walk);
+}
+
+void COdurState_Base::Decide_Attack()
+{
+	_int 	iRandNum = JoRandom::Random_Int(0, 2);
+
+	if (0 == iRandNum)
+		m_pOdur->Change_State((_uint)OdurState::State_CaneAttack1);
+	else if (1 == iRandNum)
+		m_pOdur->Change_State((_uint)OdurState::State_CaneAttack2);
+	else
+		m_pOdur->Change_State((_uint)OdurState::State_KickCombo);
 }
 
 void COdurState_Base::Free()

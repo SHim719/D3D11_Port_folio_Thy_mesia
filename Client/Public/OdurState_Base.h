@@ -21,10 +21,9 @@ protected:
 	CTransform*		m_pTargetTransform = { nullptr };
 
 protected:
-	_bool			m_bCardPattern = { false };
-
-protected:
 	virtual void Decide_State();
+	void Decide_Attack();
+
 
 public:
 	void Free() override;

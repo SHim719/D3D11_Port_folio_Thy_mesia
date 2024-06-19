@@ -4,6 +4,9 @@
 #include "ToolMapObj.h"
 #include "ToolAnimObj.h"
 #include "ToolColliderObj.h"
+#include "ToolNaviCell.h"
+#include "ToolNaviCellPoint.h"
+
 #include "TestGround.h"
 #include "Free_Camera.h"
 #include "Main_Camera.h"
@@ -25,9 +28,8 @@ HRESULT CLevel_Tool::Initialize()
 {
 	m_iLevelID = LEVEL_TOOL;
 
-	m_pGameInstance->Add_Prototype(L"Prototype_ToolMapObj", CToolMapObj::Create(m_pDevice, m_pContext));
-	m_pGameInstance->Add_Prototype(L"Prototype_ToolAnimObj", CToolAnimObj::Create(m_pDevice, m_pContext));
-	m_pGameInstance->Add_Prototype(L"Prototype_ToolColliderObj", CToolColliderObj::Create(m_pDevice, m_pContext));
+	if (FAILED(Ready_ToolObjects()))
+		return E_FAIL;
 
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_BG_Texture", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/Thymesia.jpg"));
 	m_pGameInstance->Add_Prototype(L"Prototype_TestGround", CTestGround::Create(m_pDevice, m_pContext));
@@ -61,6 +63,17 @@ void CLevel_Tool::Tick(_float fTimeDelta)
 HRESULT CLevel_Tool::Render()
 {
 	
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_ToolObjects()
+{
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolMapObj", CToolMapObj::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolAnimObj", CToolAnimObj::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolColliderObj", CToolColliderObj::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolNaviCell", CToolNaviCell::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolNaviCellPoint", CToolNaviCellPoint::Create(m_pDevice, m_pContext));
+
 	return S_OK;
 }
 

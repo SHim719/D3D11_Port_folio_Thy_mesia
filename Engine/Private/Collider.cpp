@@ -7,14 +7,11 @@ _uint CCollider::iCollisionID = 0;
 
 CCollider::CCollider(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
-	, m_pGameInstance{ CGameInstance::Get_Instance() }
 {
-	Safe_AddRef(m_pGameInstance);
 }
 
 CCollider::CCollider(const CCollider& rhs)
 	: CComponent(rhs)
-	, m_pGameInstance{ rhs.m_pGameInstance }
 	, m_iCollisionID{ iCollisionID++ }
 	, m_eColliderType{rhs.m_eColliderType}
 #ifdef _DEBUG
@@ -24,7 +21,6 @@ CCollider::CCollider(const CCollider& rhs)
 #endif // _DEBUG
 {
 	Safe_AddRef(m_pInputLayout);
-	Safe_AddRef(m_pGameInstance);
 }
 
 HRESULT CCollider::Initialize_Prototype()
@@ -67,11 +63,11 @@ void CCollider::Update(_fmatrix WorldMatrix)
 	
 }
 
-void CCollider::Render()
+HRESULT CCollider::Render()
 {
 #ifdef _DEBUG
 	if (false == m_bActive)
-		return;
+		return E_FAIL;
 
 	if (m_bIsColl)
 		m_vColor = _float4(1.f, 0.f, 0.f, 1.f);
@@ -87,6 +83,7 @@ void CCollider::Render()
 
 	m_pContext->IASetInputLayout(m_pInputLayout);
 #endif
+	return S_OK;
 }
 
 _matrix CCollider::Remove_Rotation(_fmatrix Matrix)
@@ -105,8 +102,6 @@ void CCollider::Free()
 	__super::Free();
 
 	m_pOwner = nullptr;
-
-	Safe_Release(m_pGameInstance);
 
 #ifdef _DEBUG
 	if (false == m_bIsCloned)

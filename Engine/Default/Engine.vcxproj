@@ -189,6 +189,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\Public\AABB.h" />
     <ClInclude Include="..\Public\Animation.h" />
     <ClInclude Include="..\Public\Base.h" />
+    <ClInclude Include="..\Public\Cell.h" />
     <ClInclude Include="..\Public\Collider.h" />
     <ClInclude Include="..\Public\Collision_Manager.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
@@ -216,6 +217,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\public\Level_Manager.h" />
     <ClInclude Include="..\Public\MeshContainer.h" />
     <ClInclude Include="..\Public\Model.h" />
+    <ClInclude Include="..\Public\Navigation.h" />
     <ClInclude Include="..\Public\OBB.h" />
     <ClInclude Include="..\public\Object_Manager.h" />
     <ClInclude Include="..\Public\PhysX_Manager.h" />
@@ -231,14 +233,17 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\public\Timer_Manager.h" />
     <ClInclude Include="..\Public\Transform.h" />
     <ClInclude Include="..\Public\VIBuffer.h" />
+    <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Point.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\Public\VIBuffer_Sphere.h" />
     <ClInclude Include="..\Public\VTF.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\AABB.cpp" />
     <ClCompile Include="..\Private\Animation.cpp" />
     <ClCompile Include="..\Private\Base.cpp" />
+    <ClCompile Include="..\Private\Cell.cpp" />
     <ClCompile Include="..\Private\Collider.cpp" />
     <ClCompile Include="..\Private\Collision_Manager.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
@@ -259,6 +264,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClCompile Include="..\private\Level_Manager.cpp" />
     <ClCompile Include="..\Private\MeshContainer.cpp" />
     <ClCompile Include="..\Private\Model.cpp" />
+    <ClCompile Include="..\Private\Navigation.cpp" />
     <ClCompile Include="..\Private\OBB.cpp" />
     <ClCompile Include="..\private\Object_Manager.cpp" />
     <ClCompile Include="..\Private\PhysX_Manager.cpp" />
@@ -274,8 +280,10 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClCompile Include="..\private\Timer_Manager.cpp" />
     <ClCompile Include="..\Private\Transform.cpp" />
     <ClCompile Include="..\Private\VIBuffer.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Point.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Sphere.cpp" />
     <ClCompile Include="..\Private\VTF.cpp" />
   </ItemGroup>
   <ItemGroup>

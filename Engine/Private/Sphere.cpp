@@ -85,11 +85,11 @@ void CSphere::Remake_Collider(COLLIDERDESC* pColliderDesc)
 }
 
 
-void CSphere::Render()
+HRESULT CSphere::Render()
 {
 #ifdef _DEBUG
 	if (false == m_bActive)
-		return;
+		return E_FAIL;
 
 	__super::Render();
 
@@ -99,6 +99,8 @@ void CSphere::Render()
 
 	m_pBatch->End();
 #endif
+
+	return S_OK;
 }
 
 

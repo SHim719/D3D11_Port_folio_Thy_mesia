@@ -107,6 +107,11 @@ HRESULT CToolMapObj::Render_Picking(_int iSelectIdx)
 	return S_OK;
 }
 
+_bool CToolMapObj::Ray_Cast(_fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
+{
+	return m_pModel->Picking(m_pTransform->Get_WorldMatrixInverse(), vRayStartPos, vRayDir, vPickedPos, fDist);
+}
+
 HRESULT CToolMapObj::Ready_Components(void* pArg)
 {
 	CTransform::TRANSFORMDESC		TransformDesc;

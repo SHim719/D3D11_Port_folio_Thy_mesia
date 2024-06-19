@@ -228,6 +228,8 @@
     <ClInclude Include="..\Public\ToolAnimObj.h" />
     <ClInclude Include="..\Public\ToolColliderObj.h" />
     <ClInclude Include="..\Public\ToolMapObj.h" />
+    <ClInclude Include="..\Public\ToolNaviCell.h" />
+    <ClInclude Include="..\Public\ToolNaviCellPoint.h" />
     <ClInclude Include="..\Public\ToolState.h" />
     <ClInclude Include="..\Public\UI.h" />
     <ClInclude Include="..\Public\UI_Headers.h" />
@@ -293,6 +295,8 @@
     <ClCompile Include="..\Private\ToolAnimObj.cpp" />
     <ClCompile Include="..\Private\ToolColliderObj.cpp" />
     <ClCompile Include="..\Private\ToolMapObj.cpp" />
+    <ClCompile Include="..\Private\ToolNaviCell.cpp" />
+    <ClCompile Include="..\Private\ToolNaviCellPoint.cpp" />
     <ClCompile Include="..\Private\ToolState.cpp" />
     <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\UI_LockOn.cpp" />
@@ -317,6 +321,28 @@
     <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Hull</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Hull</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Point.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

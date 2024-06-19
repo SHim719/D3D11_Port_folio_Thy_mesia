@@ -39,6 +39,19 @@ void COdurState_Appear::OnState_End()
 
 }
 
+void COdurState_Appear::Decide_State()
+{
+	if (m_pOdur->Is_CardPattern())
+	{
+		m_pOdur->Set_CardPattern(false);
+		m_pOdur->Change_State((_uint)OdurState::State_ThrowCard);
+	}
+	else
+	{
+		Decide_Attack();
+	}
+}
+
 void COdurState_Appear::Decide_Animation(void* pArg)
 {
 	_int* iDir = (_int*)pArg;
