@@ -21,7 +21,7 @@ public:
 	/* 참조개수를 감소시킨다 or 삭제한다. */
 	unsigned int Release();
 
-private:
+protected:
 	unsigned int			m_iRefCnt = { 0 };
 
 public:

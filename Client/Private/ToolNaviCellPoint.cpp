@@ -23,7 +23,8 @@ HRESULT CToolNaviCellPoint::Initialize(void* pArg)
 	_float4* vPointPos = (_float4*)pArg;
 
 	m_pTransform->Set_Position(XMLoadFloat4(vPointPos));
-	m_pTransform->Set_Scale(_float3(0.5f, 0.5f, 0.5f));
+	m_pTransform->Set_Scale(_float3(m_fScale, m_fScale, m_fScale));
+	m_bPicked = true;
 
 	return S_OK;
 }
@@ -35,12 +36,23 @@ void CToolNaviCellPoint::Tick(_float fTimeDelta)
 
 void CToolNaviCellPoint::LateTick(_float fTimeDelta)
 {
+	if (m_bUpdated)
+		m_bUpdated = false;
+
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CToolNaviCellPoint::Render()
 {
+	m_vColor = m_bPicked ? _float4(1.f, 0.f, 0.f, 1.f) : _float4(0.f, 1.f, 0.f, 1.f);
+
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Set_RawValue("g_vColor", &m_vColor, sizeof(_float4))))
@@ -55,12 +67,30 @@ HRESULT CToolNaviCellPoint::Render()
 	return S_OK;
 }
 
+_bool CToolNaviCellPoint::Check_Picked(_fvector vPoint) 
+{
+	_vector vPos = m_pTransform->Get_Position();
+
+	_float fDist = XMVector3Length(vPos - vPoint).m128_f32[0];
+
+	if (fDist <= m_fScale)
+		return m_bPicked = true;
+	
+	return false;
+}
+
+_bool CToolNaviCellPoint::Compare_PointPos(_fvector vSrc) const
+{
+	_float fDist = XMVector3Length(m_pTransform->Get_Position() - vSrc).m128_f32[0];
+
+	return fDist < FLT_EPSILON;
+}
 
 HRESULT CToolNaviCellPoint::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, nullptr)))
 		return E_FAIL;
-
+	
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_Cell"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 

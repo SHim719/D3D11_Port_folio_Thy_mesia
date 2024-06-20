@@ -15,7 +15,7 @@ private:
 	virtual ~CGameInstance() = default;
 
 public:
-	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, const string& strKeyFrameDataPath, OUT ID3D11Device** ppDevice, OUT ID3D11DeviceContext** ppContext);
+	HRESULT Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& GraphicDesc, OUT ID3D11Device** ppDevice, OUT ID3D11DeviceContext** ppContext);
 	void Tick_Engine(_float fTimeDelta);
 	HRESULT	Draw();
 	void Clear(_uint iLevelIndex);

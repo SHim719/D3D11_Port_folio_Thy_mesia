@@ -27,7 +27,8 @@ public:
 	HRESULT Render() override;
 
 public:
-	_bool isMove(_fvector vPosition);
+	_bool isMove(_fvector vPosition, OUT _float4* pNormal);
+	_float Decide_YPos(_fvector vPosition);
 
 private:
 	vector<class CCell*>				m_Cells;

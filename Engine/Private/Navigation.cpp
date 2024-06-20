@@ -27,17 +27,23 @@ CNavigation::CNavigation(const CNavigation& rhs)
 
 HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationDataFile)
 {
-	_ulong		dwByte = { 0 };
-	HANDLE		hFile = CreateFile(strNavigationDataFile.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	if (0 == hFile)
+	ifstream fin(strNavigationDataFile, ios::binary);
+
+	if (!fin.is_open())
 		return E_FAIL;
 
+	_int iReserveSize = 0;
+
+	fin.read((_char*)&iReserveSize, sizeof(_int));
+
+	m_Cells.reserve(iReserveSize);
+	
 	while (true)
 	{
 		_float3		vPoints[CCell::POINT_END] = {};
 
-		ReadFile(hFile, vPoints, sizeof(_float3) * CCell::POINT_END, &dwByte, nullptr);
-		if (0 == dwByte)
+		fin.read((_char*)vPoints, sizeof(_float3) * CCell::POINT_END);
+		if (fin.eof())
 			break;
 
 		CCell* pCell = CCell::Create(m_pDevice, m_pContext, vPoints, (_int)m_Cells.size());
@@ -46,9 +52,6 @@ HRESULT CNavigation::Initialize_Prototype(const wstring& strNavigationDataFile)
 
 		m_Cells.emplace_back(pCell);
 	}
-
-	CloseHandle(hFile);
-
 	SetUp_Neighbors();
 
 #ifdef _DEBUG
@@ -119,7 +122,7 @@ HRESULT CNavigation::Render()
 	return S_OK;
 }
 
-_bool CNavigation::isMove(_fvector vPosition)
+_bool CNavigation::isMove(_fvector vPosition, _float4* pNormal)
 {
 	if (-1 == m_iCurrentIndex || m_iCurrentIndex >= m_Cells.size())
 		return false;
@@ -131,7 +134,7 @@ _bool CNavigation::isMove(_fvector vPosition)
 	_int		iNeighborIndex = { -1 };
 
 	/* 움직이고난 결과가 현재 존재한던 셀안에존재한다. == 현재 셀 안에서 움직인거다. */
-	if (true == m_Cells[m_iCurrentIndex]->isIn(vPosition, &iNeighborIndex))
+	if (true == m_Cells[m_iCurrentIndex]->isIn(vPosition, &iNeighborIndex, pNormal))
 		return true;
 
 	else /* 현재 셀을 벗어났다. */
@@ -148,7 +151,7 @@ _bool CNavigation::isMove(_fvector vPosition)
 				if (-1 == iNeighborIndex)
 					return false;
 
-				if (true == m_Cells[iNeighborIndex]->isIn(vPosition, &iNeighborIndex))
+				if (true == m_Cells[iNeighborIndex]->isIn(vPosition, &iNeighborIndex, pNormal))
 					break;
 			}
 
@@ -157,6 +160,12 @@ _bool CNavigation::isMove(_fvector vPosition)
 		}
 	}
 }
+
+_float CNavigation::Decide_YPos(_fvector vPosition)
+{
+	return m_Cells[m_iCurrentIndex]->Calc_YPos(vPosition);
+}
+
 
 HRESULT CNavigation::SetUp_Neighbors()
 {

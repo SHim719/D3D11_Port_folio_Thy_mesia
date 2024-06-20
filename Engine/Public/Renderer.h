@@ -26,8 +26,6 @@ public:
 	HRESULT Draw();
 	void Clear();
 
-	void Set_UIShaderEffect(ID3DX11Effect* pEffect);
-
 private:
 	void Draw_Objects(_uint iGroup);
 

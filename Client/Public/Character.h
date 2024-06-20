@@ -67,13 +67,15 @@ public:
 		m_pHitBoxCollider->Set_Active(false);
 	}
 
-
+protected:
+	void Compute_YPos();
 
 protected:
-	CShader*	m_pShader = { nullptr };
-	CModel*		m_pModel = { nullptr };
-	CCollider*	m_pCollider = { nullptr };
-	CCollider*	m_pHitBoxCollider = { nullptr };
+	CShader*		m_pShader = { nullptr };
+	CModel*			m_pModel = { nullptr };
+	CCollider*		m_pCollider = { nullptr };
+	CCollider*		m_pHitBoxCollider = { nullptr };
+	CNavigation*	m_pNavigation = { nullptr };
 
 public:
 	void Free() override;

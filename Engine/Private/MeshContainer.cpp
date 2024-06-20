@@ -58,29 +58,33 @@ HRESULT CMeshContainer::Initialize(ifstream& fin, CModel::TYPE eType)
 _bool CMeshContainer::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
 {
 	// Static Model에대해서만진행
-	//m_pModelVertices
-	//m_pIndices
+	// 거리가 가장 짧은삼각형점을 피킹
 
 	_vector vRayStartLocalPos = XMVector3TransformCoord(vRayStartPos, InvWorldMat);
 	_vector vRayLocalDir = XMVector3TransformNormal(vRayDir, InvWorldMat);
 
+	_bool bResult = false;
+	fDist = FLT_MAX;
+
 	for (_uint i = 0; i < m_iNumPrimitives; ++i)
 	{
-		_bool bResult = DirectX::TriangleTests::Intersects(vRayStartLocalPos, vRayLocalDir
+		_float fNowDist = 0.f;
+
+		bResult += DirectX::TriangleTests::Intersects(vRayStartLocalPos, vRayLocalDir
 			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._0].vPosition), 1.f)
 			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._1].vPosition), 1.f)
 			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._2].vPosition), 1.f)
-			, fDist);
+			, fNowDist);
 
-		if (bResult)
+		if (fNowDist > 0.f && fNowDist < fDist)
 		{
+			fDist = fNowDist;
 			_vector _vPickedPos = vRayStartPos + vRayDir * fDist;
 			XMStoreFloat4(&vPickedPos, _vPickedPos);
-			return true;
 		}
 	}
 
-	return false;
+	return bResult;
 }
 
 

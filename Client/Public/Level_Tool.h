@@ -26,6 +26,8 @@ private:
 	HRESULT Ready_UIResource();
 	HRESULT Ready_UI();
 
+	HRESULT Ready_Navigation();
+
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

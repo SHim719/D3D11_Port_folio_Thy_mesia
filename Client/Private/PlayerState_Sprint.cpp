@@ -43,7 +43,7 @@ void CPlayerState_Sprint::OnGoing(_float fTimeDelta)
 
 		Rotate_To_Look(vNewLook, fTimeDelta);
 
-		m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);
+		m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta, m_pNavigation);
 	}
 
 

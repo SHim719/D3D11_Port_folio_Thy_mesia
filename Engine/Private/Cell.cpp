@@ -25,7 +25,7 @@ HRESULT CCell::Initialize(const _float3* pPoints, _int iIndex)
 	return S_OK;
 }
 
-_bool CCell::isIn(_fvector vLocalPos, _int* pNeighborIndex)
+_bool CCell::isIn(_fvector vLocalPos, _int* pNeighborIndex, OUT _float4* pNormal)
 {
 	_vector		vDir, vNormal;
 
@@ -38,6 +38,9 @@ _bool CCell::isIn(_fvector vLocalPos, _int* pNeighborIndex)
 		if (0 < XMVectorGetX(XMVector3Dot(XMVector3Normalize(vDir), XMVector3Normalize(vNormal))))
 		{
 			*pNeighborIndex = m_iNeighborIndices[i];
+
+			if (pNormal)
+				XMStoreFloat4(pNormal, XMVector3Normalize(vNormal));
 			return false;
 		}
 
@@ -73,6 +76,19 @@ _bool CCell::Compare_Points(_fvector vSour, _fvector vDest)
 	}
 
 	return false;
+}
+
+_float CCell::Calc_YPos(_fvector vPosition)
+{
+	_vector vPlane = XMPlaneFromPoints(XMVectorSetW(XMLoadFloat3(&m_vPoints[POINT_C]), 1.f),
+		XMVectorSetW(XMLoadFloat3(&m_vPoints[POINT_B]), 1.f),
+		XMVectorSetW(XMLoadFloat3(&m_vPoints[POINT_A]), 1.f));
+
+	//ax + by + cz + d = 0;
+	//-by = ax + cz + d;
+	//y = -(ax + cz + d) / b
+
+	return -(vPlane.m128_f32[0] * vPosition.m128_f32[0] + vPlane.m128_f32[2] * vPosition.m128_f32[2] + vPlane.m128_f32[3]) / vPlane.m128_f32[1];
 }
 
 #ifdef _DEBUG

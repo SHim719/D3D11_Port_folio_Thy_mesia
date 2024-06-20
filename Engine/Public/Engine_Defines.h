@@ -25,6 +25,8 @@ using namespace DirectX;
 #include <map>
 #include <list>
 #include <vector>
+#include <queue>
+#include <stack>
 #include <algorithm>
 #include <string>
 #include <assert.h>

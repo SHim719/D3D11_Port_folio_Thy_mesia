@@ -1,5 +1,6 @@
 #include "Map_Tool.h"
 #include "ToolNaviCell.h"
+#include "ToolNaviCellPoint.h"
 
 
 CMap_Tool::CMap_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -15,6 +16,7 @@ HRESULT CMap_Tool::Initialize(void* pArg)
     if (FAILED(Ready_Picking()))
         return E_FAIL;
 
+    m_iSelPointIndices.reserve(3);
     return S_OK;
 }
 
@@ -27,6 +29,8 @@ void CMap_Tool::Tick(_float fTimeDelta)
 
 void CMap_Tool::LateTick(_float fTimeDelta)
 {
+    Destroy_MapObjects();
+    Destroy_Cells();
 }
 
 HRESULT CMap_Tool::Ready_Picking()
@@ -82,6 +86,7 @@ void CMap_Tool::Camera_Window()
 {
     __super::Camera_Window();
     ImGui::End();
+
 }
 
 HRESULT CMap_Tool::Open_MeshesByFolder()
@@ -159,11 +164,15 @@ HRESULT CMap_Tool::Create_ObjectInLevel()
     return S_OK;
 }
 
+void CMap_Tool::Check_DestroyObjects()
+{
+}
+
 void CMap_Tool::Menu_Bar()
 {
     if (ImGui::BeginMenuBar())
     {
-        if (ImGui::BeginMenu("File"))
+        if (ImGui::BeginMenu("Map"))
         {
             if (ImGui::MenuItem("Open Meshes"))
             {
@@ -182,7 +191,26 @@ void CMap_Tool::Menu_Bar()
 
             ImGui::EndMenu();
         }
+
+        if (ImGui::BeginMenu("Navi"))
+        {
+            if (ImGui::MenuItem("Save_NaviData"))
+            {
+                if (S_OK == Save_NaviData())
+                    MSG_BOX(L"네비게이션 저장 성공");
+            }
+
+            if (ImGui::MenuItem("Open_NaviData"))
+            {
+                if (S_OK == Load_NaviData())
+                    MSG_BOX(L"네비게이션 불러오기 성공");
+            }
+
+            ImGui::EndMenu();
+        }
         ImGui::EndMenuBar();
+
+       
     }
 }
 
@@ -215,7 +243,6 @@ void CMap_Tool::Map_Tool()
     Transform_View();
     Placable_Object();
     Object_ListBox();
-    Destroy_MapObjects();
     Picking_Object();
 }
 
@@ -403,25 +430,56 @@ void CMap_Tool::Object_ListBox()
 
 void CMap_Tool::Navi_Tool()
 {
-    ImGui::SeparatorText("Navigation");
-
+    Navi_KeyInput();
     Navi_Picking();
+    Navi_Transform();
     Navi_Tool_Options();
     Navi_ListBox();
-   
+}
+
+void CMap_Tool::Navi_KeyInput()
+{
+    if (KEY_DOWN(eKeyCode::Delete))
+    {
+        if (-1 < m_iSelCellIdx && m_iSelCellIdx < (_int)m_CreatedCells.size())
+        {
+            m_CreatedCells[m_iSelCellIdx]->Set_Destroy(true);
+            m_iSelCellIdx = -1;
+            m_iSelPointIndices.clear();
+        }
+    }
+}
+
+void CMap_Tool::Navi_Transform()
+{
+    if (-1 == m_iSelCellIdx || m_iSelCellIdx >= (_int)m_CreatedCells.size())
+        return;
+
+    _float3* pCellPoints = m_CreatedCells[m_iSelCellIdx]->Get_CellPoints();
+
+    if (ImGui::InputFloat3("Navi Pos0", &pCellPoints[0].x))
+        m_CreatedCells[m_iSelCellIdx]->Set_CellPoints(pCellPoints);
+
+    if (ImGui::InputFloat3("Navi Pos1", &pCellPoints[1].x))
+        m_CreatedCells[m_iSelCellIdx]->Set_CellPoints(pCellPoints);
+
+    if (ImGui::InputFloat3("Navi Pos2", &pCellPoints[2].x))
+        m_CreatedCells[m_iSelCellIdx]->Set_CellPoints(pCellPoints);
+
+    delete pCellPoints;
 }
 
 void CMap_Tool::Navi_Tool_Options()
 {
-    if (ImGui::Checkbox("Picking?", &m_bCanPick))
-        m_bCanPick = !m_bCanPick;
-
-    if (ImGui::Checkbox("Picking NaviMesh?", &m_bPickingNaviMesh))
-        m_bPickingNaviMesh = !m_bPickingNaviMesh;
+    ImGui::Checkbox("Picking?", &m_bCanPick);
+    if (ImGui::Checkbox("Mesh Picking?", &m_bPickingMesh) && m_bPickingMesh)
+        m_iSelPointIndices.clear();
 }
 
 void CMap_Tool::Navi_ListBox()
 {
+    ImGui::SeparatorText("Created Cell");
+
     vector<string> strNaviMeshes;
     strNaviMeshes.resize(m_CreatedCells.size());
     for (size_t i = 0; i < m_CreatedCells.size(); ++i)
@@ -444,47 +502,251 @@ void CMap_Tool::Navi_Picking()
 
     if (KEY_DOWN(eKeyCode::LButton))
     {
-        _int iPickingIdx = Picking_Object();
-        if (-1 == iPickingIdx)
-            return;
+        if (m_bPickingMesh)
+            Picking_NaviMesh();
+        else
+            Picking_Point();
+    }
+}
 
-        POINT CurMousePos = Get_ScreenCursorPos(g_hWnd);
+void CMap_Tool::Picking_NaviMesh()
+{
+    _float4 f4RayStartPos, f4RayDir;
 
-        _vector vMouseNDC_Near = XMVectorSet(CurMousePos.x * 2.0f / g_iWinSizeX - 1, -CurMousePos.y * 2.0f / g_iWinSizeY + 1, 0.f, 1.f);
-        _vector vMouseNDC_Far = XMVectorSet(CurMousePos.x * 2.0f / g_iWinSizeX - 1, -CurMousePos.y * 2.0f / g_iWinSizeY + 1, 1.f, 1.f);
+    Get_MouseRayInfo(f4RayStartPos, f4RayDir);
 
-        _matrix InverseViewProj = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW) * m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
-        InverseViewProj = XMMatrixInverse(nullptr, InverseViewProj);
+    _vector vRayStartPos = XMLoadFloat4(&f4RayStartPos);
+    _vector vRayDir = XMLoadFloat4(&f4RayDir);
 
-        _vector vMouseWorld_Near = XMVector3TransformCoord(vMouseNDC_Near, InverseViewProj);
-        _vector vMouseWorld_Far = XMVector3TransformCoord(vMouseNDC_Far, InverseViewProj);
-
-        _vector vRayDir = XMVector3Normalize(vMouseWorld_Far - vMouseWorld_Near);
-
-        _float4 vPickedPos = {};
-        _float fDist = -1.f;
-
-        if (m_MapObjects[iPickingIdx]->Ray_Cast(vMouseWorld_Near, vRayDir, vPickedPos, fDist))
+    for (size_t i = 0; i < m_CreatedCells.size(); ++i)
+    {
+        if (m_CreatedCells[i]->Intersect_Ray(vRayStartPos, vRayDir))
         {
-            _bool bPickCreatedPoint = false;
-            for (auto pCell : m_CreatedCells)
+            if (-1 != m_iSelCellIdx && m_iSelCellIdx < (_int)m_CreatedCells.size())
+                m_CreatedCells[m_iSelCellIdx]->Uncheck_Picking();
+
+            m_iSelCellIdx = (_int)i;
+            return;
+        }
+    }
+
+    m_iSelCellIdx = -1;
+}
+
+void CMap_Tool::Picking_Point()
+{
+    _float4 f4RayStartPos, f4RayDir;
+
+    Get_MouseRayInfo(f4RayStartPos, f4RayDir);
+
+    _vector vRayStartPos = XMLoadFloat4(&f4RayStartPos);
+    _vector vRayDir = XMLoadFloat4(&f4RayDir);
+
+    _int iPickingIdx = Picking_Object();
+    if (-1 == iPickingIdx)
+        return;
+
+    _float4 vPickedPos = {};
+    _float fDist = -1.f;
+
+    if (m_MapObjects[iPickingIdx]->Ray_Cast(vRayStartPos, vRayDir, vPickedPos, fDist))
+    {
+        _bool bPickCreatedPoint = false;
+        _int iPointIdx = 0;
+        vPickedPos.y += 0.01f;
+
+        for (; iPointIdx < (_int)m_CreatedCellPoints.size(); ++iPointIdx)
+        {
+            if (bPickCreatedPoint = m_CreatedCellPoints[iPointIdx]->Check_Picked(XMLoadFloat4(&vPickedPos)))
+                break;
+        }
+
+        if (false == bPickCreatedPoint)
+        {
+            CToolNaviCellPoint* pPoint = static_cast<CToolNaviCellPoint*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Cell", L"Prototype_ToolNaviCellPoint", &vPickedPos));
+            m_CreatedCellPoints.push_back(pPoint);
+            iPointIdx = (_int)m_CreatedCellPoints.size() - 1;
+        }
+
+        m_iSelPointIndices.push_back(iPointIdx);
+        if (3 == m_iSelPointIndices.size())
+        {
+            vector<CToolNaviCellPoint*> CellPoints;
+            CellPoints.resize(3);
+
+            for (size_t i = 0; i < 3; ++i)
             {
-               // pCell->Check_Points(XMLoadFloat4(&vPickedPos));
+                CellPoints[i] = m_CreatedCellPoints[m_iSelPointIndices[i]];
+                CellPoints[i]->Uncheck_Picked();
             }
 
-            if (nullptr == m_NowCreatingCell)
-                m_NowCreatingCell = static_cast<CToolNaviCell*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Cell", L"Prototype_ToolNaviCell"));
-            
-            if (m_NowCreatingCell->Add_CellPoint(XMLoadFloat4(&vPickedPos)))
-            {
-                m_CreatedCells.push_back(m_NowCreatingCell);
-                m_NowCreatingCell = nullptr;
-            }
+            CToolNaviCell* pCell = static_cast<CToolNaviCell*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Cell", L"Prototype_ToolNaviCell", &CellPoints));
+            m_CreatedCells.push_back(pCell);
+            m_iSelPointIndices.clear();
         }
-            
+    }
+}
+
+
+
+HRESULT CMap_Tool::Save_NaviData()
+{
+    _tchar szFullPath[200000] = {};
+    OPENFILENAME ofn = {};
+
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = g_hWnd;
+    ofn.lpstrFile = szFullPath;
+    ofn.nMaxFile = sizeof(szFullPath);
+    ofn.lpstrFilter = L"*.dat";
+    ofn.lpstrInitialDir = L"D:\\JaeookDX11Tool\\Resources\\NaviData\\";
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (GetSaveFileName(&ofn))
+    {
+        ofstream fout(szFullPath, ios::binary);
+
+        if (!fout.is_open())
+            return E_FAIL;
+
+        _int iReserveSize = (_int)m_CreatedCells.size();
+
+        fout.write((_char*)&iReserveSize, sizeof(_int));
+
+        for (auto pCell : m_CreatedCells)
+        {
+            _float3* CellPoints = pCell->Get_CellPoints();
+
+            fout.write((_char*)CellPoints, sizeof(_float3) * 3);
+
+            Safe_Delete(CellPoints);
+        }
+    }
+
+    return S_OK;
+}
+
+HRESULT CMap_Tool::Load_NaviData()
+{
+    _tchar szFullPath[200000] = {};
+    OPENFILENAME ofn = {};
+
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = g_hWnd;
+    ofn.lpstrFile = szFullPath;
+    ofn.nMaxFile = sizeof(szFullPath);
+    ofn.lpstrFilter = L"*.dat";
+    ofn.lpstrInitialDir = L"D:\\JaeookDX11Tool\\Resources\\NaviData\\";
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (GetOpenFileName(&ofn))
+    {
+        ifstream fin(szFullPath, ios::binary);
+
+        if (!fin.is_open())
+            return E_FAIL;
+
+        for (auto pPoint : m_CreatedCellPoints)
+            pPoint->Set_Destroy(true);
+        for (auto pCell : m_CreatedCells)
+            pCell->Set_Destroy(true);
+
+        m_CreatedCellPoints.clear();
+        m_CreatedCells.clear();
+        m_iSelPointIndices.clear();
+        m_iSelCellIdx = 0;
+
+        _int iReserveSize = 0;
+
+        fin.read((_char*)&iReserveSize, sizeof(_int));
+
+        m_CreatedCellPoints.reserve(iReserveSize * 3);
+        m_CreatedCells.reserve(iReserveSize);
+
+        _float3 CellPoints[3] = {};
+        while (true)
+        {
+            fin.read((_char*)CellPoints, sizeof(_float3) * 3);
+            if (fin.eof())
+                break;
+
+            vector<CToolNaviCellPoint*> vecCellPoints;
+            vecCellPoints.reserve(3);
+
+            for (_int i = 0; i < 3; ++i)
+            {
+                _vector vCellPoint = XMVectorSetW(XMLoadFloat3(&CellPoints[i]), 1.f);
+
+                CToolNaviCellPoint* pPoint = Find_SamePoint(vCellPoint);
+                if (nullptr == pPoint)
+                {
+                    _float4 f4CellPoint;
+                    XMStoreFloat4(&f4CellPoint, vCellPoint);
+                    pPoint = static_cast<CToolNaviCellPoint*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Cell", L"Prototype_ToolNaviCellPoint", &f4CellPoint));
+                    pPoint->Uncheck_Picked();
+
+                    m_CreatedCellPoints.push_back(pPoint);
+                }
+                vecCellPoints.push_back(pPoint);
+            }
+
+            CToolNaviCell* pCell = static_cast<CToolNaviCell*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Cell", L"Prototype_ToolNaviCell", &vecCellPoints));
+            m_CreatedCells.push_back(pCell);
+        }
     }
 
 
+    return S_OK;
+}
+
+void CMap_Tool::Destroy_Cells()
+{
+    for (auto it = m_CreatedCells.begin(); it != m_CreatedCells.end();)
+    {
+        if ((*it)->Is_Destroyed())
+            it = m_CreatedCells.erase(it);
+        else
+            ++it;
+    }
+
+    for (auto it = m_CreatedCellPoints.begin(); it != m_CreatedCellPoints.end();)
+    {
+        if (m_bPickingMesh && static_cast<CToolNaviCellPoint*>(*it)->Get_RefCnt() == 1)
+        {
+            (*it)->Set_Destroy(true);
+            it = m_CreatedCellPoints.erase(it);
+        }
+        else
+            ++it;
+    }
+}
+
+CToolNaviCellPoint* CMap_Tool::Find_SamePoint(_fvector vPointPos)
+{
+    for (CToolNaviCellPoint* pPoint : m_CreatedCellPoints)
+        if (pPoint->Compare_PointPos(vPointPos))
+            return pPoint;
+
+    return nullptr;
+}
+
+void CMap_Tool::Get_MouseRayInfo(OUT _float4& _vRayStartPos, OUT _float4& _vRayDir)
+{
+    POINT CurMousePos = Get_ScreenCursorPos(g_hWnd);
+
+    _vector vMouseNDC_Near = XMVectorSet(CurMousePos.x * 2.0f / g_iWinSizeX - 1, -CurMousePos.y * 2.0f / g_iWinSizeY + 1, 0.f, 1.f);
+    _vector vMouseNDC_Far = XMVectorSet(CurMousePos.x * 2.0f / g_iWinSizeX - 1, -CurMousePos.y * 2.0f / g_iWinSizeY + 1, 1.f, 1.f);
+
+    _matrix InverseViewProj = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW) * m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+    InverseViewProj = XMMatrixInverse(nullptr, InverseViewProj);
+
+    _vector vMouseWorld_Near = XMVector3TransformCoord(vMouseNDC_Near, InverseViewProj);
+    _vector vMouseWorld_Far = XMVector3TransformCoord(vMouseNDC_Far, InverseViewProj);
+
+    _vector vRayDir = XMVector3Normalize(vMouseWorld_Far - vMouseWorld_Near);
+
+    XMStoreFloat4(&_vRayStartPos, vMouseWorld_Near);
+    XMStoreFloat4(&_vRayDir, vRayDir);
 }
 
 
@@ -496,7 +758,7 @@ void CMap_Tool::Object_Picking()
     if (KEY_DOWN(eKeyCode::LButton))
     {
         _int iPickingIdx = Picking_Object();
-        if (-1 == iPickingIdx)
+        if (-1 == iPickingIdx || iPickingIdx >= (_int)m_MapObjects.size())
             return;
         else
             m_iSelObj = iPickingIdx;

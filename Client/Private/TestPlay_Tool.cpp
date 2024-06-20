@@ -30,8 +30,6 @@ void CTestPlay_Tool::Start_Tool()
     m_pMain_Camera = static_cast<CMain_Camera*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Camera", L"Prototype_Main_Camera", &camDesc));
     m_pPlayer = static_cast<CPlayer*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Player", L"Prototype_Player", nullptr));
 
-    m_pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 1.f, 1.f));
-    
     m_pMain_Camera->Set_Player(m_pPlayer);
     m_pMain_Camera->Set_Active(false);
 
@@ -40,9 +38,9 @@ void CTestPlay_Tool::Start_Tool()
 
     m_pGameInstance->Add_Clone(LEVEL_TOOL, L"TestGround", L"Prototype_TestGround");
 
-    CGameObject* pOdur = m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Enemy", L"Prototype_Odur");
-    pOdur->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 5.f, 1.f));
-    pOdur->Get_Transform()->LookAt2D(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+    //CGameObject* pOdur = m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Enemy", L"Prototype_Odur");
+    //pOdur->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 5.f, 1.f));
+    //pOdur->Get_Transform()->LookAt2D(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 }
 
 void CTestPlay_Tool::Tick(_float fTimeDelta)

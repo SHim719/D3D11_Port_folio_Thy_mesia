@@ -27,6 +27,10 @@ HRESULT CState_Base::Initialize(void* pArg)
 	if (nullptr == m_pOwnerTransform)
 		return E_FAIL;
 
+	m_pNavigation = static_cast<CNavigation*>(pOwner->Find_Component(L"Navigation"));
+	if (nullptr == m_pNavigation)
+		return E_FAIL;
+
 	Init_AttackDesc();
 
 	return S_OK;
@@ -37,6 +41,10 @@ void CState_Base::OnState_Start(void* pArg)
 }
 
 void CState_Base::OnGoing(_float fTimeDelta)
+{
+}
+
+void CState_Base::LateGoing(_float fTimeDelta)
 {
 }
 

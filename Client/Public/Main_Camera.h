@@ -42,7 +42,7 @@ private:
 	_float4				m_vPrevTargetPos = {};
 
 	_int				m_iSensitivity = 2;
-	_float				m_fFollowingSpeed = 2.5f;
+	_float				m_fFollowingSpeed = 4.f;
 	_float				m_fLockonFollowingSpeed = 4.f;
 public:
 	void Set_Player(CGameObject* pPlayer);

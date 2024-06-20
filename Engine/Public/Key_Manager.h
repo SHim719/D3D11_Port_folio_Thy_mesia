@@ -22,7 +22,7 @@ enum class eKeyCode
 	LCtrl, LShift, NUMPAD0,
 	NUMPAD1,
 	One, Two, Three, Four,
-	Enter,
+	Enter, Delete,
 	End,
 };
 

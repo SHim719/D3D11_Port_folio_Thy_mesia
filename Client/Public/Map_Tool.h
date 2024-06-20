@@ -27,6 +27,8 @@ private:
 	wstring Get_FolderPath();
 
 	HRESULT Create_ObjectInLevel();
+	void Check_DestroyObjects();
+
 private:
 	void Menu_Bar();
 	void TabBar();
@@ -83,15 +85,28 @@ private:
 #pragma region NaviTool
 private:
 	void Navi_Tool();
+	void Navi_KeyInput();
+	void Navi_Transform();
 	void Navi_Tool_Options();
 	void Navi_ListBox();
 	void Navi_Picking();
-private:
-	_bool m_bPickingNaviMesh = { false };
 
-	vector<class CToolNaviCell*>	m_CreatedCells;
-	CToolNaviCell*					m_NowCreatingCell = { nullptr };
-	_int							m_iSelCellIdx = { 0 };
+	void Picking_NaviMesh();
+	void Picking_Point();
+
+	HRESULT Save_NaviData();
+	HRESULT Load_NaviData();
+
+	class CToolNaviCellPoint* Find_SamePoint(_fvector vPointPos);
+	void Get_MouseRayInfo(OUT _float4& _vRayStartPos, OUT _float4& _vRayDir);
+	void Destroy_Cells();
+private:
+	vector<class CToolNaviCell*>		m_CreatedCells;
+	vector<class CToolNaviCellPoint*>	m_CreatedCellPoints;
+
+	_int								m_iSelCellIdx = { -1 };
+	vector<_int>						m_iSelPointIndices;
+	_bool								m_bPickingMesh = { false };
 
 #pragma endregion NaviTool
 
@@ -109,10 +124,6 @@ private:
 	_int Picking_Object();
 
 #pragma endregion
-
-
-private:
-	
 
 
 public:

@@ -45,6 +45,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Change_State((_uint)PlayerState::State_Idle);
 	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);
 
+	m_pTransform->Set_Position(XMVectorSet(37.326f, 0.798f, -2.175f, 1.f));
+
 	return S_OK;
 }
 
@@ -62,6 +64,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
+	Compute_YPos();
+
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
 
@@ -99,6 +103,7 @@ HRESULT CPlayer::Render()
 
 	m_pCollider->Render();
 	m_pHitBoxCollider->Render();
+	m_pNavigation->Render();
 
 	return S_OK;
 }
@@ -218,6 +223,12 @@ HRESULT CPlayer::Ready_Components()
 	Desc.strCollisionLayer = "Player_HitBox";
 	
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
+		return E_FAIL;
+
+	CNavigation::NAVIGATION_DESC NaviDesc;
+	NaviDesc.iCurrentCellIndex = 0;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &NaviDesc)))
 		return E_FAIL;
 
 	return S_OK;

@@ -31,7 +31,6 @@ void CPlayerState_Jog::OnState_Start(void* pArg)
 		return;
 	}
 
-
 	m_pPlayer->Enable_NextState();
 	m_pPlayer->Enable_Rotation();
 
@@ -49,7 +48,7 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 
 		Rotate_To_Look(vNewLook, fTimeDelta);
 
-		m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);
+		m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta, m_pNavigation);
 	}
 
 	PlayerState ePlayerState = Decide_State();

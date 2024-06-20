@@ -34,6 +34,9 @@ HRESULT CLevel_Tool::Initialize()
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_BG_Texture", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/Thymesia.jpg"));
 	m_pGameInstance->Add_Prototype(L"Prototype_TestGround", CTestGround::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_Weapon", CWeapon::Create(m_pDevice, m_pContext));
+
+	if (FAILED(Ready_Navigation()))
+		return E_FAIL;
 	
 	if (FAILED(Ready_Camera()))
 		return E_FAIL;
@@ -41,14 +44,14 @@ HRESULT CLevel_Tool::Initialize()
 	if (FAILED(Ready_Player()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Odur()))
-		return E_FAIL;
+	//if (FAILED(Ready_Odur()))
+	//	return E_FAIL;
 
-	if (FAILED(Ready_UIResource()))
-		return E_FAIL;
-
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
+	//if (FAILED(Ready_UIResource()))
+	//	return E_FAIL;
+	//
+	//if (FAILED(Ready_UI()))
+	//	return E_FAIL;
 
 	UIMGR->Initialize(m_pDevice, m_pContext);
 
@@ -142,6 +145,14 @@ HRESULT CLevel_Tool::Ready_UIResource()
 
 HRESULT CLevel_Tool::Ready_UI()
 {
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Navigation()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Navigation", CNavigation::Create(m_pDevice, m_pContext,
+		TEXT("../../Resources/NaviData/TestNavi1.dat")));
+
 	return S_OK;
 }
 

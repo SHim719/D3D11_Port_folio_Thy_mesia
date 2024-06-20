@@ -18,20 +18,29 @@ public:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
+	_bool Intersect_Ray(_fvector vRayStartPos, _fvector vRayDir);
+	void Uncheck_Picking();
 
 private:
-	class CToolNaviCellPoint*	m_pCellPoints[3] = {};
-	size_t						m_iNumCellPoints = { 0 };
+	vector<class CToolNaviCellPoint*>	m_CellPoints;
 
-	_float4x4					m_IdentityMatrix;
-	_float4						m_vColor = { 0.f, 1.f, 0.f, 1.f };
+	_float4x4							m_IdentityMatrix;
+	_float4								m_vColor = { 0.f, 1.f, 0.f, 1.f };
 
-public:
-	_bool Add_CellPoint(_fvector vPointPos);
+	_bool								m_bPicked = { false };
 
+	_int								m_iCellAttribute = { 0 };
 private:
 	CVIBuffer*	m_pVIBuffer = { nullptr };
 	CShader*	m_pShader = { nullptr };
+
+public:
+	_float3* Get_CellPoints();
+	void Set_CellPoints(_float3* vPoints);
+	void Remake_VIBuffer();
+
+	_int Get_Attribute() const { return m_iCellAttribute; }
+	void Set_Attribute(_int iAttribute) { m_iCellAttribute = iAttribute; }
 
 private:
 	HRESULT Ready_Components();

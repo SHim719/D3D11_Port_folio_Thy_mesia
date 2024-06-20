@@ -127,6 +127,7 @@ private:
 	_float4x4				m_WorldMatrix;
 	TRANSFORMDESC			m_TransformDesc; 
 	_float4					m_vMoveLook;
+	_float					m_fSlidingSpeed = { 2.f };
 
 public:
 	static CTransform* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

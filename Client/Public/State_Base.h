@@ -19,6 +19,7 @@ public:
 	virtual HRESULT Initialize(void* pArg);
 	virtual void OnState_Start(void* pArg = nullptr);
 	virtual void OnGoing(_float fTimeDelta);
+	virtual void LateGoing(_float fTimeDelta);
 	virtual void OnState_End();
 
 	virtual void OnHit(void* pArg);
@@ -32,6 +33,7 @@ protected:
 protected:
 	CModel*				m_pModel = nullptr;
 	CTransform*			m_pOwnerTransform = nullptr;
+	CNavigation*		m_pNavigation = nullptr;
 
 protected:
 	_float				m_fPatternTime = { 0.f };

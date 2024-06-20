@@ -19,23 +19,45 @@ public:
 	HRESULT Render()					override;
 
 private:
-	_bool m_bPicked = { false };
+	_bool		m_bPicked = { false };
+	_bool		m_bUpdated = { false };
+
+	_float		m_fScale = 0.3f;
+	_float4		m_vColor = _float4(1.f, 0.f, 0.f, 1.f);
+
 
 public:
 	_bool Is_Picked() const {
 		return m_bPicked;
 	};
 
-	_bool Check_Picked() const {
+	_bool Check_Picked(_fvector vPoint);
 
+	void Uncheck_Picked() {
+		m_bPicked = false;
 	}
 
 	_vector Get_PointPos() const {
 		return m_pTransform->Get_Position();
 	}
 
-private:
-	_float4 m_vColor = _float4(1.f, 0.f, 0.f, 1.f);
+	void Set_PointPos(_fvector vPointPos) {
+		m_pTransform->Set_Position(vPointPos);
+	}
+
+	_bool Compare_PointPos(_fvector vSrc) const;
+
+	_uint Get_RefCnt() const {
+		return m_iRefCnt;
+	}
+
+	_bool Is_Updated() const {
+		return m_bUpdated;
+	}
+
+	void Set_Update(_bool b) {
+		m_bUpdated = b;
+	}
 
 private:
 	CVIBuffer*	m_pVIBuffer = { nullptr };

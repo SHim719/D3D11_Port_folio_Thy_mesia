@@ -22,9 +22,7 @@ HRESULT CMainApp::Initialize()
 	GraphicDesc.iWinSizeY = g_iWinSizeY;
 	GraphicDesc.isWindowed = true;
 
-	string strKeyFrameDataPath = "../../Resources/KeyFrame/KeyFrameData.txt";
-
-	if (FAILED(m_pGameInstance->Initialize_Engine(LEVEL_END, GraphicDesc, strKeyFrameDataPath, &m_pDevice, &m_pContext)))
+	if (FAILED(m_pGameInstance->Initialize_Engine(LEVEL_END, GraphicDesc, &m_pDevice, &m_pContext)))
 		return E_FAIL;
 
 	if (FAILED(Ready_Prototype_Component()))

@@ -9,7 +9,7 @@ int ASCII[(UINT)eKeyCode::End] =
 	VK_SPACE, VK_LBUTTON, VK_RBUTTON,
 	VK_LCONTROL, VK_LSHIFT, 
 	VK_NUMPAD0, VK_NUMPAD1,
-	'1', '2', '3' ,'4', VK_RETURN
+	'1', '2', '3' ,'4', VK_RETURN, VK_DELETE,
 };
 
 void CKey_Manager::Initialize()

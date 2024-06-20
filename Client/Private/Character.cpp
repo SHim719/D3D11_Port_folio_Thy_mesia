@@ -41,9 +41,17 @@ void CCharacter::Free()
 	Safe_Release(m_pModel);
 	Safe_Release(m_pCollider);
 	Safe_Release(m_pHitBoxCollider);
+	Safe_Release(m_pNavigation);
 }
 
 const ATTACKDESC& CCharacter::Get_NowAttackDesc(size_t iIdx)
 {
 	return m_States[m_iState]->Get_NowAttackDesc(iIdx);
+}
+
+void CCharacter::Compute_YPos()
+{
+	_vector vNowPosition = m_pTransform->Get_Position();
+	_float fY = m_pNavigation->Decide_YPos(vNowPosition);
+	m_pTransform->Set_Position(XMVectorSetY(vNowPosition, fY));
 }
