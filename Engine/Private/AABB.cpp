@@ -83,6 +83,18 @@ void CAABB::Remake_Collider(COLLIDERDESC* pColliderDesc)
 	m_pAABB = new BoundingBox(*m_pOriginal_AABB);
 }
 
+_vector CAABB::Get_Size() const
+{
+	return XMVectorSet(m_pOriginal_AABB->Extents.x * 2.f, m_pOriginal_AABB->Extents.y * 2.f, m_pOriginal_AABB->Extents.z * 2.f, 1.f);
+}					   
+
+void CAABB::Set_Size(_fvector vSize)
+{
+	m_pOriginal_AABB->Extents.x = vSize.m128_f32[0] * 0.5f;
+	m_pOriginal_AABB->Extents.y = vSize.m128_f32[1] * 0.5f;
+	m_pOriginal_AABB->Extents.z = vSize.m128_f32[2] * 0.5f;
+}
+
 HRESULT CAABB::Render()
 {
 #ifdef _DEBUG

@@ -38,18 +38,17 @@ HRESULT CUI_LockOn::Initialize(void* pArg)
 
 void CUI_LockOn::On_UIActive(void* pArg)
 {
-	LOCKONDESC* pDesc = (LOCKONDESC*)pArg;
+	ATTACHDESC*  pDesc = (ATTACHDESC*)pArg;
 
 	Safe_Release(m_pTargetTransform);
 	Safe_Release(m_pTargetBone);
 
-	m_pTargetTransform = pDesc->pTargetTransform;
-	m_pTargetBone = pDesc->pTargetBone;
+	m_pTargetTransform = pDesc->pParentTransform;
+	m_pTargetBone = pDesc->pAttachBone;
 
 	Safe_AddRef(m_pTargetTransform);
 	Safe_AddRef(m_pTargetBone);
 
-	m_bDestroyed = false;
 	m_bCreatedThisFrame = true;
 }
 

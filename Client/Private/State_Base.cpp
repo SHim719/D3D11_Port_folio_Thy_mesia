@@ -28,8 +28,8 @@ HRESULT CState_Base::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pNavigation = static_cast<CNavigation*>(pOwner->Find_Component(L"Navigation"));
-	if (nullptr == m_pNavigation)
-		return E_FAIL;
+	//if (nullptr == m_pNavigation)
+	//	return E_FAIL;
 
 	Init_AttackDesc();
 

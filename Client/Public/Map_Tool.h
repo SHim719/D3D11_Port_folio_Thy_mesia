@@ -7,7 +7,7 @@
 BEGIN(Client)
 class CMap_Tool : public CToolState
 {
-protected:
+private:
 	CMap_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CMap_Tool() = default;
 
@@ -21,6 +21,8 @@ private:
 
 private:
 	void Main_Window();
+	void Enemy_Window();
+	void Trigger_Window();
 	void Camera_Window() override;
 
 	HRESULT Open_MeshesByFolder();
@@ -38,18 +40,29 @@ private:
 	void Key_Input();
 	void Destroy_MapObjects();
 	void Transform_View();
+	void Placable_ComboBox();
 	void Placable_Object();
 	void ForObject_Buttons(ImVec2 vNowCursorPos);
 	void Object_ListBox();
 
+	HRESULT Save_Map();
+	HRESULT Load_Map();
+
+	HRESULT Save_MapObjects(const wstring& wstrFolderPath);
+	HRESULT Save_Enemies(const wstring& wstrFolderPath);
+	HRESULT Save_Triggers(const wstring& wstrFolderPath);
+
+
 private:
-	vector<string>										m_strPlacable_Objects;
+	vector<string>										m_strPlacable_Objects[OBJTYPE_END];
 	vector<CToolMapObj*>								m_MapObjects;
 	vector<string>										m_strCreatedObjects;
-	unordered_multimap<string, CToolMapObj*>			m_MapLayers; // 나중에 얘 데이터로 저장할거임.
+	unordered_map<string, CToolMapObj*>					m_MapLayers;
 
-	_int m_iSelPlacableObj = 0;
-	_int m_iSelObj = -1;
+	OBJTYPE												m_eNowObjMode = { MAPOBJECT };
+
+	_int												m_iSelPlacableObj = {};
+	_int												m_iSelObj = { -1 };
 
 #pragma region Transform_View
 	_float3 m_vPosition = {};
@@ -77,6 +90,15 @@ private:
 	GIZMODESC m_tGizmoDesc;
 
 	void Transform_Gizmo();
+#pragma endregion
+
+#pragma region Enemy
+	_int		m_iNowNaviIdx = -1;
+#pragma endregion 
+
+#pragma region Trigger
+	_int		m_iTriggerIdx = -1;
+	_float3		m_vColliderSize = { 0.f, 0.f, 0.f };
 #pragma endregion
 
 #pragma endregion MapTool
@@ -121,7 +143,7 @@ private:
 
 	_bool					m_bCanPick = false;
 	void Object_Picking();
-	_int Picking_Object();
+	_int ColorPicking_Object();
 
 #pragma endregion
 

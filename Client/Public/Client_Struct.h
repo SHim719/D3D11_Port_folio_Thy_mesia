@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine_Defines.h"
+
 namespace Engine
 {
 	class CBone;
@@ -43,4 +45,15 @@ namespace Client
 		tagAttachDesc			AttachDesc;
 		unsigned int			iExecutedAnimIndex = 0;
 	}EXECUTEDDESC;
+
+	typedef struct tagLoadObjectDesc
+	{
+		OBJTYPE		eObjType;
+		_float4x4	WorldMatrix;
+		_int		iNaviIdx;
+		_int		iTriggerIdx;
+		_float3		vColliderSize;
+		wstring		wstrModelTag = L"";
+	}LOADOBJDESC;
+
 }

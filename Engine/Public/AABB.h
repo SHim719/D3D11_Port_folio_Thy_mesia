@@ -13,10 +13,14 @@ protected:
 public:
 	HRESULT Initialize_Prototype()	override;
 	HRESULT Initialize(void* pArg)	override;
-	void	Update(_fmatrix TransformMatrix)	override;
+	void	Update(_fmatrix TransformMatrix)			override;
 
-	_bool Intersects(CCollider* pTargetCollider) override;
-	void Remake_Collider(COLLIDERDESC* pColliderDesc) override;
+	_bool Intersects(CCollider* pTargetCollider)		override;
+	void Remake_Collider(COLLIDERDESC* pColliderDesc)	override;
+
+	_vector Get_Size() const							override;
+	void	Set_Size(_fvector vSize)					override;
+
 #ifdef _DEBUG
 public:
 	HRESULT  Render() override;

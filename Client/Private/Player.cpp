@@ -52,6 +52,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
+	if (KEY_DOWN(eKeyCode::P))
+		Change_State((_uint)PlayerState::State_Cutscene);
+
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
@@ -106,6 +109,21 @@ HRESULT CPlayer::Render()
 	m_pNavigation->Render();
 
 	return S_OK;
+}
+
+void CPlayer::OnEnter_Cutscene()
+{
+
+}
+
+void CPlayer::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
+{
+	Change_State((_uint)PlayerState::State_Cutscene, &eCutsceneNumber);
+}
+
+void CPlayer::OnEnd_Cutscene()
+{
+	Change_State((_uint)PlayerState::State_Idle);
 }
 
 void CPlayer::Bind_KeyFrames()
@@ -252,7 +270,8 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Parried] = CPlayerState_Parried::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Executed] = CPlayerState_Executed::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Finish] = CPlayerState_Finish::Create(m_pDevice, m_pContext, this);
-	
+	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
+
 	return S_OK;
 }
 

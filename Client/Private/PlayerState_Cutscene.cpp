@@ -21,7 +21,18 @@ void CPlayerState_Cutscene::OnState_Start(void* pArg)
 	m_pPlayer->Disable_Rotation();
 	m_pPlayer->Inactive_AllWeaponColliders();
 
-	m_pModel->Change_Animation(Corvus_SD_Rebound_R, 0.f);
+	CUTSCENE_NUMBER* pCutsceneNum = (CUTSCENE_NUMBER*)pArg;
+
+	//switch (*pCutsceneNum)
+	//{
+	//case ENCOUNTER_ODUR:
+	//	m_pModel->Change_Animation(Corvus_VS_MagicianLV1_Seq_BossFightStart, 0.f);
+	//	break;
+	//case ENCOUNTER_URD:
+	//	break;
+	//}
+
+	m_pModel->Change_Animation(Corvus_VS_MagicianLV1_Seq_BossFightStart, 0.f);
 }
 
 void CPlayerState_Cutscene::OnGoing(_float fTimeDelta)
@@ -29,12 +40,8 @@ void CPlayerState_Cutscene::OnGoing(_float fTimeDelta)
 	if (m_pModel->Is_AnimComplete())
 	{
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
-		return;
 	}
-
-	//m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
 }
-
 
 void CPlayerState_Cutscene::OnState_End()
 {

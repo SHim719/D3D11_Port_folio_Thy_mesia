@@ -19,6 +19,8 @@ private:
 	void Main_Window();
 	void Camera_Window() override;
 
+
+	HRESULT Load_TestMap();
 private:
 	class CMain_Camera* m_pMain_Camera = nullptr;
 	class CPlayer*		m_pPlayer = nullptr;

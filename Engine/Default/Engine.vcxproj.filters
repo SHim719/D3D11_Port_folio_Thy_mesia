@@ -10,9 +10,6 @@
     <Filter Include="01.Utility">
       <UniqueIdentifier>{4964a1e7-5206-4b22-881f-246564302202}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\97. Frustum">
-      <UniqueIdentifier>{73f10387-e9b9-46da-be7f-1ebc12c68f2a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\01. Levels">
       <UniqueIdentifier>{6810cfc5-c0a5-44e0-82b7-57b222979270}</UniqueIdentifier>
     </Filter>
@@ -153,6 +150,9 @@
     </Filter>
     <Filter Include="01.Utility\03. Components\03. VIBuffer\03. Sphere">
       <UniqueIdentifier>{29a7eadd-6eb9-42cd-8650-2943ed572605}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\97. Frustum">
+      <UniqueIdentifier>{73f10387-e9b9-46da-be7f-1ebc12c68f2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

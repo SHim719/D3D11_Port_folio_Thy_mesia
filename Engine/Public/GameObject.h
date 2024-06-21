@@ -84,6 +84,10 @@ public:
 		return m_bDestroyed || m_bReturnToPool;
 	}
 
+	void Set_ReturnToPool(_bool b) {
+		m_bReturnToPool = b;
+	}
+
 	_bool Is_ReturnToPool() const {
 		return m_bReturnToPool;
 	}

@@ -20,7 +20,7 @@ void COdurState_Walk::OnState_Start(void* pArg)
 
 	Decide_Animation();
 
-	m_fPatternTime = JoRandom::Random_Float(1.5f, 2.5f);
+	m_fPatternTime = pArg == nullptr ? JoRandom::Random_Float(1.5f, 2.5f): *(_float*)pArg;
 
 	m_pOwnerTransform->Set_Speed(m_fWalkSpeed);
 }

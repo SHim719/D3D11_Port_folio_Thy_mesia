@@ -29,7 +29,7 @@ public:
 
 public:
 	HRESULT Initialize(const _float3* pPoints, _int iIndex);
-	_bool isIn(_fvector vLocalPos, _int* pNeighborIndex, OUT _float4* pNormal);
+	_bool isIn(_fvector vLocalPos, _int* pNeighborIndex, OUT _float4* pNormal = nullptr);
 
 	_bool Compare_Points(_fvector vSour, _fvector vDest);
 

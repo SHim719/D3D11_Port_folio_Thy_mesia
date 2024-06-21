@@ -28,6 +28,11 @@ private:
 
 	HRESULT Ready_Navigation();
 
+	HRESULT Ready_Stage1Boss();
+
+private:
+	HRESULT Load_Map();
+		
 public:
 	static CLevel_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual void Free() override;

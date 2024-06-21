@@ -55,7 +55,7 @@ void CMain_Camera::Tick(_float fTimeDelta)
 		{
 			SetState_LockOn();
 			m_pPlayer->Toggle_LockOn(m_pTargetTransform);
-			m_fFollowingSpeed = 4.f;
+			m_fFollowingSpeed = 4.5f;
 		}
 		else
 		{
@@ -127,9 +127,9 @@ void CMain_Camera::SetState_LockOn()
 		return;
 	Safe_AddRef(m_pTargetBone);
 
-	CUI_LockOn::LOCKONDESC Desc = {};
-	Desc.pTargetTransform = m_pTargetTransform;
-	Desc.pTargetBone = m_pTargetBone;
+	ATTACHDESC Desc = {};
+	Desc.pParentTransform = m_pTargetTransform;
+	Desc.pAttachBone = m_pTargetBone;
 
 	UIMGR->Active_UI("UI_LockOn", &Desc);
 

@@ -3,6 +3,7 @@
 #include "Main_Camera.h"
 #include "Player.h"
 
+#include "ToolMapObj.h"
 
 CTestPlay_Tool::CTestPlay_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CToolState(pDevice, pContext)
@@ -19,6 +20,9 @@ HRESULT CTestPlay_Tool::Initialize(void* pArg)
 
 void CTestPlay_Tool::Start_Tool()
 {
+    if (FAILED(Load_TestMap()))
+        return;
+
     CCamera::CAMERADESC camDesc{};
     camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
     camDesc.fNear = 0.1f;
@@ -36,11 +40,9 @@ void CTestPlay_Tool::Start_Tool()
     Safe_AddRef(m_pPlayer);
     Safe_AddRef(m_pMain_Camera);
 
-    m_pGameInstance->Add_Clone(LEVEL_TOOL, L"TestGround", L"Prototype_TestGround");
-
-    //CGameObject* pOdur = m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Enemy", L"Prototype_Odur");
-    //pOdur->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 5.f, 1.f));
-    //pOdur->Get_Transform()->LookAt2D(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+    CGameObject* pOdur = m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Enemy", L"Prototype_Odur");
+    pOdur->Get_Transform()->Set_Position(XMVectorSet(-11.429f, 4.276f, 4.269f, 1.f));
+    pOdur->Get_Transform()->LookAt2D(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 }
 
 void CTestPlay_Tool::Tick(_float fTimeDelta)
@@ -66,15 +68,61 @@ void CTestPlay_Tool::Camera_Window()
     ImGui::SetCursorPos(ImVec2(20, 140));
     ImGui::Text("Free Camera?");
 
+
     _bool bFreeCam = m_pCamera->Is_Active();
-    ImGui::SetCursorPos(ImVec2(110, 135));
-    if (ImGui::Checkbox("##CheckCamera", &bFreeCam))
+    if (KEY_DOWN(eKeyCode::NUMPAD0))
     {
+        bFreeCam = !bFreeCam;
         m_pCamera->Set_Active(bFreeCam);
         m_pMain_Camera->Set_Active(!bFreeCam);
     }
 
+    ImGui::Checkbox("##CheckCamera", &bFreeCam);
+
+
     ImGui::End();
+}
+
+HRESULT CTestPlay_Tool::Load_TestMap()
+{
+    string strMapDataPath = "../../Resources/Maps/Stage1/";
+
+    fs::path MapDataPath(strMapDataPath);
+
+    for (const fs::directory_entry& entry : fs::directory_iterator(MapDataPath))
+    {
+        if (entry.is_directory())
+            continue;
+
+        ifstream fin(entry.path().c_str(), ios::binary);
+
+        if (!fin.is_open())
+            return E_FAIL;
+
+        fs::path fileName = entry.path().filename();
+        fs::path fileTitle = fileName.stem();
+
+        wstring wstrModelTag = L"Prototype_Model_";
+        wstrModelTag += fileTitle.c_str();
+
+        while (true)
+        {
+            _float4x4 WorldMatrix;
+            fin.read((_char*)&WorldMatrix, sizeof(_float4x4));
+
+            if (fin.eof())
+                break;
+
+            CToolMapObj* pObj = static_cast<CToolMapObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"MapObject", L"Prototype_ToolMapObj", &wstrModelTag));
+            if (nullptr == pObj)
+                return E_FAIL;
+
+            pObj->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+        }
+    }
+
+
+    return S_OK;
 }
 
 

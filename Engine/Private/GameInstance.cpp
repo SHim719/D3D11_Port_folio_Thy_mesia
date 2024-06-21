@@ -226,6 +226,12 @@ CLayer* CGameInstance::Find_Layer(_uint iLevelIndex, const wstring& strLayerTag)
 
 	return m_pObject_Manager->Find_Layer(iLevelIndex, strLayerTag);
 }
+
+void CGameInstance::Clear_Layer(_uint iLevelIndex, const wstring& strLayerTag)
+{
+
+}
+
 void CGameInstance::Insert_GameObject(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pObj)
 {
 	if (nullptr == m_pObject_Manager)

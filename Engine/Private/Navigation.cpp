@@ -122,7 +122,7 @@ HRESULT CNavigation::Render()
 	return S_OK;
 }
 
-_bool CNavigation::isMove(_fvector vPosition, _float4* pNormal)
+_bool CNavigation::isMove(_fvector vPosition, OUT _float4* pNormal)
 {
 	if (-1 == m_iCurrentIndex || m_iCurrentIndex >= m_Cells.size())
 		return false;
@@ -164,6 +164,22 @@ _bool CNavigation::isMove(_fvector vPosition, _float4* pNormal)
 _float CNavigation::Decide_YPos(_fvector vPosition)
 {
 	return m_Cells[m_iCurrentIndex]->Calc_YPos(vPosition);
+}
+
+void CNavigation::Set_CurrentIdx(_fvector vPosition)
+{
+	_int iNeighbor = 0;
+	_int iCellIdx = 0;
+	for (auto& pCell : m_Cells)
+	{
+		if (pCell->isIn(vPosition, &iNeighbor))
+		{
+			m_iCurrentIndex = iCellIdx;
+			return;
+		}
+		++iCellIdx;
+	}
+
 }
 
 

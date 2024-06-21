@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Character.h"
+#include "Cutscene_Actor.h"
 #include "Player_Enums.h"
 
 BEGIN(Client)
 
-class CPlayer final : public CCharacter
+class CPlayer final : public CCharacter, public CCutscene_Actor
 {
 private:
 	enum PLAYER_WEAPON { SABER, DAGGER, CLAW_L, CLAW_R, WEAPON_END};
@@ -15,15 +16,18 @@ private:
 	CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer() = default;
 
-public:
+private:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-private:
-	void Bind_KeyFrames()	override;
+	void OnEnter_Cutscene()									override;
+	void OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)	override;
+	void OnEnd_Cutscene()									override;
+
+	void Bind_KeyFrames()									override;
 
 private:
 	class CPlayerStat*	m_pStats = { nullptr };

@@ -20,6 +20,13 @@ namespace Engine
 		bool			isWindowed;
 	}GRAPHIC_DESC;
 
+	typedef struct tagLoadObjectDesc
+	{
+		std::wstring	wstrModelTag = L"";
+		XMFLOAT4X4		WorldMatrix;
+	} LOADOBJECTDESC;
+
+
 	typedef struct tagLineIndices16
 	{
 		unsigned short		_0, _1;

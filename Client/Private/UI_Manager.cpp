@@ -34,11 +34,8 @@ CUI* CUI_Manager::Active_UI(const string& strUITag, void* pArg)
 	if (m_UIs.end() == it)
 		return nullptr;
 
-	m_pGameInstance->Insert_GameObject(LEVEL_STATIC, L"UI", it->second);
-
+	it->second->Add_PoolingObject_To_Layer(L"UI", nullptr);
 	it->second->On_UIActive(pArg);
-
-	Safe_AddRef(it->second);
 
 	return it->second;
 }
@@ -50,19 +47,18 @@ void CUI_Manager::InActive_UI(const string& strUITag)
 	if (m_UIs.end() == it)
 		return;
 
-	it->second->Set_Destroy(true);
-
-	return;
+	it->second->Set_ReturnToPool(true);
 }
 
 HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CUI* pUI = CUI_LockOn::Create(pDevice, pContext);
-	if (FAILED(pUI->Initialize(nullptr)))
-		return E_FAIL;
+	//CUI* pUI = CUI_LockOn::Create(pDevice, pContext);
+	//if (FAILED(pUI->Initialize(nullptr)))
+	//	return E_FAIL;
+	//
+	//m_UIs.emplace("UI_LockOn", pUI);
 
 
-	m_UIs.emplace("UI_LockOn", pUI);
 	return S_OK;
 }
 

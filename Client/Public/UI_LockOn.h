@@ -6,12 +6,6 @@ BEGIN(Client)
 
 class CUI_LockOn final : public CUI
 {
-public:
-	typedef struct tagLockOnDesc
-	{
-		CTransform* pTargetTransform = { nullptr };
-		class CBone* pTargetBone = { nullptr };
-	} LOCKONDESC;
 private:
 	CUI_LockOn(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CUI_LockOn(const CUI_LockOn& rhs);

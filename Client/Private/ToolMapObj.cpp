@@ -1,4 +1,5 @@
 #include "ToolMapObj.h"
+#include "Map_Tool.h"
 
 
 
@@ -19,8 +20,53 @@ HRESULT CToolMapObj::Initialize_Prototype()
 
 HRESULT CToolMapObj::Initialize(void* pArg)
 {
-	if (FAILED(Ready_Components(pArg)))
+	if (nullptr == pArg)
+		return S_OK;
+
+	TOOLMAPOBJDESC* pDesc = (TOOLMAPOBJDESC*)pArg;
+
+	m_eObjType = pDesc->eObjType;
+
+	if (FAILED(Ready_Components(pDesc->wstrModelTag)))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CToolMapObj::Initialize_Load(void* pArg)
+{
+	LOADOBJDESC* pDesc = (LOADOBJDESC*)pArg;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
+		return E_FAIL;
+
+	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pDesc->WorldMatrix));
+
+	if (m_eObjType < TRIGGEROBJ)
+	{
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"), TEXT("Shader"), (CComponent**)&m_pShader)))
+			return E_FAIL;
+
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, pDesc->wstrModelTag, L"Model", (CComponent**)&m_pModel)))
+			return E_FAIL;
+
+		m_iNaviIdx = pDesc->iNaviIdx;
+	}
+	else
+	{
+		CCollider::COLLIDERDESC CollisionDesc;
+		CollisionDesc.eType = CCollider::AABB;
+		CollisionDesc.pOwner = this;
+		CollisionDesc.vCenter = { 0.f, 0.f, 0.f };
+		CollisionDesc.vSize = pDesc->vColliderSize;
+		CollisionDesc.vRotation = { 0.f, 0.f, 0.f };
+		CollisionDesc.bActive = true;
+
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, L"Prototype_AABB", L"Collider", (CComponent**)&m_pTriggerCollider, &CollisionDesc)))
+			return E_FAIL;
+
+		m_iTriggerIdx = pDesc->iTriggerIdx;
+	}
 
 	return S_OK;
 }
@@ -32,6 +78,9 @@ void CToolMapObj::Tick(_float fTimeDelta)
 
 void CToolMapObj::LateTick(_float fTimeDelta)
 {
+	if (m_pTriggerCollider)
+		m_pTriggerCollider->Update(m_pTransform->Get_WorldMatrix());
+
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
@@ -46,20 +95,26 @@ HRESULT CToolMapObj::Render()
 	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
-
-	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
-
-	for (_uint j = 0; j < iNumMeshes; ++j)
+	if (m_eObjType < TRIGGEROBJ)
 	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture")))
-			return E_FAIL;
+		_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
+		for (_uint j = 0; j < iNumMeshes; ++j)
+		{
+			if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture")))
+				return E_FAIL;
 
-		if (FAILED(m_pModel->Render(m_pShader, j, 0)))
-			return E_FAIL;
+			/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+				return E_FAIL;*/
+
+			if (FAILED(m_pModel->Render(m_pShader, j, 0)))
+				return E_FAIL;
+		}
 	}
+	
+
+	if (m_pTriggerCollider)
+		m_pTriggerCollider->Render();
 	
 	return S_OK;
 }
@@ -112,25 +167,51 @@ _bool CToolMapObj::Ray_Cast(_fvector vRayStartPos, _fvector vRayDir, OUT _float4
 	return m_pModel->Picking(m_pTransform->Get_WorldMatrixInverse(), vRayStartPos, vRayDir, vPickedPos, fDist);
 }
 
-HRESULT CToolMapObj::Ready_Components(void* pArg)
+_float3 CToolMapObj::Get_ColliderSize() const
 {
-	CTransform::TRANSFORMDESC		TransformDesc;
-	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
+	if (m_pTriggerCollider)
+	{
+		_float3 vSize;
+		XMStoreFloat3(&vSize, m_pTriggerCollider->Get_Size());
+		return vSize;
+	}
 
-	TransformDesc.fSpeedPerSec = 5.f;
-	TransformDesc.fRotationPerSec = To_Radian(90.0f);
+	return _float3(1.f, 1.f, 1.f);
+}
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, &TransformDesc)))
+void CToolMapObj::Set_ColliderSize(const _float3& vSize)
+{
+	if (m_pTriggerCollider)
+		m_pTriggerCollider->Set_Size(XMLoadFloat3(&vSize));
+}
+
+HRESULT CToolMapObj::Ready_Components(const wstring& wstrModelTag)
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	wstring* strModelPrototypeTag = (wstring*)pArg;
+	if (m_eObjType < TRIGGEROBJ)
+	{
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, wstrModelTag, L"Model", (CComponent**)&m_pModel)))
+			return E_FAIL;
+	}
+	else
+	{
+		CCollider::COLLIDERDESC CollisionDesc;
+		CollisionDesc.eType = CCollider::AABB;
+		CollisionDesc.pOwner = this;
+		CollisionDesc.vCenter = { 0.f, 0.f, 0.f };
+		CollisionDesc.vSize = { 1.f, 1.f, 1.f };
+		CollisionDesc.vRotation = { 0.f, 0.f, 0.f };
+		CollisionDesc.bActive = true;
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, *strModelPrototypeTag, L"Model", (CComponent**)&m_pModel)))
-		return E_FAIL;
-
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, L"Prototype_AABB", L"Collider", (CComponent**)&m_pTriggerCollider, &CollisionDesc)))
+			return E_FAIL; 
+	}
+	
 	return S_OK;
 }
 
@@ -166,6 +247,6 @@ void CToolMapObj::Free()
 	__super::Free();
 
 	Safe_Release(m_pModel);
-
 	Safe_Release(m_pShader);
+	Safe_Release(m_pTriggerCollider);
 }

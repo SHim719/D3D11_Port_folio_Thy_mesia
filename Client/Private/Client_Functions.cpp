@@ -85,6 +85,10 @@ namespace JoMath
 		_float cosy_cosp = 1.f - 2.f * (vQuat.m128_f32[1] * vQuat.m128_f32[1] + vQuat.m128_f32[2] * vQuat.m128_f32[2]);
 		vEulerAngle.m128_f32[2] = atan2(siny_cosp, cosy_cosp);
 
+		vEulerAngle.m128_f32[0] = XMConvertToDegrees(vEulerAngle.m128_f32[0]);
+		vEulerAngle.m128_f32[1] = XMConvertToDegrees(vEulerAngle.m128_f32[1]);
+		vEulerAngle.m128_f32[2] = XMConvertToDegrees(vEulerAngle.m128_f32[2]);
+
 		return vEulerAngle;
 	}
 	_vector Slerp_TargetLook(_fvector vNowLook, _fvector vTargetLook, _float fRotRate)

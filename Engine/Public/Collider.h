@@ -5,7 +5,7 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CCollider : public CComponent
+class ENGINE_DLL CCollider abstract : public CComponent
 {
 public:
 	enum ColliderType { AABB, OBB, SPHERE, Collider_End };
@@ -36,6 +36,8 @@ public:
 	virtual _bool Intersects(CCollider* pTargetCollider) PURE;
 	virtual void Remake_Collider(COLLIDERDESC* pColliderDesc) PURE;
 
+	virtual _vector Get_Size() const;
+	virtual void Set_Size(_fvector vSize);
 protected:
 	static _uint		iCollisionID;
 	_uint				m_iCollisionID = { 0 };

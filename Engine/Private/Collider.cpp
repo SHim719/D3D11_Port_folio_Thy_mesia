@@ -63,6 +63,15 @@ void CCollider::Update(_fmatrix WorldMatrix)
 	
 }
 
+_vector CCollider::Get_Size() const
+{
+	return _vector();
+}
+
+void CCollider::Set_Size(_fvector vSize)
+{
+}
+
 HRESULT CCollider::Render()
 {
 #ifdef _DEBUG

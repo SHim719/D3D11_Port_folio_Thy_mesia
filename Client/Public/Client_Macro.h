@@ -10,6 +10,8 @@
 #define Get_Inst(TYPE) TYPE::Get_Instance()
 
 #define UIMGR Get_Inst(CUI_Manager)
+#define CUTSCENEMGR Get_Inst(CCutscene_Manager)
+#define FADEMGR Get_Inst(CFade_Manager)
 
 #define YAXIS XMVectorSet(0.f, 1.f, 0.f, 0.f)
  

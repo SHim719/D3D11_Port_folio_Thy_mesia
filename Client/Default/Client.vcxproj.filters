@@ -73,26 +73,8 @@
     <Filter Include="02. GameObjects\99. ToolObject">
       <UniqueIdentifier>{a30fb29b-086b-471a-815d-25ec9dccaec7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\1. ToolAnimObj">
-      <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\0. ToolMapObj">
-      <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="95. Client_Components">
-      <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\04. Weapon">
-      <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="100. IMGUI\99. TestPlay_Tool">
       <UniqueIdentifier>{1a9a7660-075b-4d31-91da-c017877d3d77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\2. ToolColliderObj">
-      <UniqueIdentifier>{9db4c5a9-80e3-4486-9561-e6867fbf2c19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\UI_LockOn">
-      <UniqueIdentifier>{cd881789-e140-49b4-9b5d-22889b88dc1d}</UniqueIdentifier>
     </Filter>
     <Filter Include="04. UI\Define">
       <UniqueIdentifier>{4c8b1b45-18f3-48e2-a62c-459d032d96bc}</UniqueIdentifier>
@@ -106,143 +88,182 @@
     <Filter Include="02. GameObjects\02. Character">
       <UniqueIdentifier>{2f408878-5258-48e7-a250-cedd772a55bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player">
+    <Filter Include="05. Interface">
+      <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Interface\01. Cutscene_Actor">
+      <UniqueIdentifier>{a4aa2f76-17c5-4854-ae94-135abb7aa656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Managers\01. Cutscene_Manager">
+      <UniqueIdentifier>{c12a6fb0-7888-4a1e-8807-877159cb28db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Managers\02. Fade_Manager">
+      <UniqueIdentifier>{f20ef841-c559-459b-b396-f85be562a341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\00. FadeScreen">
+      <UniqueIdentifier>{e768a7cc-d3d2-42d7-84fe-0892d95fa1ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\01. UI_LockOn">
+      <UniqueIdentifier>{cd881789-e140-49b4-9b5d-22889b88dc1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Weapon">
+      <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. EventTrigger">
+      <UniqueIdentifier>{f2a7b51f-1f21-49bc-b543-b17733592bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player">
       <UniqueIdentifier>{aa72ff72-1ace-4fd0-a5c4-a7f304de7a43}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\Define">
+    <Filter Include="02. GameObjects\02. Character\01. Player\Define">
       <UniqueIdentifier>{0e4045a1-145f-4eb5-b384-776987f0c0b6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State">
       <UniqueIdentifier>{07182893-84d4-493a-b9b8-14cb44323865}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\00. PlayerState_Base">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\00. PlayerState_Base">
       <UniqueIdentifier>{3d38f81e-3750-4bc3-a092-fc21bbc9b2e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\01. PlayerState_Idle">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\01. PlayerState_Idle">
       <UniqueIdentifier>{4f85e5a9-4052-43b0-b17a-66bd501520ea}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\02. PlayerState_Jog">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\02. PlayerState_Jog">
       <UniqueIdentifier>{746d33b3-1235-4b28-b441-d7cd8e614b2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\03. PlayerState_Sprint">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\03. PlayerState_Sprint">
       <UniqueIdentifier>{58fb744d-0798-43c4-96a6-6c3c2dcefaf1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\05. PlayerState_Attack">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\05. PlayerState_Attack">
       <UniqueIdentifier>{4947652d-dcd0-4fda-b241-22cc93c50f32}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\04. PlayerState_Avoid">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\04. PlayerState_Avoid">
       <UniqueIdentifier>{3ef2ea5d-24fb-4784-a39c-b2f0551af820}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\06. PlayerState_LockOn">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\06. PlayerState_LockOn">
       <UniqueIdentifier>{4b45c3b8-7213-4b21-aa2a-6d26764e5051}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\PlayerStat">
-      <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy">
-      <UniqueIdentifier>{c151c21c-0afd-4e07-a6ca-7a53edd2ef0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss">
-      <UniqueIdentifier>{a89a7117-4c15-432e-a54c-1960327a5d0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\07. PlayerState_Parry">
       <UniqueIdentifier>{1e47503b-6be9-436f-9217-1b3daea8b3e9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess">
       <UniqueIdentifier>{c4dcbed1-7899-422e-ad3c-9deda5c43459}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\08. PlayerState_Hit">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\08. PlayerState_Hit">
       <UniqueIdentifier>{c3034d36-d3c4-4832-8b2b-159ee2ee1b2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\09. PlayerState_Parried">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\09. PlayerState_Parried">
       <UniqueIdentifier>{c46328e2-54e0-44cc-aaab-fb307396d834}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Elite">
-      <UniqueIdentifier>{b7bae545-b60c-4eb6-8818-80e8580f1c4e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Normal">
-      <UniqueIdentifier>{c5dbf081-bd20-4e28-9660-c69f5205a1bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Stats">
-      <UniqueIdentifier>{58435bba-5ebc-4e65-ad6a-9fc346159b58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\98. PlayerState_Executed">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\98. PlayerState_Executed">
       <UniqueIdentifier>{9f58949f-a326-42fb-8bde-feacdf319462}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\99. PlayerState_Cutscene">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\99. PlayerState_Cutscene">
       <UniqueIdentifier>{dfaac50f-ceee-44fb-b441-2ceb73289741}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Player\State\97. PlayerState_Finish">
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\97. PlayerState_Finish">
       <UniqueIdentifier>{f771ba8d-7a6c-4a71-b6f4-6367e081ba84}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur">
+    <Filter Include="02. GameObjects\02. Character\01. Player\PlayerStat">
+      <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy">
+      <UniqueIdentifier>{c151c21c-0afd-4e07-a6ca-7a53edd2ef0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss">
+      <UniqueIdentifier>{a89a7117-4c15-432e-a54c-1960327a5d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur">
       <UniqueIdentifier>{f4250b3e-f360-4fd3-98fb-a10599e54be8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State">
       <UniqueIdentifier>{3e83f096-1b05-4522-9de4-21f0c3e8b2fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\01. OdurState_Idle">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\01. OdurState_Idle">
       <UniqueIdentifier>{5b9cab58-b3bf-4e1c-bb76-8a0b5e78ef2d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\00. OdurState_Base">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\00. OdurState_Base">
       <UniqueIdentifier>{37dd4bf1-1966-4d5f-ba3d-952f4abdd755}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\02. OdurState_Walk">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\02. OdurState_Walk">
       <UniqueIdentifier>{11f478aa-e48c-4ff0-ae24-62241cae08b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\03. OdurState_Hit">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\03. OdurState_Hit">
       <UniqueIdentifier>{a863063d-f990-4382-a5ec-f7c3fc6078f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack">
       <UniqueIdentifier>{0eb1a668-191d-44dc-939c-54b8297d4651}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack1">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack1">
       <UniqueIdentifier>{8a129262-2927-4f57-a494-e9865cf9bec0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack2">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack2">
       <UniqueIdentifier>{744aa43e-0d0b-4b98-8fa7-f5f821bc9609}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_KickCombo">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_KickCombo">
       <UniqueIdentifier>{29cabfaf-bf09-4318-a7ef-50a8f12fff22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\05. OdurState_DisappearWalk">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\05. OdurState_DisappearWalk">
       <UniqueIdentifier>{10f68389-bbe9-481f-8c7b-8976510ad524}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\06. OdurState_DisappearMove">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\06. OdurState_DisappearMove">
       <UniqueIdentifier>{41fba9d0-531b-429b-acd6-9a272e7d292c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\07. OdurState_Appear">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\07. OdurState_Appear">
       <UniqueIdentifier>{61339d3b-762e-4c70-af71-e9323946bd1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\08. OdurState_Parry">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\08. OdurState_Parry">
       <UniqueIdentifier>{689bbd23-feac-492a-a87c-d13e161e81b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\09. OdurState_ThrowCard">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\09. OdurState_ThrowCard">
       <UniqueIdentifier>{6437b6db-fbc3-4022-80b0-6c6ebb639cb2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\10. OdurState_Execute">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute">
       <UniqueIdentifier>{836b4406-3f56-4c53-87f6-77095a72c157}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ReadyExecution">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ReadyExecution">
       <UniqueIdentifier>{38425856-a3a2-4e4b-8270-f6fda4a01ceb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\11. OdurState_Finished">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\11. OdurState_Finished">
       <UniqueIdentifier>{d0873048-d6db-47c3-bf58-a1dd3db8f270}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\Define">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\99. OdurState_Cutscene">
+      <UniqueIdentifier>{e8f11dd5-0fa5-489b-be57-d1c3a3f32351}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Define">
       <UniqueIdentifier>{c814f354-7456-47db-928e-a7d1bda2fa2a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\Card">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Card">
       <UniqueIdentifier>{efbeaa55-c1cc-41b9-8915-deace3b9e3f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\03. Enemy\Boss\02. Urd">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Card\For_Cutscene">
+      <UniqueIdentifier>{3af46cc6-fc0f-4f78-92fe-c4cb2818003a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\02. Urd">
       <UniqueIdentifier>{df5ad288-0396-4729-a06f-c0e134463d4d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\3. ToolNaviCell">
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Elite">
+      <UniqueIdentifier>{b7bae545-b60c-4eb6-8818-80e8580f1c4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Normal">
+      <UniqueIdentifier>{c5dbf081-bd20-4e28-9660-c69f5205a1bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Stats">
+      <UniqueIdentifier>{58435bba-5ebc-4e65-ad6a-9fc346159b58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\2. ToolAnimObj">
+      <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\3. ToolColliderObj">
+      <UniqueIdentifier>{9db4c5a9-80e3-4486-9561-e6867fbf2c19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\4. ToolNaviCell">
       <UniqueIdentifier>{3d56b1ac-c2b9-4a45-87b5-4e8813e6ff55}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\3. ToolNaviCell\ToolNaviCellPoint">
+    <Filter Include="02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint">
       <UniqueIdentifier>{df7dcd97-b882-46c5-a831-49cd782e49dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\1. ToolMapObj">
+      <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -283,13 +304,13 @@
       <Filter>02. GameObjects\00. Background</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
-      <Filter>02. GameObjects\02. Character\02. Player</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Free_Camera.h">
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Enemy.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Tool.h">
       <Filter>01. Levels\03. Tool</Filter>
@@ -307,10 +328,10 @@
       <Filter>100. IMGUI\02. Map_Tool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolMapObj.h">
-      <Filter>02. GameObjects\99. ToolObject\0. ToolMapObj</Filter>
+      <Filter>02. GameObjects\99. ToolObject\1. ToolMapObj</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolAnimObj.h">
-      <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
+      <Filter>02. GameObjects\99. ToolObject\2. ToolAnimObj</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestGround.h">
       <Filter>02. GameObjects</Filter>
@@ -319,67 +340,67 @@
       <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Idle.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\01. PlayerState_Idle</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\01. PlayerState_Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_States.h">
-      <Filter>02. GameObjects\02. Character\02. Player\Define</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Macro.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Base.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\00. PlayerState_Base</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\00. PlayerState_Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Jog.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\02. PlayerState_Jog</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\02. PlayerState_Jog</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Sprint.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\03. PlayerState_Sprint</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\03. PlayerState_Sprint</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
-      <Filter>02. GameObjects\04. Weapon</Filter>
+      <Filter>02. GameObjects\03. Weapon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\TestPlay_Tool.h">
       <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Attack.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\05. PlayerState_Attack</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\05. PlayerState_Attack</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\State_Base.h">
       <Filter>03. State</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolColliderObj.h">
-      <Filter>02. GameObjects\99. ToolObject\2. ToolColliderObj</Filter>
+      <Filter>02. GameObjects\99. ToolObject\3. ToolColliderObj</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Functions.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerStat.h">
-      <Filter>02. GameObjects\02. Character\02. Player\PlayerStat</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\PlayerStat</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Enums.h">
-      <Filter>02. GameObjects\02. Character\02. Player\Define</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Odur.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Odur_Enums.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\Define</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Odur_States.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\Define</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Define</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Idle.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\01. OdurState_Idle</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\01. OdurState_Idle</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Base.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\00. OdurState_Base</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\00. OdurState_Base</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI.h">
       <Filter>04. UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_LockOn.h">
-      <Filter>04. UI\UI_LockOn</Filter>
+      <Filter>04. UI\01. UI_LockOn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Headers.h">
       <Filter>04. UI\Define</Filter>
@@ -388,85 +409,109 @@
       <Filter>04. UI\Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_LockOn.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\06. PlayerState_LockOn</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\06. PlayerState_LockOn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Hit.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\03. OdurState_Hit</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\03. OdurState_Hit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Character.h">
       <Filter>02. GameObjects\02. Character</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Avoid.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\04. PlayerState_Avoid</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\04. PlayerState_Avoid</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Parry.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\07. PlayerState_Parry</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_ParrySuccess.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_CaneAttack1.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack1</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Walk.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\02. OdurState_Walk</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\02. OdurState_Walk</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_CaneAttack2.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack2</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack2</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_DisappearWalk.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\05. OdurState_DisappearWalk</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\05. OdurState_DisappearWalk</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_DisappearMove.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\06. OdurState_DisappearMove</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\06. OdurState_DisappearMove</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Appear.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\07. OdurState_Appear</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\07. OdurState_Appear</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_KickCombo.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_KickCombo</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_KickCombo</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Parry.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\08. OdurState_Parry</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\08. OdurState_Parry</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Hit.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\08. PlayerState_Hit</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\08. PlayerState_Hit</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Parried.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\09. PlayerState_Parried</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\09. PlayerState_Parried</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EnemyStats.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Stats</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Stats</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_ThrowCard.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\09. OdurState_ThrowCard</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\09. OdurState_ThrowCard</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Odur_Card.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\Card</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Card</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Cutscene.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\99. PlayerState_Cutscene</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\99. PlayerState_Cutscene</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Finish.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\97. PlayerState_Finish</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\97. PlayerState_Finish</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Executed.h">
-      <Filter>02. GameObjects\02. Character\02. Player\State\98. PlayerState_Executed</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\98. PlayerState_Executed</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Execute.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\10. OdurState_Execute</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_ReadyExecution.h">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ReadyExecution</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Client_Struct.h">
-      <Filter>100. IMGUI</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ReadyExecution</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolNaviCell.h">
-      <Filter>02. GameObjects\99. ToolObject\3. ToolNaviCell</Filter>
+      <Filter>02. GameObjects\99. ToolObject\4. ToolNaviCell</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ToolNaviCellPoint.h">
-      <Filter>02. GameObjects\99. ToolObject\3. ToolNaviCell\ToolNaviCellPoint</Filter>
+      <Filter>02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\EventTrigger.h">
+      <Filter>02. GameObjects\04. EventTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Enums.h">
+      <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\public\Cutscene_Actor.h">
+      <Filter>05. Interface\01. Cutscene_Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Cutscene.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\99. OdurState_Cutscene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Odur_Card_Cutscene.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Card\For_Cutscene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Cutscene_Manager.h">
+      <Filter>97. Managers\01. Cutscene_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Fade_Manager.h">
+      <Filter>97. Managers\02. Fade_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\FadeScreen.h">
+      <Filter>04. UI\00. FadeScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Client_Struct.h">
+      <Filter>99. Defines</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -489,7 +534,7 @@
       <Filter>02. GameObjects\00. Background</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Free_Camera.cpp">
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
@@ -510,7 +555,7 @@
       <Filter>100. IMGUI\02. Map_Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolMapObj.cpp">
-      <Filter>02. GameObjects\99. ToolObject\0. ToolMapObj</Filter>
+      <Filter>02. GameObjects\99. ToolObject\1. ToolMapObj</Filter>
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>98. Default</Filter>
@@ -525,136 +570,157 @@
       <Filter>02. GameObjects\01. Camera\Main_Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Idle.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\01. PlayerState_Idle</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\01. PlayerState_Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Base.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\00. PlayerState_Base</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\00. PlayerState_Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Jog.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\02. PlayerState_Jog</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\02. PlayerState_Jog</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolAnimObj.cpp">
-      <Filter>02. GameObjects\99. ToolObject\1. ToolAnimObj</Filter>
+      <Filter>02. GameObjects\99. ToolObject\2. ToolAnimObj</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Sprint.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\03. PlayerState_Sprint</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\03. PlayerState_Sprint</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
-      <Filter>02. GameObjects\04. Weapon</Filter>
+      <Filter>02. GameObjects\03. Weapon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\TestPlay_Tool.cpp">
       <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Attack.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\05. PlayerState_Attack</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\05. PlayerState_Attack</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\State_Base.cpp">
       <Filter>03. State</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolColliderObj.cpp">
-      <Filter>02. GameObjects\99. ToolObject\2. ToolColliderObj</Filter>
+      <Filter>02. GameObjects\99. ToolObject\3. ToolColliderObj</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerStat.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\PlayerStat</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\PlayerStat</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Enemy.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Idle.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\01. OdurState_Idle</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\01. OdurState_Idle</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Base.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\00. OdurState_Base</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\00. OdurState_Base</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI.cpp">
       <Filter>04. UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_LockOn.cpp">
-      <Filter>04. UI\UI_LockOn</Filter>
+      <Filter>04. UI\01. UI_LockOn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Manager.cpp">
       <Filter>04. UI\Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_LockOn.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\06. PlayerState_LockOn</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\06. PlayerState_LockOn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Hit.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\03. OdurState_Hit</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\03. OdurState_Hit</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Character.cpp">
       <Filter>02. GameObjects\02. Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Avoid.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\04. PlayerState_Avoid</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\04. PlayerState_Avoid</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Parry.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\07. PlayerState_Parry</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_ParrySuccess.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\07. PlayerState_Parry\PlayerState_ParrySucess</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_CaneAttack1.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack1</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Walk.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\02. OdurState_Walk</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\02. OdurState_Walk</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_CaneAttack2.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack2</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_CaneAttack2</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_DisappearWalk.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\05. OdurState_DisappearWalk</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\05. OdurState_DisappearWalk</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_DisappearMove.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\06. OdurState_DisappearMove</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\06. OdurState_DisappearMove</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Appear.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\07. OdurState_Appear</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\07. OdurState_Appear</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_KickCombo.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_KickCombo</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\04. OdurState_Attack\OdurState_KickCombo</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Parry.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\08. OdurState_Parry</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\08. OdurState_Parry</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Hit.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\08. PlayerState_Hit</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\08. PlayerState_Hit</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Parried.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\09. PlayerState_Parried</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\09. PlayerState_Parried</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EnemyStats.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Stats</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Stats</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_ThrowCard.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\09. OdurState_ThrowCard</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\09. OdurState_ThrowCard</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Odur_Card.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\Card</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Card</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Odur.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Cutscene.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\99. PlayerState_Cutscene</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\99. PlayerState_Cutscene</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Finish.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\97. PlayerState_Finish</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\97. PlayerState_Finish</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Executed.cpp">
-      <Filter>02. GameObjects\02. Character\02. Player\State\98. PlayerState_Executed</Filter>
+      <Filter>02. GameObjects\02. Character\01. Player\State\98. PlayerState_Executed</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Execute.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\10. OdurState_Execute</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_ReadyExecution.cpp">
-      <Filter>02. GameObjects\02. Character\03. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ReadyExecution</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ReadyExecution</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolNaviCell.cpp">
-      <Filter>02. GameObjects\99. ToolObject\3. ToolNaviCell</Filter>
+      <Filter>02. GameObjects\99. ToolObject\4. ToolNaviCell</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ToolNaviCellPoint.cpp">
-      <Filter>02. GameObjects\99. ToolObject\3. ToolNaviCell\ToolNaviCellPoint</Filter>
+      <Filter>02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\EventTrigger.cpp">
+      <Filter>02. GameObjects\04. EventTrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="Cutscene_Actor.cpp">
+      <Filter>05. Interface\01. Cutscene_Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\private\OdurState_Cutscene.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\99. OdurState_Cutscene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Odur_Card_Cutscene.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\Card\For_Cutscene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Cutscene_Manager.cpp">
+      <Filter>97. Managers\01. Cutscene_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Fade_Manager.cpp">
+      <Filter>97. Managers\02. Fade_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\FadeScreen.cpp">
+      <Filter>04. UI\00. FadeScreen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

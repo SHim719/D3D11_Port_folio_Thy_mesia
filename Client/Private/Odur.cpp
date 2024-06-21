@@ -21,6 +21,9 @@ HRESULT COdur::Initialize_Prototype()
 
 HRESULT COdur::Initialize(void* pArg)
 {
+	if (nullptr == pArg)
+		return E_FAIL;
+
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
@@ -213,6 +216,9 @@ HRESULT COdur::Ready_Components()
 	Desc.bActive = true;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, nullptr)))
 		return E_FAIL;
 
 	return S_OK;

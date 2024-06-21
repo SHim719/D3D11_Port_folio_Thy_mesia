@@ -35,7 +35,6 @@ void CPlayerState_Executed::OnState_Start(void* pArg)
 
 	m_pMain_Camera->SetState_Cutscene(AttachDesc);
 
-
 	m_pModel->Change_Animation(Corvus_VSMagician_SP1Hurt, 0.f);
 }
 
@@ -45,7 +44,7 @@ void CPlayerState_Executed::OnGoing(_float fTimeDelta)
 	{
 		m_pMain_Camera->Reset_State();
 
-		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
+		//누워있게m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;
 	}
 
