@@ -20,13 +20,14 @@ HRESULT COdurState_ThrowCard::Initialize(void* pArg)
 
 	m_Cards.resize(20);
 	for (size_t i = 0; i < m_Cards.size(); ++i)
-		m_Cards[i] = dynamic_cast<COdur_Card*>(m_pGameInstance->Clone_GameObject(L"Prototype_Odur_Card"));
+		m_Cards[i] = static_cast<COdur_Card*>(m_pGameInstance->Clone_GameObject(L"Prototype_Odur_Card"));
 
 	m_pLeftHandBone = m_pModel->Get_Bone("hand_l");
 	Safe_AddRef(m_pLeftHandBone);
 
 	m_pModel->Bind_Func("Throw_Card", bind(&COdurState_ThrowCard::Throw_SingleCard, this));
 	m_pModel->Bind_Func("Throw_MultipleCard", bind(&COdurState_ThrowCard::Throw_MultipleCards, this));
+	m_pModel->Bind_Func("Odur_ChangeToNextCardAnim", bind(&COdurState_ThrowCard::Change_To_NextAnim, this));
 		
 	return S_OK;
 }
@@ -53,18 +54,10 @@ void COdurState_ThrowCard::OnGoing(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
-		if (m_AnimPlaylists[m_iThrowState].size() == m_iCurAnimIdx)
-		{
-			if (0 == m_iThrowState)
-				Decide_State();
-			else
-				int x = 10; // Ã³Çü	
-		}
-		else
-		{
-			m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);
-		}
+		Change_To_NextAnim();
+		return;
 	}
+
 
 	if (m_bThrowMultipleCard)
 	{
@@ -136,6 +129,21 @@ void COdurState_ThrowCard::Throw_SingleCard()
 void COdurState_ThrowCard::Throw_MultipleCards()
 {
 	m_bThrowMultipleCard = true;
+}
+
+void COdurState_ThrowCard::Change_To_NextAnim()
+{
+	if (m_AnimPlaylists[m_iThrowState].size() == m_iCurAnimIdx)
+	{
+		if (0 == m_iThrowState)
+			Decide_State();
+		else
+			m_pOdur->Change_State()
+	}
+	else
+	{
+		m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);
+	}
 }
 
 COdurState_ThrowCard* COdurState_ThrowCard::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

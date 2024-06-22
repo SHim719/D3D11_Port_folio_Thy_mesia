@@ -21,6 +21,8 @@ private:
 private:
 	void Decide_Animation();
 
+	void ChangeState_Appear();
+
 public:
 	static COdurState_DisappearMove* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

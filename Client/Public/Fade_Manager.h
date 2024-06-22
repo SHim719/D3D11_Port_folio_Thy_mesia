@@ -12,11 +12,7 @@ private:
 	CFade_Manager();
 	~CFade_Manager() = default;
 
-	void Add_CallBack()
 
-private:
-	function<void()>	m_FadeStartCallBack = { nullptr };
-	function<void()>	m_FadeEndCallBack = { nullptr };
 };
 
 END

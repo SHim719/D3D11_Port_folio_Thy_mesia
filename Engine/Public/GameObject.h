@@ -59,11 +59,12 @@ public:
 	virtual void OnCollisionExit(CGameObject* pOther) {}
 
 protected:
-	_bool m_bDestroyed = { false };
-	_bool m_bActive = { true };
-	_bool m_bCreatedThisFrame = { true };
+	_bool	m_bDestroyed = { false };
+	_bool	m_bActive = { true };
+	_bool	m_bCreatedThisFrame = { true };
 
-	_bool m_bReturnToPool = { false }; // For Object Pool
+	_bool	m_bReturnToPool = { false }; // For Object Pool
+	_bool	m_bNoRender = { false };
 
 	_uint m_iTag = 0;
 public:
@@ -90,6 +91,17 @@ public:
 
 	_bool Is_ReturnToPool() const {
 		return m_bReturnToPool;
+	}
+
+	void Enable_Render() {
+		m_bNoRender = false;
+	}
+	void Disable_Render() {
+		m_bNoRender = true;
+	}
+
+	_bool No_Render() const {
+		return m_bNoRender;
 	}
 
 public:

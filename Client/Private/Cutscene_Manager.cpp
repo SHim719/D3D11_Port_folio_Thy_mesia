@@ -8,6 +8,7 @@
 IMPLEMENT_SINGLETON(CCutscene_Manager);
 
 CCutscene_Manager::CCutscene_Manager()
+	: m_pGameInstance(CGameInstance::Get_Instance())
 {
 }
 
@@ -16,14 +17,22 @@ void CCutscene_Manager::OnEnter_Cutscene(CUTSCENE_NUMBER eCutscene)
 {
 	m_eNowPlaying = eCutscene;
 
-	CFadeScreen::FADEDESC FadeDesc;
-	FadeDesc.eFadeColor = CFadeScreen::BLACK;
-	FadeDesc.eFadeType = CFadeScreen::FADEOUT;
-	FadeDesc.fAlphaDeltaSpeed = 2.f;
-	FadeDesc.fExtraTime = 0.f;
-	FadeDesc.Callback_FadeEnd = bind(&CCutscene_Manager::OnStart_Cutscene, this);
+	switch (m_eNowPlaying)
+	{
+	case ENCOUNTER_ODUR:
+	{
+		CFadeScreen::FADEDESC FadeDesc;
+		FadeDesc.eFadeColor = CFadeScreen::BLACK;
+		FadeDesc.fFadeOutSpeed = 0.5f;
+		FadeDesc.fFadeInSpeed = 1.5f;
+		FadeDesc.pCallback_FadeOutEnd = move(bind(&CCutscene_Manager::OnStart_Cutscene, this));
+		m_pGameInstance->Add_Clone(GET_CURLEVEL, L"UI", L"Prototype_FadeScreen", &FadeDesc);
+	}
+		break;
 
-	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"UI", L"Prototype_FadeScreen", &FadeDesc);
+	case ENCOUNTER_URD:
+		break;
+	}
 
 	for (auto it = m_CutsceneActors.begin(); it != m_CutsceneActors.end(); ++it)
 		(*it)->OnEnter_Cutscene();
@@ -38,4 +47,8 @@ void CCutscene_Manager::OnStart_Cutscene()
 
 void CCutscene_Manager::OnEnd_Cutscene()
 {
+	for (auto it = m_CutsceneActors.begin(); it != m_CutsceneActors.end(); ++it)
+		(*it)->OnEnd_Cutscene();
 }
+
+

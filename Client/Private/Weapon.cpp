@@ -59,6 +59,12 @@ void CWeapon::LateTick(_float fTimeDelta)
 
 HRESULT CWeapon::Render()
 {
+	if (m_bNoRender)
+		return E_FAIL;
+
+	if (nullptr != m_pOwner && m_pOwner->No_Render())
+		return E_FAIL;
+
 	if (nullptr == m_pModel ||
 		nullptr == m_pShader)
 	{

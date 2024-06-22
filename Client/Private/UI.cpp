@@ -13,13 +13,13 @@ CUI::CUI(const CUI& rhs)
 
 HRESULT CUI::Initialize_Prototype()
 {
-	_float4x4 ViewMatrix, ProjMatrix;
+	return S_OK;
+}
 
-	XMStoreFloat4x4(&ViewMatrix, XMMatrixIdentity());
-	XMStoreFloat4x4(&ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f)));
-
-	m_pShader->Set_RawValue("g_ViewMatrix", &ViewMatrix, sizeof(_float4x4));
-	m_pShader->Set_RawValue("g_ProjMatrix", &ProjMatrix, sizeof(_float4x4));
+HRESULT CUI::Initialize(void* pArg)
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_UI"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
 
 	_matrix ViewportMatrix = XMMatrixSet(
 		g_iWinSizeX * 0.5f, 0.0f, 0.0f, 0.0f,
@@ -29,14 +29,6 @@ HRESULT CUI::Initialize_Prototype()
 	);
 
 	XMStoreFloat4x4(&m_ViewportMatrix, ViewportMatrix);
-
-	return S_OK;
-}
-
-HRESULT CUI::Initialize(void* pArg)
-{
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_UI"), TEXT("Shader"), (CComponent**)&m_pShader)))
-		return E_FAIL;
 
 	return S_OK;
 }

@@ -7,6 +7,9 @@ BEGIN(Client)
 class CEventTrigger final : public CGameObject
 {
 private:
+	enum TRIGGEREVENTS { START_ODUR_CUTSCENE, START_URD_CUTSCENE, EVENT_END };
+
+private:
 	CEventTrigger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEventTrigger(const CEventTrigger& rhs);
 	virtual ~CEventTrigger() = default;
@@ -18,13 +21,19 @@ public:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
+private:
+	TRIGGEREVENTS	m_eTriggerEvent = EVENT_END;
+
+	_bool			m_bNextFrameDestroy = { false };
 
 private:
-	CShader*	m_pShader = { nullptr };
+	void OnCollisionEnter(CGameObject* pOther)	override;
+
+private:
 	CCollider*	m_pCollider = { nullptr };
 
 private:
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void* pArg);
 
 public:
 	static CEventTrigger* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

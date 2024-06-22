@@ -17,7 +17,7 @@ public:
 	void Tick(_float fTimeDelta)	override;
 
 private:
-	HRESULT Load_KeyFrameNames();
+	HRESULT Load_KeyFrameNames(_int iSelModelIdx);
 	HRESULT Load_KeyFrames();
 	HRESULT Load_KeyFrameData(const _tchar* pPath);
 	

@@ -3,6 +3,10 @@
 #include "Weapon.h"
 #include "Bone.h"
 
+#include "Cutscene_Manager.h"
+
+#include "FadeScreen.h"
+
 COdur::COdur(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -24,7 +28,7 @@ HRESULT COdur::Initialize(void* pArg)
 	if (nullptr == pArg)
 		return E_FAIL;
 
-	if (FAILED(Ready_Components()))
+	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
 	if (FAILED(Ready_States()))
@@ -40,14 +44,21 @@ HRESULT COdur::Initialize(void* pArg)
 
 	Change_State((_uint)OdurState::State_Idle);
 	m_pModel->Set_AnimPlay();
+
+	CUTSCENEMGR->Add_Actor(this);
+
+	m_bNoRender = true;
+
 	return S_OK;
 }
 
 void COdur::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::T))
-		Change_State((_uint)OdurState::State_ReadyExecution);
-
+	{
+	
+	}
+		
 	if (m_bLookTarget)
 	{
 		m_pTransform->Rotation_Quaternion(
@@ -65,6 +76,8 @@ void COdur::LateTick(_float fTimeDelta)
 {
 	Update_Alpha(fTimeDelta);
 
+	m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
 
@@ -73,8 +86,7 @@ void COdur::LateTick(_float fTimeDelta)
 
 HRESULT COdur::Render()
 {
-	if (nullptr == m_pModel ||
-		nullptr == m_pShader)
+	if (m_bNoRender)
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
@@ -112,6 +124,19 @@ HRESULT COdur::Render()
 	return S_OK;
 }
 
+void COdur::OnEnter_Cutscene()
+{
+}
+
+void COdur::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
+{
+	Change_State((_uint)OdurState::State_Cutscene);
+}
+
+void COdur::OnEnd_Cutscene()
+{
+}
+
 void COdur::Bind_KeyFrames()
 {
 	m_pModel->Bind_Func("Active_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_Weapons[CANE]));
@@ -128,6 +153,7 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Enable_Stanced, this));
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Disable_Stanced, this));
 	m_pModel->Bind_Func("Add_AttackIdx", bind(&CCharacter::Add_AttackIdx, this));
+	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Enable_Render, this));
 }
 
 void COdur::Swap_Bone()
@@ -178,8 +204,10 @@ void COdur::OnCollisionExit(CGameObject* pOther)
 	__super::OnCollisionExit(pOther);
 }
 
-HRESULT COdur::Ready_Components()
+HRESULT COdur::Ready_Components(void* pArg)
 {
+	LOADOBJDESC* pLoadDesc = (LOADOBJDESC*)pArg;
+
 	CTransform::TRANSFORMDESC		TransformDesc;
 	ZeroMemory(&TransformDesc, sizeof(CTransform::TRANSFORMDESC));
 
@@ -218,8 +246,10 @@ HRESULT COdur::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, nullptr)))
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &(pLoadDesc->iNaviIdx))))
 		return E_FAIL;
+
+	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
 
 	return S_OK;
 }
@@ -241,6 +271,8 @@ HRESULT COdur::Ready_States()
 	m_States[(_uint)OdurState::State_ThrowCard] = COdurState_ThrowCard::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_ReadyExecution] = COdurState_ReadyExecution::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_Execute] = COdurState_Execute::Create(m_pDevice, m_pContext, this);
+	//m_States[(_uint)OdurState::State_Finished] = COdurState_Execute::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Cutscene] = COdurState_Cutscene::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }

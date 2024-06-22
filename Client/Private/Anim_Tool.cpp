@@ -18,9 +18,6 @@ HRESULT CAnim_Tool::Initialize(void* pArg)
     m_strModelLists.reserve(10);
     m_strModelLists.emplace_back("Prototype_Model_Player");
     m_strModelLists.emplace_back("Prototype_Model_Odur");
-
-    Load_KeyFrameNames();
-
 	return S_OK;
 }
 
@@ -36,9 +33,19 @@ void CAnim_Tool::Tick(_float fTimeDelta)
     KeyFrame_Window();
 }
 
-HRESULT CAnim_Tool::Load_KeyFrameNames()
+HRESULT CAnim_Tool::Load_KeyFrameNames(_int iSelModelIdx)
 {
-    string strFullPath = "../../Resources/KeyFrame/KeyFrameData.txt";
+    string strFullPath; 
+
+    switch (iSelModelIdx)
+    {
+    case 0:
+        strFullPath = "../../Resources/KeyFrame/KeyFrames_Player.txt";
+        break;
+    case 1:
+        strFullPath = "../../Resources/KeyFrame/KeyFrames_Odur.txt";
+        break;
+    }
 
     ifstream fin;
     fin.open(strFullPath);
@@ -464,6 +471,8 @@ void CAnim_Tool::Model_Button()
 
         m_pAnimObj = static_cast<CToolAnimObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"ToolObject", L"Prototype_ToolAnimObj", &m_iSelModelIdx));
         m_pModel = m_pAnimObj->Get_Model();
+
+        Load_KeyFrameNames(m_iSelModelIdx);
 
         m_strAnimations.clear();
         m_strAnimations.shrink_to_fit();

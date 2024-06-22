@@ -3,8 +3,11 @@
 #include "GameInstance.h"
 #include "Levels_Header.h"
 #include "Background.h"
-#include "UI_Manager.h"
+
 #include "ImGui_Main.h"
+
+#include "UI_Manager.h"
+#include "Cutscene_Manager.h"
 
 
 CMainApp::CMainApp()
@@ -142,6 +145,7 @@ void CMainApp::Free()
 	__super::Free();
 
 	CUI_Manager::Destroy_Instance();
+	CCutscene_Manager::Destroy_Instance();
 
 	Safe_Release(m_pImGui_Main);
 	

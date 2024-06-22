@@ -25,7 +25,6 @@ public:
 	void OnStart_Cutscene();
 	void OnEnd_Cutscene();
 
-
 private:
 	CGameInstance*					m_pGameInstance = { nullptr };
 

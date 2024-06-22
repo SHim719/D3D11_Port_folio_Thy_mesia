@@ -7,6 +7,8 @@
 
 #include "Enemy.h"
 
+#include "Cutscene_Manager.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)
 {
@@ -47,13 +49,15 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	m_pTransform->Set_Position(XMVectorSet(37.326f, 0.798f, -2.175f, 1.f));
 
+	CUTSCENEMGR->Add_Actor(this);
+
 	return S_OK;
 }
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	if (KEY_DOWN(eKeyCode::P))
-		Change_State((_uint)PlayerState::State_Cutscene);
+	//if (KEY_DOWN(eKeyCode::T))
+	//	Change_State((_uint)PlayerState::State_Cutscene);
 
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
@@ -77,6 +81,9 @@ void CPlayer::LateTick(_float fTimeDelta)
 
 HRESULT CPlayer::Render()
 {
+	if (m_bNoRender)
+		return S_OK;
+
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -113,7 +120,8 @@ HRESULT CPlayer::Render()
 
 void CPlayer::OnEnter_Cutscene()
 {
-
+	XMStoreFloat4x4(&m_PrevWorldMatrix, m_pTransform->Get_WorldMatrix());
+	Change_State((_uint)PlayerState::State_Idle);
 }
 
 void CPlayer::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
@@ -123,6 +131,8 @@ void CPlayer::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
 
 void CPlayer::OnEnd_Cutscene()
 {
+	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&m_PrevWorldMatrix));
+
 	Change_State((_uint)PlayerState::State_Idle);
 }
 
@@ -134,7 +144,7 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_NextState", bind(&CPlayer::Disable_NextState, this));
 	m_pModel->Bind_Func("Disable_Rotation", bind(&CPlayer::Disable_Rotation, this));
 	m_pModel->Bind_Func("Set_Vulnerable", bind(&CPlayer::Set_Vulnerable, this));
-
+	m_pModel->Bind_Func("Enable_Render", bind(&CPlayer::Enable_Render, this));
 }
 
 
@@ -166,7 +176,6 @@ void CPlayer::Inactive_AllWeaponColliders()
 			pWeapon->Inactive_Collider();
 	}
 }
-
 
 void CPlayer::Toggle_LockOn(CTransform* pTargetTransform)
 {

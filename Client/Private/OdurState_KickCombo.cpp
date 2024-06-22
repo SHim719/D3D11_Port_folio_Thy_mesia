@@ -24,8 +24,9 @@ void COdurState_KickCombo::OnGoing(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
+		_int iDir = 0;
 		m_pOdur->Swap_Bone();
-		//m_pOdur->Change_State((_uint)OdurState::State_DisappearMove);
+		m_pOdur->Change_State((_uint)OdurState::State_DisappearMove, &iDir);
 		return;
 	}
 

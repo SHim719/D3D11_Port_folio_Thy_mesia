@@ -20,9 +20,6 @@ HRESULT CTestPlay_Tool::Initialize(void* pArg)
 
 void CTestPlay_Tool::Start_Tool()
 {
-    if (FAILED(Load_TestMap()))
-        return;
-
     CCamera::CAMERADESC camDesc{};
     camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
     camDesc.fNear = 0.1f;
@@ -40,9 +37,8 @@ void CTestPlay_Tool::Start_Tool()
     Safe_AddRef(m_pPlayer);
     Safe_AddRef(m_pMain_Camera);
 
-    CGameObject* pOdur = m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Enemy", L"Prototype_Odur");
-    pOdur->Get_Transform()->Set_Position(XMVectorSet(-11.429f, 4.276f, 4.269f, 1.f));
-    pOdur->Get_Transform()->LookAt2D(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+    if (FAILED(Load_TestMap()))
+        return;
 }
 
 void CTestPlay_Tool::Tick(_float fTimeDelta)
@@ -85,7 +81,7 @@ void CTestPlay_Tool::Camera_Window()
 
 HRESULT CTestPlay_Tool::Load_TestMap()
 {
-    string strMapDataPath = "../../Resources/Maps/Stage1/";
+    string strMapDataPath = "../../Resources/Maps/SaveTest/";
 
     fs::path MapDataPath(strMapDataPath);
 
@@ -102,22 +98,23 @@ HRESULT CTestPlay_Tool::Load_TestMap()
         fs::path fileName = entry.path().filename();
         fs::path fileTitle = fileName.stem();
 
-        wstring wstrModelTag = L"Prototype_Model_";
-        wstrModelTag += fileTitle.c_str();
+        LOADOBJDESC LoadDesc;
+
+        wstring wstrPrototypeTag = L"Prototype_";
+        wstrPrototypeTag += fileTitle.c_str();
 
         while (true)
         {
-            _float4x4 WorldMatrix;
-            fin.read((_char*)&WorldMatrix, sizeof(_float4x4));
+            fin.read((_char*)&LoadDesc, sizeof(LOADOBJDESC));
 
             if (fin.eof())
                 break;
 
-            CToolMapObj* pObj = static_cast<CToolMapObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"MapObject", L"Prototype_ToolMapObj", &wstrModelTag));
-            if (nullptr == pObj)
-                return E_FAIL;
+            wsprintf(LoadDesc.szModelTag, L"Prototype_Model_%s", fileTitle.c_str());
 
-            pObj->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+            CGameObject* pObj = m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Object", wstrPrototypeTag, &LoadDesc);
+            if (nullptr == pObj)
+                m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Object", L"Prototype_MapObject", &LoadDesc);
         }
     }
 

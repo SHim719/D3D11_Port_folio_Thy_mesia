@@ -20,9 +20,20 @@ CUI_Manager::~CUI_Manager()
 
 HRESULT CUI_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
+	CShader* pShader = static_cast<CShader*>(m_pGameInstance->Clone_Component(LEVEL_STATIC, L"Prototype_Shader_UI"));
+
+	_float4x4 ViewMatrix, ProjMatrix;
+
+	XMStoreFloat4x4(&ViewMatrix, XMMatrixIdentity());
+	XMStoreFloat4x4(&ProjMatrix, XMMatrixTranspose(XMMatrixOrthographicLH(g_iWinSizeX, g_iWinSizeY, 0.f, 1.f)));
+
+	pShader->Set_RawValue("g_ViewMatrix", &ViewMatrix, sizeof(_float4x4));
+	pShader->Set_RawValue("g_ProjMatrix", &ProjMatrix, sizeof(_float4x4));
+
+	Safe_Release(pShader);
+
 	if (FAILED(Ready_UI(pDevice, pContext)))
 		return E_FAIL;
-
 
 	return S_OK;
 }

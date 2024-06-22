@@ -28,16 +28,13 @@ public:
 
 protected:
 	_bool						m_bStanced = { false };
-
+	
 public:
 	void Enable_Stanced() {
-		m_bStanced = true;
-	}
-
+		m_bStanced = true;}
 	void Disable_Stanced() {
-		m_bStanced = false;
-	}
-
+		m_bStanced = false;}
+	
 protected:
 	vector<class CWeapon*>		m_Weapons;
 

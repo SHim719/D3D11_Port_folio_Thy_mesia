@@ -8,17 +8,19 @@ class CFadeScreen final : public CUI
 {
 public:
 	enum FADECOLOR { BLACK, WHITE, COLOR_END};
-	enum FADETYPE { FADEOUT, FADEIN, FADETYPE_END};
+	enum FADESTATE { FADEOUT, EXTRA, FADEIN};
 
 public:
 	typedef struct tagFadeDesc
 	{
-		FADETYPE			eFadeType;
 		FADECOLOR			eFadeColor;
-		_float				fAlphaDeltaSpeed;
+		_float				fFadeOutSpeed;
+		_float				fFadeInSpeed;
 		_float				fExtraTime = 0.f;
-		function<void()>	Callback_FadeStart = nullptr;
-		function<void()>	Callback_FadeEnd = nullptr;
+		function<void()>	pCallback_FadeOutStart = nullptr;
+		function<void()>	pCallback_FadeOutEnd =  nullptr;
+		function<void()>	pCallback_FadeInStart = nullptr;
+		function<void()>	pCallback_FadeInEnd = nullptr;
 	}FADEDESC;	
 
 private:
@@ -33,19 +35,27 @@ private:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
+public:
+	//void Bind_Callback_FadeStart(function<void()> func) { 
+	//	m_Callback_FadeStart  = move(func);}
+	//void Bind_Callback_FadeEnd(function<void()> func) { 
+	//	m_Callback_FadeEnd = move(func);} 
+
 private:
 	_float		m_fAlpha = { 0.f };
-	_float		m_fAlphaDeltaSpeed = { };
+	_float		m_fFadeOutSpeed = { 0.f };
+	_float		m_fFadeInSpeed = { 0.f };
 	_float		m_fExtraTime = { 0.f };
-	_bool		m_bExtraTime = { false };
+	_bool		m_bComplete = { false };
 
-	FADETYPE	m_eFadeType = { FADETYPE_END };
+	FADESTATE	m_eFadeState = { FADEOUT };
 
 	_float4		m_vFadeColor = {};
 
-	function<void()> m_Callback_FadeStart = { nullptr };
-	function<void()> m_Callback_FadeEnd = { nullptr };
-
+	function<void()>	m_Callback_FadeOutStart = { nullptr };
+	function<void()>	m_Callback_FadeOutEnd = { nullptr };
+	function<void()>	m_Callback_FadeInStart = { nullptr };
+	function<void()>	m_Callback_FadeInEnd = { nullptr };
 public:
 	static CFadeScreen* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr)	override;

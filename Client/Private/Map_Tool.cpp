@@ -18,7 +18,7 @@ HRESULT CMap_Tool::Initialize(void* pArg)
 
     m_iSelPointIndices.reserve(3);
 
-    m_strPlacable_Objects[TRIGGEROBJ].push_back("Trigger");
+    m_strPlacable_Objects[TRIGGEROBJ].push_back("EventTrigger");
 
     return S_OK;
 }
@@ -279,7 +279,6 @@ void CMap_Tool::Map_Tool()
         break;
     }
 
-
     Transform_Gizmo();
     Transform_View();
     Placable_Object();
@@ -498,15 +497,33 @@ HRESULT CMap_Tool::Save_Map()
     if (L"" == wstrFolderPath)
         return E_FAIL;
 
-    if (FAILED(Save_MapObjects(wstrFolderPath)))
-        return E_FAIL;
+    for (_int i = 0; i < OBJTYPE_END; ++i)
+    {
+        for (const string& strObj : m_strPlacable_Objects[i])
+        {
+            auto Pair = m_MapLayers.equal_range(strObj);
+            if (m_MapLayers.end() != Pair.first)
+            {
+                wstring wstrFullPath = wstrFolderPath + L"\\" + Convert_StrToWStr(strObj) + L".dat";
 
-    if (FAILED(Save_Enemies(wstrFolderPath)))
-        return E_FAIL;
+                ofstream fout(wstrFullPath, ios::binary);
+                if (!fout.is_open())
+                    return E_FAIL;
 
-    if (FAILED(Save_Triggers(wstrFolderPath)))
-        return E_FAIL;
-  
+                for (auto it = Pair.first; it != Pair.second; ++it)
+                {
+                    LOADOBJDESC LoadDesc;
+                    LoadDesc.eObjType = it->second->Get_ObjType();
+                    LoadDesc.WorldMatrix = it->second->Get_Transform()->Get_WorldFloat4x4();
+                    LoadDesc.iNaviIdx = it->second->Get_NaviIdx();
+                    LoadDesc.iTriggerIdx = it->second->Get_TriggerIdx();
+                    LoadDesc.vColliderSize = it->second->Get_ColliderSize();
+
+                    fout.write((_char*)&LoadDesc, sizeof(LOADOBJDESC));
+                }
+            }
+        }
+    }
     return S_OK;
 }
 
@@ -531,126 +548,26 @@ HRESULT CMap_Tool::Load_Map()
         fs::path fileName = entry.path().filename();
         fs::path fileTitle = fileName.stem();
 
-        wstring wstrModelTag = L"Prototype_Model_";
-        wstrModelTag += fileTitle.c_str();
-
-        LOADOBJDESC Desc;
-        Desc.wstrModelTag = wstrModelTag;
+        LOADOBJDESC LoadDesc;
 
         while (true)
         {
-            fin.read((_char*)&Desc.eObjType, sizeof(_int));
-            fin.read((_char*)&Desc.WorldMatrix, sizeof(_float4x4));
+            fin.read((_char*)&LoadDesc, sizeof(LOADOBJDESC));
            
+            wsprintf(LoadDesc.szModelTag, L"Prototype_Model_%s", fileTitle.c_str());
+
            if (fin.eof())
                break;
-
-           switch (Desc.eObjType)
-           {
-           case ENEMY:
-               fin.read((_char*)&Desc.iNaviIdx, sizeof(_int));
-               break;
-           case TRIGGEROBJ:
-               fin.read((_char*)&Desc.iTriggerIdx, sizeof(_int));
-               fin.read((_char*)&Desc.vColliderSize, sizeof(_float3));
-               break;
-           }
 
             CToolMapObj* pObj = static_cast<CToolMapObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"MapObject", L"Prototype_ToolMapObj", nullptr));
             if (nullptr == pObj)
                 return E_FAIL;
-            pObj->Initialize_Load(&Desc);
+
+            pObj->Initialize_Load(&LoadDesc);
 
             m_MapObjects.emplace_back(pObj);
             m_MapLayers.emplace(fileTitle.generic_string(), pObj);
             m_strCreatedObjects.emplace_back(fileTitle.generic_string());
-        }
-    }
-
-    return S_OK;
-}
-
-HRESULT CMap_Tool::Save_MapObjects(const wstring& wstrFolderPath)
-{
-    for (const string& strObj : m_strPlacable_Objects[MAPOBJECT])
-    {
-        auto Pair = m_MapLayers.equal_range(strObj);
-        if (m_MapLayers.end() != Pair.first)
-        {
-            wstring wstrFullPath = wstrFolderPath + L"\\" + Convert_StrToWStr(strObj) + L".dat";
-
-            ofstream fout(wstrFullPath, ios::binary);
-            if (!fout.is_open())
-                return E_FAIL;
-
-            for (auto it = Pair.first; it != Pair.second; ++it)
-            {
-                OBJTYPE eType = it->second->Get_ObjType();
-
-                fout.write((_char*)&eType, sizeof(_int));
-
-                _float4x4 WorldMatrix = it->second->Get_Transform()->Get_WorldFloat4x4();
-                fout.write((_char*)&WorldMatrix, sizeof(_float4x4));
-            }
-        }
-    }
-
-    return S_OK;
-}
-
-HRESULT CMap_Tool::Save_Enemies(const wstring& wstrFolderPath)
-{
-    for (const string& strObj : m_strPlacable_Objects[ENEMY])
-    {
-        auto Pair = m_MapLayers.equal_range(strObj);
-        if (m_MapLayers.end() != Pair.first)
-        {
-            wstring wstrFullPath = wstrFolderPath + L"\\" + Convert_StrToWStr(strObj) + L".dat";
-
-            ofstream fout(wstrFullPath, ios::binary);
-            if (!fout.is_open())
-                return E_FAIL;
-
-            for (auto it = Pair.first; it != Pair.second; ++it)
-            {
-                OBJTYPE     eType = it->second->Get_ObjType();
-                _float4x4   WorldMatrix = it->second->Get_Transform()->Get_WorldFloat4x4();
-                _int        iNaviIdx = it->second->Get_NaviIdx();
-                fout.write((_char*)&eType, sizeof(_int));
-                fout.write((_char*)&WorldMatrix, sizeof(_float4x4));
-                fout.write((_char*)&iNaviIdx, sizeof(_int));
-            }
-        }
-    }
-
-    return S_OK;
-}
-
-HRESULT CMap_Tool::Save_Triggers(const wstring& wstrFolderPath)
-{
-    for (const string& strObj : m_strPlacable_Objects[TRIGGEROBJ])
-    {
-        auto Pair = m_MapLayers.equal_range(strObj);
-        if (m_MapLayers.end() != Pair.first)
-        {
-            wstring wstrFullPath = wstrFolderPath + L"\\" + Convert_StrToWStr(strObj) + L".dat";
-
-            ofstream fout(wstrFullPath, ios::binary);
-            if (!fout.is_open())
-                return E_FAIL;
-
-            for (auto it = Pair.first; it != Pair.second; ++it)
-            {
-                OBJTYPE     eType = it->second->Get_ObjType();
-                _float4x4   WorldMatrix = it->second->Get_Transform()->Get_WorldFloat4x4();
-                _int        iTriggerIdx = it->second->Get_TriggerIdx();
-                _float3     vSize = it->second->Get_ColliderSize();
-
-                fout.write((_char*)&eType, sizeof(_int));
-                fout.write((_char*)&WorldMatrix, sizeof(_float4x4));
-                fout.write((_char*)&iTriggerIdx, sizeof(_int));
-                fout.write((_char*)&vSize, sizeof(_float3));
-            }
         }
     }
 

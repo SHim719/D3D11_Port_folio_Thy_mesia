@@ -69,27 +69,33 @@ namespace JoMath
 			XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	}
 
-	_vector ToEulerAngle(_fvector vQuat)
+	_vector ToEulerAngle(_fvector vQuat, _bool bToDegree)
 	{
-		_vector vEulerAngle;
+		_float w = vQuat.m128_f32[3];
+		_float x = vQuat.m128_f32[0];
+		_float y = vQuat.m128_f32[1];
+		_float z = vQuat.m128_f32[2];
 
-		_float sinr_cosp = 2.f * (vQuat.m128_f32[3] * vQuat.m128_f32[0] + vQuat.m128_f32[1] * vQuat.m128_f32[2]);
-		_float cosr_cosp = 1.f - 2.f * (vQuat.m128_f32[0] * vQuat.m128_f32[0] + vQuat.m128_f32[1] * vQuat.m128_f32[1]);
-		vEulerAngle.m128_f32[0] = atan2(sinr_cosp, cosr_cosp);
+		_float sqw = w * w;
+		_float sqx = x * x;
+		_float sqy = y * y;
+		_float sqz = z * z;
 
-		_float sinp = std::sqrt(1.f + 2.f * (vQuat.m128_f32[3] * vQuat.m128_f32[1] - vQuat.m128_f32[0] * vQuat.m128_f32[2]));
-		_float cosp = std::sqrt(1.f - 2.f * (vQuat.m128_f32[3] * vQuat.m128_f32[1] - vQuat.m128_f32[0] * vQuat.m128_f32[2]));
-		vEulerAngle.m128_f32[1] = 2.f * atan2(sinp, cosp) - 3.14159265f / 2.f;
+		// rotation about x-axis
+		_float pitch = asinf(2.0f * (w * x - y * z));
+		// rotation about y-axis
+		_float yaw = atan2f(2.0f * (x * z + w * y), (-sqx - sqy + sqz + sqw));
+		// rotation about z-axis
+		_float roll = atan2f(2.0f * (x * y + w * z), (-sqx + sqy - sqz + sqw));
 
-		_float siny_cosp = 2.f * (vQuat.m128_f32[3] * vQuat.m128_f32[2] + vQuat.m128_f32[0] * vQuat.m128_f32[1]);
-		_float cosy_cosp = 1.f - 2.f * (vQuat.m128_f32[1] * vQuat.m128_f32[1] + vQuat.m128_f32[2] * vQuat.m128_f32[2]);
-		vEulerAngle.m128_f32[2] = atan2(siny_cosp, cosy_cosp);
+		if (bToDegree)
+		{
+			pitch = XMConvertToDegrees(pitch);
+			yaw = XMConvertToDegrees(yaw);
+			roll = XMConvertToDegrees(roll);
+		}
 
-		vEulerAngle.m128_f32[0] = XMConvertToDegrees(vEulerAngle.m128_f32[0]);
-		vEulerAngle.m128_f32[1] = XMConvertToDegrees(vEulerAngle.m128_f32[1]);
-		vEulerAngle.m128_f32[2] = XMConvertToDegrees(vEulerAngle.m128_f32[2]);
-
-		return vEulerAngle;
+		return XMVectorSet(pitch, yaw, roll, 1.f);
 	}
 	_vector Slerp_TargetLook(_fvector vNowLook, _fvector vTargetLook, _float fRotRate)
 	{

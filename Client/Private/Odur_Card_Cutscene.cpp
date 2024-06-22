@@ -37,7 +37,9 @@ void COdur_Card_Cutscene::Tick(_float fTimeDelta)
 
 void COdur_Card_Cutscene::LateTick(_float fTimeDelta)
 {
-	m_pTransform->Attach_To_Bone(m_AttachDesc.pAttachBone, m_AttachDesc.pParentTransform);
+	//_matrix CutsceneOffsetMatrix = XMMatrixRotationX(To_Radian(-90.f));
+
+	m_pTransform->Attach_To_Bone(m_AttachDesc.pAttachBone, m_AttachDesc.pParentTransform);// , CutsceneOffsetMatrix);
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
@@ -121,8 +123,8 @@ void COdur_Card_Cutscene::Free()
 {
 	__super::Free();
 
-	Safe_AddRef(m_AttachDesc.pAttachBone);
-	Safe_AddRef(m_AttachDesc.pParentTransform);
+	Safe_Release(m_AttachDesc.pAttachBone);
+	Safe_Release(m_AttachDesc.pParentTransform);
 
 	Safe_Release(m_pShader);
 	Safe_Release(m_pModel);

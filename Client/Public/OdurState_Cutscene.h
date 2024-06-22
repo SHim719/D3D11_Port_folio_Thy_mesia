@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "OdurState_Base.h"
 
 BEGIN(Client)
@@ -16,6 +14,10 @@ public:
 	void OnState_Start(void* pArg)		override;
 	void OnGoing(_float fTimeDelta)		override;
 	void OnState_End()					override;
+
+
+private:
+	void FadeOut_Cutscene();
 
 private:
 	CGameObject*	m_pCard = { nullptr };

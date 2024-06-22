@@ -102,12 +102,19 @@ PS_OUT PS_MAIN_REDTOALPHA(PS_IN In)
 
     Out.vColor.a = Out.vColor.r;
     
-    ////Out.vColor.a = 1.f;
-    //Out.vColor.a = Out.vColor.a * g_fAhlpaScale;
-	//
-    
     if (Out.vColor.a < 0.3f)
 	    discard;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_FADE(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord) * g_vColor;
+    
+    Out.vColor.a *= g_fAlpha;
 
     return Out;
 }
@@ -138,6 +145,19 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_REDTOALPHA();
+    }
+
+    pass FADE //2
+    {
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_NoZTest_And_Write, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_FADE();
     }
 
 	

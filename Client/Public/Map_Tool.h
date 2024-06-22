@@ -48,11 +48,6 @@ private:
 	HRESULT Save_Map();
 	HRESULT Load_Map();
 
-	HRESULT Save_MapObjects(const wstring& wstrFolderPath);
-	HRESULT Save_Enemies(const wstring& wstrFolderPath);
-	HRESULT Save_Triggers(const wstring& wstrFolderPath);
-
-
 private:
 	vector<string>										m_strPlacable_Objects[OBJTYPE_END];
 	vector<CToolMapObj*>								m_MapObjects;

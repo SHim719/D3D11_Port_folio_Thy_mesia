@@ -16,6 +16,7 @@ HRESULT CCollision_Manager::Initialize()
 void CCollision_Manager::Update()
 {
 	Execute_Collision("Player", "Enemy", COLLISION);
+	Execute_Collision("Player", "EventTrigger", TRIGGER);
 	Execute_Collision("Enemy_HitBox", "Player_Weapon", TRIGGER);
 	Execute_Collision("Player_HitBox", "Enemy_Weapon", TRIGGER);
 
@@ -39,77 +40,6 @@ void CCollision_Manager::Add_ColliderToLayer(const string& strLayer, CCollider* 
 	Safe_AddRef(pCollider);
 }
 
-void CCollision_Manager::Execute_Collision(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eType)
-{
-	if (iLevel < 2)
-		return;
-
-	CLayer* pDstLayer = m_pGameInstance->Find_Layer(iLevel, strDstLayer);
-	CLayer* pSrcLayer = m_pGameInstance->Find_Layer(iLevel, strSrcLayer);
-	
-	if (nullptr == pDstLayer || nullptr == pSrcLayer)
-		return;
-	
-	auto& DstObjects = pDstLayer->Get_GameObjects();
-	auto& SrcObjects = pSrcLayer->Get_GameObjects();
-	
-	for (auto DstIt = DstObjects.begin(); DstIt != DstObjects.end(); ++DstIt)
-	{
-		CCollider* pDstCollider = static_cast<CCollider*>((*DstIt)->Find_Component(L"Collider"));
-
-		if (nullptr == pDstCollider)
-			continue;
-
-		for (auto SrcIt = SrcObjects.begin(); SrcIt != SrcObjects.end(); ++SrcIt)
-		{
-			if (*SrcIt == *DstIt)
-				continue;
-	
-			CCollider* pSrcCollider = static_cast<CCollider*>((*SrcIt)->Find_Component(L"Collider"));
-			if (nullptr == pSrcCollider)
-				continue;
-	
-			CollisionID id;
-			id.left = pDstCollider->Get_CollisionID();
-			id.right = pSrcCollider->Get_CollisionID();
-	
-			auto it = m_CollisionInfo.find(id.id);
-			if (m_CollisionInfo.end() == it)
-				m_CollisionInfo.insert({ id.id, false });
-	
-			it = m_CollisionInfo.find(id.id);
-
-			if (pSrcCollider->Intersects(pDstCollider))
-			{
-				if (false == it->second)
-				{
-					if (COLLISION == eType) 
-						Push_Object(pDstCollider, pSrcCollider, (*DstIt)->Get_Transform());
-					(*DstIt)->OnCollisionEnter(*SrcIt);
-					(*SrcIt)->OnCollisionEnter(*DstIt);
-					
-					it->second = true;
-				}
-
-				else
-				{
-					if (COLLISION == eType) 
-						Push_Object(pDstCollider, pSrcCollider, (*DstIt)->Get_Transform());
-					(*DstIt)->OnCollisionStay(*SrcIt);
-					(*SrcIt)->OnCollisionStay(*DstIt);
-					
-				}
-			}
-			else if (it->second)
-			{
-				(*DstIt)->OnCollisionExit(*SrcIt);
-				(*SrcIt)->OnCollisionExit(*DstIt);
-				
-				it->second = false;
-			}
-		}
-	}
-}
 
 void CCollision_Manager::Execute_Collision(const string& strDstLayer, const string& strSrcLayer, CollisionType eType)
 {
@@ -133,6 +63,7 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 		if (pDstObj->Is_Destroyed())
 		{
 			DstIt = DstColliders.erase(DstIt);
+			Safe_Release(pDstCollider);
 			continue;
 		}
 			
@@ -172,10 +103,16 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 					it->second = false;
 				}
 
-				if (pDstObj->Is_Destroyed())
+				if (pSrcObj->Is_Destroyed())
+				{
 					SrcIt = SrcColliders.erase(SrcIt);
+					Safe_Release(pSrcCollider);
+				}
 				else
+				{
 					++SrcIt;
+				}
+					
 
 				continue;
 			}

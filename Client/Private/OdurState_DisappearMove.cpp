@@ -10,6 +10,8 @@ HRESULT COdurState_DisappearMove::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pModel->Bind_Func("Odur_ChangeToAppear", bind(&COdurState_DisappearMove::ChangeState_Appear, this));
+
 	return S_OK;
 }
 
@@ -20,16 +22,19 @@ void COdurState_DisappearMove::OnState_Start(void* pArg)
 
 	m_pOdur->Set_Alpha(0.f);
 
+	if (nullptr != pArg)
+	{
+		m_iDir = 1;
+		m_pModel->Change_Animation(Magician_DisappearMove_B);
+		return;
+	}
+
+
 	Decide_Animation();
 }
 
 void COdurState_DisappearMove::OnGoing(_float fTimeDelta)
 {
-	if (m_pModel->Is_AnimComplete())
-	{
-		m_pOdur->Change_State((_uint)OdurState::State_Appear, &m_iDir);
-		return;
-	}
 
 	if (false == m_pOdur->Is_CollPlayer())
 		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
@@ -90,6 +95,11 @@ void COdurState_DisappearMove::Decide_Animation()
 		}
 	}
 	
+}
+
+void COdurState_DisappearMove::ChangeState_Appear()
+{
+	m_pOdur->Change_State((_uint)OdurState::State_Appear, &m_iDir);
 }
 
 

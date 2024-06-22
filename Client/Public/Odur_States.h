@@ -13,6 +13,7 @@
 #include "OdurState_ThrowCard.h"
 #include "OdurState_Execute.h"
 #include "OdurState_ReadyExecution.h"
+#include "OdurState_Cutscene.h"
 //#include "OdurState_Finished.h"
 
 

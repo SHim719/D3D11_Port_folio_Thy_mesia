@@ -5,6 +5,7 @@
 
 
 BEGIN(Client)
+
 class CEnemyStats : public CBase
 {
 private:
@@ -26,5 +27,6 @@ public:
 public:
 	static CEnemyStats* Create(const ENEMYDESC& EnemyDesc);
 };
+
 END
 

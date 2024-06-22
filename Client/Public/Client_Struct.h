@@ -53,7 +53,7 @@ namespace Client
 		_int		iNaviIdx;
 		_int		iTriggerIdx;
 		_float3		vColliderSize;
-		wstring		wstrModelTag = L"";
+		_tchar		szModelTag[MAX_PATH];
 	}LOADOBJDESC;
 
 }

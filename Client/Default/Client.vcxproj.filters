@@ -109,9 +109,6 @@
     <Filter Include="02. GameObjects\03. Weapon">
       <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\04. EventTrigger">
-      <UniqueIdentifier>{f2a7b51f-1f21-49bc-b543-b17733592bb9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player">
       <UniqueIdentifier>{aa72ff72-1ace-4fd0-a5c4-a7f304de7a43}</UniqueIdentifier>
     </Filter>
@@ -265,6 +262,15 @@
     <Filter Include="02. GameObjects\99. ToolObject\1. ToolMapObj">
       <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\04. MapObject">
+      <UniqueIdentifier>{da660398-3255-4bae-85c1-c53f7ba4521f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\EventTrigger">
+      <UniqueIdentifier>{f2a7b51f-1f21-49bc-b543-b17733592bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear">
+      <UniqueIdentifier>{39bb80a2-e8fe-4abe-8e07-95a7db28bc91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -308,9 +314,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Free_Camera.h">
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Enemy.h">
-      <Filter>02. GameObjects\02. Character\02. Enemy</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Tool.h">
       <Filter>01. Levels\03. Tool</Filter>
@@ -487,7 +490,7 @@
       <Filter>02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EventTrigger.h">
-      <Filter>02. GameObjects\04. EventTrigger</Filter>
+      <Filter>02. GameObjects\04. MapObject\EventTrigger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Enums.h">
       <Filter>99. Defines</Filter>
@@ -512,6 +515,15 @@
     </ClInclude>
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99. Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\MapObject.h">
+      <Filter>02. GameObjects\04. MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Enemy.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_ExecutionDisappear.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -601,9 +613,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerStat.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\PlayerStat</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Enemy.cpp">
-      <Filter>02. GameObjects\02. Character\02. Enemy</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Idle.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\01. OdurState_Idle</Filter>
@@ -702,7 +711,7 @@
       <Filter>02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EventTrigger.cpp">
-      <Filter>02. GameObjects\04. EventTrigger</Filter>
+      <Filter>02. GameObjects\04. MapObject\EventTrigger</Filter>
     </ClCompile>
     <ClCompile Include="Cutscene_Actor.cpp">
       <Filter>05. Interface\01. Cutscene_Actor</Filter>
@@ -721,6 +730,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\FadeScreen.cpp">
       <Filter>04. UI\00. FadeScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MapObject.cpp">
+      <Filter>02. GameObjects\04. MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Enemy.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_ExecutionDisappear.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -17,7 +17,7 @@ namespace JoMath
 	_matrix LookTo(_fvector vTargetLook);
 	_matrix LookAt(_fvector vSrc, _fvector vDst);
 
-	_vector ToEulerAngle(_fvector vQuat);
+	_vector ToEulerAngle(_fvector vQuat, _bool bToDegree = true);
 
 	_vector Slerp_TargetLook(_fvector vNowLook, _fvector vTargetLook, _float fRotRate);
 	_vector Calc_GroundLook(_fvector vSrc, _fvector vDst);

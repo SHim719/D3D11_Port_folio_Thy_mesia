@@ -26,6 +26,8 @@ private:
 	_int				m_iThrowState = { 0 };
 
 	vector<OdurAnim>	m_AnimPlaylists[2];
+	vector<_int>		m_StartFrames[2];
+
 	size_t				m_iCurAnimIdx = { 0 };
 
 	vector<ATTACKDESC>	m_CardAttackDescs[2];
@@ -45,9 +47,11 @@ private:
 	_vector Calc_LeftHandPos();
 
 	void Throw_Card(_vector vLook);
+
 #pragma region KeyFrameEvent
 	void Throw_SingleCard();
 	void Throw_MultipleCards();
+	void Change_To_NextAnim();
 #pragma endregion
 
 public:

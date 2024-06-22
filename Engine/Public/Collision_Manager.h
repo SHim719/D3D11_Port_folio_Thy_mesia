@@ -38,7 +38,6 @@ public:
 	void Add_ColliderToLayer(const string& strLayer, CCollider* pCollider);
 
 private:
-	void Execute_Collision(_uint iLevel, const wstring& strDstLayer, const wstring& strSrcLayer, CollisionType eType);
 	void Execute_Collision(const string& strDstLayer, const string& strSrcLayer, CollisionType eType);
 	void Push_Object(CCollider* pDstCollider, CCollider* pSrcCollider, class CTransform* pDstTransform);
 

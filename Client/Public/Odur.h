@@ -2,6 +2,7 @@
 
 #include "Enemy.h"
 #include "Odur_Enums.h"
+#include "Cutscene_Actor.h"
 
 BEGIN(Engine)
 class CBone;
@@ -9,7 +10,7 @@ END
 
 BEGIN(Client)
 
-class COdur final : public CEnemy
+class COdur final : public CEnemy, public CCutscene_Actor
 {
 private:
 	enum ODUR_WEAPON { CANE, SWORD, FOOT_L, FOOT_R, WEAPON_END};
@@ -19,14 +20,17 @@ private:
 	COdur(const COdur& rhs);
 	virtual ~COdur() = default;
 
-public:
+private:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-private:
+	void OnEnter_Cutscene()									override;
+	void OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)	override;
+	void OnEnd_Cutscene()									override;
+
 	void Bind_KeyFrames()				override;
 
 private:
@@ -72,7 +76,7 @@ private:
 	void OnCollisionExit(CGameObject* pOther)	override;
 
 private:
-	HRESULT Ready_Components();
+	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_States();
 	HRESULT Ready_Weapons();
 

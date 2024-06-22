@@ -191,6 +191,7 @@
     <ClInclude Include="..\Public\Loader.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Main_Camera.h" />
+    <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Map_Tool.h" />
     <ClInclude Include="..\Public\Odur.h" />
     <ClInclude Include="..\Public\OdurState_Appear.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="..\Public\OdurState_CaneAttack2.h" />
     <ClInclude Include="..\Public\OdurState_Cutscene.h" />
     <ClInclude Include="..\Public\OdurState_Execute.h" />
+    <ClInclude Include="..\Public\OdurState_ExecutionDisappear.h" />
     <ClInclude Include="..\Public\OdurState_ReadyExecution.h" />
     <ClInclude Include="..\Public\OdurState_ThrowCard.h" />
     <ClInclude Include="..\Public\OdurState_DisappearMove.h" />
@@ -268,6 +270,7 @@
     <ClCompile Include="..\Private\Loader.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Main_Camera.cpp" />
+    <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Map_Tool.cpp" />
     <ClCompile Include="..\Private\Odur.cpp" />
     <ClCompile Include="..\Private\OdurState_Appear.cpp" />
@@ -276,6 +279,7 @@
     <ClCompile Include="..\Private\OdurState_CaneAttack2.cpp" />
     <ClCompile Include="..\private\OdurState_Cutscene.cpp" />
     <ClCompile Include="..\Private\OdurState_Execute.cpp" />
+    <ClCompile Include="..\Private\OdurState_ExecutionDisappear.cpp" />
     <ClCompile Include="..\Private\OdurState_ReadyExecution.cpp" />
     <ClCompile Include="..\Private\OdurState_ThrowCard.cpp" />
     <ClCompile Include="..\Private\OdurState_DisappearMove.cpp" />

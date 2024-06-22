@@ -78,5 +78,6 @@ enum class OdurState
 	State_ReadyExecution,
 	State_Execute,
 	State_Finished,
+	State_Cutscene,
 	State_End,
 };

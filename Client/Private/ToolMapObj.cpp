@@ -42,12 +42,14 @@ HRESULT CToolMapObj::Initialize_Load(void* pArg)
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pDesc->WorldMatrix));
 
+	m_eObjType = pDesc->eObjType;
+
 	if (m_eObjType < TRIGGEROBJ)
 	{
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"), TEXT("Shader"), (CComponent**)&m_pShader)))
 			return E_FAIL;
 
-		if (FAILED(__super::Add_Component(LEVEL_TOOL, pDesc->wstrModelTag, L"Model", (CComponent**)&m_pModel)))
+		if (FAILED(__super::Add_Component(LEVEL_TOOL, pDesc->szModelTag, L"Model", (CComponent**)&m_pModel)))
 			return E_FAIL;
 
 		m_iNaviIdx = pDesc->iNaviIdx;
@@ -86,17 +88,18 @@ void CToolMapObj::LateTick(_float fTimeDelta)
 
 HRESULT CToolMapObj::Render()
 {
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-		return E_FAIL;
-
 	if (m_eObjType < TRIGGEROBJ)
 	{
+
+		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+			return E_FAIL;
+
 		_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
 		for (_uint j = 0; j < iNumMeshes; ++j)
@@ -111,11 +114,9 @@ HRESULT CToolMapObj::Render()
 				return E_FAIL;
 		}
 	}
-	
-
-	if (m_pTriggerCollider)
+	else if (m_pTriggerCollider)
 		m_pTriggerCollider->Render();
-	
+
 	return S_OK;
 }
 

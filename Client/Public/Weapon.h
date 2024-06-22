@@ -68,6 +68,8 @@ private:
 	_bool			m_bAlphaBlend = { false };
 	_float			m_fAlpha = { 1.f };
 
+	
+
 public:
 	void Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
 
