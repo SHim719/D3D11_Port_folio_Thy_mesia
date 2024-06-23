@@ -7,6 +7,9 @@
 
 
 #define GET_CURLEVEL m_pGameInstance->Get_CurrentLevelID()
+#define ADD_EVENT(FUNC) m_pGameInstance->Add_Event(FUNC)
+
+
 #define Get_Inst(TYPE) TYPE::Get_Instance()
 
 #define UIMGR Get_Inst(CUI_Manager)

@@ -47,13 +47,13 @@ HRESULT CLevel_Tool::Initialize()
 
 	if (FAILED(Ready_Navigation()))
 		return E_FAIL;
-
+	
 	if (FAILED(Ready_Player()))
 		return E_FAIL;
 	
 	if (FAILED(Ready_Odur()))
 		return E_FAIL;
-
+	
 	if (FAILED(Ready_UIResource()))
 		return E_FAIL;
 	
@@ -62,8 +62,8 @@ HRESULT CLevel_Tool::Initialize()
 	
 	if (FAILED(Ready_Stage1Boss()))
 		return E_FAIL;
-
-	UIMGR->Initialize(m_pDevice, m_pContext);
+	
+	//
 
 	return S_OK;
 }
@@ -155,6 +155,18 @@ HRESULT CLevel_Tool::Ready_UIResource()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_FadeScreen", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/FadeScreen/FadeScreen.png"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_Right.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_Left.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_BG.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_MainBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_MainBar.png"))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -163,13 +175,16 @@ HRESULT CLevel_Tool::Ready_UI()
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_FadeScreen", CFadeScreen::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_ProgressBar", CProgressBar::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
 HRESULT CLevel_Tool::Ready_Navigation()
 {
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Navigation", CNavigation::Create(m_pDevice, m_pContext,
-		TEXT("../../Resources/NaviData/TestNavi.dat")));
+		TEXT("../../Resources/NaviData/TestNavi1.dat")));
 
 	return S_OK;
 }

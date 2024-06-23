@@ -89,7 +89,7 @@ PS_OUT PS_MAIN(PS_IN In)
 
     Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
 
-    Out.vColor.a = Out.vColor.a * g_fAlpha;
+   // Out.vColor.a = Out.vColor.a * g_fAlpha;
 
     return Out;
 }

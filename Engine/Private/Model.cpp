@@ -144,6 +144,9 @@ void CModel::Calc_DeltaRootPos()
 
 	XMStoreFloat4(&m_vPrevRootPos, vNowRootPos);
 
+	if (m_vDeltaRootPos.x > 1.f || m_vDeltaRootPos.y > 1.f || m_vDeltaRootPos.z > 1.f)
+		int x = 10;
+
 	m_Bones[m_iRootBoneIdx]->Reset_Position();
 }
 
@@ -199,14 +202,16 @@ _bool CModel::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRay
 
 void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 {
-	if (iAnimIdx < (_uint)m_Animations.size())
-		m_Animations[m_iCurrentAnimIndex]->Reset();
+	if (iAnimIdx > (_uint)m_Animations.size())
+		return;
+	
+	m_Animations[iAnimIdx]->Reset();
 
 	m_iCurrentAnimIndex = iAnimIdx;
 	m_bComplete = false;
 
 	Reset_RootPos();
-
+	
 	if (fBlendingTime > 0.f)
 	{
 		m_bBlending = true;

@@ -22,8 +22,8 @@ HRESULT CEventTrigger::Initialize(void* pArg)
 	if (nullptr == pArg)
 		return S_OK;
 
-	if (FAILED(Ready_Components(pArg)))
-		return E_FAIL;
+	//if (FAILED(Ready_Components(pArg)))
+	//	return E_FAIL;
 
 	return S_OK;
 }
@@ -38,14 +38,16 @@ void CEventTrigger::Tick(_float fTimeDelta)
 
 void CEventTrigger::LateTick(_float fTimeDelta)
 {
-	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+	if (m_pCollider)
+		m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CEventTrigger::Render()
 {
-	m_pCollider->Render();
+	if (m_pCollider)
+		m_pCollider->Render();
 
 	return S_OK;
 }

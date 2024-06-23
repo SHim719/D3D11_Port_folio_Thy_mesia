@@ -138,7 +138,7 @@ void COdurState_ThrowCard::Change_To_NextAnim()
 		if (0 == m_iThrowState)
 			Decide_State();
 		else
-			m_pOdur->Change_State()
+			m_pOdur->Change_State((_uint)OdurState::State_ExecutionDisappear);
 	}
 	else
 	{

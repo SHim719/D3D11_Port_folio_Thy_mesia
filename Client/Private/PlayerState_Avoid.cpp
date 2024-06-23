@@ -38,7 +38,7 @@ void CPlayerState_Avoid::OnGoing(_float fTimeDelta)
 		Rotate_To_Look(m_pOwnerTransform->Get_MoveLook(), fTimeDelta);
 	
 
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)

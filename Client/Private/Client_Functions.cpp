@@ -111,6 +111,11 @@ namespace JoMath
 
 		return vGroundLook;
 	}
+
+	_float Lerp(_float fA, _float fB, _float fRatio)
+	{
+		return fA * (1.f - fRatio) + fB * fRatio;
+	}
 }
 
 namespace JoRandom

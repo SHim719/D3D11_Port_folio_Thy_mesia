@@ -42,7 +42,7 @@ private:
 	_bool			m_bCanNextState = { false };
 	_bool			m_bCanRotation = { true };
 	_bool			m_bInvincible = { false };
-
+	
 	_float4x4		m_PrevWorldMatrix; // 컷신시작전 위치
 public:
 	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);

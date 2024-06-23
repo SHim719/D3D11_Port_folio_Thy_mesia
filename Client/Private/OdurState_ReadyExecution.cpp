@@ -23,6 +23,8 @@ void COdurState_ReadyExecution::OnState_Start(void* pArg)
 	m_pOdur->Enable_Stanced();
 	m_pOdur->Reset_AttackIdx();
 
+	m_pOdur->Set_Alpha_Increase();
+
 	m_pModel->Change_Animation(Magician_SPAttack1, 0.f);
 }
 
@@ -35,7 +37,7 @@ void COdurState_ReadyExecution::OnGoing(_float fTimeDelta)
 	}
 
 	if (false == m_pOdur->Is_CollPlayer())
-		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 	else
 		ChangeState_Execution();	
 

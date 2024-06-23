@@ -55,6 +55,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (nullptr == m_pPipeLine)
 		return E_FAIL;
 
+	m_pEvent_Manager = CEvent_Manager::Create();
+	if (nullptr == m_pPipeLine)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -67,6 +71,8 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->Manage_LifeCycle();
 
 	m_pKey_Manager->Update();
+
+	m_pEvent_Manager->Process_Events();
 
 	m_pObject_Manager->PriorityTick(fTimeDelta * m_fTimeScale);
 	m_pObject_Manager->Tick(fTimeDelta * m_fTimeScale);
@@ -402,6 +408,14 @@ _float4 CGameInstance::Get_CamPosition() const
 	return m_pPipeLine->Get_CamPosition();
 }
 
+void CGameInstance::Add_Event(function<void()> pFunc)
+{
+	if (nullptr == m_pEvent_Manager)
+		return;
+
+	m_pEvent_Manager->Add_Event(move(pFunc));
+}
+
 #pragma endregion
 
 
@@ -425,6 +439,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pKey_Manager);
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pSound_Manager);
+	Safe_Release(m_pEvent_Manager);
 	//Safe_Release(m_pFrustum);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pGraphic_Device);

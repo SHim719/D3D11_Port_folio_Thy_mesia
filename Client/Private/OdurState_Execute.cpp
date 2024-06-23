@@ -32,7 +32,7 @@ void COdurState_Execute::OnGoing(_float fTimeDelta)
 		return;
 	}
 
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 void COdurState_Execute::OnState_End()

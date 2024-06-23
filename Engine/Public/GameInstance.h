@@ -106,6 +106,10 @@ public:
 #pragma endregion
 
 
+#pragma region EVENT
+	void Add_Event(function<void()> pFunc);
+#pragma endregion
+
 
 private:
 	CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -119,6 +123,7 @@ private:
 	//CFrustum*				m_pFrustum = { nullptr };
 	CRenderer*				m_pRenderer = { nullptr };
 	CPipeLine*				m_pPipeLine = { nullptr };
+	CEvent_Manager*			m_pEvent_Manager = { nullptr };
 
 	
 public:

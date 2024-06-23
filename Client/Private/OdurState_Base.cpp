@@ -33,6 +33,12 @@ void COdurState_Base::OnState_End()
 {
 }
 
+void COdurState_Base::OnHit(void* pArg)
+{
+	if (!m_pOdur->Is_Stanced())
+		m_pOdur->Change_State((_uint)OdurState::State_Hit);
+}
+
 void COdurState_Base::Decide_State()
 {
 	_int iRandNum = JoRandom::Random_Int(0, 9);

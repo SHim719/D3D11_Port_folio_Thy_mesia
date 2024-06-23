@@ -35,9 +35,10 @@ private:
 	void Menu_Bar();
 	void TabBar();
 
+	void Key_Input();
 #pragma region MapTool
 	void Map_Tool();
-	void Key_Input();
+	void Key_Input_MapTool();
 	void Destroy_MapObjects();
 	void Transform_View();
 	void Placable_ComboBox();

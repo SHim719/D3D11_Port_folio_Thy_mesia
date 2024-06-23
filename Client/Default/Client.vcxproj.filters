@@ -100,12 +100,6 @@
     <Filter Include="97. Managers\02. Fade_Manager">
       <UniqueIdentifier>{f20ef841-c559-459b-b396-f85be562a341}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. UI\00. FadeScreen">
-      <UniqueIdentifier>{e768a7cc-d3d2-42d7-84fe-0892d95fa1ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\01. UI_LockOn">
-      <UniqueIdentifier>{cd881789-e140-49b4-9b5d-22889b88dc1d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\03. Weapon">
       <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
     </Filter>
@@ -271,6 +265,24 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear">
       <UniqueIdentifier>{39bb80a2-e8fe-4abe-8e07-95a7db28bc91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. UI\InGameUI">
+      <UniqueIdentifier>{b1d2376f-80b3-49c2-9e38-de3e25bc92e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\00. FadeScreen">
+      <UniqueIdentifier>{e768a7cc-d3d2-42d7-84fe-0892d95fa1ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\01. UI_LockOn">
+      <UniqueIdentifier>{cd881789-e140-49b4-9b5d-22889b88dc1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerBar">
+      <UniqueIdentifier>{ed961139-4a30-42e1-bbef-6f013e7d2d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\UI_Component">
+      <UniqueIdentifier>{6d4ddae4-d103-4797-b1bc-dbbde6be4929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\UI_Component\ProgressBar">
+      <UniqueIdentifier>{b119a576-8c92-4a71-8bc9-3836f2b76962}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -403,7 +415,7 @@
       <Filter>04. UI</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_LockOn.h">
-      <Filter>04. UI\01. UI_LockOn</Filter>
+      <Filter>04. UI\InGameUI\01. UI_LockOn</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_Headers.h">
       <Filter>04. UI\Define</Filter>
@@ -511,7 +523,7 @@
       <Filter>97. Managers\02. Fade_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FadeScreen.h">
-      <Filter>04. UI\00. FadeScreen</Filter>
+      <Filter>04. UI\InGameUI\00. FadeScreen</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Struct.h">
       <Filter>99. Defines</Filter>
@@ -524,6 +536,12 @@
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_ExecutionDisappear.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PlayerBar.h">
+      <Filter>04. UI\InGameUI\02. UI_PlayerBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ProgressBar.h">
+      <Filter>04. UI\UI_Component\ProgressBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -624,7 +642,7 @@
       <Filter>04. UI</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_LockOn.cpp">
-      <Filter>04. UI\01. UI_LockOn</Filter>
+      <Filter>04. UI\InGameUI\01. UI_LockOn</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_Manager.cpp">
       <Filter>04. UI\Manager</Filter>
@@ -729,7 +747,7 @@
       <Filter>97. Managers\02. Fade_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FadeScreen.cpp">
-      <Filter>04. UI\00. FadeScreen</Filter>
+      <Filter>04. UI\InGameUI\00. FadeScreen</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\MapObject.cpp">
       <Filter>02. GameObjects\04. MapObject</Filter>
@@ -739,6 +757,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_ExecutionDisappear.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PlayerBar.cpp">
+      <Filter>04. UI\InGameUI\02. UI_PlayerBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ProgressBar.cpp">
+      <Filter>04. UI\UI_Component\ProgressBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

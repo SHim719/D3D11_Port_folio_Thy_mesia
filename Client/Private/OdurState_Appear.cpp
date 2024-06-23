@@ -31,7 +31,7 @@ void COdurState_Appear::OnGoing(_float fTimeDelta)
 	}
 
 	if (false == m_pOdur->Is_CollPlayer())
-		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 void COdurState_Appear::OnState_End()

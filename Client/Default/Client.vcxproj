@@ -232,6 +232,7 @@
     <ClInclude Include="..\Public\Player_Enums.h" />
     <ClInclude Include="..\Public\Player_States.h" />
     <ClInclude Include="..\Public\PlayerState_Idle.h" />
+    <ClInclude Include="..\Public\ProgressBar.h" />
     <ClInclude Include="..\Public\State_Base.h" />
     <ClInclude Include="..\Public\TestGround.h" />
     <ClInclude Include="..\Public\TestPlay_Tool.h" />
@@ -245,6 +246,7 @@
     <ClInclude Include="..\Public\UI_Headers.h" />
     <ClInclude Include="..\Public\UI_LockOn.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
+    <ClInclude Include="..\Public\UI_PlayerBar.h" />
     <ClInclude Include="..\Public\Weapon.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
@@ -307,6 +309,7 @@
     <ClCompile Include="..\Private\PlayerState_Parried.cpp" />
     <ClCompile Include="..\Private\PlayerState_ParrySuccess.cpp" />
     <ClCompile Include="..\Private\PlayerState_Sprint.cpp" />
+    <ClCompile Include="..\Private\ProgressBar.cpp" />
     <ClCompile Include="..\Private\State_Base.cpp" />
     <ClCompile Include="..\Private\TestGround.cpp" />
     <ClCompile Include="..\Private\TestPlay_Tool.cpp" />
@@ -319,6 +322,7 @@
     <ClCompile Include="..\Private\UI.cpp" />
     <ClCompile Include="..\Private\UI_LockOn.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerBar.cpp" />
     <ClCompile Include="..\Private\Weapon.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Cutscene_Actor.cpp" />

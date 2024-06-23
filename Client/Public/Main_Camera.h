@@ -47,7 +47,7 @@ private:
 public:
 	void Set_Player(CGameObject* pPlayer);
 	
-	void SetState_LockOn();
+	_bool SetState_LockOn();
 	void SetState_Cutscene(const ATTACHDESC& Desc);
 
 	void Reset_State();

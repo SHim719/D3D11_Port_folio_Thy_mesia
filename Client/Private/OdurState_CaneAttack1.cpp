@@ -16,6 +16,7 @@ HRESULT COdurState_CaneAttack1::Initialize(void* pArg)
 void COdurState_CaneAttack1::OnState_Start(void* pArg)
 {
 	m_pOdur->Reset_AttackIdx();
+	m_pOdur->Enable_Stanced();
 	m_pModel->Change_Animation(Magician_CaneAttack03);
 
 }
@@ -26,7 +27,7 @@ void COdurState_CaneAttack1::OnGoing(_float fTimeDelta)
 		m_pOdur->Change_State((_uint)OdurState::State_Walk);
 
 	if (false == m_pOdur->Is_CollPlayer())
-		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 void COdurState_CaneAttack1::OnState_End()

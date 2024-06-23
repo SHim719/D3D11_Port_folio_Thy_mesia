@@ -75,6 +75,7 @@ enum class OdurState
 	State_Appear,
 	State_Parry,
 	State_ThrowCard,
+	State_ExecutionDisappear,
 	State_ReadyExecution,
 	State_Execute,
 	State_Finished,

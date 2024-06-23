@@ -30,7 +30,7 @@ void CPlayerState_Finish::OnGoing(_float fTimeDelta)
 		return;
 	}
 
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 

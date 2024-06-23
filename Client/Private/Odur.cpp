@@ -56,7 +56,16 @@ void COdur::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::T))
 	{
-	
+		m_bNoRender = false;
+		//Change_State((_uint)OdurState::State_Walk);
+		Change_State((_uint)OdurState::State_KickCombo);
+	}
+
+	if (KEY_DOWN(eKeyCode::O))
+	{
+		m_bNoRender = false;
+		//Change_State((_uint)OdurState::State_Walk);
+		Change_State((_uint)OdurState::State_Idle);
 	}
 		
 	if (m_bLookTarget)
@@ -191,10 +200,7 @@ void COdur::OnCollisionEnter(CGameObject* pOther)
 
 	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
 	{
-		if (false == m_bStanced)
-			m_States[m_iState]->OnHit(nullptr);
-
-
+		m_States[m_iState]->OnHit(nullptr);
 	}
 
 }
@@ -269,6 +275,7 @@ HRESULT COdur::Ready_States()
 	m_States[(_uint)OdurState::State_DisappearMove] = COdurState_DisappearMove::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_Appear] = COdurState_Appear::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_ThrowCard] = COdurState_ThrowCard::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_ExecutionDisappear] = COdurState_ExecutionDisappear::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_ReadyExecution] = COdurState_ReadyExecution::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_Execute] = COdurState_Execute::Create(m_pDevice, m_pContext, this);
 	//m_States[(_uint)OdurState::State_Finished] = COdurState_Execute::Create(m_pDevice, m_pContext, this);

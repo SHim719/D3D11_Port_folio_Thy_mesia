@@ -16,6 +16,7 @@ HRESULT COdurState_CaneAttack2::Initialize(void* pArg)
 void COdurState_CaneAttack2::OnState_Start(void* pArg)
 {
 	m_pOdur->Reset_AttackIdx();
+	m_pOdur->Enable_Stanced();
 	m_pModel->Change_Animation(Magician_CaneAttack1Appear);
 }
 
@@ -28,7 +29,7 @@ void COdurState_CaneAttack2::OnGoing(_float fTimeDelta)
 	}
 		
 	if (false == m_pOdur->Is_CollPlayer())
-		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 void COdurState_CaneAttack2::OnState_End()

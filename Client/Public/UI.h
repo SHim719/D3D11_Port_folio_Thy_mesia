@@ -21,9 +21,12 @@ public:
 
 	virtual void On_UIActive(void* pArg);
 
+	virtual void Update_PlayerHp(_float fMaxHp, _float fHp);
+	virtual void Update_PlayerMp(_int iMaxMp, _int iMp);
+
 protected:
-	_vector Convert_WorldToScreen(_fvector vUIScreenPos);
-	_vector Convert_ScreenToWorld(_fvector vUIWorldPos);
+	_vector Convert_WorldToScreen(_fvector vUIWorldPos);
+	_vector Convert_ScreenToWorld(_fvector vUIScreenPos);
 
 protected:
 	_float4x4	m_ViewportMatrix;

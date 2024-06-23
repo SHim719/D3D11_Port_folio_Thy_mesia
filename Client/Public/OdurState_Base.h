@@ -16,6 +16,8 @@ public:
 	void OnGoing(_float fTimeDelta)					override;
 	void OnState_End()								override;
 
+	void OnHit(void* pArg)							override;
+
 protected:
 	COdur*			m_pOdur = { nullptr };
 	CTransform*		m_pTargetTransform = { nullptr };

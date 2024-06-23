@@ -3,6 +3,8 @@
 
 #include "GameInstance.h"
 
+#include "Player.h"
+
 IMPLEMENT_SINGLETON(CUI_Manager)
 
 CUI_Manager::CUI_Manager()
@@ -63,12 +65,17 @@ void CUI_Manager::InActive_UI(const string& strUITag)
 
 HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	//CUI* pUI = CUI_LockOn::Create(pDevice, pContext);
-	//if (FAILED(pUI->Initialize(nullptr)))
-	//	return E_FAIL;
-	//
-	//m_UIs.emplace("UI_LockOn", pUI);
+	CUI* pUI = CUI_LockOn::Create(pDevice, pContext);
+	if (FAILED(pUI->Initialize(nullptr)))
+		return E_FAIL;
+	
+	m_UIs.emplace("UI_LockOn", pUI);
 
+	pUI = CUI_PlayerBar::Create(pDevice, pContext);
+	if (FAILED(pUI->Initialize(m_pPlayer->Get_PlayerStat())))
+		return E_FAIL;
+
+	m_UIs.emplace("UI_PlayerBar", pUI);
 
 	return S_OK;
 }

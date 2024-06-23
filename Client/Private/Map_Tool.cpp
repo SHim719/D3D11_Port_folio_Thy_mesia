@@ -279,11 +279,21 @@ void CMap_Tool::Map_Tool()
         break;
     }
 
+    Key_Input_MapTool();
     Transform_Gizmo();
     Transform_View();
     Placable_Object();
     Object_ListBox();
     Object_Picking();
+}
+
+void CMap_Tool::Key_Input_MapTool()
+{
+    if (KEY_DOWN(eKeyCode::Delete))
+    {
+        m_MapObjects[m_iSelObj]->Set_Destroy(true);
+    }
+
 }
 
 void CMap_Tool::Destroy_MapObjects()
@@ -327,7 +337,7 @@ void CMap_Tool::Transform_View()
     {
         if (-1 == m_iSelObj)
             return;
-        _vector vQuat = XMQuaternionRotationRollPitchYaw(m_vRotation.x, m_vRotation.y, m_vRotation.z);
+        _vector vQuat = XMQuaternionRotationRollPitchYaw(To_Radian(m_vRotation.x), To_Radian(m_vRotation.y), To_Radian(m_vRotation.z));
         m_MapObjects[m_iSelObj]->Get_Transform()->Rotation_Quaternion(vQuat);
     }
 

@@ -5,6 +5,8 @@
 
 #include "ToolMapObj.h"
 
+#include "UI_Manager.h"
+
 CTestPlay_Tool::CTestPlay_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CToolState(pDevice, pContext)
 {
@@ -36,6 +38,9 @@ void CTestPlay_Tool::Start_Tool()
 
     Safe_AddRef(m_pPlayer);
     Safe_AddRef(m_pMain_Camera);
+
+    UIMGR->Set_Player(m_pPlayer);
+    
 
     if (FAILED(Load_TestMap()))
         return;
@@ -112,7 +117,21 @@ HRESULT CTestPlay_Tool::Load_TestMap()
 
             wsprintf(LoadDesc.szModelTag, L"Prototype_Model_%s", fileTitle.c_str());
 
-            CGameObject* pObj = m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Object", wstrPrototypeTag, &LoadDesc);
+            wstring wstrLayerTag;
+            switch (LoadDesc.eObjType)
+            {
+            case MAPOBJECT:
+                wstrLayerTag = L"Object";
+                break;
+            case ENEMY:
+                wstrLayerTag = L"Enemy";
+                break;
+            case TRIGGEROBJ:
+                wstrLayerTag = L"TriggerObject";
+                break;
+            }
+
+            CGameObject* pObj = m_pGameInstance->Add_Clone(LEVEL_TOOL, wstrLayerTag, wstrPrototypeTag, &LoadDesc);
             if (nullptr == pObj)
                 m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Object", L"Prototype_MapObject", &LoadDesc);
         }

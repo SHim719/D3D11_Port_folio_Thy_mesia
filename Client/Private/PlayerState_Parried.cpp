@@ -32,7 +32,7 @@ void CPlayerState_Parried::OnGoing(_float fTimeDelta)
 		return;
 	}
 		
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 
 	//PlayerState ePlayerState = Decide_State();
 	//if (PlayerState::State_End != ePlayerState)

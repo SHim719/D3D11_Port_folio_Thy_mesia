@@ -30,21 +30,21 @@ protected:
 	_bool						m_bStanced = { false };
 	
 public:
+	_bool Is_Stanced() const {
+		return m_bStanced;
+	}
 	void Enable_Stanced() {
 		m_bStanced = true;}
 	void Disable_Stanced() {
 		m_bStanced = false;}
+
 	
 protected:
 	vector<class CWeapon*>		m_Weapons;
 
 	size_t	m_iAttackIdx = { 0 };
 public:
-	const ATTACKDESC& Get_NowAttackDesc(size_t iIdx);
-
-	size_t Get_AttackIdx() const {
-		return m_iAttackIdx;
-	}
+	const ATTACKDESC& Get_NowAttackDesc();
 
 	void Add_AttackIdx() {
 		m_iAttackIdx++;

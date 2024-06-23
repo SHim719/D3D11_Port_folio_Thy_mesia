@@ -44,9 +44,9 @@ void CCharacter::Free()
 	Safe_Release(m_pNavigation);
 }
 
-const ATTACKDESC& CCharacter::Get_NowAttackDesc(size_t iIdx)
+const ATTACKDESC& CCharacter::Get_NowAttackDesc()
 {
-	return m_States[m_iState]->Get_NowAttackDesc(iIdx);
+	return m_States[m_iState]->Get_NowAttackDesc(m_iAttackIdx);
 }
 
 void CCharacter::Compute_YPos()

@@ -33,13 +33,13 @@ void COdurState_Walk::OnGoing(_float fTimeDelta)
 	switch (m_iDir)
 	{
 	case 0:
-		m_pOwnerTransform->Go_Straight(fTimeDelta);
+		m_pOwnerTransform->Go_Straight(fTimeDelta, m_pNavigation);
 		break;
 	case 1:
-		m_pOwnerTransform->Go_Left(fTimeDelta);
+		m_pOwnerTransform->Go_Left(fTimeDelta, m_pNavigation);
 		break;
 	case 2:
-		m_pOwnerTransform->Go_Right(fTimeDelta);
+		m_pOwnerTransform->Go_Right(fTimeDelta, m_pNavigation);
 		break;
 	}
 	

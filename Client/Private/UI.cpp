@@ -50,6 +50,14 @@ void CUI::On_UIActive(void* pArg)
 {
 }
 
+void CUI::Update_PlayerHp(_float fMaxHp, _float fHp)
+{
+}
+
+void CUI::Update_PlayerMp(_int iMaxMp, _int iMp)
+{
+}
+
 _vector CUI::Convert_ScreenToWorld(_fvector vUIScreenPos)
 {
 	/*

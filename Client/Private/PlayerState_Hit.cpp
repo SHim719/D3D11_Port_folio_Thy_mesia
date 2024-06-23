@@ -52,7 +52,7 @@ void CPlayerState_Hit::OnGoing(_float fTimeDelta)
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 
 
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos());
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)

@@ -53,9 +53,11 @@ void CMain_Camera::Tick(_float fTimeDelta)
 	{
 		if (LOCKON != m_eState)
 		{
-			SetState_LockOn();
-			m_pPlayer->Toggle_LockOn(m_pTargetTransform);
-			m_fFollowingSpeed = 4.5f;
+			if (SetState_LockOn())
+			{
+				m_pPlayer->Toggle_LockOn(m_pTargetTransform);
+				m_fFollowingSpeed = 4.5f;
+			}
 		}
 		else
 		{
@@ -111,11 +113,11 @@ void CMain_Camera::Set_Player(CGameObject* pPlayer)
 	XMStoreFloat4(&m_vPrevTargetPos, m_pPlayerTransform->Get_Position());
 }
 
-void CMain_Camera::SetState_LockOn()
+_bool CMain_Camera::SetState_LockOn()
 {
 	CGameObject* pTarget = m_pGameInstance->Find_Target(m_pPlayerTransform->Get_Position());
 	if (nullptr == pTarget)
-		return;
+		return false;
 
 	m_pTargetTransform = pTarget->Get_Transform();
 	Safe_AddRef(m_pTargetTransform);
@@ -124,7 +126,7 @@ void CMain_Camera::SetState_LockOn()
 
 	m_pTargetBone = Find_TargetBone(pTargetModel);
 	if (nullptr == m_pTargetBone)
-		return;
+		return false;
 	Safe_AddRef(m_pTargetBone);
 
 	ATTACHDESC Desc = {};
@@ -134,6 +136,8 @@ void CMain_Camera::SetState_LockOn()
 	UIMGR->Active_UI("UI_LockOn", &Desc);
 
 	m_eState = LOCKON;
+
+	return true;
 }
 
 void CMain_Camera::SetState_Cutscene(const ATTACHDESC& Desc)

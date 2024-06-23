@@ -22,6 +22,9 @@ HRESULT CUI_LockOn::Initialize_Prototype()
 
 HRESULT CUI_LockOn::Initialize(void* pArg)
 {
+	if (FAILED(__super::Initialize(pArg)))
+		return E_FAIL;
+
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
 		return E_FAIL;
 

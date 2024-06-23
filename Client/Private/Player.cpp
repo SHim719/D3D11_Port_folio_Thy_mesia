@@ -56,8 +56,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
-	//if (KEY_DOWN(eKeyCode::T))
-	//	Change_State((_uint)PlayerState::State_Cutscene);
+	if (KEY_DOWN(eKeyCode::R))
+		m_pStats->Increase_Hp(-10);
+
 
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
@@ -205,7 +206,7 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 		CWeapon* pEnemyWeapon = static_cast<CWeapon*>(pOther);
 		CEnemy* pOwner = static_cast<CEnemy*>(pEnemyWeapon->Get_Owner());
 
-		ATTACKDESC AtkDesc = pOwner->Get_NowAttackDesc(pOwner->Get_AttackIdx());
+		ATTACKDESC AtkDesc = pOwner->Get_NowAttackDesc();
 
 		m_States[m_iState]->OnHit(&AtkDesc);
 	}

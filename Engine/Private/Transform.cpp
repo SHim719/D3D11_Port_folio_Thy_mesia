@@ -101,10 +101,19 @@ void CTransform::Go_Dir(_fvector vDir, _float fTimeDelta, CNavigation* pNavigati
 
 	_float4 f4Normal;
 
+	
+	if (nullptr == pNavigation)
+	{
+		Set_State(STATE_POSITION, vPos + vDeltaPos);
+		return;
+	}
+
 	_bool bCanMove = pNavigation->isMove(vPos + vDeltaPos, &f4Normal);
 
-	if (nullptr == pNavigation || true == bCanMove)
+	if (bCanMove)
+	{
 		Set_State(STATE_POSITION, vPos + vDeltaPos);
+	}
 	else
 	{
 		//vDeltaPos

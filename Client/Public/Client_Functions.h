@@ -21,6 +21,8 @@ namespace JoMath
 
 	_vector Slerp_TargetLook(_fvector vNowLook, _fvector vTargetLook, _float fRotRate);
 	_vector Calc_GroundLook(_fvector vSrc, _fvector vDst);
+
+	_float Lerp(_float fA, _float fB, _float fRatio);
 }
 
 namespace JoRandom

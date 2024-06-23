@@ -35,7 +35,7 @@ void CPlayerState_LockOn::OnGoing(_float fTimeDelta)
 
 	Change_WalkAnimation();
 
-	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta);
+	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta, m_pNavigation);
 
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
