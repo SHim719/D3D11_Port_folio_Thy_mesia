@@ -30,7 +30,7 @@ private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 
 private:
-	CCollider*	m_pCollider = { nullptr };
+	CCollider*		m_pCollider = { nullptr };
 
 private:
 	HRESULT Ready_Components(void* pArg);

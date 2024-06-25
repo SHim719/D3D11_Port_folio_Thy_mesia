@@ -22,8 +22,8 @@ HRESULT CEventTrigger::Initialize(void* pArg)
 	if (nullptr == pArg)
 		return S_OK;
 
-	//if (FAILED(Ready_Components(pArg)))
-	//	return E_FAIL;
+	if (FAILED(Ready_Components(pArg)))
+		return E_FAIL;
 
 	return S_OK;
 }

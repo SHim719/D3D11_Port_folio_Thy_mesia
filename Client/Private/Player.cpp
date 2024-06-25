@@ -1,7 +1,7 @@
 #include "Player.h"
 
 #include "Player_States.h"
-#include "PlayerStat.h"
+#include "PlayerStats.h"
 
 #include "Weapon.h"
 
@@ -51,6 +51,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	CUTSCENEMGR->Add_Actor(this);
 
+
 	return S_OK;
 }
 
@@ -58,7 +59,6 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::R))
 		m_pStats->Increase_Hp(-10);
-
 
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
@@ -139,13 +139,13 @@ void CPlayer::OnEnd_Cutscene()
 
 void CPlayer::Bind_KeyFrames()
 {
-	m_pModel->Bind_Func("Active_SaberCollider", bind(&CWeapon::Active_Collider, m_Weapons[SABER]));
-	m_pModel->Bind_Func("Inactive_SaberCollider", bind(&CWeapon::Inactive_Collider, m_Weapons[SABER]));
-	m_pModel->Bind_Func("Enable_NextState", bind(&CPlayer::Enable_NextState, this));
-	m_pModel->Bind_Func("Disable_NextState", bind(&CPlayer::Disable_NextState, this));
-	m_pModel->Bind_Func("Disable_Rotation", bind(&CPlayer::Disable_Rotation, this));
-	m_pModel->Bind_Func("Set_Vulnerable", bind(&CPlayer::Set_Vulnerable, this));
-	m_pModel->Bind_Func("Enable_Render", bind(&CPlayer::Enable_Render, this));
+	m_pModel->Bind_Func("Active_SaberCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SABER], true));
+	m_pModel->Bind_Func("Inactive_SaberCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SABER], false));
+	m_pModel->Bind_Func("Enable_NextState", bind(&CPlayer::Set_CanNextState, this, true));
+	m_pModel->Bind_Func("Disable_NextState", bind(&CPlayer::Set_CanNextState, this, false));
+	m_pModel->Bind_Func("Disable_Rotation", bind(&CPlayer::Set_CanRotation, this, false));
+	m_pModel->Bind_Func("Set_Vulnerable", bind(&CPlayer::Set_Invincible, this, false));
+	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));
 }
 
 
@@ -174,9 +174,10 @@ void CPlayer::Inactive_AllWeaponColliders()
 	for (auto pWeapon : m_Weapons)
 	{
 		if (pWeapon)
-			pWeapon->Inactive_Collider();
+			pWeapon->Set_Active_Collider(false);
 	}
 }
+
 
 void CPlayer::Toggle_LockOn(CTransform* pTargetTransform)
 {
@@ -204,12 +205,21 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 	if (TAG_ENEMY_WEAPON == pOther->Get_Tag())
 	{
 		CWeapon* pEnemyWeapon = static_cast<CWeapon*>(pOther);
-		CEnemy* pOwner = static_cast<CEnemy*>(pEnemyWeapon->Get_Owner());
-
-		ATTACKDESC AtkDesc = pOwner->Get_NowAttackDesc();
+		
+		ATTACKDESC AtkDesc = pEnemyWeapon->Get_AttackDesc();
 
 		m_States[m_iState]->OnHit(&AtkDesc);
 	}
+}
+
+void CPlayer::Take_Damage(void* pArg)
+{
+	ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;
+	
+	if (0 == m_pStats->Increase_Hp(-pAttackDesc->iDamage))
+		int x = 10;
+		//Change_State((_uint)PlayerState::State_Dead)
+
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -264,7 +274,7 @@ HRESULT CPlayer::Ready_Components()
 
 HRESULT CPlayer::Ready_States()
 {
-	m_pStats = CPlayerStat::Create();
+	m_pStats = CPlayerStats::Create();
 
 	m_States.resize((_uint)PlayerState::State_End);
 

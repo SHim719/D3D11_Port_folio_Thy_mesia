@@ -27,8 +27,8 @@ void CPlayerState_Idle::OnState_Start(void* pArg)
 	}
 		
 
-	m_pPlayer->Enable_NextState();
-	m_pPlayer->Enable_Rotation();
+	m_pPlayer->Set_CanNextState(true);
+	m_pPlayer->Set_CanRotation(true);
 
 	m_pModel->Change_Animation(Corvus_SD_Idle);
 }

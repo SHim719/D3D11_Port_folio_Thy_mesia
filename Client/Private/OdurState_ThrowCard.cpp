@@ -34,9 +34,8 @@ HRESULT COdurState_ThrowCard::Initialize(void* pArg)
 
 void COdurState_ThrowCard::OnState_Start(void* pArg)
 {
-	m_pOdur->Enable_LookTarget();
-	m_pOdur->Enable_Stanced();
-	m_pOdur->Reset_AttackIdx();
+	m_pOdur->Set_LookTarget(true);
+	m_pOdur->Set_Stanced(true);
 
 	m_iCurAnimIdx = 0;
 
@@ -44,8 +43,6 @@ void COdurState_ThrowCard::OnState_Start(void* pArg)
 	m_iThrowCount = (m_iThrowCount + 1) % m_iMaxThrowCount;
 
 	m_fTimeAcc = m_fThrowingGap;
-	
-	m_AttackDescs = m_CardAttackDescs[m_iThrowState];
 
 	m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);
 }
@@ -85,15 +82,18 @@ void COdurState_ThrowCard::OnState_End()
 
 void COdurState_ThrowCard::Init_AttackDesc()
 {
+	m_CardAttackDescs[0].reserve(1);
+	m_CardAttackDescs[1].reserve(2);
+
 	ATTACKDESC AttDesc;
 	AttDesc.eAttackType = WEAK;
-	m_CardAttackDescs[0].push_back(AttDesc);
+	m_CardAttackDescs[0].emplace_back(AttDesc);
 
-	m_CardAttackDescs[1].push_back(AttDesc);
+	m_CardAttackDescs[1].emplace_back(AttDesc);
 	
 	AttDesc.eAttackType = VERY_BIG_HIT;
 
-	m_CardAttackDescs[1].push_back(AttDesc);
+	m_CardAttackDescs[1].emplace_back(AttDesc);
 
 }
 
@@ -116,7 +116,9 @@ void COdurState_ThrowCard::Throw_Card(_vector vLook)
 	_float4x4 ParamMatrix4x4;
 	XMStoreFloat4x4(&ParamMatrix4x4, ParamMatrix);
 
-	m_Cards[m_iCurCardIdx]->Add_PoolingObject_To_Layer(L"Enemy_Weapon", &ParamMatrix4x4);
+	m_Cards[m_iCurCardIdx]->OnEnter_Layer(&ParamMatrix4x4);
+
+	ADD_EVENT(bind(&CGameInstance::Insert_GameObject, m_pGameInstance, GET_CURLEVEL, L"Enemy_Weapon", m_Cards[m_iCurCardIdx]));
 
 	m_iCurCardIdx = (m_iCurCardIdx + 1) % m_Cards.size();
 }

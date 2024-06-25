@@ -18,10 +18,10 @@ HRESULT CPlayerState_Avoid::Initialize(void* pArg)
 
 void CPlayerState_Avoid::OnState_Start(void* pArg)
 {	
-	m_pPlayer->Disable_NextState();
-	m_pPlayer->Enable_Rotation();
+	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_CanRotation(true);
 
-	m_pPlayer->Set_Invincible();
+	m_pPlayer->Set_Invincible(true);
 
 	Decide_Animation();
 }

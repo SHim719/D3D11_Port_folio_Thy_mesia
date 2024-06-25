@@ -46,15 +46,19 @@ HRESULT CUI::Render()
 	return S_OK;
 }
 
-void CUI::On_UIActive(void* pArg)
-{
-}
-
-void CUI::Update_PlayerHp(_float fMaxHp, _float fHp)
+void CUI::Update_PlayerHp(_int iMaxHp, _int iHp)
 {
 }
 
 void CUI::Update_PlayerMp(_int iMaxMp, _int iMp)
+{
+}
+
+void CUI::Update_EnemyHp(_int iHp)
+{
+}
+
+void CUI::Update_EnemyMp(_int iMp)
 {
 }
 

@@ -23,14 +23,17 @@ namespace Client
 
 	typedef struct tagAttackDesc
 	{
-		ATTACKTYPE eAttackType;
-
+		class CCharacter*	pAttacker = nullptr;
+		ATTACKTYPE			eAttackType;
+		_int				iDamage = 0;
+		_int				iPlagueDamage = 0;
 	}ATTACKDESC;
 
 
 	typedef struct tagEnemyDesc
 	{
-		int iMaxHp;
+		wstring wstrEnemyName = L"";
+		int		iMaxHp = 0;
 	}ENEMYDESC;
 
 	typedef struct tagAttachDesc

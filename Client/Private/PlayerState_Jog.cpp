@@ -31,8 +31,8 @@ void CPlayerState_Jog::OnState_Start(void* pArg)
 		return;
 	}
 
-	m_pPlayer->Enable_NextState();
-	m_pPlayer->Enable_Rotation();
+	m_pPlayer->Set_CanNextState(true);
+	m_pPlayer->Set_CanRotation(true);
 
 	m_pModel->Change_Animation(Corvus_SD_RunF_24);
 	m_pOwnerTransform->Set_Speed(m_fJogSpeed);

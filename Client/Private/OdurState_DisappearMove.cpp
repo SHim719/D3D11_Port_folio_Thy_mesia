@@ -17,8 +17,8 @@ HRESULT COdurState_DisappearMove::Initialize(void* pArg)
 
 void COdurState_DisappearMove::OnState_Start(void* pArg)
 {
-	m_pOdur->Disable_LookTarget();
-	m_pOdur->Enable_Stanced();
+	m_pOdur->Set_LookTarget(false);
+	m_pOdur->Set_Stanced(true);
 
 	m_pOdur->Set_Alpha(0.f);
 
@@ -32,13 +32,11 @@ void COdurState_DisappearMove::OnState_Start(void* pArg)
 		return;
 	}
 
-
 	Decide_Animation();
 }
 
 void COdurState_DisappearMove::OnGoing(_float fTimeDelta)
 {
-
 	if (false == m_pOdur->Is_CollPlayer())
 		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }

@@ -1,18 +1,19 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "Weapon.h"
 
 
 BEGIN(Client)
 
-class COdur_Card final : public CGameObject
+class COdur_Card final : public CWeapon
 {
 private:
 	COdur_Card(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	COdur_Card(const COdur_Card& rhs);
 	virtual ~COdur_Card() = default;
 
+public:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;

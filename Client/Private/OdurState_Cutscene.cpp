@@ -5,6 +5,7 @@
 #include "FadeScreen.h"
 
 #include "Cutscene_Manager.h"
+#include "UI_Manager.h"
 
 
 COdurState_Cutscene::COdurState_Cutscene(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -24,9 +25,8 @@ HRESULT COdurState_Cutscene::Initialize(void* pArg)
 
 void COdurState_Cutscene::OnState_Start(void* pArg)
 {
-	m_pOdur->Disable_LookTarget();
-	m_pOdur->Enable_Stanced();
-	m_pOdur->Reset_AttackIdx();
+	m_pOdur->Set_LookTarget(false);
+	m_pOdur->Set_Stanced(true);
 
 	ATTACHDESC attachDesc;
 	attachDesc.pAttachBone = m_pModel->Get_Bone("AnimTargetPoint");
@@ -66,7 +66,7 @@ void COdurState_Cutscene::FadeOut_Cutscene()
 	FadeDesc.fFadeOutSpeed = 0.4f;
 	FadeDesc.fFadeInSpeed = 1.5f;
 
-	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"UI", L"Prototype_FadeScreen", &FadeDesc);
+	UIMGR->Active_UI("FadeScreen", &FadeDesc);
 }
 
 COdurState_Cutscene* COdurState_Cutscene::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

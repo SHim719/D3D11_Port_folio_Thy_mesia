@@ -17,9 +17,9 @@ HRESULT CPlayerState_ParrySuccess::Initialize(void* pArg)
 
 void CPlayerState_ParrySuccess::OnState_Start(void* pArg)
 {
-	m_pPlayer->Disable_NextState();
-	m_pPlayer->Disable_Rotation();
-	m_pPlayer->Set_Invincible();
+	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_CanRotation(false);
+	m_pPlayer->Set_Invincible(true);
 
 	_int* iParryDir = (_int*)pArg;
 	_int iRandNum = JoRandom::Random_Int(0, 1);

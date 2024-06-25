@@ -26,8 +26,8 @@ void CPlayerState_Sprint::OnState_Start(void* pArg)
 		return;
 	}
 
-	m_pPlayer->Enable_NextState();
-	m_pPlayer->Enable_Rotation();
+	m_pPlayer->Set_CanNextState(true);
+	m_pPlayer->Set_CanRotation(true);
 
 	m_pOwnerTransform->Set_Speed(m_fSprintSpeed);
 	m_pModel->Change_Animation(Corvus_SD1_Sprint);

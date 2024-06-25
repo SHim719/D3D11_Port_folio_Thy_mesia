@@ -15,17 +15,37 @@ private:
 	void Initialize(const ENEMYDESC& EnemyDesc);
 
 private:
-	_int			m_iMaxHp;
-	_int			m_iHp;
-	_int			m_iSubHp;
+	wstring			m_wstrName = { L"" };
+
+	_int			m_iMaxHp = { 0 };
+	_int			m_iHp = { 0 };
+	_int			m_iMp = { 0 };
+
+private:
+	void Increase_Hp(_int iHp);
+	void Increase_Mp(_int iMp);
+private:
+	void Broadcast_Update_Hp();
+	void Broadcast_Update_Mp();
 
 public:
-	_int Get_Hp() const { 
-		return m_iHp; }
+	void Add_Observer(class CUI* pUI);
 
+private:
+	list<class CUI*>	m_ObserverUIs;
+
+public:
+	const wstring& Get_Name() const {
+		return m_wstrName;
+	}
+
+	_int Get_MaxHp() const {
+		return m_iMaxHp;
+	}
 
 public:
 	static CEnemyStats* Create(const ENEMYDESC& EnemyDesc);
+	void Free() override;
 };
 
 END

@@ -38,6 +38,8 @@ public:
 		m_fRatio = fRatio;
 	}
 
+	void Update_Center(_vector vCenter);
+
 private:
 	HRESULT Ready_Component(const wstring& wstrTexTag);
 

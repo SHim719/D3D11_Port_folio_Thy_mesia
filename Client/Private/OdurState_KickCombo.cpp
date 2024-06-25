@@ -17,9 +17,9 @@ HRESULT COdurState_KickCombo::Initialize(void* pArg)
 
 void COdurState_KickCombo::OnState_Start(void* pArg)
 {
-	m_pOdur->Reset_AttackIdx();
-	m_pOdur->Enable_LookTarget();
-
+	Reset_AttackIdx();
+	m_pOdur->Set_Stanced(true);
+	m_pOdur->Set_LookTarget(true);
 	m_pModel->Change_Animation(Magician_KickCombo);
 }
 
@@ -36,17 +36,17 @@ void COdurState_KickCombo::OnState_End()
 
 void COdurState_KickCombo::Init_AttackDesc()
 {
-	m_AttackDescs.resize(3);
+	m_AttackDescs.reserve(3);
 
 	ATTACKDESC AttackDesc;
 	AttackDesc.eAttackType = NORMAL;
 
-	m_AttackDescs[0] = AttackDesc;
-	m_AttackDescs[1] = AttackDesc;
+	m_AttackDescs.emplace_back(COdur::FOOT_R, AttackDesc);
+	m_AttackDescs.emplace_back(COdur::FOOT_R, AttackDesc);
 
 	AttackDesc.eAttackType = KNOCKBACK;
 
-	m_AttackDescs[2] = AttackDesc;
+	m_AttackDescs.emplace_back(COdur::SWORD, AttackDesc);
 }
 
 void COdurState_KickCombo::Change_To_Disappear()

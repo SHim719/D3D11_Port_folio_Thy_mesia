@@ -12,3 +12,4 @@
 #include "Renderer.h"
 #include "PipeLine.h"
 #include "Event_Manager.h"
+#include "Font_Manager.h"

@@ -1,15 +1,15 @@
 #pragma once
 
-#include "UI.h"
+#include "UI_EnemyBar.h"
 
 BEGIN(Client)
 
-class CUI_LockOn final : public CUI
+class CUI_BossBar final : public CUI_EnemyBar
 {
 private:
-	CUI_LockOn(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CUI_LockOn(const CUI_LockOn& rhs);
-	virtual ~CUI_LockOn() = default;
+	CUI_BossBar(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CUI_BossBar(const CUI_BossBar& rhs);
+	virtual ~CUI_BossBar() = default;
 
 private:
 	HRESULT Initialize_Prototype()		override;
@@ -20,11 +20,13 @@ private:
 
 	HRESULT OnEnter_Layer(void* pArg)	override;
 private:
-	CTransform*		m_pTargetTransform = { nullptr };
-	class CBone*	m_pTargetBone = { nullptr };
+	void Draw_BossNameText();
+
+private:
+	wstring m_wstrBossName = L"";
 
 public:
-	static CUI_LockOn* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CUI_BossBar* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr)	override;
 	void Free()									override;
 };

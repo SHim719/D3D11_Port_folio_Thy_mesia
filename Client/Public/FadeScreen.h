@@ -35,12 +35,7 @@ private:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-public:
-	//void Bind_Callback_FadeStart(function<void()> func) { 
-	//	m_Callback_FadeStart  = move(func);}
-	//void Bind_Callback_FadeEnd(function<void()> func) { 
-	//	m_Callback_FadeEnd = move(func);} 
-
+	HRESULT OnEnter_Layer(void* pArg)	override;
 private:
 	_float		m_fAlpha = { 0.f };
 	_float		m_fFadeOutSpeed = { 0.f };

@@ -19,10 +19,11 @@ public:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-	virtual void On_UIActive(void* pArg);
-
-	virtual void Update_PlayerHp(_float fMaxHp, _float fHp);
+	virtual void Update_PlayerHp(_int iMaxHp, _int iHp);
 	virtual void Update_PlayerMp(_int iMaxMp, _int iMp);
+
+	virtual void Update_EnemyHp(_int iHp);
+	virtual void Update_EnemyMp(_int iMp);
 
 protected:
 	_vector Convert_WorldToScreen(_fvector vUIWorldPos);

@@ -15,25 +15,23 @@ HRESULT CPlayerState_Cutscene::Initialize(void* pArg)
 
 void CPlayerState_Cutscene::OnState_Start(void* pArg)
 {
-	m_pPlayer->Disable_NextState();
-	m_pPlayer->Disable_Rotation();
+	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Inactive_AllWeaponColliders();
-	m_pPlayer->Inactive_Colliders();
-	m_pPlayer->Disable_Render();
+	m_pPlayer->Set_Active_Colliders(false);
+	m_pPlayer->Set_NoRender(true);
 
 	CUTSCENE_NUMBER* pCutsceneNum = (CUTSCENE_NUMBER*)pArg;
 
-	//switch (*pCutsceneNum)
-	//{
-	//case ENCOUNTER_ODUR:
-	//	m_pModel->Change_Animation(Corvus_VS_MagicianLV1_Seq_BossFightStart, 0.f);
-	//	break;
-	//case ENCOUNTER_URD:
-	//	break;
-	//}
+	switch (*pCutsceneNum)
+	{
+	case ENCOUNTER_ODUR:
+		m_pModel->Change_Animation(Corvus_VS_MagicianLV1_Seq_BossFightStart, 0.f);
+		break;
+	case ENCOUNTER_URD:
+		break;
+	}
 
-	m_pPlayer->Disable_Render();
-	m_pModel->Change_Animation(Corvus_VS_MagicianLV1_Seq_BossFightStart, 0.f);
 }
 
 void CPlayerState_Cutscene::OnGoing(_float fTimeDelta)
@@ -42,7 +40,7 @@ void CPlayerState_Cutscene::OnGoing(_float fTimeDelta)
 
 void CPlayerState_Cutscene::OnState_End()
 {
-	m_pPlayer->Active_Colliders();
+	m_pPlayer->Set_Active_Colliders(true);
 	m_pMain_Camera->Reset_State();
 }
 

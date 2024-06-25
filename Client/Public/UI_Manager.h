@@ -26,7 +26,7 @@ private:
 
 	unordered_map<string, class CUI*>	m_UIs;
 public:
-	CUI* Active_UI(const string& strUITag, void* pArg = nullptr);
+	void Active_UI(const string& strUITag, void* pArg = nullptr);
 	void InActive_UI(const string& strUITag);
 
 	void Set_Player(CPlayer* pPlayer) {

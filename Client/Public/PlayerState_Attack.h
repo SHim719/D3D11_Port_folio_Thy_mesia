@@ -8,23 +8,21 @@ private:
 	CPlayerState_Attack(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPlayerState_Attack() = default;
 
-public:
+private:
 	HRESULT Initialize(void* pArg)	override;
 	void OnState_Start(void* pArg)	override;
 	void OnGoing(_float fTimeDelta)	override;
 	void OnState_End()				override;
 
+	void Init_AttackDesc()			override;
+
 private:
-	_bool			m_bNextAttack = { false };
+	_bool			m_bCanNextAttack = { false };
 	_uint			m_iNowComboCnt = 0;
 
 private:
-	void Enable_NextAttack() {
-		m_bNextAttack = true;
-	}
-
-	void Disable_NextAttack() {
-		m_bNextAttack = false;
+	void Set_CanNextAttack(_bool bCanNextAttack) {
+		m_bCanNextAttack = bCanNextAttack;
 	}
 
 public:

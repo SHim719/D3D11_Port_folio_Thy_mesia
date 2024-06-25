@@ -15,8 +15,8 @@ HRESULT COdurState_Appear::Initialize(void* pArg)
 
 void COdurState_Appear::OnState_Start(void* pArg)
 {
-	m_pOdur->Enable_LookTarget();
-	m_pOdur->Enable_Stanced();
+	m_pOdur->Set_LookTarget(true);
+	m_pOdur->Set_Stanced(true);
 	m_pOdur->Set_Alpha_Increase();
 
 	Decide_Animation(pArg);

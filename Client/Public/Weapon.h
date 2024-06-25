@@ -12,7 +12,7 @@ END
 
 BEGIN(Client)
 
-class CWeapon final : public CGameObject
+class CWeapon : public CGameObject
 {
 public:
 	typedef struct tagWeaponDesc
@@ -26,12 +26,12 @@ public:
 		CCollider::COLLIDERDESC*	pColliderDesc = nullptr;
 	} WEAPONDESC;
 
-private:
+protected:
 	CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CWeapon(const CWeapon& rhs);
 	virtual ~CWeapon() = default;
 
-public:
+private:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
@@ -52,7 +52,7 @@ public:
 		return m_pOwner;
 	}
 
-private:
+protected:
 	ATTACKDESC		m_AttackDesc;
 
 public:
@@ -69,7 +69,6 @@ private:
 	_float			m_fAlpha = { 1.f };
 
 	
-
 public:
 	void Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
 
@@ -81,15 +80,11 @@ private:
 
 
 public:
-	void Active_Collider() {
+	void Set_Active_Collider(_bool bActive) {
 		if (m_pCollider)
-			m_pCollider->Set_Active(true);
+			m_pCollider->Set_Active(bActive);
 	}
-	void Inactive_Collider() {
-		if (m_pCollider)
-			m_pCollider->Set_Active(false);
-	}
-
+	
 private:
 	HRESULT Ready_Components(WEAPONDESC* pDesc);
 

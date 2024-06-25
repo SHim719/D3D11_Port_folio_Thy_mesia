@@ -192,9 +192,11 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\Public\Cell.h" />
     <ClInclude Include="..\Public\Collider.h" />
     <ClInclude Include="..\Public\Collision_Manager.h" />
+    <ClInclude Include="..\Public\CustomFont.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\Engine_Enums.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
+    <ClInclude Include="..\Public\Font_Manager.h" />
     <ClInclude Include="..\Public\KeyFrameEvent.h" />
     <ClInclude Include="..\Public\MyCamera.h" />
     <ClInclude Include="..\Public\Channel.h" />
@@ -247,8 +249,10 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClCompile Include="..\Private\Cell.cpp" />
     <ClCompile Include="..\Private\Collider.cpp" />
     <ClCompile Include="..\Private\Collision_Manager.cpp" />
+    <ClCompile Include="..\Private\CustomFont.cpp" />
     <ClCompile Include="..\Private\DebugDraw.cpp" />
     <ClCompile Include="..\Private\Event_Manager.cpp" />
+    <ClCompile Include="..\Private\Font_Manager.cpp" />
     <ClCompile Include="..\Private\KeyFrameEvent.cpp" />
     <ClCompile Include="..\Private\MyCamera.cpp" />
     <ClCompile Include="..\Private\Channel.cpp" />

@@ -1,6 +1,8 @@
 #include "Character.h"
 #include "State_Base.h"
 
+#include "Weapon.h"
+
 CCharacter::CCharacter(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -26,8 +28,24 @@ void CCharacter::Change_State(_uint eState, void* pArg)
 	m_States[m_iState]->OnState_Start(pArg);
 }
 
-void CCharacter::Hit(void* pArg)
+void CCharacter::Take_Damage(void* pArg)
 {
+	
+}
+
+
+void CCharacter::Update_AttackDesc()
+{
+	pair<_uint, ATTACKDESC> AtkDesc = m_States[m_iState]->Get_NowAttackDesc();
+
+	m_Weapons[AtkDesc.first]->Set_AttackDesc(AtkDesc.second);
+}
+
+void CCharacter::Compute_YPos()
+{
+	_vector vNowPosition = m_pTransform->Get_Position();
+	_float fY = m_pNavigation->Decide_YPos(vNowPosition);
+	m_pTransform->Set_Position(XMVectorSetY(vNowPosition, fY));
 }
 
 void CCharacter::Free()
@@ -42,16 +60,4 @@ void CCharacter::Free()
 	Safe_Release(m_pCollider);
 	Safe_Release(m_pHitBoxCollider);
 	Safe_Release(m_pNavigation);
-}
-
-const ATTACKDESC& CCharacter::Get_NowAttackDesc()
-{
-	return m_States[m_iState]->Get_NowAttackDesc(m_iAttackIdx);
-}
-
-void CCharacter::Compute_YPos()
-{
-	_vector vNowPosition = m_pTransform->Get_Position();
-	_float fY = m_pNavigation->Decide_YPos(vNowPosition);
-	m_pTransform->Set_Position(XMVectorSetY(vNowPosition, fY));
 }

@@ -11,8 +11,8 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_pModel->Bind_Func("Enable_NextAttack", bind(&CPlayerState_Attack::Enable_NextAttack, this));
-	m_pModel->Bind_Func("Disable_NextAttack", bind(&CPlayerState_Attack::Disable_NextAttack, this));
+	m_pModel->Bind_Func("Enable_NextAttack", bind(&CPlayerState_Attack::Set_CanNextAttack, this, true));
+	m_pModel->Bind_Func("Disable_NextAttack", bind(&CPlayerState_Attack::Set_CanNextAttack, this, false));
 
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_Avoid, PlayerState::State_Parry };
 
@@ -21,9 +21,11 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 
 void CPlayerState_Attack::OnState_Start(void* pArg)
 {
-	m_bNextAttack = false;
-	m_pPlayer->Disable_NextState();
-	m_pPlayer->Enable_Rotation();
+	m_bCanNextAttack = false;
+	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_CanRotation(true);
+
+	Reset_AttackIdx();
 
 	m_pModel->Change_Animation(_uint(Corvus_SD_LAttack1 + m_iNowComboCnt), 0.f);
 }
@@ -43,7 +45,7 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 		if (0.f != vNewLook.m128_f32[0] || 0.f != vNewLook.m128_f32[1])
 			Rotate_To_Look(vNewLook, fTimeDelta);
 	}
-	
+
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 
 	PlayerState ePlayerState = Decide_State();
@@ -51,7 +53,7 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 	{
 		if (PlayerState::State_Attack == ePlayerState)
 		{
-			if (true == m_bNextAttack && m_iNowComboCnt < m_pPlayerStat->Get_MaxAttackCnt() - 1)
+			if (true == m_bCanNextAttack && m_iNowComboCnt < m_pPlayerStats->Get_MaxAttackCnt() - 1)
 			{
 				++m_iNowComboCnt;
 				OnState_Start(nullptr);
@@ -68,6 +70,12 @@ void CPlayerState_Attack::OnGoing(_float fTimeDelta)
 void CPlayerState_Attack::OnState_End()
 {
 	m_iNowComboCnt = 0;
+}
+
+void CPlayerState_Attack::Init_AttackDesc()
+{
+	m_AttackDescs.reserve(1);
+	m_AttackDescs.emplace_back(CPlayer::SABER , ATTACKDESC());
 }
 
 

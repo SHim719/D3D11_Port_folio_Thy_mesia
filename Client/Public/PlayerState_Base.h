@@ -2,7 +2,7 @@
 
 #include "State_Base.h"
 #include "Player.h"
-#include "PlayerStat.h"
+#include "PlayerStats.h"
 #include "Main_Camera.h"
 
 BEGIN(Client)
@@ -30,14 +30,14 @@ protected:
 protected:
 	CPlayer*			m_pPlayer = { nullptr };
 	CMain_Camera*		m_pMain_Camera = { nullptr };
-	CPlayerStat*		m_pPlayerStat = { nullptr };
+	CPlayerStats*		m_pPlayerStats = { nullptr };
 	vector<PlayerState> m_PossibleStates;
 
 	_float2				m_vMoveAxis = { 0.f, 0.f };
 
 	_float				m_fRotRate = { 10.f };
-	_float				m_fJogSpeed = { 5.f };
-	_float				m_fSprintSpeed = { 7.f };
+	_float				m_fJogSpeed = { 4.f };
+	_float				m_fSprintSpeed = { 6.f };
 public:
 	void Free() override;
 };

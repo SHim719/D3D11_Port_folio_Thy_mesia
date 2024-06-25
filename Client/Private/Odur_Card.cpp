@@ -1,17 +1,19 @@
 #include "Odur_Card.h"
 
 COdur_Card::COdur_Card(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CWeapon(pDevice, pContext)
 {
 }
 
 COdur_Card::COdur_Card(const COdur_Card& rhs)
-	: CGameObject(rhs)
+	: CWeapon(rhs)
 {
 }
 
 HRESULT COdur_Card::Initialize_Prototype()
 {
+	m_iTag = TAG_ENEMY_WEAPON;
+
 	return S_OK;
 }
 

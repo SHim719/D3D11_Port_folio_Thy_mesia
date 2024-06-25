@@ -17,8 +17,8 @@ HRESULT CPlayerState_LockOn::Initialize(void* pArg)
 
 void CPlayerState_LockOn::OnState_Start(void* pArg)
 {
-	m_pPlayer->Enable_NextState();
-	m_pPlayer->Enable_Rotation();
+	m_pPlayer->Set_CanNextState(true);
+	m_pPlayer->Set_CanRotation(true);
 
 	m_pOwnerTransform->Set_Speed(m_fJogSpeed);
 }

@@ -25,22 +25,15 @@ public:
 	}
 
 protected:
-	class CEnemyStats* m_pStats = { nullptr };
-
-public:
-	CEnemyStats* Get_Stats() const { 
-		return m_pStats; }
+	class CEnemyStats*	m_pStats = { nullptr };
 
 protected:
 	_bool m_bLookTarget = { true };
 	_bool m_bCollPlayer = { false };
 
 public:
-	void Enable_LookTarget() {
-		m_bLookTarget = true;
-	}
-	void Disable_LookTarget() {
-		m_bLookTarget = false;
+	void Set_LookTarget(_bool bLookTarget) {
+		m_bLookTarget = bLookTarget;
 	}
 
 	_bool Is_CollPlayer() const { return m_bCollPlayer; }
@@ -49,7 +42,6 @@ protected:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 	void OnCollisionExit(CGameObject* pOther)	override;
 	
-
 public:
 	void Free() override;
 };

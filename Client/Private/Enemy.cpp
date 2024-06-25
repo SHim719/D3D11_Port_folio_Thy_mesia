@@ -1,5 +1,5 @@
 #include "Enemy.h"
-
+#include "State_Base.h"
 
 CGameObject* CEnemy::s_pTarget = nullptr;
 
@@ -12,6 +12,7 @@ CEnemy::CEnemy(const CEnemy& rhs)
 	: CCharacter(rhs)
 {
 }
+
 
 void CEnemy::OnCollisionEnter(CGameObject* pOther)
 {

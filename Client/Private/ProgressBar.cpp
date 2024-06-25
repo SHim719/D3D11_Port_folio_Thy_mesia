@@ -29,7 +29,6 @@ HRESULT CProgressBar::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_vOriginScale = pProgressDesc->vScale;
-
 	m_vCenter = pProgressDesc->vPosition;
 	m_fLeftX = m_vCenter.x - m_vOriginScale.x * 0.5f;
 
@@ -39,6 +38,9 @@ HRESULT CProgressBar::Initialize(void* pArg)
 
 HRESULT CProgressBar::Render()
 {
+	if (0.f == m_fRatio)
+		return S_OK;
+
 	Setting_World();
 
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
@@ -67,7 +69,12 @@ void CProgressBar::Setting_World()
 	m_pTransform->Set_Position(Convert_ScreenToWorld(XMLoadFloat4(&vPosition)));
 }
 
+void CProgressBar::Update_Center(_vector vCenter)
+{
+	XMStoreFloat4(&m_vCenter, vCenter);
+	m_fLeftX = m_vCenter.x - m_vOriginScale.x * 0.5f;
 
+}
 
 HRESULT CProgressBar::Ready_Component(const wstring& wstrTexTag)
 {

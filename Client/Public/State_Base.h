@@ -38,15 +38,20 @@ protected:
 protected:
 	_float				m_fPatternTime = { 0.f };
 
-	vector<ATTACKDESC>	m_AttackDescs;
-
+	vector<pair<_uint, ATTACKDESC>>	m_AttackDescs; // ¹«±â ÀÎµ¦½º + ATTACKDESC
+	
+	size_t				m_iNowAttackIdx = { 0 };
 public:
-	const ATTACKDESC& Get_NowAttackDesc(size_t iIdx) const {
-		return m_AttackDescs[iIdx];
+	const pair<_uint, ATTACKDESC>& Get_NowAttackDesc() const {
+		return m_AttackDescs[m_iNowAttackIdx];
 	}
 
 protected:
 	virtual void Init_AttackDesc();
+
+	void Reset_AttackIdx() {
+		m_iNowAttackIdx = 0;
+	}
 
 public:
 	void Free() override;

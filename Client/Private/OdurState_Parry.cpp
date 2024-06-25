@@ -17,9 +17,8 @@ HRESULT COdurState_Parry::Initialize(void* pArg)
 
 void COdurState_Parry::OnState_Start(void* pArg)
 {
-	m_pOdur->Enable_LookTarget();
-	m_pOdur->Enable_Stanced();
-	m_pOdur->Reset_AttackIdx();
+	m_pOdur->Set_LookTarget(true);
+	m_pOdur->Set_Stanced(true);
 
 	static_cast<CPlayer*>(m_pOdur->Get_Target())->SetState_Parried();
 
@@ -50,12 +49,12 @@ void COdurState_Parry::Init_AttackDesc()
 
 	ATTACKDESC AttDesc;
 	AttDesc.eAttackType = NORMAL;
-	m_ParryAttackDescs[0].push_back(AttDesc);
-	m_ParryAttackDescs[1].push_back(AttDesc);
-	m_ParryAttackDescs[1].push_back(AttDesc);
+	m_ParryAttackDescs[0].emplace_back(COdur::CANE, AttDesc);
+	m_ParryAttackDescs[1].emplace_back(COdur::SWORD, AttDesc);
+	m_ParryAttackDescs[1].emplace_back(COdur::SWORD, AttDesc);
 	
 	AttDesc.eAttackType = KNOCKBACK;
-	m_ParryAttackDescs[0].push_back(AttDesc);
+	m_ParryAttackDescs[0].emplace_back(COdur::FOOT_L, AttDesc);
 }
 
 void COdurState_Parry::Decide_Animation()

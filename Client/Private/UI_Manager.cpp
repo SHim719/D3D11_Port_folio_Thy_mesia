@@ -40,17 +40,18 @@ HRESULT CUI_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 	return S_OK;
 }
 
-CUI* CUI_Manager::Active_UI(const string& strUITag, void* pArg)
+void CUI_Manager::Active_UI(const string& strUITag, void* pArg)
 {
 	auto it = m_UIs.find(strUITag);
 
 	if (m_UIs.end() == it)
-		return nullptr;
+		return;
 
-	it->second->Add_PoolingObject_To_Layer(L"UI", nullptr);
-	it->second->On_UIActive(pArg);
+	it->second->OnEnter_Layer(pArg);
 
-	return it->second;
+	Safe_AddRef(it->second);
+
+	ADD_EVENT(bind(&CGameInstance::Insert_GameObject, m_pGameInstance, GET_CURLEVEL, L"UI", it->second));
 }
 
 void CUI_Manager::InActive_UI(const string& strUITag)
@@ -72,10 +73,23 @@ HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pConte
 	m_UIs.emplace("UI_LockOn", pUI);
 
 	pUI = CUI_PlayerBar::Create(pDevice, pContext);
-	if (FAILED(pUI->Initialize(m_pPlayer->Get_PlayerStat())))
+	if (FAILED(pUI->Initialize(m_pPlayer->Get_PlayerStats())))
 		return E_FAIL;
 
 	m_UIs.emplace("UI_PlayerBar", pUI);
+
+	pUI = CFadeScreen::Create(pDevice, pContext);
+	if (FAILED(pUI->Initialize(nullptr)))
+		return E_FAIL;
+
+	m_UIs.emplace("FadeScreen", pUI);
+
+	pUI = CUI_BossBar::Create(pDevice, pContext);
+	if (FAILED(pUI->Initialize(nullptr)))
+		return E_FAIL;
+
+	m_UIs.emplace("UI_BossBar", pUI);
+
 
 	return S_OK;
 }

@@ -59,15 +59,15 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (nullptr == m_pPipeLine)
 		return E_FAIL;
 
+	m_pFont_Manager = CFont_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pFont_Manager)
+		return E_FAIL;
+
 	return S_OK;
 }
 
 void CGameInstance::Tick_Engine(_float fTimeDelta)
 {
-	if (nullptr == m_pLevel_Manager || 
-		nullptr == m_pObject_Manager)
-		return;
-	
 	m_pObject_Manager->Manage_LifeCycle();
 
 	m_pKey_Manager->Update();
@@ -407,7 +407,10 @@ _float4 CGameInstance::Get_CamPosition() const
 
 	return m_pPipeLine->Get_CamPosition();
 }
+#pragma endregion
 
+
+#pragma region EVENT_MANAGER
 void CGameInstance::Add_Event(function<void()> pFunc)
 {
 	if (nullptr == m_pEvent_Manager)
@@ -415,9 +418,20 @@ void CGameInstance::Add_Event(function<void()> pFunc)
 
 	m_pEvent_Manager->Add_Event(move(pFunc));
 }
-
 #pragma endregion
 
+
+#pragma region FONT_MANAGER
+HRESULT CGameInstance::Add_Font(const wstring& strFontTag, const wstring& strFontFilePath)
+{
+	return m_pFont_Manager->Add_Font(strFontTag, strFontFilePath);
+}
+
+HRESULT CGameInstance::Render_Font(const wstring& strFontTag, const wstring& strText, const _float2& vPosition, _float fScale, _fvector vColor, _float fRotation)
+{
+	return m_pFont_Manager->Render(strFontTag, strText, vPosition, vColor, fRotation, fScale);
+}
+#pragma endregion
 
 
 void CGameInstance::Release_Engine()
@@ -440,6 +454,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pCollision_Manager);
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pEvent_Manager);
+	Safe_Release(m_pFont_Manager);
 	//Safe_Release(m_pFrustum);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pGraphic_Device);

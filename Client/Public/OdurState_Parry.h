@@ -16,7 +16,7 @@ public:
 	void OnState_End()					override;
 
 private:
-	vector<ATTACKDESC> m_ParryAttackDescs[2];
+	vector<pair<_uint, ATTACKDESC>> m_ParryAttackDescs[2];
 
 private:
 	void Init_AttackDesc()				override;

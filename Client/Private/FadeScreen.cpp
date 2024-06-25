@@ -18,9 +18,6 @@ HRESULT CFadeScreen::Initialize_Prototype()
 
 HRESULT CFadeScreen::Initialize(void* pArg)
 {
-	if (nullptr == pArg)
-		return E_FAIL;
-
 	if (FAILED(__super::Initialize(nullptr)))
 		return E_FAIL;
 
@@ -33,30 +30,7 @@ HRESULT CFadeScreen::Initialize(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Point"), TEXT("VIBuffer"), (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
-	FADEDESC* pFadeDesc = (FADEDESC*)pArg;
-
-	m_vFadeColor = pFadeDesc->eFadeColor == BLACK ? _float4(0.f, 0.f, 0.f, 1.f) : _float4(1.f, 1.f, 1.f, 1.f);
-
-	m_fFadeOutSpeed = pFadeDesc->fFadeOutSpeed;
-	m_fFadeInSpeed = pFadeDesc->fFadeInSpeed;
-	m_fExtraTime = pFadeDesc->fExtraTime;
-
-	if (pFadeDesc->pCallback_FadeOutStart)
-		m_Callback_FadeOutStart = move(pFadeDesc->pCallback_FadeOutStart);
-
-	if (pFadeDesc->pCallback_FadeOutEnd)
-		m_Callback_FadeOutEnd = move(pFadeDesc->pCallback_FadeOutEnd);
-
-	if (pFadeDesc->pCallback_FadeInStart)
-		m_Callback_FadeInStart = move(pFadeDesc->pCallback_FadeInStart);
-
-	if (pFadeDesc->pCallback_FadeInEnd)
-		m_Callback_FadeInEnd = move(pFadeDesc->pCallback_FadeInEnd);
-
 	m_pTransform->Set_Scale({ _float(g_iWinSizeX), _float(g_iWinSizeY), 0.f });
-
-	if (m_Callback_FadeOutStart)
-		m_Callback_FadeOutStart();
 
 	return S_OK;
 }
@@ -72,7 +46,11 @@ void CFadeScreen::Tick(_float fTimeDelta)
 		{
 			m_fAlpha = 1.f;
 			if (m_Callback_FadeOutEnd)
+			{
 				m_Callback_FadeOutEnd();
+				m_Callback_FadeOutEnd = nullptr;
+			}
+				
 			m_eFadeState = EXTRA;
 		}
 		break;
@@ -82,24 +60,32 @@ void CFadeScreen::Tick(_float fTimeDelta)
 		m_fExtraTime -= fTimeDelta;
 		if (m_fExtraTime < 0.f)
 		{
-			if(m_Callback_FadeInStart)
+			if (m_Callback_FadeInStart)
+			{
 				m_Callback_FadeInStart();
+				m_Callback_FadeInStart = nullptr;
+			}
+				
 			m_eFadeState = FADEIN;
 		}
 	}
 		break;
 	case CFadeScreen::FADEIN:
-		m_fAlpha -= m_fFadeOutSpeed * fTimeDelta;
+		m_fAlpha -= m_fFadeInSpeed * fTimeDelta;
 		if (m_fAlpha <= 0.f)
 		{
 			m_fAlpha = 0.f;
+
 			if (m_Callback_FadeInEnd)
+			{
 				m_Callback_FadeInEnd();
-			Set_Destroy(true);
+				m_Callback_FadeInEnd = nullptr;
+			}
+			
+			m_bReturnToPool = true;
 		}
 		break;
 	}
-
 }
 
 void CFadeScreen::LateTick(_float fTimeDelta)
@@ -130,7 +116,41 @@ HRESULT CFadeScreen::Render()
 	return S_OK;
 }
 
+HRESULT CFadeScreen::OnEnter_Layer(void* pArg)
+{
+	if (FAILED(__super::OnEnter_Layer(pArg)))
+		return E_FAIL;
 
+	FADEDESC* pFadeDesc = (FADEDESC*)pArg;
+
+	m_vFadeColor = pFadeDesc->eFadeColor == BLACK ? _float4(0.f, 0.f, 0.f, 1.f) : _float4(1.f, 1.f, 1.f, 1.f);
+
+	m_fFadeOutSpeed = pFadeDesc->fFadeOutSpeed;
+	m_fFadeInSpeed = pFadeDesc->fFadeInSpeed;
+	m_fExtraTime = pFadeDesc->fExtraTime;
+	m_fAlpha = 0.f;
+	m_eFadeState = FADEOUT;
+
+	if (pFadeDesc->pCallback_FadeOutStart)
+		m_Callback_FadeOutStart = move(pFadeDesc->pCallback_FadeOutStart);
+
+	if (pFadeDesc->pCallback_FadeOutEnd)
+		m_Callback_FadeOutEnd = move(pFadeDesc->pCallback_FadeOutEnd);
+
+	if (pFadeDesc->pCallback_FadeInStart)
+		m_Callback_FadeInStart = move(pFadeDesc->pCallback_FadeInStart);
+
+	if (pFadeDesc->pCallback_FadeInEnd)
+		m_Callback_FadeInEnd = move(pFadeDesc->pCallback_FadeInEnd);
+
+	if (m_Callback_FadeOutStart)
+	{
+		m_Callback_FadeOutStart();
+		m_Callback_FadeOutStart = nullptr;
+	}
+
+	return S_OK;
+}
 
 CFadeScreen* CFadeScreen::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

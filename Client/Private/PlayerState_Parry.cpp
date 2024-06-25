@@ -20,8 +20,8 @@ HRESULT CPlayerState_Parry::Initialize(void* pArg)
 
 void CPlayerState_Parry::OnState_Start(void* pArg)
 {
-	m_pPlayer->Disable_NextState();
-	m_pPlayer->Enable_Rotation();
+	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_CanRotation(true);
 	m_bCanParry = true;
 
 	if ((_uint)PlayerState::State_ParrySuccess == m_pPlayer->Get_PrevState() ||
@@ -60,8 +60,13 @@ void CPlayerState_Parry::OnState_End()
 void CPlayerState_Parry::OnHit(void* pArg)
 {
 	if (m_bCanParry)
+	{
 		m_pPlayer->Change_State((_uint)PlayerState::State_ParrySuccess, &m_iParryDir);
 
+		ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;
+		if (pAttackDesc->pAttacker)
+			pAttackDesc->pAttacker->Take_Damage(&m_pPlayerStats->Get_NormalAttackDesc());
+	}
 }
 
 CPlayerState_Parry* CPlayerState_Parry::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

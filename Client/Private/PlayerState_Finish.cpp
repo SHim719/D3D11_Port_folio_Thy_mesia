@@ -15,8 +15,8 @@ HRESULT CPlayerState_Finish::Initialize(void* pArg)
 
 void CPlayerState_Finish::OnState_Start(void* pArg)
 {
-	m_pPlayer->Disable_NextState();
-	m_pPlayer->Disable_Rotation();
+	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Inactive_AllWeaponColliders();
 
 	m_pModel->Change_Animation(Corvus_SD_Rebound_R, 0.f);

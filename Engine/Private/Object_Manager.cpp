@@ -173,9 +173,6 @@ void CObject_Manager::Insert_GameObject(_uint iLevelIndex, const wstring& strLay
 	}
 	else
 		pLayer->Add_GameObject(pObj);
-
-	Safe_AddRef(pObj);
-
 }
 
 CGameObject * CObject_Manager::Find_Prototype(const wstring & strPrototypeTag)

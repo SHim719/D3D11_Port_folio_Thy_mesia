@@ -1,7 +1,9 @@
 #include "Cutscene_Manager.h"
 
-#include "FadeScreen.h"
+#include "UI_Manager.h"
 #include "Cutscene_Actor.h"
+#include "FadeScreen.h"
+
 
 #include "GameInstance.h"
 
@@ -24,9 +26,10 @@ void CCutscene_Manager::OnEnter_Cutscene(CUTSCENE_NUMBER eCutscene)
 		CFadeScreen::FADEDESC FadeDesc;
 		FadeDesc.eFadeColor = CFadeScreen::BLACK;
 		FadeDesc.fFadeOutSpeed = 0.5f;
-		FadeDesc.fFadeInSpeed = 1.5f;
+		FadeDesc.fFadeInSpeed = 1020.f;
 		FadeDesc.pCallback_FadeOutEnd = move(bind(&CCutscene_Manager::OnStart_Cutscene, this));
-		m_pGameInstance->Add_Clone(GET_CURLEVEL, L"UI", L"Prototype_FadeScreen", &FadeDesc);
+
+		UIMGR->Active_UI("FadeScreen", &FadeDesc);
 	}
 		break;
 

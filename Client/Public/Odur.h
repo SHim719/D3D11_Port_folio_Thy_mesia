@@ -12,7 +12,7 @@ BEGIN(Client)
 
 class COdur final : public CEnemy, public CCutscene_Actor
 {
-private:
+public:
 	enum ODUR_WEAPON { CANE, SWORD, FOOT_L, FOOT_R, WEAPON_END};
 
 private:
@@ -31,7 +31,7 @@ private:
 	void OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)	override;
 	void OnEnd_Cutscene()									override;
 
-	void Bind_KeyFrames()				override;
+	void Bind_KeyFrames()									override;
 
 private:
 	CBone*	m_pSwapBone = { nullptr };
@@ -70,7 +70,6 @@ private:
 	void Update_Alpha(_float fTimeDelta);
 	void Update_WeaponAlpha();
 
-
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 	void OnCollisionExit(CGameObject* pOther)	override;
@@ -79,6 +78,7 @@ private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_States();
 	HRESULT Ready_Weapons();
+	HRESULT Ready_Stats();
 
 public:
 	static COdur* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

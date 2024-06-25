@@ -9,7 +9,6 @@
 #include "UI_Manager.h"
 #include "Cutscene_Manager.h"
 
-
 CMainApp::CMainApp()
 	: m_pGameInstance { CGameInstance::Get_Instance() }
 {
@@ -30,6 +29,9 @@ HRESULT CMainApp::Initialize()
 
 	if (FAILED(Ready_Prototype_Component()))
 		return E_FAIL;
+	
+	if (FAILED(Ready_Font()))
+		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Change_Level(CLevel_Tool::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
@@ -38,8 +40,10 @@ HRESULT CMainApp::Initialize()
 	if (nullptr == m_pImGui_Main)
 		return E_FAIL;
 
+#ifdef testplay
 	UIMGR->Initialize(m_pDevice, m_pContext);
 	UIMGR->Active_UI("UI_PlayerBar");
+#endif
 
 	return S_OK;
 }
@@ -125,6 +129,14 @@ HRESULT CMainApp::Ready_Prototype_Shader()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Shader_Cell"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cell.hlsl"), VTXPOINT_DECLARATION::Elements, VTXPOINT_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Font()
+{
+	if (FAILED(m_pGameInstance->Add_Font(TEXT("Main_Font"), TEXT("../../Resources/Fonts/MainFont11.spritefont"))))
 		return E_FAIL;
 
 	return S_OK;

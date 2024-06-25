@@ -8,7 +8,7 @@ BEGIN(Client)
 
 class CPlayer final : public CCharacter, public CCutscene_Actor
 {
-private:
+public:
 	enum PLAYER_WEAPON { SABER, DAGGER, CLAW_L, CLAW_R, WEAPON_END};
 
 private:
@@ -30,10 +30,12 @@ private:
 	void Bind_KeyFrames()									override;
 
 private:
-	class CPlayerStat*	m_pStats = { nullptr };
+	class CPlayerStats*	m_pStats = { nullptr };
+
 public:
-	CPlayerStat* Get_PlayerStat() const { 
-		return m_pStats; }
+	CPlayerStats* Get_PlayerStats() const {
+		return m_pStats;
+	}
 
 private:
 	CTransform*		m_pTargetTransform = { nullptr };
@@ -60,31 +62,18 @@ public:
 	void SetState_Executed(void* pArg);
 	void Inactive_AllWeaponColliders();
 
-#pragma region KEYFRAMEEVENT
-public:
-	void Enable_NextState() {
-  		m_bCanNextState = true;
+	void Set_CanNextState(_bool bCanNextState) {
+		m_bCanNextState = bCanNextState;
 	}
 
-	void Disable_NextState() {
-		m_bCanNextState = false;
+	void Set_CanRotation(_bool bCanRotation) {
+		m_bCanRotation = bCanRotation;
 	}
 
-	void Disable_Rotation() {
-		m_bCanRotation = false;
+	void Set_Invincible(_bool bInvincible) {
+		m_bInvincible = bInvincible;
 	}
-
-	void Enable_Rotation() {
-		m_bCanRotation = true;
-	}
-
-	void Set_Invincible() {
-		m_bInvincible = true;
-	}
-	
-	void Set_Vulnerable() {
-		m_bInvincible = false;
-	}
+		
 
 private:
 	void Active_Weapons();
@@ -92,10 +81,11 @@ private:
 	void Active_Claw();
 	void InActive_Claw();
 	
-#pragma endregion
 
 private:
-	void OnCollisionEnter(CGameObject* pOther) override;
+	void OnCollisionEnter(CGameObject* pOther)	override;
+	void Take_Damage(void* pArg)				override;
+
 
 private:
 	HRESULT Ready_Components();

@@ -18,8 +18,8 @@ HRESULT CPlayerState_Hit::Initialize(void* pArg)
 
 void CPlayerState_Hit::OnState_Start(void* pArg)
 {
-	m_pPlayer->Disable_NextState();
-	m_pPlayer->Disable_Rotation();
+	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Inactive_AllWeaponColliders();
 
 	ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;

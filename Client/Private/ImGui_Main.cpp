@@ -33,9 +33,23 @@ HRESULT CImGui_Main::Initialize()
 
     m_ToolStates[MAP] = CMap_Tool::Create(m_pDevice, m_pContext);
     m_ToolStates[ANIM] = CAnim_Tool::Create(m_pDevice, m_pContext);
-    m_ToolStates[TESTPLAY] = CTestPlay_Tool::Create(m_pDevice, m_pContext);        
+    m_ToolStates[TESTPLAY] = CTestPlay_Tool::Create(m_pDevice, m_pContext);   
 
-    m_eToolState = TESTPLAY;
+    ToolState eState;
+
+#ifdef MapTool
+    eState = MAP;
+#endif
+
+#ifdef AnimTool
+    eState = ANIM;
+#endif
+
+#ifdef testplay
+    eState = TESTPLAY;
+#endif
+
+    m_eToolState = eState;
     m_ToolStates[m_eToolState]->Start_Tool();
     return S_OK;
 }

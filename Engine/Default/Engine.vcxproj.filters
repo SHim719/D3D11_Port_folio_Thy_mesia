@@ -151,11 +151,17 @@
     <Filter Include="01.Utility\03. Components\03. VIBuffer\03. Sphere">
       <UniqueIdentifier>{29a7eadd-6eb9-42cd-8650-2943ed572605}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\99. Managers\97. Frustum">
-      <UniqueIdentifier>{73f10387-e9b9-46da-be7f-1ebc12c68f2a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\99. Managers\08. Event_Manager">
       <UniqueIdentifier>{a2db80df-8439-4390-9385-da42445cd45b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\09. Font_Manager">
+      <UniqueIdentifier>{f0c90b1c-f129-4d8e-a055-079fbbfeb6a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\06. Font">
+      <UniqueIdentifier>{c6843baf-fd56-4182-b141-b8c0912fb228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\99. Managers\97. Frustum">
+      <UniqueIdentifier>{73f10387-e9b9-46da-be7f-1ebc12c68f2a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -318,6 +324,12 @@
     <ClInclude Include="..\Public\Event_Manager.h">
       <Filter>01.Utility\99. Managers\08. Event_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\CustomFont.h">
+      <Filter>01.Utility\06. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Font_Manager.h">
+      <Filter>01.Utility\99. Managers\09. Font_Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -457,6 +469,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Event_Manager.cpp">
       <Filter>01.Utility\99. Managers\08. Event_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\CustomFont.cpp">
+      <Filter>01.Utility\06. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Font_Manager.cpp">
+      <Filter>01.Utility\99. Managers\09. Font_Manager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

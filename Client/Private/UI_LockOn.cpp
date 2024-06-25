@@ -39,21 +39,6 @@ HRESULT CUI_LockOn::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CUI_LockOn::On_UIActive(void* pArg)
-{
-	ATTACHDESC*  pDesc = (ATTACHDESC*)pArg;
-
-	Safe_Release(m_pTargetTransform);
-	Safe_Release(m_pTargetBone);
-
-	m_pTargetTransform = pDesc->pParentTransform;
-	m_pTargetBone = pDesc->pAttachBone;
-
-	Safe_AddRef(m_pTargetTransform);
-	Safe_AddRef(m_pTargetBone);
-
-	m_bCreatedThisFrame = true;
-}
 
 void CUI_LockOn::Tick(_float fTimeDelta)
 {
@@ -81,20 +66,39 @@ HRESULT CUI_LockOn::Render()
 {
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
-
+	
 	if (FAILED(m_pUITexture->Set_SRV(m_pShader, "g_DiffuseTexture", 0)))
 		return E_FAIL;
-
+	
 	if (FAILED(m_pShader->Begin(1)))
 		return E_FAIL;
-
+	
 	if (FAILED(m_pVIBuffer->Render()))
 		return E_FAIL;
 
 	return S_OK;
 }
 
+HRESULT CUI_LockOn::OnEnter_Layer(void* pArg)
+{
+	if (FAILED(__super::OnEnter_Layer(pArg)))
+		return E_FAIL;
 
+	ATTACHDESC* pDesc = (ATTACHDESC*)pArg;
+
+	Safe_Release(m_pTargetTransform);
+	Safe_Release(m_pTargetBone);
+
+	m_pTargetTransform = pDesc->pParentTransform;
+	m_pTargetBone = pDesc->pAttachBone;
+
+	Safe_AddRef(m_pTargetTransform);
+	Safe_AddRef(m_pTargetBone);
+
+	m_bCreatedThisFrame = true;
+
+	return S_OK;
+}
 
 CUI_LockOn* CUI_LockOn::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

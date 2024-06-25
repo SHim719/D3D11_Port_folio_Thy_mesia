@@ -19,10 +19,10 @@ HRESULT CPlayerState_Executed::Initialize(void* pArg)
 
 void CPlayerState_Executed::OnState_Start(void* pArg)
 {
-	m_pPlayer->Disable_NextState();
-	m_pPlayer->Disable_Rotation();
+	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Inactive_AllWeaponColliders();
-	m_pPlayer->Inactive_Colliders();
+	m_pPlayer->Set_Active_Colliders(false);
 
 	m_ExecutedDesc = *(EXECUTEDDESC*)pArg;
 
@@ -56,7 +56,7 @@ void CPlayerState_Executed::OnGoing(_float fTimeDelta)
 
 void CPlayerState_Executed::OnState_End()
 {
-	m_pPlayer->Active_Colliders();
+	m_pPlayer->Set_Active_Colliders(true);
 }
 
 CPlayerState_Executed* CPlayerState_Executed::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

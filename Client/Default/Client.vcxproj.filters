@@ -283,6 +283,12 @@
     <Filter Include="04. UI\UI_Component\ProgressBar">
       <UniqueIdentifier>{b119a576-8c92-4a71-8bc9-3836f2b76962}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. UI\InGameUI\03. UI_MonsterBar">
+      <UniqueIdentifier>{33f34ad6-cd0b-4893-9096-2f5d015cbe50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\03. UI_MonsterBar\UI_BossBar">
+      <UniqueIdentifier>{cb077580-a273-44b3-ab9d-fbc23ba0f5cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -390,7 +396,7 @@
     <ClInclude Include="..\Public\Client_Functions.h">
       <Filter>99. Defines</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerStat.h">
+    <ClInclude Include="..\Public\PlayerStats.h">
       <Filter>02. GameObjects\02. Character\01. Player\PlayerStat</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player_Enums.h">
@@ -543,6 +549,13 @@
     <ClInclude Include="..\Public\ProgressBar.h">
       <Filter>04. UI\UI_Component\ProgressBar</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\MyText.h" />
+    <ClInclude Include="..\Public\UI_EnemyBar.h">
+      <Filter>04. UI\InGameUI\03. UI_MonsterBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_BossBar.h">
+      <Filter>04. UI\InGameUI\03. UI_MonsterBar\UI_BossBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -629,7 +642,7 @@
     <ClCompile Include="..\Private\ToolColliderObj.cpp">
       <Filter>02. GameObjects\99. ToolObject\3. ToolColliderObj</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerStat.cpp">
+    <ClCompile Include="..\Private\PlayerStats.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\PlayerStat</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Idle.cpp">
@@ -763,6 +776,13 @@
     </ClCompile>
     <ClCompile Include="..\Private\ProgressBar.cpp">
       <Filter>04. UI\UI_Component\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\MyText.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyBar.cpp">
+      <Filter>04. UI\InGameUI\03. UI_MonsterBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_BossBar.cpp">
+      <Filter>04. UI\InGameUI\03. UI_MonsterBar\UI_BossBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -106,8 +106,13 @@ public:
 #pragma endregion
 
 
-#pragma region EVENT
+#pragma region EVENT_MANAGER
 	void Add_Event(function<void()> pFunc);
+#pragma endregion
+
+#pragma region FONT_MANAGER
+	HRESULT Add_Font(const wstring& strFontTag, const wstring& strFontFilePath);
+	HRESULT Render_Font(const wstring& strFontTag, const wstring& strText, const _float2& vPosition, _float fScale = 1.f, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float fRotation = 0.f);
 #pragma endregion
 
 
@@ -124,7 +129,7 @@ private:
 	CRenderer*				m_pRenderer = { nullptr };
 	CPipeLine*				m_pPipeLine = { nullptr };
 	CEvent_Manager*			m_pEvent_Manager = { nullptr };
-
+	CFont_Manager*			m_pFont_Manager = { nullptr };
 	
 public:
 	static void Release_Engine();

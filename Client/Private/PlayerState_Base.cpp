@@ -17,7 +17,7 @@ HRESULT CPlayerState_Base::Initialize(void* pArg)
 	if (nullptr == m_pMain_Camera)
 		return E_FAIL;
 
-	m_pPlayerStat = m_pPlayer->Get_PlayerStat();
+	m_pPlayerStats = m_pPlayer->Get_PlayerStats();
 
 	return S_OK;
 }

@@ -193,6 +193,7 @@
     <ClInclude Include="..\Public\Main_Camera.h" />
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Map_Tool.h" />
+    <ClInclude Include="..\Public\MyText.h" />
     <ClInclude Include="..\Public\Odur.h" />
     <ClInclude Include="..\Public\OdurState_Appear.h" />
     <ClInclude Include="..\Public\OdurState_Base.h" />
@@ -215,7 +216,7 @@
     <ClInclude Include="..\Public\Odur_Enums.h" />
     <ClInclude Include="..\Public\Odur_States.h" />
     <ClInclude Include="..\Public\Player.h" />
-    <ClInclude Include="..\Public\PlayerStat.h" />
+    <ClInclude Include="..\Public\PlayerStats.h" />
     <ClInclude Include="..\Public\PlayerState_Attack.h" />
     <ClInclude Include="..\Public\PlayerState_Avoid.h" />
     <ClInclude Include="..\Public\PlayerState_Base.h" />
@@ -243,6 +244,8 @@
     <ClInclude Include="..\Public\ToolNaviCellPoint.h" />
     <ClInclude Include="..\Public\ToolState.h" />
     <ClInclude Include="..\Public\UI.h" />
+    <ClInclude Include="..\Public\UI_BossBar.h" />
+    <ClInclude Include="..\Public\UI_EnemyBar.h" />
     <ClInclude Include="..\Public\UI_Headers.h" />
     <ClInclude Include="..\Public\UI_LockOn.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
@@ -274,6 +277,7 @@
     <ClCompile Include="..\Private\Main_Camera.cpp" />
     <ClCompile Include="..\Private\MapObject.cpp" />
     <ClCompile Include="..\Private\Map_Tool.cpp" />
+    <ClCompile Include="..\Private\MyText.cpp" />
     <ClCompile Include="..\Private\Odur.cpp" />
     <ClCompile Include="..\Private\OdurState_Appear.cpp" />
     <ClCompile Include="..\Private\OdurState_Base.cpp" />
@@ -294,7 +298,7 @@
     <ClCompile Include="..\Private\Odur_Card.cpp" />
     <ClCompile Include="..\Private\Odur_Card_Cutscene.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
-    <ClCompile Include="..\Private\PlayerStat.cpp" />
+    <ClCompile Include="..\Private\PlayerStats.cpp" />
     <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
     <ClCompile Include="..\Private\PlayerState_Avoid.cpp" />
     <ClCompile Include="..\Private\PlayerState_Base.cpp" />
@@ -320,6 +324,8 @@
     <ClCompile Include="..\Private\ToolNaviCellPoint.cpp" />
     <ClCompile Include="..\Private\ToolState.cpp" />
     <ClCompile Include="..\Private\UI.cpp" />
+    <ClCompile Include="..\Private\UI_BossBar.cpp" />
+    <ClCompile Include="..\Private\UI_EnemyBar.cpp" />
     <ClCompile Include="..\Private\UI_LockOn.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
     <ClCompile Include="..\Private\UI_PlayerBar.cpp" />

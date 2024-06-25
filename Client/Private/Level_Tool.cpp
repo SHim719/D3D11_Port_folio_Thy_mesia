@@ -45,25 +45,36 @@ HRESULT CLevel_Tool::Initialize()
 	if (FAILED(Ready_Camera()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Navigation()))
-		return E_FAIL;
+#ifdef AnimTool
 	
 	if (FAILED(Ready_Player()))
 		return E_FAIL;
-	
+
 	if (FAILED(Ready_Odur()))
 		return E_FAIL;
-	
+#endif
+
+#ifdef testplay
+
+	if (FAILED(Ready_Player()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Odur()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Navigation()))
+		return E_FAIL;
+
 	if (FAILED(Ready_UIResource()))
 		return E_FAIL;
-	
+
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
-	
+
 	if (FAILED(Ready_Stage1Boss()))
 		return E_FAIL;
-	
-	//
+
+#endif
 
 	return S_OK;
 }
@@ -75,6 +86,7 @@ void CLevel_Tool::Tick(_float fTimeDelta)
 
 HRESULT CLevel_Tool::Render()
 {
+	
 	
 	return S_OK;
 }
@@ -155,17 +167,58 @@ HRESULT CLevel_Tool::Ready_UIResource()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_FadeScreen", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/FadeScreen/FadeScreen.png"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_Right.png"))))
+#pragma region PlayerHpBar
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_Right.dds"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_Left.png"))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_Left.dds"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_BG.png"))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_BG.dds"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_MainBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_MainBar.png"))))
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_MainBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_MainBar.dds"))))
 		return E_FAIL;
+
+#pragma endregion
+
+#pragma region PlayerMpBar
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_Right.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_Left.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_BG.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_MainBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_MainBar.dds"))))
+		return E_FAIL;
+
+#pragma endregion
+
+
+#pragma region EnemyBar
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpBarHead_R.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpBarHead_L.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpBorder.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_MainHpBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpMain.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_StunnedSign", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_StunnedShine1.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_NewPrestBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_NewPrestBar.png"))))
+		return E_FAIL;
+
+#pragma endregion
+
 
 	return S_OK;
 }

@@ -4,6 +4,7 @@
 #include "Bone.h"
 
 #include "Cutscene_Manager.h"
+#include "UI_Manager.h"
 
 #include "FadeScreen.h"
 
@@ -37,6 +38,9 @@ HRESULT COdur::Initialize(void* pArg)
 	if (FAILED(Ready_Weapons()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Stats()))
+		return E_FAIL;
+
 	Bind_KeyFrames();
 
 	m_pSwapBone = m_pModel->Get_Bone("weapon_l_Sword");
@@ -57,16 +61,13 @@ void COdur::Tick(_float fTimeDelta)
 	if (KEY_DOWN(eKeyCode::T))
 	{
 		m_bNoRender = false;
-		//Change_State((_uint)OdurState::State_Walk);
-		Change_State((_uint)OdurState::State_KickCombo);
+		UIMGR->Active_UI("UI_BossBar", m_pStats);
+		Change_State((_uint)OdurState::State_Walk);
 	}
 
 	if (KEY_DOWN(eKeyCode::O))
-	{
-		m_bNoRender = false;
-		//Change_State((_uint)OdurState::State_Walk);
-		Change_State((_uint)OdurState::State_Idle);
-	}
+		Change_State((_uint)OdurState::State_ExecutionDisappear);
+	
 		
 	if (m_bLookTarget)
 	{
@@ -144,25 +145,26 @@ void COdur::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
 
 void COdur::OnEnd_Cutscene()
 {
+	UIMGR->Active_UI("UI_BossBar", m_pStats);
 }
 
 void COdur::Bind_KeyFrames()
 {
-	m_pModel->Bind_Func("Active_Odur_Cane_Collider", bind(&CWeapon::Active_Collider, m_Weapons[CANE]));
-	m_pModel->Bind_Func("Inactive_Odur_Cane_Collider", bind(&CWeapon::Inactive_Collider, m_Weapons[CANE]));
-	m_pModel->Bind_Func("Active_Odur_Sword_Collider", bind(&CWeapon::Active_Collider, m_Weapons[SWORD]));
-	m_pModel->Bind_Func("Inactive_Odur_Sword_Collider", bind(&CWeapon::Inactive_Collider, m_Weapons[SWORD]));
-	m_pModel->Bind_Func("Active_Odur_Foot_L_Collider", bind(&CWeapon::Active_Collider, m_Weapons[FOOT_L]));
-	m_pModel->Bind_Func("Inactive_Odur_Foot_L_Collider", bind(&CWeapon::Inactive_Collider, m_Weapons[FOOT_L]));
-	m_pModel->Bind_Func("Active_Odur_Foot_R_Collider", bind(&CWeapon::Active_Collider, m_Weapons[FOOT_R]));
-	m_pModel->Bind_Func("Inactive_Odur_Foot_R_Collider", bind(&CWeapon::Inactive_Collider, m_Weapons[FOOT_R]));
+	m_pModel->Bind_Func("Active_Odur_Cane_Collider", bind(&CWeapon::Set_Active_Collider, m_Weapons[CANE], true));
+	m_pModel->Bind_Func("Inactive_Odur_Cane_Collider", bind(&CWeapon::Set_Active_Collider, m_Weapons[CANE], false));
+	m_pModel->Bind_Func("Active_Odur_Sword_Collider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SWORD], true));
+	m_pModel->Bind_Func("Inactive_Odur_Sword_Collider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SWORD], false));
+	m_pModel->Bind_Func("Active_Odur_Foot_L_Collider", bind(&CWeapon::Set_Active_Collider, m_Weapons[FOOT_L], true));
+	m_pModel->Bind_Func("Inactive_Odur_Foot_L_Collider", bind(&CWeapon::Set_Active_Collider, m_Weapons[FOOT_L], false));
+	m_pModel->Bind_Func("Active_Odur_Foot_R_Collider", bind(&CWeapon::Set_Active_Collider, m_Weapons[FOOT_R], true));
+	m_pModel->Bind_Func("Inactive_Odur_Foot_R_Collider", bind(&CWeapon::Set_Active_Collider, m_Weapons[FOOT_R], false));
 	m_pModel->Bind_Func("Swap_Bone", bind(&COdur::Swap_Bone, this));
-	m_pModel->Bind_Func("Enable_LookTarget", bind(&CEnemy::Enable_LookTarget, this));
-	m_pModel->Bind_Func("Disable_LookTarget", bind(&CEnemy::Disable_LookTarget, this));
-	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Enable_Stanced, this));
-	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Disable_Stanced, this));
-	m_pModel->Bind_Func("Add_AttackIdx", bind(&CCharacter::Add_AttackIdx, this));
-	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Enable_Render, this));
+	m_pModel->Bind_Func("Enable_LookTarget", bind(&CEnemy::Set_LookTarget, this, true));
+	m_pModel->Bind_Func("Disable_LookTarget", bind(&CEnemy::Set_LookTarget, this, false));
+	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Set_Stanced, this, true));
+	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
+	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
+	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));
 }
 
 void COdur::Swap_Bone()
@@ -343,6 +345,18 @@ HRESULT COdur::Ready_Weapons()
 
 	return S_OK;
 }
+
+HRESULT COdur::Ready_Stats()
+{
+	ENEMYDESC EnemyDesc;
+	EnemyDesc.wstrEnemyName = L"¿ÀµÎ¸£";
+	EnemyDesc.iMaxHp = 1000;
+
+	m_pStats = CEnemyStats::Create(EnemyDesc);
+
+	return S_OK;
+}
+
 
 COdur* COdur::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

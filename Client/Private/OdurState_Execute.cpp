@@ -17,9 +17,8 @@ HRESULT COdurState_Execute::Initialize(void* pArg)
 
 void COdurState_Execute::OnState_Start(void* pArg)
 {
-	m_pOdur->Disable_LookTarget();
-	m_pOdur->Enable_Stanced();
-	m_pOdur->Reset_AttackIdx();
+	m_pOdur->Set_LookTarget(false);
+	m_pOdur->Set_Stanced(true);
 
 	m_pModel->Change_Animation(Magician_SPAttack1_Suc, 0.f);
 }

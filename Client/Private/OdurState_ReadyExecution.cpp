@@ -19,9 +19,8 @@ HRESULT COdurState_ReadyExecution::Initialize(void* pArg)
 
 void COdurState_ReadyExecution::OnState_Start(void* pArg)
 {
-	m_pOdur->Enable_LookTarget();
-	m_pOdur->Enable_Stanced();
-	m_pOdur->Reset_AttackIdx();
+	m_pOdur->Set_LookTarget(true);
+	m_pOdur->Set_Stanced(true);
 
 	m_pOdur->Set_Alpha_Increase();
 

@@ -234,7 +234,7 @@ HRESULT CModel::Bind_Func(const string& strEventName, function<void()> pFunc)
 	if (m_AllKeyFrameEvents.end() == it)
 		return E_FAIL;
 
-	it->second->Bind_Func(pFunc);
+	it->second->Bind_Func(move(pFunc));
 
 	return S_OK;
 }

@@ -24,7 +24,7 @@ public:
 	_uint Get_PrevState() const { return m_iPrevState; }
 
 public:
-	virtual void Hit(void* pArg);
+	virtual void Take_Damage(void* pArg);
 
 protected:
 	_bool						m_bStanced = { false };
@@ -33,36 +33,22 @@ public:
 	_bool Is_Stanced() const {
 		return m_bStanced;
 	}
-	void Enable_Stanced() {
-		m_bStanced = true;}
-	void Disable_Stanced() {
-		m_bStanced = false;}
+	void Set_Stanced(_bool bStanced) {
+		m_bStanced = bStanced;
+	}
 
-	
 protected:
 	vector<class CWeapon*>		m_Weapons;
 
-	size_t	m_iAttackIdx = { 0 };
 public:
-	const ATTACKDESC& Get_NowAttackDesc();
+	void Update_AttackDesc();
 
-	void Add_AttackIdx() {
-		m_iAttackIdx++;
+
+	void Set_Active_Colliders(_bool bActive) {
+		m_pCollider->Set_Active(bActive);
+		m_pHitBoxCollider->Set_Active(bActive);
 	}
 
-	void Reset_AttackIdx() {
-		m_iAttackIdx = 0;
-	}
-
-	void Active_Colliders() {
-		m_pCollider->Set_Active(true);
-		m_pHitBoxCollider->Set_Active(true);
-	}
-
-	void Inactive_Colliders() {
-		m_pCollider->Set_Active(false);
-		m_pHitBoxCollider->Set_Active(false);
-	}
 
 protected:
 	void Compute_YPos();

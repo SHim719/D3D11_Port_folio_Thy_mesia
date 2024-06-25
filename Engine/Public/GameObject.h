@@ -19,6 +19,8 @@ public:
 	virtual HRESULT Initialize_Prototype();
 	virtual HRESULT Initialize(void* pArg);
 
+	virtual HRESULT OnEnter_Layer(void* pArg);
+
 	virtual void OnActive();
 	virtual void OnInActive();
 
@@ -27,11 +29,7 @@ public:
 	virtual void LateTick(_float fTimeDelta);
 
 	virtual HRESULT Render();
-public:
-	HRESULT Add_PoolingObject_To_Layer(const wstring& wstrLayer, void* pArg);
-	virtual HRESULT OnEnter_Layer(void* pArg);
 
-	
 protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
@@ -93,11 +91,8 @@ public:
 		return m_bReturnToPool;
 	}
 
-	void Enable_Render() {
-		m_bNoRender = false;
-	}
-	void Disable_Render() {
-		m_bNoRender = true;
+	void Set_NoRender(_bool bNoRender) {
+		m_bNoRender = bNoRender;
 	}
 
 	_bool No_Render() const {
@@ -110,26 +105,3 @@ public:
 };
 
 END
-
-/* Mouse Picking!!!!*/
-//void CToolCamera::Mouse_Ray()
-//{
-//	_float3 fMouseNDC_Near = _float3(m_tCurrentMousePos.x * 2.0f / g_iWinSizeX - 1, -m_tCurrentMousePos.y * 2.0f / g_iWinSizeY + 1, 0.f);
-//	_float3 fMouseNDC_Far = _float3(m_tCurrentMousePos.x * 2.0f / g_iWinSizeX - 1, -m_tCurrentMousePos.y * 2.0f / g_iWinSizeY + 1, 1.f);
-//
-//	_float4x4 inverseProjView;
-//	D3DXMatrixInverse(&inverseProjView, nullptr, &(m_ViewMatrix * m_ProjMatrix));
-//
-//	_float3 fMouseWorld_Near = *D3DXVec3TransformCoord(&fMouseWorld_Near, &fMouseNDC_Near, &inverseProjView);
-//	_float3 fMouseWorld_Far = *D3DXVec3TransformCoord(&fMouseWorld_Far, &fMouseNDC_Far, &inverseProjView);
-//
-//	_float3 vRayDir = *D3DXVec3Normalize(&vRayDir, &(fMouseWorld_Far - fMouseWorld_Near));
-//
-//	RAY_DESC rayDesc{};
-//	rayDesc.iLevel = LEVEL_TOOL;
-//	rayDesc.strDstLayer = L"Wall";
-//	rayDesc.vRayDir = vRayDir;
-//	rayDesc.vRayWorldPos = fMouseWorld_Near;
-//
-//	m_pGameInstance->Add_RayDesc(rayDesc);
-//}
