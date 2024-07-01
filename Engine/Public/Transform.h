@@ -56,7 +56,7 @@ public:
 	_vector Get_Position() const {
 		return Get_State(STATE_POSITION);
 	}
-
+	
 	void Set_Position(_fvector vPosition) {
 		Set_State(STATE_POSITION, vPosition);
 	}
@@ -107,6 +107,7 @@ public:
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation_Quaternion(_fvector vQuat);
+	void Turn_Quaternion(_fvector vQuat, _fmatrix OffsetMatrix = XMMatrixIdentity());
 	void LookAt(_fvector vAt);
 	void LookAt2D(_fvector vAt);
 	void LookTo(_fvector vTo);

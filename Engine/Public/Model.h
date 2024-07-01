@@ -67,20 +67,20 @@ private:
 public:
 	const BONES& Get_Bones() { return m_Bones; }
 
-	_vector Get_DeltaRootPos() const {
-		return XMLoadFloat4(&m_vDeltaRootPos);
+	_vector Get_DeltaRootPos() {
+		return Organize_RootPos(XMLoadFloat4(&m_vDeltaRootPos));
 	}
 
-	_vector Organize_RootPos(_fvector OriginRootPos) {
-		//return XMVectorSet(OriginRootPos.m128_f32[0] * 0.01f, OriginRootPos.m128_f32[1] * 0.01f, -OriginRootPos.m128_f32[2] * 0.01f, 1.f);
+	_vector Organize_RootPos(_fvector OriginRootPos) const {
 		return XMVectorSet(OriginRootPos.m128_f32[0], OriginRootPos.m128_f32[2], -OriginRootPos.m128_f32[1], 1.f);
 	}
 
-	void Reset_RootPos() {
-		XMStoreFloat4(&m_vPrevRootPos, XMVectorZero());
-	}
+	void Reset_PrevRootPos();
+	_vector Get_NowRootQuat() const;
+
 private:
 	void Calc_DeltaRootPos();
+
 private:
 	_uint											m_iCurrentAnimIndex = 0;
 	_uint											m_iNumAnimations = 0;
@@ -90,6 +90,7 @@ private:
 	_bool											m_bIsPlaying = false;
 	_bool											m_bBlending = false;
 	_bool											m_bComplete = false;
+	_bool											m_bLoop = true;
 
 	unordered_map<string, class CKeyFrameEvent*>	m_AllKeyFrameEvents;
 public:
@@ -99,13 +100,14 @@ public:
 	_uint	Get_CurrentAnimIndex() const { return m_iCurrentAnimIndex; }
 
 	void		Play_Animation(_float fTimeDelta);
-	void		Change_Animation(_uint iAnimIdx, _float fBlendingTime = 0.1f);
+	void		Change_Animation(_uint iAnimIdx, _float fBlendingTime = 0.1f, _bool bLoop = true);
+	void		Change_AnimationWithStartFrame(_uint iAnimIdx, _uint iStartKeyFrame, _float fBlendingTime = 0.1f, _bool bLoop = true);
 	_bool		Is_Playing() const { return m_bIsPlaying; }
 	void		Set_AnimPlay() { m_bIsPlaying = true; }
 	void		Set_AnimPause() { m_bIsPlaying = false; }
 	void		Set_Preview(_bool b) { m_bPreview = b; }
 	_bool		Is_AnimComplete() const { return m_bComplete; }
-	void		Set_NowAnimKeyFrame(_uint iKeyFrame);
+	void		Set_NowAnimKeyFrame(_uint iKeyFrame, _bool bBlend);
 
 	HRESULT		Bind_Func(const string& strEventName, function<void()> pFunc);
 

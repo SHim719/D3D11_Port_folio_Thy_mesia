@@ -19,6 +19,8 @@ HRESULT CPlayerState_Base::Initialize(void* pArg)
 
 	m_pPlayerStats = m_pPlayer->Get_PlayerStats();
 
+	Init_AttackDesc();
+
 	return S_OK;
 }
 
@@ -26,7 +28,11 @@ void CPlayerState_Base::OnState_Start(void* pArg)
 {
 }
 
-void CPlayerState_Base::OnGoing(_float fTimeDelta)
+void CPlayerState_Base::Update(_float fTimeDelta)
+{
+}
+
+void CPlayerState_Base::Late_Update(_float fTimeDelta)
 {
 }
 
@@ -34,11 +40,16 @@ void CPlayerState_Base::OnState_End()
 {
 }
 
-void CPlayerState_Base::OnHit(void* pArg)
+void CPlayerState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
-	// 체력감소 죽음상태 체크
+	ENEMYATTACKTYPE eEnemyAttackType = AttackDesc.eEnemyAttackType;
 
-	m_pPlayer->Change_State((_uint)PlayerState::State_Hit, pArg);
+	// 체력감소 죽음상태 체크
+	if (0 == m_pPlayer->Take_Damage(AttackDesc))
+		//Death
+		int x = 10;
+	else
+		m_pPlayer->Change_State((_uint)PlayerState::State_Hit, &eEnemyAttackType);
 }
 
 _vector CPlayerState_Base::Calc_MoveLook(_bool IsCamOriented)
@@ -55,7 +66,6 @@ _vector CPlayerState_Base::Calc_MoveLook(_bool IsCamOriented)
 		vLook = m_pOwnerTransform->Get_GroundLook();
 		vRight = m_pOwnerTransform->Get_GroundRight();
 	}
-	
 
 	_vector vNewLook = XMVectorZero();
 
@@ -127,13 +137,25 @@ _bool CPlayerState_Base::Check_StateChange(PlayerState eState)
 			&& m_pPlayer->Is_LockOn();
 		break;
 	case PlayerState::State_Attack:
+	case PlayerState::State_Execution_Default:
 		bStateChange = KEY_PUSHING(eKeyCode::LButton);
 		break;
+
 	case PlayerState::State_Avoid:
 		bStateChange = KEY_PUSHING(eKeyCode::Space);
 		break;
 	case PlayerState::State_Parry:
 		bStateChange =  KEY_PUSHING(eKeyCode::F);
+		break;
+	case PlayerState::State_ChargeStart:
+		bStateChange = KEY_PUSHING(eKeyCode::RButton);
+		break;
+	case PlayerState::State_ClawAttack_Long:
+	case PlayerState::State_StealRush:
+		bStateChange = KEY_NONE(eKeyCode::RButton);
+		break;
+	case PlayerState::State_ClawAttack_Short:
+		bStateChange = KEY_PUSHING(eKeyCode::RButton);
 		break;
 	case PlayerState::State_End:
 		break;
@@ -153,6 +175,11 @@ PlayerState CPlayerState_Base::Decide_State()
 	}
 
 	return eFinalState;
+}
+
+void CPlayerState_Base::Check_ExtraStateChange(PlayerState eState)
+{
+
 }
 
 void CPlayerState_Base::Free()

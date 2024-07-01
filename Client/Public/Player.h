@@ -17,11 +17,12 @@ private:
 	virtual ~CPlayer() = default;
 
 private:
-	HRESULT Initialize_Prototype()		override;
-	HRESULT Initialize(void* pArg)		override;
-	void Tick(_float fTimeDelta)		override;
-	void LateTick(_float fTimeDelta)	override;
-	HRESULT Render()					override;
+	HRESULT Initialize_Prototype()			override;
+	HRESULT Initialize(void* pArg)			override;
+	void PriorityTick(_float fTimeDelta)	override;
+	void Tick(_float fTimeDelta)			override;
+	void LateTick(_float fTimeDelta)		override;
+	HRESULT Render()						override;
 
 	void OnEnter_Cutscene()									override;
 	void OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)	override;
@@ -38,29 +39,49 @@ public:
 	}
 
 private:
+	_float				m_fExecutionDist = { 4.5f };
+	class CEnemy*		m_pExecutionTarget = { nullptr };
+
+	list<class CEnemy*> m_StunnedEnemies;
+private:
+	void Update_CanExecutionEnemy();
+
+public:
+	void Add_StunnedEnemy(class CEnemy* pEnemy) {
+		m_StunnedEnemies.push_back(pEnemy);
+	}
+
+	class CEnemy* Get_ExecutionEnemy() const {
+		return m_pExecutionTarget;
+	}
+
+
+private:
 	CTransform*		m_pTargetTransform = { nullptr };
 	_bool			m_bLockOn = { false };
 
 	_bool			m_bCanNextState = { false };
+	_bool			m_bCanNextAttack = { false };
 	_bool			m_bCanRotation = { true };
 	_bool			m_bInvincible = { false };
 	
 	_float4x4		m_PrevWorldMatrix; // 컷신시작전 위치
+
 public:
-	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
 	_bool Is_LockOn() const { 
 		return m_bLockOn; }
 
 	_bool Can_NextState() const { 
 		return m_bCanNextState; }
+
 	_bool Can_Rotation() const { 
 		return m_bCanRotation; }
+
+	_bool Can_NextAttack() const {
+		return m_bCanNextAttack;
+	}
 	_bool Is_Invincible() const { 
 		return m_bInvincible; }
-
-	void SetState_Parried();
-	void SetState_Executed(void* pArg);
-	void Inactive_AllWeaponColliders();
 
 	void Set_CanNextState(_bool bCanNextState) {
 		m_bCanNextState = bCanNextState;
@@ -73,18 +94,23 @@ public:
 	void Set_Invincible(_bool bInvincible) {
 		m_bInvincible = bInvincible;
 	}
-		
 
-private:
-	void Active_Weapons();
-	void InActive_Weapons();
-	void Active_Claw();
-	void InActive_Claw();
-	
+	void Set_CanNextAttack(_bool bCanNextAttack) {
+		m_bCanNextAttack = bCanNextAttack;
+	}
+
+	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
+	void SetState_Parried();
+	void SetState_Executed(void* pArg);
+	void Inactive_AllWeaponColliders();
+	void Set_Active_DefaultWeapons(_bool bActive);
+	void Set_Active_Claws(_bool bActive);
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
-	void Take_Damage(void* pArg)				override;
+	
+public:
+	_int Take_Damage(const ATTACKDESC& AttackDesc)	override;
 
 
 private:

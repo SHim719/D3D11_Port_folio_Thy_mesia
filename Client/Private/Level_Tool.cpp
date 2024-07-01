@@ -18,11 +18,17 @@
 #include "Odur_Card.h"
 #include "Odur_Card_Cutscene.h"
 
+#include "Villager_F.h"
+#include "Villager_M.h"
+#include "Joker.h"
+
 #include "MapObject.h"
 #include "EventTrigger.h"
 
 #include "UI_Headers.h"
 #include "UI_Manager.h"
+
+#include "PerceptionBounding.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -52,14 +58,35 @@ HRESULT CLevel_Tool::Initialize()
 
 	if (FAILED(Ready_Odur()))
 		return E_FAIL;
+
+	if (FAILED(Ready_Villager_F()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Villager_M()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Joker()))
+		return E_FAIL;
 #endif
 
 #ifdef testplay
+
+	if (FAILED(Ready_UI()))
+		return E_FAIL;
 
 	if (FAILED(Ready_Player()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Odur()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Villager_F()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Villager_M()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Joker()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Navigation()))
@@ -68,11 +95,14 @@ HRESULT CLevel_Tool::Initialize()
 	if (FAILED(Ready_UIResource()))
 		return E_FAIL;
 
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
 
 	if (FAILED(Ready_Stage1Boss()))
 		return E_FAIL;
+
+	if (FAILED(Ready_Etc()))
+		return E_FAIL;
+
+
 
 #endif
 
@@ -159,6 +189,41 @@ HRESULT CLevel_Tool::Ready_Odur()
 	return S_OK;
 }
 
+HRESULT CLevel_Tool::Ready_Villager_F()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Villager_F", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Villager_F/", "Villager_F.dat", "../../Resources/KeyFrame/Villager_F/"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Villager_F", CVillager_F::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Villager_M()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Villager_M", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Villager_M/", "Villager_M.dat", "../../Resources/KeyFrame/Villager_M/"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Villager_M_Axe", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Villager_M/", "Villager_Axe.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Villager_M", CVillager_M::Create(m_pDevice, m_pContext));
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Joker()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Joker", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Joker/", "Joker.dat", "../../Resources/KeyFrame/Joker/"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Joker_Hammer", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Joker/", "Joker_Hammer.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Joker", CJoker::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
 HRESULT CLevel_Tool::Ready_UIResource()
 {
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_LockOn", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Target.png"))))
@@ -194,7 +259,6 @@ HRESULT CLevel_Tool::Ready_UIResource()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_MainBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_MainBar.dds"))))
 		return E_FAIL;
-
 #pragma endregion
 
 
@@ -214,10 +278,14 @@ HRESULT CLevel_Tool::Ready_UIResource()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_StunnedSign", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_StunnedShine1.png"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_NewPrestBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_NewPrestBar.png"))))
+#pragma endregion
+
+#pragma region DamageFont
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_DamageFont", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/DamageFont/%d.png", 10))))
 		return E_FAIL;
 
-#pragma endregion
+#pragma endregion 
 
 
 	return S_OK;
@@ -244,7 +312,16 @@ HRESULT CLevel_Tool::Ready_Navigation()
 
 HRESULT CLevel_Tool::Ready_Stage1Boss()
 {
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Stage1BossStructure", CModel::Create(m_pDevice, m_pContext, "../../Resources/MapObjects/Stage11/", "Stage1BossStructure.dat"));
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Stage1BossStructure", CModel::Create(m_pDevice, m_pContext, "../../Resources/MapObjects/Stage1/", "Stage1BossStructure.dat"));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Etc()
+{
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_PerceptionBounding", CPerceptionBounding::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 
 	return S_OK;
 }

@@ -22,7 +22,7 @@ void COdurState_DisappearWalk::OnState_Start(void* pArg)
 	Decide_Animation();
 }
 
-void COdurState_DisappearWalk::OnGoing(_float fTimeDelta)
+void COdurState_DisappearWalk::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{

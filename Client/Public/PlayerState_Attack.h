@@ -9,21 +9,19 @@ private:
 	virtual ~CPlayerState_Attack() = default;
 
 private:
-	HRESULT Initialize(void* pArg)	override;
-	void OnState_Start(void* pArg)	override;
-	void OnGoing(_float fTimeDelta)	override;
-	void OnState_End()				override;
+	HRESULT Initialize(void* pArg)					override;
+	void OnState_Start(void* pArg)					override;
+	void Update(_float fTimeDelta)					override;
+	void Late_Update(_float fTimeDelta)				override;
+	void OnState_End()								override;
 
-	void Init_AttackDesc()			override;
+	void Init_AttackDesc()							override;
+	void Check_ExtraStateChange(PlayerState eState)	override;
 
+	void Decide_ExecutionState(class CEnemy* pExecutionEnemy);
 private:
-	_bool			m_bCanNextAttack = { false };
 	_uint			m_iNowComboCnt = 0;
 
-private:
-	void Set_CanNextAttack(_bool bCanNextAttack) {
-		m_bCanNextAttack = bCanNextAttack;
-	}
 
 public:
 	static CPlayerState_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

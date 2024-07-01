@@ -13,7 +13,7 @@ protected:
 public:
 	HRESULT Initialize(void* pArg)		override;
 	void OnState_Start(void* pArg)		override;
-	void OnGoing(_float fTimeDelta)		override;
+	void Update(_float fTimeDelta)		override;
 	void OnState_End()					override;
 
 private:

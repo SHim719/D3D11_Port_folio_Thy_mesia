@@ -23,7 +23,7 @@ void COdurState_ExecutionDisappear::OnState_Start(void* pArg)
 	m_pModel->Change_Animation(Magician_DisappearMove_F);
 }
 
-void COdurState_ExecutionDisappear::OnGoing(_float fTimeDelta)
+void COdurState_ExecutionDisappear::Update(_float fTimeDelta)
 {
 	_float fDist = XMVectorGetX(XMVector3Length(m_pOdur->Get_Target()->Get_Transform()->Get_Position() - m_pOwnerTransform->Get_Position()));
 

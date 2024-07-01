@@ -35,11 +35,7 @@ HRESULT CImGui_Main::Initialize()
     m_ToolStates[ANIM] = CAnim_Tool::Create(m_pDevice, m_pContext);
     m_ToolStates[TESTPLAY] = CTestPlay_Tool::Create(m_pDevice, m_pContext);   
 
-    ToolState eState;
-
-#ifdef MapTool
-    eState = MAP;
-#endif
+    ToolState eState = MAP;
 
 #ifdef AnimTool
     eState = ANIM;

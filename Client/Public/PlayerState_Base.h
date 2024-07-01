@@ -15,10 +15,11 @@ protected:
 public:
 	HRESULT Initialize(void* pArg)		override;
 	void OnState_Start(void* pArg)		override;
-	void OnGoing(_float fTimeDelta)		override;
+	void Update(_float fTimeDelta)		override;
+	void Late_Update(_float fTimeDelta)	override;
 	void OnState_End()					override;
 
-	void OnHit(void* pArg)				override;
+	void OnHit(const ATTACKDESC& AttackDesc)	override;
 
 protected:
 	_vector Calc_MoveLook(_bool IsCamOriented);
@@ -26,6 +27,8 @@ protected:
 
 	_bool Check_StateChange(PlayerState eState);
 	PlayerState Decide_State();
+
+	virtual void Check_ExtraStateChange(PlayerState eState);
 
 protected:
 	CPlayer*			m_pPlayer = { nullptr };
@@ -36,7 +39,7 @@ protected:
 	_float2				m_vMoveAxis = { 0.f, 0.f };
 
 	_float				m_fRotRate = { 10.f };
-	_float				m_fJogSpeed = { 4.f };
+	_float				m_fJogSpeed = { 4.5f };
 	_float				m_fSprintSpeed = { 6.f };
 public:
 	void Free() override;

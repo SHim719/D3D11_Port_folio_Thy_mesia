@@ -7,6 +7,8 @@
 #include "UI_Manager.h"
 #include "UI_LockOn.h"
 
+#include "Enemy.h"
+
 CMain_Camera::CMain_Camera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
 {
@@ -41,6 +43,17 @@ void CMain_Camera::OnInActive()
 {
 }
 
+void CMain_Camera::PriorityTick(_float fTimeDelta)
+{
+	__super::PriorityTick(fTimeDelta);
+
+	if (nullptr != m_pTarget)
+	{
+		if (m_pTarget->Is_Death())
+			SetState_LockOn_To_Default();
+	}
+}
+
 
 void CMain_Camera::Tick(_float fTimeDelta)
 {
@@ -52,26 +65,9 @@ void CMain_Camera::Tick(_float fTimeDelta)
 	if (KEY_DOWN(eKeyCode::Q))
 	{
 		if (LOCKON != m_eState)
-		{
-			if (SetState_LockOn())
-			{
-				m_pPlayer->Toggle_LockOn(m_pTargetTransform);
-				m_fFollowingSpeed = 4.5f;
-			}
-		}
+			SetState_LockOn();
 		else
-		{
-			Safe_Release(m_pTargetTransform);
-			Safe_Release(m_pTargetBone);
-
-			UIMGR->InActive_UI("UI_LockOn");
-
-			m_pPlayer->Toggle_LockOn();
-
-			m_fFollowingSpeed = 2.5f;
-
-			m_eState = DEFAULT;
-		}
+			SetState_LockOn_To_Default();
 	}
 
 }
@@ -113,35 +109,57 @@ void CMain_Camera::Set_Player(CGameObject* pPlayer)
 	XMStoreFloat4(&m_vPrevTargetPos, m_pPlayerTransform->Get_Position());
 }
 
-_bool CMain_Camera::SetState_LockOn()
+void CMain_Camera::SetState_LockOn()
 {
 	CGameObject* pTarget = m_pGameInstance->Find_Target(m_pPlayerTransform->Get_Position());
 	if (nullptr == pTarget)
-		return false;
+		return;
+
+	m_pTarget = static_cast<CEnemy*>(pTarget);
 
 	m_pTargetTransform = pTarget->Get_Transform();
-	Safe_AddRef(m_pTargetTransform);
-
+	
 	CModel* pTargetModel = static_cast<CModel*>(pTarget->Find_Component(L"Model"));
 
 	m_pTargetBone = Find_TargetBone(pTargetModel);
 	if (nullptr == m_pTargetBone)
-		return false;
+		return;
+	Safe_AddRef(m_pTargetTransform);
 	Safe_AddRef(m_pTargetBone);
 
 	ATTACHDESC Desc = {};
 	Desc.pParentTransform = m_pTargetTransform;
 	Desc.pAttachBone = m_pTargetBone;
 
+	m_pPlayer->Toggle_LockOn(m_pTargetTransform);
+	m_fFollowingSpeed = 4.5f;
+
 	UIMGR->Active_UI("UI_LockOn", &Desc);
 
 	m_eState = LOCKON;
+}
 
-	return true;
+void CMain_Camera::SetState_LockOn_To_Default()
+{
+	if (LOCKON != m_eState)
+		return;
+
+	Safe_Release(m_pTargetTransform);
+	Safe_Release(m_pTargetBone);
+
+	UIMGR->InActive_UI("UI_LockOn");
+
+	m_pPlayer->Toggle_LockOn();
+
+	m_fFollowingSpeed = 2.5f;
+
+	m_eState = DEFAULT;
 }
 
 void CMain_Camera::SetState_Cutscene(const ATTACHDESC& Desc)
 {
+	SetState_LockOn_To_Default();
+
 	m_pCutsceneTargetTransform = Desc.pParentTransform;
 	m_pCutsceneBone = Desc.pAttachBone;
 
@@ -156,11 +174,7 @@ void CMain_Camera::Reset_State()
 	Safe_Release(m_pCutsceneTargetTransform);
 	Safe_Release(m_pCutsceneBone);
 
-	if (nullptr != m_pTargetBone)
-		m_eState = LOCKON;
-	else
-		m_eState = DEFAULT;
-
+	m_eState = DEFAULT;
 }
 
 CBone* CMain_Camera::Find_TargetBone(CModel* pModel)

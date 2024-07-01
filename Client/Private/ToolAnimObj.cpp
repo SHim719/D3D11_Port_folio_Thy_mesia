@@ -36,9 +36,29 @@ HRESULT CToolAnimObj::Initialize(void* pArg)
 			return E_FAIL;
 		break;
 	}
-		
+
+	case Villager_F:
+	{
+		if (FAILED(Ready_Villager_F()))
+			return E_FAIL;
+		break;
 	}
 
+	case Villager_M:
+	{
+		if (FAILED(Ready_Villager_M()))
+			return E_FAIL;
+		break;
+	}
+
+	case Joker:
+	{
+		if (FAILED(Ready_Joker()))
+			return E_FAIL;
+		break;
+	}
+		
+	}
 
 	m_pModel->Set_Preview(true);
 	return S_OK;
@@ -74,8 +94,7 @@ HRESULT CToolAnimObj::Render()
 
 	for (_uint j = 0; j < iNumMeshes; ++j)
 	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture")))
-			return E_FAIL;
+		m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture");
 
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
@@ -154,6 +173,62 @@ HRESULT CToolAnimObj::Ready_Odur()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Sword");
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
 
+	return S_OK;
+}
+
+HRESULT CToolAnimObj::Ready_Villager_F()
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_Villager_F", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CToolAnimObj::Ready_Villager_M()
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_Villager_M", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Villager_M_Axe";
+	WeaponDesc.pColliderDesc = nullptr;
+
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	return S_OK;
+}
+
+HRESULT CToolAnimObj::Ready_Joker()
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_Joker", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Hammer");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Joker_Hammer";
+	WeaponDesc.pColliderDesc = nullptr;
+
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
 	return S_OK;
 }
 

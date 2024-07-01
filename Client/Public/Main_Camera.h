@@ -23,6 +23,7 @@ public:
 	HRESULT Initialize(void* pArg)			override;
 	void OnActive()							override;
 	void OnInActive()						override;
+	void PriorityTick(_float fTimeDelta)	override;
 	void Tick(_float fTimeDelta)			override;
 	void LateTick(_float fTimeDelta)		override;
 
@@ -31,6 +32,8 @@ private:
 
 	class CPlayer*		m_pPlayer = { nullptr };
 	CTransform*			m_pPlayerTransform = { nullptr };
+
+	class CEnemy*		m_pTarget = { nullptr };
 	CTransform*			m_pTargetTransform = { nullptr };
 	CBone*				m_pTargetBone = { nullptr };
 
@@ -47,9 +50,10 @@ private:
 public:
 	void Set_Player(CGameObject* pPlayer);
 	
-	_bool SetState_LockOn();
-	void SetState_Cutscene(const ATTACHDESC& Desc);
+	void SetState_LockOn();
+	void SetState_LockOn_To_Default();
 
+	void SetState_Cutscene(const ATTACHDESC& Desc);
 	void Reset_State();
 private:
 	void Default_State(_float fTimeDelta);

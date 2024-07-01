@@ -29,15 +29,17 @@ HRESULT CUI_EnemyBar::Initialize(void* pArg)
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
 
-	m_vEnemyBarScales[LEFT] = { 9.f, 9.f, 1.f };
-	m_vEnemyBarScales[BG] = { 50.f, 9.f, 1.f };
-	m_vEnemyBarScales[RIGHT] = { 9.f, 9.f, 1.f, };
+	m_pTransform->Set_Scale({ 150.f, 9.f, 1.f });
 	
-	CProgressBar::PROGRESSBARDESC HpBarDesc;
-	HpBarDesc.vScale = { 50.f, 9.f, 1.f };
-	HpBarDesc.wstrTextureTag = L"Prototype_Texture_PlayerHpBar_MainBar";
-	
-	m_pHpProgressBar = static_cast<CProgressBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_ProgressBar", &HpBarDesc));
+	CProgressBar::PROGRESSBARDESC BarDesc;
+	BarDesc.vScale = { 145.f, 5.f, 1.f };
+	BarDesc.wstrTextureTag = L"Prototype_Texture_EnemyBar_MainHpBar";
+
+	m_pHpProgressBar = static_cast<CProgressBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_ProgressBar", &BarDesc));
+
+	BarDesc.wstrTextureTag = L"Prototype_Texture_PlayerMpBar_MainBar";
+
+	m_pMpProgressBar = static_cast<CProgressBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_ProgressBar", &BarDesc));
 
 	return S_OK;
 }
@@ -45,23 +47,54 @@ HRESULT CUI_EnemyBar::Initialize(void* pArg)
 
 void CUI_EnemyBar::Tick(_float fTimeDelta)
 {
-
+	if (m_bStunned)
+	{
+		m_fAlpha += m_fDeltaAlphaSpeed * fTimeDelta;
+		if (0.f >= m_fAlpha || m_fAlpha >= 1.f)
+		{
+			m_fDeltaAlphaSpeed = -m_fDeltaAlphaSpeed;
+			m_fAlpha = clamp(m_fAlpha, 0.f, 1.f);
+		}
+	}
 }
 
 void CUI_EnemyBar::LateTick(_float fTimeDelta)
 {
+	if (m_bReturnToPool)
+		return;
+
+	_vector vEnemyPos = m_pOwnerTransform->Get_Position() + XMLoadFloat4(&m_vOffset);
+	_vector vScreenPos = Convert_WorldToScreen(vEnemyPos);
+
+	m_pHpProgressBar->Update_Center(vScreenPos);
+	m_pMpProgressBar->Update_Center(vScreenPos);
+
+	XMStoreFloat4(&m_vRenderStartPos, vScreenPos);
+
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
 
 }
 
 HRESULT CUI_EnemyBar::Render()
 {
+	if (m_bNoRender)
+		return E_FAIL;
+
 	if (FAILED(Render_MainBar()))
+		return E_FAIL;
+
+	if (FAILED(m_pMpProgressBar->Render()))
 		return E_FAIL;
 
 	if (FAILED(m_pHpProgressBar->Render()))
 		return E_FAIL;
 
+	if (m_bStunned)
+	{
+		if (FAILED(Render_StunnedShine()))
+			return E_FAIL;
+	}
+		
 	return S_OK;
 }
 
@@ -73,62 +106,102 @@ void CUI_EnemyBar::Update_EnemyHp(_int iHp)
 void CUI_EnemyBar::Update_EnemyMp(_int iMp)
 {
 	m_pMpProgressBar->Set_Ratio((_float)iMp / m_iMaxHp);
+	if (0 == iMp)
+	{
+		m_bStunned = true;
+		m_fAlpha = 1.f;
+	}
+		
 }
 
-HRESULT CUI_EnemyBar::Render_MainBar()
+void CUI_EnemyBar::Broadcast_Death()
 {
-	_float4 vPivotPos = m_vRenderStartPos;
-	
-	for (_uint i = 0; i < ENEMYBAR_END; ++i)
-	{
-		_float4 vRenderPos = { vPivotPos.x + m_vEnemyBarScales[i].x * 0.5f, vPivotPos.y, 1.f, 1.f };
-		m_pTransform->Set_Position(Convert_ScreenToWorld(XMLoadFloat4(&vRenderPos)));
-		m_pTransform->Set_Scale(m_vEnemyBarScales[i]);
-	
-		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-			return E_FAIL;
-	
-		if (FAILED(m_pEnemyBarTex[i]->Set_SRV(m_pShader, "g_DiffuseTexture", 0)))
-			return E_FAIL;
-	
-		if (FAILED(m_pShader->Begin(0)))
-			return E_FAIL;
-	
-		if (FAILED(m_pVIBuffer->Render()))
-			return E_FAIL;
-	
-		vPivotPos.x += m_vEnemyBarScales[i].x;
-	}
+	Safe_Release(m_pOwnerTransform);
+	m_bReturnToPool = true;
+}
+
+void CUI_EnemyBar::Enemy_FirstHit()
+{
+	m_bNoRender = false;
+}
+
+
+HRESULT CUI_EnemyBar::OnEnter_Layer(void* pArg)
+{
+	UIENEMYBARDESC* pEnemyBarDesc = (UIENEMYBARDESC*)pArg;
+
+	m_pOwnerTransform = pEnemyBarDesc->pOwnerTransform;
+
+	Safe_AddRef(m_pOwnerTransform);
+
+	m_vOffset = pEnemyBarDesc->vOffset;
+
+	m_iMaxHp = pEnemyBarDesc->pStats->Get_MaxHp();
+
+	pEnemyBarDesc->pStats->Add_Observer(this);
+
+	m_bNoRender = true;
 
 	return S_OK;
 }
 
+HRESULT CUI_EnemyBar::Render_MainBar()
+{
+	m_pTransform->Set_Position(Convert_ScreenToRenderPos(XMLoadFloat4(&m_vRenderStartPos)));
 
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pUITexture->Set_SRV(m_pShader, "g_DiffuseTexture", 0)))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Begin(0)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CUI_EnemyBar::Render_StunnedShine()
+{
+	m_pTransform->Set_Position(Convert_ScreenToRenderPos(XMLoadFloat4(&m_vRenderStartPos)));
+
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pStunnedShineTex->Set_SRV(m_pShader, "g_DiffuseTexture", 0)))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Begin(3)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
 
 HRESULT CUI_EnemyBar::Ready_Component()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_EnemyBar_Right"), TEXT("Tex_EnemyBar_Right"), (CComponent**)&m_pEnemyBarTex[RIGHT])))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_EnemyBar_BG"), TEXT("Tex_EnemyBar_BG"), (CComponent**)&m_pUITexture)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_EnemyBar_Left"), TEXT("Tex_EnemyBar_Left"), (CComponent**)&m_pEnemyBarTex[LEFT])))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_EnemyBar_StunnedSign"), TEXT("Tex_EnemyBar_StunnedSign"), (CComponent**)&m_pStunnedShineTex)))
 		return E_FAIL;
-
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_EnemyBar_BG"), TEXT("Tex_EnemyBar_BG"), (CComponent**)&m_pEnemyBarTex[BG])))
-		return E_FAIL;
-
-	
-//Prototype_Texture_EnemyBar_StunnedSign"
-//Prototype_Texture_EnemyBar_NewPrestBar"
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Point"), TEXT("VIBuffer"), (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
 	return S_OK;
 }
-
 
 
 CUI_EnemyBar* CUI_EnemyBar::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -162,12 +235,10 @@ void CUI_EnemyBar::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pOwnerTransform);
+
 	Safe_Release(m_pHpProgressBar);
 	Safe_Release(m_pMpProgressBar);
 
-	for (_uint i = 0; i < ENEMYBAR_END; ++i)
-	{
-		Safe_Release(m_pEnemyBarTex[i]);
-		m_pEnemyBarTex[i] = nullptr;
-	}
+	Safe_Release(m_pStunnedShineTex);
 }

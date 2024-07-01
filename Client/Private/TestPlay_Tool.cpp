@@ -40,7 +40,8 @@ void CTestPlay_Tool::Start_Tool()
     Safe_AddRef(m_pMain_Camera);
 
     UIMGR->Set_Player(m_pPlayer);
-    
+    UIMGR->Initialize(m_pDevice, m_pContext);
+    UIMGR->Active_UI("UI_PlayerBar");
 
     if (FAILED(Load_TestMap()))
         return;

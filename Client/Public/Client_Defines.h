@@ -9,7 +9,6 @@
 #include "Client_Macro.h"
 #include "Client_Functions.h"
 
-
 //#define AnimTool
 #define testplay
 

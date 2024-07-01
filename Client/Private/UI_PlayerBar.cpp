@@ -102,7 +102,7 @@ HRESULT CUI_PlayerBar::Render_HpBar()
 	for (_uint i = 0; i < PLAYERBAR_END; ++i)
 	{
 		_float4 vRenderPos = { vPivotPos.x + m_vHpBarScales[i].x * 0.5f, vPivotPos.y, 1.f, 1.f };
-		m_pTransform->Set_Position(Convert_ScreenToWorld(XMLoadFloat4(&vRenderPos)));
+		m_pTransform->Set_Position(Convert_ScreenToRenderPos(XMLoadFloat4(&vRenderPos)));
 		m_pTransform->Set_Scale(m_vHpBarScales[i]);
 
 		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
@@ -130,7 +130,7 @@ HRESULT CUI_PlayerBar::Render_MpBar()
 	for (_uint i = 0; i < PLAYERBAR_END; ++i)
 	{
 		_float4 vRenderPos = { vPivotPos.x + m_vMpBarScales[i].x * 0.5f, vPivotPos.y, 1.f, 1.f };
-		m_pTransform->Set_Position(Convert_ScreenToWorld(XMLoadFloat4(&vRenderPos)));
+		m_pTransform->Set_Position(Convert_ScreenToRenderPos(XMLoadFloat4(&vRenderPos)));
 		m_pTransform->Set_Scale(m_vMpBarScales[i]);
 
 		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))

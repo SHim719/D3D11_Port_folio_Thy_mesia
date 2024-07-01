@@ -43,7 +43,7 @@ void COdurState_Cutscene::OnState_Start(void* pArg)
 	m_pOdur->Get_Target()->Get_Transform()->Set_WorldMatrix(m_pOwnerTransform->Get_WorldMatrix());
 }
 
-void COdurState_Cutscene::OnGoing(_float fTimeDelta)
+void COdurState_Cutscene::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{

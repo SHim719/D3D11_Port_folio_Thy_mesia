@@ -22,6 +22,9 @@ private:
 	HRESULT Ready_Camera();
 	HRESULT Ready_Player();
 	HRESULT Ready_Odur();
+	HRESULT Ready_Villager_F();
+	HRESULT Ready_Villager_M();
+	HRESULT Ready_Joker();
 
 	HRESULT Ready_UIResource();
 	HRESULT Ready_UI();
@@ -30,6 +33,7 @@ private:
 
 	HRESULT Ready_Stage1Boss();
 
+	HRESULT Ready_Etc();
 private:
 	HRESULT Load_Map();
 		

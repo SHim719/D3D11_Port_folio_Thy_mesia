@@ -36,8 +36,8 @@ void CPlayerStats::Increase_MaxMp(_int iMp)
 ATTACKDESC CPlayerStats::Get_NormalAttackDesc() const
 {
 	ATTACKDESC AttackDesc;
-	AttackDesc.iDamage = m_iStrength * 2;
-	AttackDesc.iPlagueDamage = m_iStrength;
+	AttackDesc.iDamage = (m_iStrength * 2);
+	AttackDesc.iPlagueDamage = m_iStrength >> 2;
 
 	return AttackDesc;
 }
@@ -46,7 +46,7 @@ ATTACKDESC CPlayerStats::Get_PlagueAttackDesc() const
 {
 	ATTACKDESC AttackDesc;
 	AttackDesc.iDamage = 0;
-	AttackDesc.iPlagueDamage = m_iPlague * 3;
+	AttackDesc.iPlagueDamage = m_bShortClaw == true ? m_iPlague : m_iPlague * 2;
 
 	return AttackDesc;
 }

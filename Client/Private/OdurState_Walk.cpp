@@ -25,7 +25,7 @@ void COdurState_Walk::OnState_Start(void* pArg)
 	m_pOwnerTransform->Set_Speed(m_fWalkSpeed);
 }
 
-void COdurState_Walk::OnGoing(_float fTimeDelta)
+void COdurState_Walk::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 		Decide_Animation();
@@ -53,7 +53,7 @@ void COdurState_Walk::OnState_End()
 
 }
 
-void COdurState_Walk::OnHit(void* pArg)
+void COdurState_Walk::OnHit(const ATTACKDESC& AttackDesc)
 {
 	m_pOdur->Change_State((_uint)OdurState::State_Hit);
 }

@@ -40,11 +40,6 @@ HRESULT CMainApp::Initialize()
 	if (nullptr == m_pImGui_Main)
 		return E_FAIL;
 
-#ifdef testplay
-	UIMGR->Initialize(m_pDevice, m_pContext);
-	UIMGR->Active_UI("UI_PlayerBar");
-#endif
-
 	return S_OK;
 }
 

@@ -12,7 +12,7 @@ HRESULT CPlayerState_Avoid::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_fRotRate = 30.f;
-	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_Parry, PlayerState::State_Avoid};
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Parry, PlayerState::State_Avoid};
 	return S_OK;
 }
 
@@ -26,7 +26,7 @@ void CPlayerState_Avoid::OnState_Start(void* pArg)
 	Decide_Animation();
 }
 
-void CPlayerState_Avoid::OnGoing(_float fTimeDelta)
+void CPlayerState_Avoid::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
@@ -39,23 +39,14 @@ void CPlayerState_Avoid::OnGoing(_float fTimeDelta)
 	
 
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	
+}
 
+void CPlayerState_Avoid::Late_Update(_float fTimeDelta)
+{
 	PlayerState ePlayerState = Decide_State();
-	if (PlayerState::State_End != ePlayerState)
-	{
-		if (PlayerState::State_Avoid == ePlayerState)
-		{
-			if (m_bOneMore)
-			{
-				m_bOneMore = false;
-				m_pPlayer->Change_State((_uint)ePlayerState);
-			}
-		}
-		else
-			m_pPlayer->Change_State((_uint)ePlayerState);
+	
 
-	}
-		
 }
 
 void CPlayerState_Avoid::OnState_End()
@@ -64,11 +55,25 @@ void CPlayerState_Avoid::OnState_End()
 	m_vMoveAxis.y = 0.f;
 }
 
-void CPlayerState_Avoid::OnHit(void* pArg)
+void CPlayerState_Avoid::OnHit(const ATTACKDESC& AttackDesc)
 {
 	if (m_pPlayer->Is_Invincible())
 		m_bOneMore = true;
 	//else Hit;
+}
+
+void CPlayerState_Avoid::Check_ExtraStateChange(PlayerState eState)
+{
+	if (PlayerState::State_End == eState)
+		return;
+
+	if (PlayerState::State_Avoid == eState && m_bOneMore)
+	{
+		m_bOneMore = false;
+		m_pPlayer->Change_State((_uint)eState);
+	}
+	else
+		m_pPlayer->Change_State((_uint)eState);
 }
 
 void CPlayerState_Avoid::Decide_Animation()

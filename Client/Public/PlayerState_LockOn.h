@@ -9,10 +9,11 @@ private:
 	virtual ~CPlayerState_LockOn() = default;
 
 public:
-	HRESULT Initialize(void* pArg)	override;
-	void OnState_Start(void* pArg)	override;
-	void OnGoing(_float fTimeDelta)	override;
-	void OnState_End()				override;
+	HRESULT Initialize(void* pArg)			override;
+	void OnState_Start(void* pArg)			override;
+	void Update(_float fTimeDelta)			override;
+	void Late_Update(_float fTimeDelta)		override;
+	void OnState_End()						override;
 
 private:
 	void Change_WalkAnimation();

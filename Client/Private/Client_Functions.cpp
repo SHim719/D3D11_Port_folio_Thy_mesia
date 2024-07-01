@@ -3,6 +3,8 @@
 #include <codecvt>
 #include <locale> 
 
+#include "Bone.h"
+
 namespace Client
 {
 	wstring Convert_StrToWStr(const string& str)
@@ -110,6 +112,33 @@ namespace JoMath
 		vGroundLook = XMVector3Normalize(vDst - vSrc);
 
 		return vGroundLook;
+	}
+
+	_vector Get_BoneWorldPos(Engine::CBone* pBone, _fmatrix ParentMatrix)
+	{
+		_matrix SocketMatrix = pBone->Get_CombinedTransformation();
+		SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
+		SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
+		SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
+
+		SocketMatrix *= ParentMatrix;
+
+		return SocketMatrix.r[3];
+	}
+
+	_float Calc_AngleToTarget(_fvector vSrcPos, _fvector vDestPos, _fvector vSrcLook)
+	{
+		_vector vTargetLook = XMVector3Normalize(XMVectorSetY(vDestPos - vSrcPos, 0.f));
+		_vector vNormalizedSrcLook = XMVector3Normalize(XMVectorSetY(vSrcLook, 0.f));
+
+		_float fAngle = acosf(XMVector3Dot(vNormalizedSrcLook, vTargetLook).m128_f32[0]);
+
+		_vector vCross = XMVector3Cross(vNormalizedSrcLook, vTargetLook);
+
+		if (vCross.m128_f32[1] < 0.f)
+			fAngle = -fAngle;
+
+		return fAngle;
 	}
 
 	_float Lerp(_float fA, _float fB, _float fRatio)

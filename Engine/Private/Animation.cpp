@@ -86,21 +86,17 @@ HRESULT CAnimation::Initialize(const CModel::KEYFRAMEEVENTS& Events, const ANIME
 
 	ZeroMemory(m_bCheckKeyFrames, Get_NumKeyFrames());
 
+	XMStoreFloat4(&m_vInitialRootPos, Get_RootTransformation().r[3]);
+
 	return S_OK;
 }
 
 
 
-_bool CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool bPlay)
+_bool CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool bLoop, _bool bPlay)
 {
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta * (_float)bPlay;
 
-	if (m_fPlayTime >= m_fDuration)
-	{
-		Reset();
-		return true;
-	}
-	
 	_uint		iChannelIndex = 0;
 
 	for (auto& pChannel : m_Channels)
@@ -111,6 +107,15 @@ _bool CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool
 
 	Check_KeyFrameEvent();
 
+	if (m_fPlayTime >= m_fDuration)
+	{
+		m_fPlayTime = m_fDuration;
+
+		if (bLoop)
+			Reset();
+		return true;
+	}
+
 	return false;
 }
 
@@ -118,10 +123,12 @@ _bool CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones,
 {
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta * (_float)bPlay;
 
-	_float fRatio = m_fPlayTime / m_fBlendingTime;
-	if (fRatio > 1.f)
-		return false;
+	m_fBlendingAcc += fTimeDelta;
 
+	_float fRatio = m_fBlendingAcc / m_fBlendingTime;
+	if (fRatio > 1.f)
+		fRatio = 1.f;
+		
 	_uint		iChannelIndex = 0;
 	for (auto& pChannel : m_Channels)
 	{
@@ -131,15 +138,14 @@ _bool CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones,
 
 	Check_KeyFrameEvent();
 
-	return true;
+	return fRatio != 1.f;
 }
-
-
 
 void CAnimation::Reset()
 {
 	m_fPlayTime = 0.f;
 	m_iPrevKeyFrame = 0;
+	m_fBlendingAcc = 0.f;
 
 	for (auto& pChannel : m_Channels)
 	{
@@ -171,13 +177,24 @@ void CAnimation::Set_CurrentKeyFrames(_uint iKeyFrame)
 	}
 }
 
+_matrix CAnimation::Get_RootTransformation()
+{
+	auto it = find_if(m_Channels.begin(), m_Channels.end(), [&](CChannel* pChannel) ->_bool
+		{
+			return !strcmp(pChannel->Get_Name(), "root");
+		});
+
+	if (m_Channels.end() == it)
+		return XMMatrixIdentity();
+
+	return (*it)->Get_CurTransformation(m_fPlayTime, Get_NowKeyFrame());
+}
+
 void CAnimation::Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent)
 {
 	m_KeyFrameEvents.insert({ iKeyFrame, pEvent }); 
 	Safe_AddRef(pEvent);
 }
-
-
 
 void CAnimation::Check_KeyFrameEvent()
 {

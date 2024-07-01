@@ -122,10 +122,42 @@ _uint CChannel::Blend_Transformation(_float fBlendRatio, _float fPlayTime, _uint
 		memcpy(&curKeyFrame.vScale, &vScale, sizeof(_float3));
 		memcpy(&curKeyFrame.vRotation, &vRotation, sizeof(_float4));
 		memcpy(&curKeyFrame.vPosition, &vPosition, sizeof(_float3));
+
 		pBone->Set_BlendTransformation(curKeyFrame, fBlendRatio);
 	}
 
 	return iCurrentKeyFrame;
+}
+
+_matrix CChannel::Get_CurTransformation(_float fPlayTime, _uint iCurrentKeyFrame)
+{
+	_float3			vScale;
+	_float4			vRotation;
+	_float3			vPosition;
+
+	_float		fRatio = (fPlayTime - m_KeyFrames[iCurrentKeyFrame].fTime) /
+		(m_KeyFrames[iCurrentKeyFrame + 1].fTime - m_KeyFrames[iCurrentKeyFrame].fTime);
+
+	_float3		vSourScale, vDestScale;
+	_float4		vSourRotation, vDestRotation;
+	_float3		vSourPosition, vDestPosition;
+
+	vSourScale = m_KeyFrames[iCurrentKeyFrame].vScale;
+	vDestScale = m_KeyFrames[iCurrentKeyFrame + 1].vScale;
+
+	vSourRotation = m_KeyFrames[iCurrentKeyFrame].vRotation;
+	vDestRotation = m_KeyFrames[iCurrentKeyFrame + 1].vRotation;
+
+	vSourPosition = m_KeyFrames[iCurrentKeyFrame].vPosition;
+	vDestPosition = m_KeyFrames[iCurrentKeyFrame + 1].vPosition;
+
+	XMStoreFloat3(&vScale, XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio));
+	XMStoreFloat4(&vRotation, XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio));
+	XMStoreFloat3(&vPosition, XMVectorLerp(XMLoadFloat3(&vSourPosition), XMLoadFloat3(&vDestPosition), fRatio));
+	
+	_matrix		TransformationMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorSet(0.f, 0.f, 0.f, 1.f), XMLoadFloat4(&vRotation), XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));
+
+	return TransformationMatrix;
 }
 
 CChannel* CChannel::Create(ifstream& fin)

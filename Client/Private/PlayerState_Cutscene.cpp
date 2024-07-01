@@ -34,7 +34,7 @@ void CPlayerState_Cutscene::OnState_Start(void* pArg)
 
 }
 
-void CPlayerState_Cutscene::OnGoing(_float fTimeDelta)
+void CPlayerState_Cutscene::Update(_float fTimeDelta)
 {
 }
 

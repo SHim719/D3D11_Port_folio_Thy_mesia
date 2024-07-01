@@ -66,7 +66,10 @@ void COdur::Tick(_float fTimeDelta)
 	}
 
 	if (KEY_DOWN(eKeyCode::O))
-		Change_State((_uint)OdurState::State_ExecutionDisappear);
+	{
+		Change_State((_uint)OdurState::State_CaneAttack1);
+	}
+		//Change_State((_uint)OdurState::State_ExecutionDisappear);
 	
 		
 	if (m_bLookTarget)
@@ -77,7 +80,7 @@ void COdur::Tick(_float fTimeDelta)
 				, m_fRotRate * fTimeDelta));
 	}
 
-	m_States[m_iState]->OnGoing(fTimeDelta);
+	m_States[m_iState]->Update(fTimeDelta);
 
 	m_pModel->Play_Animation(fTimeDelta);
 }
@@ -202,14 +205,9 @@ void COdur::OnCollisionEnter(CGameObject* pOther)
 
 	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
 	{
-		m_States[m_iState]->OnHit(nullptr);
+		m_States[m_iState]->OnHit(static_cast<CWeapon*>(pOther)->Get_AttackDesc());
 	}
 
-}
-
-void COdur::OnCollisionExit(CGameObject* pOther)
-{
-	__super::OnCollisionExit(pOther);
 }
 
 HRESULT COdur::Ready_Components(void* pArg)

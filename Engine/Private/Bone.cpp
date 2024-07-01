@@ -25,7 +25,6 @@ HRESULT CBone::Initialize(ifstream& fin, CModel* pModel)
 	fin.read((char*)&m_Transformation, sizeof(_float4x4));
 	fin.read((char*)&m_iDepth, sizeof(_uint));
 	fin.read((char*)&m_iParentBoneIdx, sizeof(_int));
-
 	return S_OK;
 }
 
@@ -38,34 +37,38 @@ void CBone::Set_CombinedTransformation(const vector<CBone*>& Bones, _fmatrix Piv
 }
 
 
-
 void CBone::Set_BlendTransformation(const KEYFRAME& curKeyFrame, _float fRatio)
 {
-	_float3			vScale;
-	_float4			vRotation;
-	_float3			vPosition;
+	_float3			vScale = {};
+	_float4			vRotation = {};
+	_float3			vPosition = {};
 
-	_float3		vSourScale, vDestScale;
-	_float4		vSourRotation, vDestRotation;
-	_float3		vSourPosition, vDestPosition;
+	if (!m_bRootBone)
+	{
+		_float3		vSourScale, vDestScale;
+		_float4		vSourRotation, vDestRotation;
+		_float3		vSourPosition, vDestPosition;
 
-	vSourScale = m_LastKeyFrame.vScale;
-	vDestScale = curKeyFrame.vScale;
+		vSourScale = m_LastKeyFrame.vScale;
+		vDestScale = curKeyFrame.vScale;
 
-	vSourRotation = m_LastKeyFrame.vRotation;
-	vDestRotation = curKeyFrame.vRotation;
+		vSourRotation = m_LastKeyFrame.vRotation;
+		vDestRotation = curKeyFrame.vRotation;
 
-	if (m_bRootBone)
-		vSourPosition =  _float3(0.f, 0.f, 0.f);
-	else
 		vSourPosition = m_LastKeyFrame.vPosition;
-		
-	vDestPosition = curKeyFrame.vPosition;
+		vDestPosition = curKeyFrame.vPosition;
 
-	XMStoreFloat3(&vScale, XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio));
-	XMStoreFloat4(&vRotation, XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio));
-	XMStoreFloat3(&vPosition, XMVectorLerp(XMLoadFloat3(&vSourPosition), XMLoadFloat3(&vDestPosition), fRatio));
-
+		XMStoreFloat3(&vScale, XMVectorLerp(XMLoadFloat3(&vSourScale), XMLoadFloat3(&vDestScale), fRatio));
+		XMStoreFloat4(&vRotation, XMQuaternionSlerp(XMLoadFloat4(&vSourRotation), XMLoadFloat4(&vDestRotation), fRatio));
+		XMStoreFloat3(&vPosition, XMVectorLerp(XMLoadFloat3(&vSourPosition), XMLoadFloat3(&vDestPosition), fRatio));
+	}
+	else
+	{
+		vScale = curKeyFrame.vScale;
+		vRotation = curKeyFrame.vRotation;
+		vPosition = curKeyFrame.vPosition;
+	}
+	
 	_matrix	TransformationMatrix = XMMatrixAffineTransformation(XMLoadFloat3(&vScale), XMVectorSet(0.f, 0.f, 0.f, 1.f)
 		, XMLoadFloat4(&vRotation)
 		, XMVectorSetW(XMLoadFloat3(&vPosition), 1.f));

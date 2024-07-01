@@ -215,6 +215,17 @@ void CTransform::Rotation_Quaternion(_fvector vQuat)
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::Turn_Quaternion(_fvector vQuat, _fmatrix OffsetMatrix)
+{
+	_matrix	RotationMatrix = OffsetMatrix * XMMatrixRotationQuaternion(vQuat);
+
+	_matrix WorldMatrix = XMLoadFloat4x4(&m_WorldMatrix);
+
+	RotationMatrix *= WorldMatrix;
+	
+	XMStoreFloat4x4(&m_WorldMatrix, RotationMatrix);
+}
+
 void CTransform::LookAt(_fvector vAt)
 {
 	_fvector		vLook	= vAt - Get_State(CTransform::STATE_POSITION);

@@ -42,7 +42,7 @@ private:
 	_bool	m_bAlphaEnable = { false };
 	_bool	m_bAlphaIncrease = { false };
 
-	_bool  m_bCardPattern = { false };
+	_bool	m_bCardPattern = { false };
 public:
 	void Swap_Bone();
 
@@ -72,7 +72,6 @@ private:
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
-	void OnCollisionExit(CGameObject* pOther)	override;
 
 private:
 	HRESULT Ready_Components(void* pArg);

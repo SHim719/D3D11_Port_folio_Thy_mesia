@@ -38,7 +38,7 @@ void CPlayerState_Executed::OnState_Start(void* pArg)
 	m_pModel->Change_Animation(Corvus_VSMagician_SP1Hurt, 0.f);
 }
 
-void CPlayerState_Executed::OnGoing(_float fTimeDelta)
+void CPlayerState_Executed::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{

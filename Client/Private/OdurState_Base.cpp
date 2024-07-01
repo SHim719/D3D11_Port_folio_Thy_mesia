@@ -17,6 +17,8 @@ HRESULT COdurState_Base::Initialize(void* pArg)
 	m_pTargetTransform = m_pOdur->Get_Target()->Get_Transform();
 	Safe_AddRef(m_pTargetTransform);
 
+	Init_AttackDesc();
+
 	return S_OK;
 }
 
@@ -24,7 +26,7 @@ void COdurState_Base::OnState_Start(void* pArg)
 {
 }
 
-void COdurState_Base::OnGoing(_float fTimeDelta)
+void COdurState_Base::Update(_float fTimeDelta)
 {
 
 }
@@ -33,9 +35,11 @@ void COdurState_Base::OnState_End()
 {
 }
 
-void COdurState_Base::OnHit(void* pArg)
+void COdurState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
-	if (!m_pOdur->Is_Stanced())
+	if (0 == m_pOdur->Take_Damage(AttackDesc))
+		int x = 10; // Á×À½ Ã³¸®
+	else if (!m_pOdur->Is_Stanced())
 		m_pOdur->Change_State((_uint)OdurState::State_Hit);
 }
 

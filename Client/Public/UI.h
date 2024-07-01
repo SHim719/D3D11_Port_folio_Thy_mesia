@@ -24,14 +24,21 @@ public:
 
 	virtual void Update_EnemyHp(_int iHp);
 	virtual void Update_EnemyMp(_int iMp);
+	virtual void Enemy_FirstHit();
+	virtual void Broadcast_Death();
+	
+	_bool Is_Using() const {
+		return m_bUsing;
+	}
 
 protected:
 	_vector Convert_WorldToScreen(_fvector vUIWorldPos);
-	_vector Convert_ScreenToWorld(_fvector vUIScreenPos);
+	_vector Convert_ScreenToRenderPos(_fvector vUIScreenPos);
 
 protected:
 	_float4x4	m_ViewportMatrix;
-
+	_float		m_fAlpha = { 1.f };
+	_bool		m_bUsing = { false };
 
 protected:
 	CShader*	m_pShader = { nullptr };

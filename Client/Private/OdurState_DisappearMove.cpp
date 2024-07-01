@@ -35,7 +35,7 @@ void COdurState_DisappearMove::OnState_Start(void* pArg)
 	Decide_Animation();
 }
 
-void COdurState_DisappearMove::OnGoing(_float fTimeDelta)
+void COdurState_DisappearMove::Update(_float fTimeDelta)
 {
 	if (false == m_pOdur->Is_CollPlayer())
 		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);

@@ -19,10 +19,12 @@ void COdurState_CaneAttack2::OnState_Start(void* pArg)
 	m_pOdur->Set_LookTarget(true);
 	Reset_AttackIdx();
 
+	m_pOdur->Update_AttackDesc();
+
 	m_pModel->Change_Animation(Magician_CaneAttack1Appear);
 }
 
-void COdurState_CaneAttack2::OnGoing(_float fTimeDelta)
+void COdurState_CaneAttack2::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
@@ -45,11 +47,11 @@ void COdurState_CaneAttack2::Init_AttackDesc()
 
 	ATTACKDESC AttackDesc;
 	AttackDesc.pAttacker = m_pOdur;
-	AttackDesc.eAttackType = NORMAL;
+	AttackDesc.eEnemyAttackType = NORMAL;
 
 	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
 
-	AttackDesc.eAttackType = KNOCKBACK;
+	AttackDesc.eEnemyAttackType = KNOCKBACK;
 
 	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
 

@@ -10,7 +10,8 @@ HRESULT CPlayerState_Parry::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack,  PlayerState::State_ChargeStart, 
+		PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	m_pModel->Bind_Func("Enable_Parry", bind(&CPlayerState_Parry::Enable_Parry, this));
 	m_pModel->Bind_Func("Disable_Parry", bind(&CPlayerState_Parry::Disable_Parry, this));
@@ -38,14 +39,17 @@ void CPlayerState_Parry::OnState_Start(void* pArg)
 			m_pOwnerTransform->LookTo(vMoveLook);
 	}
 
-	m_pModel->Change_Animation(Corvus_SD1_ParryL_NEW + m_iParryDir);
+	m_pModel->Change_Animation(Corvus_SD1_ParryL_NEW + m_iParryDir, 0.f);
 }
 
-void CPlayerState_Parry::OnGoing(_float fTimeDelta)
+void CPlayerState_Parry::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
+}
 
+void CPlayerState_Parry::Late_Update(_float fTimeDelta)
+{
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
 		m_pPlayer->Change_State((_uint)ePlayerState);
@@ -57,15 +61,14 @@ void CPlayerState_Parry::OnState_End()
 	
 }
 
-void CPlayerState_Parry::OnHit(void* pArg)
+void CPlayerState_Parry::OnHit(const ATTACKDESC& AttackDesc)
 {
 	if (m_bCanParry)
 	{
 		m_pPlayer->Change_State((_uint)PlayerState::State_ParrySuccess, &m_iParryDir);
 
-		ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;
-		if (pAttackDesc->pAttacker)
-			pAttackDesc->pAttacker->Take_Damage(&m_pPlayerStats->Get_NormalAttackDesc());
+		if (AttackDesc.pAttacker)
+			AttackDesc.pAttacker->Take_Damage(m_pPlayerStats->Get_NormalAttackDesc());
 	}
 }
 

@@ -31,7 +31,7 @@ HRESULT CState_Base::Initialize(void* pArg)
 	//if (nullptr == m_pNavigation)
 	//	return E_FAIL;
 
-	Init_AttackDesc();
+	XMStoreFloat4x4(&m_OffsetMatrix, XMMatrixRotationX(-XM_PIDIV2));
 
 	return S_OK;
 }
@@ -40,11 +40,11 @@ void CState_Base::OnState_Start(void* pArg)
 {
 }
 
-void CState_Base::OnGoing(_float fTimeDelta)
+void CState_Base::Update(_float fTimeDelta)
 {
 }
 
-void CState_Base::LateGoing(_float fTimeDelta)
+void CState_Base::Late_Update(_float fTimeDelta)
 {
 }
 
@@ -52,12 +52,20 @@ void CState_Base::OnState_End()
 {
 }
 
-void CState_Base::OnHit(void* pArg)
+void CState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
 }
 
 void CState_Base::Init_AttackDesc()
 {
+}
+
+void CState_Base::Setup_RootRotation()
+{
+	_vector vQuat = m_pModel->Get_NowRootQuat();
+
+	ADD_EVENT(bind(&CTransform::Turn_Quaternion, m_pOwnerTransform, vQuat, XMLoadFloat4x4(&m_OffsetMatrix))); // 마지막 회전상태를 가짐
+
 }
 
 void CState_Base::Free()

@@ -10,6 +10,7 @@
 map<const string, class CTexture*>	CModel::g_ModelTextures;
 
 
+
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -99,7 +100,6 @@ HRESULT CModel::Initialize(const BONES& Bones, const ANIMATIONS& Anims, const KE
 		m_Animations.emplace_back(pAnimation);
 	}
 
-
 	return S_OK;
 }
 
@@ -122,33 +122,42 @@ HRESULT CModel::SetUp_BoneMatrices(CShader* pShader)
 
 HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, TextureType eTextureType, const char* pConstantName)
 {
-	if (iMaterialIndex >= m_iNumMaterials)
+	if (iMaterialIndex >= m_iNumMaterials || nullptr == m_Materials[iMaterialIndex].pTexture[eTextureType])
 		return E_FAIL;
 
 	return m_Materials[iMaterialIndex].pTexture[eTextureType]->Set_SRV(pShader, pConstantName);
 }
 
 
+void CModel::Reset_PrevRootPos()
+{
+	_vector vInitRootPos = m_Animations[m_iCurrentAnimIndex]->Get_InitRootPos();
+	vInitRootPos = XMVector3TransformCoord(vInitRootPos, XMLoadFloat4x4(&m_PivotMatrix));
+
+	XMStoreFloat4(&m_vPrevRootPos, vInitRootPos);
+}
+
+_vector CModel::Get_NowRootQuat() const
+{
+	return XMLoadFloat4(&m_Bones[m_iRootBoneIdx]->Get_LastKeyFrame().vRotation);
+}
+
 void CModel::Calc_DeltaRootPos()
 {
 	if (m_bPreview)
 		return;
 
-	//_vector vNowRootPos = m_Bones[m_iRootBoneIdx]->Get_Tranformation().r[3];
-
 	_matrix TransformMatrix = m_Bones[m_iRootBoneIdx]->Get_Transformation() * XMLoadFloat4x4(&m_PivotMatrix);
 
-	_vector vNowRootPos = Organize_RootPos(TransformMatrix.r[3]);//Organize_RootPos(vNowRootPos);
+	_vector vNowRootPos = TransformMatrix.r[3];
+	_vector vPrevRootPos = XMLoadFloat4(&m_vPrevRootPos);
 
-	XMStoreFloat4(&m_vDeltaRootPos, (vNowRootPos - XMLoadFloat4(&m_vPrevRootPos)));
-
+	XMStoreFloat4(&m_vDeltaRootPos, vNowRootPos - vPrevRootPos);
 	XMStoreFloat4(&m_vPrevRootPos, vNowRootPos);
-
-	if (m_vDeltaRootPos.x > 1.f || m_vDeltaRootPos.y > 1.f || m_vDeltaRootPos.z > 1.f)
-		int x = 10;
 
 	m_Bones[m_iRootBoneIdx]->Reset_Position();
 }
+
 
 void CModel::Play_Animation(_float fTimeDelta)
 {
@@ -156,17 +165,13 @@ void CModel::Play_Animation(_float fTimeDelta)
 		return;
 
 	if (m_bBlending)
-	{
 		m_bBlending = m_Animations[m_iCurrentAnimIndex]->Play_Animation_Blend(fTimeDelta, m_Bones, m_bIsPlaying);
-	}
 	else
-	{
-		m_bComplete = m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones, m_bIsPlaying);
-		if (m_bComplete)
-			XMStoreFloat4(&m_vPrevRootPos, XMVectorZero());
-	}
+		m_bComplete = m_Animations[m_iCurrentAnimIndex]->Play_Animation(fTimeDelta, m_Bones, m_bLoop, m_bIsPlaying);
 	
 	Calc_DeltaRootPos();
+	if (m_bComplete && !m_bLoop)
+		Reset_PrevRootPos();
 
 	for (auto& pBone : m_Bones)
 	{
@@ -199,8 +204,27 @@ _bool CModel::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRay
 		
 	return false;
 }
+void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime, _bool bLoop)
+{
+	if (iAnimIdx > (_uint)m_Animations.size())
+		return;
 
-void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
+	m_Animations[iAnimIdx]->Reset();
+
+	m_iCurrentAnimIndex = iAnimIdx;
+	m_bComplete = false;
+	m_bLoop = bLoop;
+
+	Reset_PrevRootPos();
+
+	if (fBlendingTime > 0.f)
+	{
+		m_bBlending = true;
+		m_Animations[m_iCurrentAnimIndex]->Set_BlendingTime(fBlendingTime);
+	}
+}
+
+void CModel::Change_AnimationWithStartFrame(_uint iAnimIdx, _uint iStartKeyFrame, _float fBlendingTime, _bool bLoop)
 {
 	if (iAnimIdx > (_uint)m_Animations.size())
 		return;
@@ -209,21 +233,27 @@ void CModel::Change_Animation(_uint iAnimIdx, _float fBlendingTime)
 
 	m_iCurrentAnimIndex = iAnimIdx;
 	m_bComplete = false;
+	m_bLoop = bLoop;
 
-	Reset_RootPos();
+	Set_NowAnimKeyFrame(iStartKeyFrame, fBlendingTime > 0.f);
 	
 	if (fBlendingTime > 0.f)
 	{
 		m_bBlending = true;
 		m_Animations[m_iCurrentAnimIndex]->Set_BlendingTime(fBlendingTime);
 	}
-	
 }
 
-void CModel::Set_NowAnimKeyFrame(_uint iKeyFrame)
+void CModel::Set_NowAnimKeyFrame(_uint iKeyFrame, _bool bBlend)
 {
 	m_Animations[m_iCurrentAnimIndex]->Set_CurrentKeyFrames(iKeyFrame);
-	Calc_DeltaRootPos();
+
+	_matrix RootMatrix = m_Animations[m_iCurrentAnimIndex]->Get_RootTransformation();
+
+	_matrix TransformMatrix = RootMatrix * XMLoadFloat4x4(&m_PivotMatrix);
+
+	XMStoreFloat4(&m_vPrevRootPos, TransformMatrix.r[3]);
+
 	XMStoreFloat4(&m_vDeltaRootPos, XMVectorZero());
 }
 

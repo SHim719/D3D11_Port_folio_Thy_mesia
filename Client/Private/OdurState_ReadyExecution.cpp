@@ -27,7 +27,7 @@ void COdurState_ReadyExecution::OnState_Start(void* pArg)
 	m_pModel->Change_Animation(Magician_SPAttack1, 0.f);
 }
 
-void COdurState_ReadyExecution::OnGoing(_float fTimeDelta)
+void COdurState_ReadyExecution::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{

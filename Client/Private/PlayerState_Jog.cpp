@@ -11,8 +11,8 @@ HRESULT CPlayerState_Jog::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Sprint, PlayerState::State_LockOn, PlayerState::State_Attack,
-	PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Sprint, PlayerState::State_LockOn, PlayerState::State_ChargeStart,
+		PlayerState::State_Attack, PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
 }
@@ -38,7 +38,7 @@ void CPlayerState_Jog::OnState_Start(void* pArg)
 	m_pOwnerTransform->Set_Speed(m_fJogSpeed);
 }
 
-void CPlayerState_Jog::OnGoing(_float fTimeDelta)
+void CPlayerState_Jog::Update(_float fTimeDelta)
 {
 	_vector vNewLook = Calc_MoveLook(true);
 
@@ -50,7 +50,10 @@ void CPlayerState_Jog::OnGoing(_float fTimeDelta)
 
 		m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta, m_pNavigation);
 	}
+}
 
+void CPlayerState_Jog::Late_Update(_float fTimeDelta)
+{
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
 		m_pPlayer->Change_State((_uint)ePlayerState);

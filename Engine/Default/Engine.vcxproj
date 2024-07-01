@@ -121,13 +121,14 @@
       </DelayLoadDLLs>
     </Link>
     <PostBuildEvent>
-      <Command>del  ..\..\EngineSDK\Inc /q/s 
+      <Command>del  ..\..\EngineSDK\Inc /q/s
 
-xcopy ..\Public\\*.h     ..\..\EngineSDK\Inc /y
+xcopy ..\Public\\*.h ..\..\EngineSDK\Inc /y
 
-xcopy ..\Bin\Engine.lib    ..\..\EngineSDK\Lib /y
+xcopy ..\Bin\Engine.lib ..\..\EngineSDK\Lib /y
 
-xcopy ..\Bin\Engine.dll    ..\..\Client\Bin  /y
+xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
+     
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

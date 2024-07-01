@@ -2,6 +2,11 @@
 
 #include "Engine_Defines.h"
 
+namespace Engine
+{
+	class CBone;
+}
+
 namespace Client
 {
    wstring Convert_StrToWStr(const string& str);
@@ -21,6 +26,10 @@ namespace JoMath
 
 	_vector Slerp_TargetLook(_fvector vNowLook, _fvector vTargetLook, _float fRotRate);
 	_vector Calc_GroundLook(_fvector vSrc, _fvector vDst);
+
+	_vector Get_BoneWorldPos(Engine::CBone* pBone, _fmatrix ParentMatrix);
+
+	_float Calc_AngleToTarget(_fvector vSrcPos, _fvector vDestPos, _fvector vSrcLook);
 
 	_float Lerp(_float fA, _float fB, _float fRatio);
 }

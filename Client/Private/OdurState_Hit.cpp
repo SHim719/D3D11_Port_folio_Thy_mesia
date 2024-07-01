@@ -18,7 +18,7 @@ void COdurState_Hit::OnState_Start(void* pArg)
 	m_pModel->Change_Animation(Magician_HurtFL + m_iHitCount % 2);
 }
 
-void COdurState_Hit::OnGoing(_float fTimeDelta)
+void COdurState_Hit::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
@@ -33,7 +33,7 @@ void COdurState_Hit::OnState_End()
 {
 }
 
-void COdurState_Hit::OnHit(void* pArg)
+void COdurState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 {
 	m_iHitCount = (m_iHitCount + 1) % (m_iMaxHitCount + 1);
 	

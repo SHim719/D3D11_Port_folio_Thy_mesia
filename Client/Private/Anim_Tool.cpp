@@ -18,6 +18,9 @@ HRESULT CAnim_Tool::Initialize(void* pArg)
     m_strModelLists.reserve(10);
     m_strModelLists.emplace_back("Prototype_Model_Player");
     m_strModelLists.emplace_back("Prototype_Model_Odur");
+    m_strModelLists.emplace_back("Prototype_Model_Villager_F");
+    m_strModelLists.emplace_back("Prototype_Model_Villager_M");
+    m_strModelLists.emplace_back("Prototype_Model_Joker");
 	return S_OK;
 }
 
@@ -44,6 +47,15 @@ HRESULT CAnim_Tool::Load_KeyFrameNames(_int iSelModelIdx)
         break;
     case 1:
         strFullPath = "../../Resources/KeyFrame/KeyFrames_Odur.txt";
+        break;
+    case 2:
+        strFullPath = "../../Resources/KeyFrame/KeyFrames_Villager_F.txt";
+        break;
+    case 3:
+        strFullPath = "../../Resources/KeyFrame/KeyFrames_Villager_M.txt";
+        break;
+    case 4:
+        strFullPath = "../../Resources/KeyFrame/KeyFrames_Joker.txt";
         break;
     }
 
@@ -507,7 +519,7 @@ void CAnim_Tool::Anim_ListBox()
 
     for (_int i = 0; i < (_int)m_strAnimations.size(); ++i)
         szAnimations[i] = m_strAnimations[i].c_str();
-    ImGui::PushItemWidth(210);
+    ImGui::PushItemWidth(270);
     if (ImGui::ListBox("##Anim_ListBox", &m_iSelAnimIdx, szAnimations, (_int)m_strAnimations.size(), 20))
     {
         m_pModel->Change_Animation(m_iSelAnimIdx);
@@ -521,13 +533,13 @@ void CAnim_Tool::Anim_ListBox()
 void CAnim_Tool::Anim_Buttons()
 {
     _float fCursorY = m_fAnimListBoxStartCursorY;
-    ImGui::SetCursorPos(ImVec2(230.5, fCursorY));
+    ImGui::SetCursorPos(ImVec2(280.f, fCursorY));
     if (ImGui::Button("Play") && m_pModel)
         m_pModel->Set_AnimPlay();
 
     fCursorY = ImGui::GetCursorPosY() + 10.f;
         
-    ImGui::SetCursorPos(ImVec2(230.5, fCursorY));
+    ImGui::SetCursorPos(ImVec2(280.f, fCursorY));
     if (ImGui::Button("Stop") && m_pModel)
         m_pModel->Set_AnimPause();
     

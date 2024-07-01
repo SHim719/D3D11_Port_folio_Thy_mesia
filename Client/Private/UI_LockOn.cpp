@@ -46,14 +46,7 @@ void CUI_LockOn::Tick(_float fTimeDelta)
 
 	_vector vUIPos = TargetMatrix.r[3];
 
-	_matrix ViewMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
-	_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
-
-	vUIPos = XMVector3TransformCoord(vUIPos, ViewMatrix);
-	vUIPos = XMVector3TransformCoord(vUIPos, ProjMatrix);
-	vUIPos = XMVector3TransformCoord(vUIPos, XMLoadFloat4x4(&m_ViewportMatrix));
-
-	m_pTransform->Set_Position(XMVectorSetW(Convert_ScreenToWorld(vUIPos), 1.f));
+	m_pTransform->Set_Position(XMVectorSetW(Convert_ScreenToRenderPos(Convert_WorldToScreen(vUIPos)), 1.f));
 }
 
 void CUI_LockOn::LateTick(_float fTimeDelta)

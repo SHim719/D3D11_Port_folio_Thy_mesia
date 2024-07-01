@@ -11,20 +11,29 @@ namespace Engine
 
 namespace Client
 {
-	enum ATTACKTYPE
+	enum ENEMYATTACKTYPE
 	{
 		WEAK,
 		NORMAL,
 		SEMIKNOCKBACK,
 		KNOCKBACK,
+		KNOCKDOWN,
 		BIG_HIT,
 		VERY_BIG_HIT,
+		ENEMYATTACKTYPE_END,
+	};
+
+	enum PLAYERATTACKTYPE
+	{
+		STEAL_TALENT,
+		PLAYERATTACKTYPE_END,
 	};
 
 	typedef struct tagAttackDesc
 	{
 		class CCharacter*	pAttacker = nullptr;
-		ATTACKTYPE			eAttackType;
+		ENEMYATTACKTYPE		eEnemyAttackType;
+		PLAYERATTACKTYPE	ePlayerAttackType;
 		_int				iDamage = 0;
 		_int				iPlagueDamage = 0;
 	}ATTACKDESC;
@@ -38,8 +47,8 @@ namespace Client
 
 	typedef struct tagAttachDesc
 	{
-		Engine::CBone*			pAttachBone = nullptr;
-		Engine::CTransform*		pParentTransform = nullptr;
+		Engine::CBone* pAttachBone = nullptr;
+		Engine::CTransform* pParentTransform = nullptr;
 	}ATTACHDESC;
 
 

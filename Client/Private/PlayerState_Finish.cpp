@@ -19,10 +19,10 @@ void CPlayerState_Finish::OnState_Start(void* pArg)
 	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Inactive_AllWeaponColliders();
 
-	m_pModel->Change_Animation(Corvus_SD_Rebound_R, 0.f);
+	//m_pModel->Change_Animation(Corvus_SD_Rebound_R, 0.f);
 }
 
-void CPlayerState_Finish::OnGoing(_float fTimeDelta)
+void CPlayerState_Finish::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{

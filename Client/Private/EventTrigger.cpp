@@ -54,17 +54,17 @@ HRESULT CEventTrigger::Render()
 
 void CEventTrigger::OnCollisionEnter(CGameObject* pOther)
 {
-	switch (m_eTriggerEvent)
-	{
-	case START_ODUR_CUTSCENE:
-		CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
-		break;
-	case START_URD_CUTSCENE:
-		CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
-		break;
-	}
-
-	m_bNextFrameDestroy = true;
+	//switch (m_eTriggerEvent)
+	//{
+	//case START_ODUR_CUTSCENE:
+	//	CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
+	//	break;
+	//case START_URD_CUTSCENE:
+	//	CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
+	//	break;
+	//}
+	//
+	//m_bNextFrameDestroy = true;
 }
 
 

@@ -9,12 +9,13 @@ private:
 	virtual ~CPlayerState_Parry() = default;
 
 public:
-	HRESULT Initialize(void* pArg)	override;
-	void OnState_Start(void* pArg)	override;
-	void OnGoing(_float fTimeDelta)	override;
-	void OnState_End()				override;
+	HRESULT Initialize(void* pArg)			override;
+	void OnState_Start(void* pArg)			override;
+	void Update(_float fTimeDelta)			override;
+	void Late_Update(_float fTimeDelta)		override;
+	void OnState_End()						override;
 
-	void OnHit(void* pArg)			override;
+	void OnHit(const ATTACKDESC& AttackDesc)			override;
 
 private:
 	_bool m_bCanParry = { false };

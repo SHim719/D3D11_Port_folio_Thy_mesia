@@ -8,7 +8,7 @@ namespace Engine
 		float		fTime;
 
 		XMFLOAT3		vScale;
-		XMFLOAT4	vRotation;
+		XMFLOAT4		vRotation;
 		XMFLOAT3		vPosition;
 	}KEYFRAME;
 

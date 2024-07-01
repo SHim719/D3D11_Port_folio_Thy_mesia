@@ -20,7 +20,7 @@ void CCharacter::Bind_KeyFrames()
 void CCharacter::Change_State(_uint eState, void* pArg)
 {
 	m_iPrevState = m_iState;
-
+	
 	m_States[m_iPrevState]->OnState_End();
 
 	m_iState = eState;
@@ -28,17 +28,21 @@ void CCharacter::Change_State(_uint eState, void* pArg)
 	m_States[m_iState]->OnState_Start(pArg);
 }
 
-void CCharacter::Take_Damage(void* pArg)
+_int CCharacter::Take_Damage(const ATTACKDESC& AttackDesc)
 {
-	
+	return 0;
 }
-
 
 void CCharacter::Update_AttackDesc()
 {
 	pair<_uint, ATTACKDESC> AtkDesc = m_States[m_iState]->Get_NowAttackDesc();
 
 	m_Weapons[AtkDesc.first]->Set_AttackDesc(AtkDesc.second);
+}
+
+void CCharacter::Set_Active_Weapon(_uint iWeaponIdx, _bool bActive)
+{
+	m_Weapons[iWeaponIdx]->Set_Active(bActive);
 }
 
 void CCharacter::Compute_YPos()

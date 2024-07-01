@@ -28,6 +28,7 @@ public:
 	_uint Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, class CBone* pBone);
 	_uint Blend_Transformation(_float fBlendRatio, _float fPlayTime, _uint iCurrentKeyFrame, CBone* pBone);
 
+	_matrix Get_CurTransformation(_float fPlayTime, _uint iCurrentKeyFrame);
 private:
 	char							m_szName[MAX_PATH] = "";
 

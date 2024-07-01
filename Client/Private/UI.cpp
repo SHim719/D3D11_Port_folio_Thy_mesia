@@ -62,7 +62,16 @@ void CUI::Update_EnemyMp(_int iMp)
 {
 }
 
-_vector CUI::Convert_ScreenToWorld(_fvector vUIScreenPos)
+void CUI::Enemy_FirstHit()
+{
+}
+
+void CUI::Broadcast_Death()
+{
+
+}
+
+_vector CUI::Convert_ScreenToRenderPos(_fvector vUIScreenPos)
 {
 	/*
 	m_fX = SX - WINCX* 0.5f;
@@ -76,14 +85,16 @@ _vector CUI::Convert_ScreenToWorld(_fvector vUIScreenPos)
 
 _vector CUI::Convert_WorldToScreen(_fvector vUIWorldPos)
 {
-	/*
-	SX = m_fX + WINCX * 0.5f,
-	SY = WINCY * 0.5f - m_fY;
-	*/
+	_vector vUIScreenPos = vUIWorldPos;
 
-	return XMVectorSet(vUIWorldPos.m128_f32[0] + _float(g_iWinSizeX) * 0.5f
-		, _float(g_iWinSizeY) * 0.5f - vUIWorldPos.m128_f32[1]
-		, XMVectorGetZ(vUIWorldPos), 1.f);
+	_matrix ViewMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
+	_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+
+	vUIScreenPos = XMVector3TransformCoord(vUIScreenPos, ViewMatrix);
+	vUIScreenPos = XMVector3TransformCoord(vUIScreenPos, ProjMatrix);
+	vUIScreenPos = XMVector3TransformCoord(vUIScreenPos, XMLoadFloat4x4(&m_ViewportMatrix));
+
+	return vUIScreenPos;
 }
 
 void CUI::Free()

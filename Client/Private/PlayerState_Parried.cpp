@@ -24,7 +24,7 @@ void CPlayerState_Parried::OnState_Start(void* pArg)
 	m_pModel->Change_Animation(Corvus_SD_Rebound_R, 0.f);
 }
 
-void CPlayerState_Parried::OnGoing(_float fTimeDelta)
+void CPlayerState_Parried::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{

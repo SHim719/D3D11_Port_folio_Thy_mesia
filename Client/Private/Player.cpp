@@ -8,6 +8,10 @@
 #include "Enemy.h"
 
 #include "Cutscene_Manager.h"
+#include "UI_Manager.h"
+#include "UI_DamageFont.h"
+
+#include "Bone.h"
 
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)
@@ -55,24 +59,31 @@ HRESULT CPlayer::Initialize(void* pArg)
 	return S_OK;
 }
 
+void CPlayer::PriorityTick(_float fTimeDelta)
+{
+	__super::PriorityTick(fTimeDelta);
+
+	Update_CanExecutionEnemy();
+}
+
 void CPlayer::Tick(_float fTimeDelta)
 {
-	if (KEY_DOWN(eKeyCode::R))
-		m_pStats->Increase_Hp(-10);
-
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
-
-	if (m_pGameInstance->GetKeyNone(eKeyCode::RButton))
-		m_States[m_iState]->OnGoing(fTimeDelta);
+	if (m_pGameInstance->GetKeyNone(eKeyCode::One))
+		m_States[m_iState]->Update(fTimeDelta);
 
 	m_pModel->Play_Animation(fTimeDelta);
 }
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-	Compute_YPos();
+	if (m_pGameInstance->GetKeyNone(eKeyCode::One))
+		m_States[m_iState]->Late_Update(fTimeDelta);
+
+	if (m_bAdjustNaviY)
+		Compute_YPos();
 
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
@@ -141,33 +152,95 @@ void CPlayer::Bind_KeyFrames()
 {
 	m_pModel->Bind_Func("Active_SaberCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SABER], true));
 	m_pModel->Bind_Func("Inactive_SaberCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SABER], false));
+	m_pModel->Bind_Func("Active_Claw_R", bind(&CWeapon::Set_Active_Collider, m_Weapons[CLAW_R], true));
+	m_pModel->Bind_Func("Inactive_Claw_R", bind(&CWeapon::Set_Active_Collider, m_Weapons[CLAW_R], false));
+	m_pModel->Bind_Func("Active_Claw_L", bind(&CWeapon::Set_Active_Collider, m_Weapons[CLAW_L], true));
+	m_pModel->Bind_Func("Inactive_Claw_L", bind(&CWeapon::Set_Active_Collider, m_Weapons[CLAW_L], false));
 	m_pModel->Bind_Func("Enable_NextState", bind(&CPlayer::Set_CanNextState, this, true));
 	m_pModel->Bind_Func("Disable_NextState", bind(&CPlayer::Set_CanNextState, this, false));
 	m_pModel->Bind_Func("Disable_Rotation", bind(&CPlayer::Set_CanRotation, this, false));
+	m_pModel->Bind_Func("Enable_NextAttack", bind(&CPlayer::Set_CanNextAttack, this, true));
+	m_pModel->Bind_Func("Disable_NextAttack", bind(&CPlayer::Set_CanNextAttack, this, false));
 	m_pModel->Bind_Func("Set_Vulnerable", bind(&CPlayer::Set_Invincible, this, false));
 	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));
 }
 
-
-void CPlayer::Active_Weapons()
+void CPlayer::Update_CanExecutionEnemy()
 {
-	m_Weapons[DAGGER]->Set_Active(true);
-	m_Weapons[SABER]->Set_Active(true);
+	m_pExecutionTarget = nullptr;
+
+	if (m_bLockOn)
+	{
+		_float fAngle = JoMath::Calc_AngleToTarget(m_pTransform->Get_Position(), m_pTargetTransform->Get_Position(), m_pTransform->Get_GroundLook());
+		if (fabsf(fAngle) < To_Radian(70.f))
+		{
+			_float fDist = XMVector3Length(m_pTransform->Get_Position() - m_pTargetTransform->Get_Position()).m128_f32[0];
+			if (fDist < m_fExecutionDist)
+			{
+				for (auto it = m_StunnedEnemies.begin(); it != m_StunnedEnemies.end(); )
+				{
+					if ((*it)->Is_Stunned())
+					{
+						if ((*it)->Get_Transform() == m_pTargetTransform)
+						{
+							m_pExecutionTarget = *it;
+							m_pExecutionTarget->Active_StunnedMark();
+						}
+						else
+						{
+							m_pExecutionTarget->InActive_StunnedMark();
+						}
+						++it;
+					}
+					else
+					{
+						it = m_StunnedEnemies.erase(it);
+					}
+
+					
+				}
+			}
+		}
+	}
+	else
+	{
+		_float fMaxDist = m_fExecutionDist;
+
+		for (auto it = m_StunnedEnemies.begin(); it != m_StunnedEnemies.end(); )
+		{
+			if ((*it)->Is_Stunned())
+			{
+				_float fAngle = JoMath::Calc_AngleToTarget(m_pTransform->Get_Position(), (*it)->Get_Transform()->Get_Position(), m_pTransform->Get_GroundLook());
+				if (fabsf(fAngle) < To_Radian(70.f))
+				{
+					_float fDist = XMVector3Length(m_pTransform->Get_Position() - (*it)->Get_Transform()->Get_Position()).m128_f32[0];
+					if (fDist < m_fExecutionDist && fDist < fMaxDist)
+					{
+						fMaxDist = fDist;
+						m_pExecutionTarget = *it;
+					}
+					else
+					{
+						(*it)->InActive_StunnedMark();
+					}
+
+				}
+				else
+				{
+					(*it)->InActive_StunnedMark();
+				}
+				++it;
+			}
+			else
+			{
+				it = m_StunnedEnemies.erase(it);
+			}
+			
+		}
+	}
+
 }
 
-void CPlayer::InActive_Weapons()
-{
-	m_Weapons[DAGGER]->Set_Active(false);
-	m_Weapons[SABER]->Set_Active(false);
-}
-
-void CPlayer::Active_Claw()
-{
-}
-
-void CPlayer::InActive_Claw()
-{
-}
 
 void CPlayer::Inactive_AllWeaponColliders()
 {
@@ -200,26 +273,37 @@ void CPlayer::SetState_Executed(void* pArg)
 	Change_State((_uint)PlayerState::State_Executed, pArg);
 }
 
+void CPlayer::Set_Active_DefaultWeapons(_bool bActive)
+{
+	m_Weapons[SABER]->Set_Active(bActive); 
+	m_Weapons[DAGGER]->Set_Active(bActive);
+}
+
+void CPlayer::Set_Active_Claws(_bool bActive)
+{
+	m_Weapons[CLAW_L]->Set_Active(bActive); 
+	m_Weapons[CLAW_R]->Set_Active(bActive);
+}
+
 void CPlayer::OnCollisionEnter(CGameObject* pOther)
 {
 	if (TAG_ENEMY_WEAPON == pOther->Get_Tag())
 	{
 		CWeapon* pEnemyWeapon = static_cast<CWeapon*>(pOther);
-		
-		ATTACKDESC AtkDesc = pEnemyWeapon->Get_AttackDesc();
 
-		m_States[m_iState]->OnHit(&AtkDesc);
+		m_States[m_iState]->OnHit(pEnemyWeapon->Get_AttackDesc());
 	}
 }
 
-void CPlayer::Take_Damage(void* pArg)
+_int CPlayer::Take_Damage(const ATTACKDESC& AttackDesc)
 {
-	ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;
-	
-	if (0 == m_pStats->Increase_Hp(-pAttackDesc->iDamage))
-		int x = 10;
-		//Change_State((_uint)PlayerState::State_Dead)
+	CUI_DamageFont::DAMAGEFONTDESC DamageFontDesc;
+	DamageFontDesc.strDamage = to_string(AttackDesc.iDamage);
+	XMStoreFloat4(&DamageFontDesc.vWorldPosition, JoMath::Get_BoneWorldPos(m_pModel->Get_Bone("Bip001-Head"), m_pTransform->Get_WorldMatrix()));
 
+	UIMGR->Active_UI("UI_DamageFont", &DamageFontDesc);
+
+	return m_pStats->Increase_Hp(-AttackDesc.iDamage);
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -287,7 +371,16 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Parry] = CPlayerState_Parry::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_ParrySuccess] = CPlayerState_ParrySuccess::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Hit] = CPlayerState_Hit::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_ChargeStart] = CPlayerState_ChargeStart::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_ChargeComplete] = CPlayerState_ChargeComplete::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_ChargeLoop] = CPlayerState_ChargeLoop::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_ClawAttack_Long] = CPlayerState_ClawAttack_Long::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_ClawAttack_Short] = CPlayerState_ClawAttack_Short::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_ClawAttack_ShortEnd] = CPlayerState_ClawAttack_ShortEnd::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_StealRush] = CPlayerState_StealRush::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Parried] = CPlayerState_Parried::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Execution_Default] = CPlayerState_Execution_Default::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Execution_Joker] = CPlayerState_Execution_Joker::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Executed] = CPlayerState_Executed::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Finish] = CPlayerState_Finish::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
@@ -328,6 +421,27 @@ HRESULT CPlayer::Ready_Weapons()
 		return E_FAIL;
 
 	// Claw »ý¼º
+
+	ColliderDesc.eType = CCollider::SPHERE;
+	ColliderDesc.vCenter = { 0.2f, 0.f, 0.f };
+	ColliderDesc.vSize = { 1.f, 0.f, 0.1f };
+	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
+	ColliderDesc.bActive = false;
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("ik_hand_r");
+	WeaponDesc.wstrModelTag = L"";
+	WeaponDesc.pColliderDesc = &ColliderDesc;
+	m_Weapons[CLAW_R] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_Weapons[CLAW_R])
+		return E_FAIL;
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("ik_hand_l");
+	m_Weapons[CLAW_L] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_Weapons[CLAW_L])
+		return E_FAIL;
+
+	m_Weapons[CLAW_L]->Set_Active(false);
+	m_Weapons[CLAW_R]->Set_Active(false);
 
 	return S_OK;
 }

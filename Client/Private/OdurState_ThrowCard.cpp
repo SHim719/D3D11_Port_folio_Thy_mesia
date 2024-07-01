@@ -47,7 +47,7 @@ void COdurState_ThrowCard::OnState_Start(void* pArg)
 	m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);
 }
 
-void COdurState_ThrowCard::OnGoing(_float fTimeDelta)
+void COdurState_ThrowCard::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
@@ -86,12 +86,12 @@ void COdurState_ThrowCard::Init_AttackDesc()
 	m_CardAttackDescs[1].reserve(2);
 
 	ATTACKDESC AttDesc;
-	AttDesc.eAttackType = WEAK;
+	AttDesc.eEnemyAttackType = WEAK;
 	m_CardAttackDescs[0].emplace_back(AttDesc);
 
 	m_CardAttackDescs[1].emplace_back(AttDesc);
 	
-	AttDesc.eAttackType = VERY_BIG_HIT;
+	AttDesc.eEnemyAttackType = VERY_BIG_HIT;
 
 	m_CardAttackDescs[1].emplace_back(AttDesc);
 

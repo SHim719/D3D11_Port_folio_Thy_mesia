@@ -89,7 +89,8 @@ PS_OUT PS_MAIN(PS_IN In)
 
     Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
 
-   // Out.vColor.a = Out.vColor.a * g_fAlpha;
+    if (Out.vColor.a < 0.2f)
+        discard;
 
     return Out;
 }
@@ -119,11 +120,38 @@ PS_OUT PS_MAIN_FADE(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    Out.vColor.a *= g_fAlpha;
+
+    return Out;
+}
+
+PS_OUT PS_MAIN_STUNNEDMARK(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+
+    Out.vColor.a = Out.vColor.r;
+    
+    if (Out.vColor.a < 0.3f)
+        discard;
+    
+    Out.vColor *= float4(1.f, 0.f, 0.f, 1.f);
+
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass DefaultUI //0
     {
-        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetBlendState(BS_None, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
         SetDepthStencilState(DSS_NoZTest_And_Write, 0);
         SetRasterizerState(RS_Default);
 
@@ -160,5 +188,30 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_FADE();
     }
 
+    pass ALPHABLEND //3
+    {
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_NoZTest_And_Write, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_ALPHABLEND();
+    }
+    
+    pass STUNNEDMARK //4
+    {
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_NoZTest_And_Write, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        PixelShader = compile ps_5_0 PS_MAIN_STUNNEDMARK();
+    }
 	
 }

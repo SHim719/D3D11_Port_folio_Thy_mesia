@@ -52,6 +52,10 @@ public:
 		memcpy(&m_LastKeyFrame, &KeyFrame, sizeof(KEYFRAME));
 	}
 
+	const KEYFRAME& Get_LastKeyFrame() const {
+		return m_LastKeyFrame;
+	}
+
 	void Reset_Position() {
 		XMStoreFloat4((_float4*)m_Transformation.m[3], XMVectorSetW(XMVectorZero(), 1.f));
 	}

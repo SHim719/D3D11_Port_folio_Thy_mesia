@@ -24,10 +24,11 @@ public:
 	_uint Get_PrevState() const { return m_iPrevState; }
 
 public:
-	virtual void Take_Damage(void* pArg);
+	virtual _int Take_Damage(const ATTACKDESC& AttackDesc);
 
 protected:
 	_bool						m_bStanced = { false };
+	_bool						m_bAdjustNaviY = { true };
 	
 public:
 	_bool Is_Stanced() const {
@@ -43,10 +44,17 @@ protected:
 public:
 	void Update_AttackDesc();
 
+	void Set_Active_Weapon(_uint iWeaponIdx, _bool bActive);
+
 
 	void Set_Active_Colliders(_bool bActive) {
 		m_pCollider->Set_Active(bActive);
 		m_pHitBoxCollider->Set_Active(bActive);
+	}
+
+public:
+	void Set_Adjust_NaviY(_bool b) {
+		m_bAdjustNaviY = b;
 	}
 
 

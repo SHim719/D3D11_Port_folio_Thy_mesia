@@ -22,7 +22,7 @@ void COdurState_Appear::OnState_Start(void* pArg)
 	Decide_Animation(pArg);
 }
 
-void COdurState_Appear::OnGoing(_float fTimeDelta)
+void COdurState_Appear::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{

@@ -20,10 +20,13 @@ void COdurState_KickCombo::OnState_Start(void* pArg)
 	Reset_AttackIdx();
 	m_pOdur->Set_Stanced(true);
 	m_pOdur->Set_LookTarget(true);
+
+	m_pOdur->Update_AttackDesc();
+
 	m_pModel->Change_Animation(Magician_KickCombo);
 }
 
-void COdurState_KickCombo::OnGoing(_float fTimeDelta)
+void COdurState_KickCombo::Update(_float fTimeDelta)
 {
 	if (false == m_pOdur->Is_CollPlayer())
 		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
@@ -39,12 +42,13 @@ void COdurState_KickCombo::Init_AttackDesc()
 	m_AttackDescs.reserve(3);
 
 	ATTACKDESC AttackDesc;
-	AttackDesc.eAttackType = NORMAL;
+	AttackDesc.pAttacker = m_pOdur;
+	AttackDesc.eEnemyAttackType = NORMAL;
 
 	m_AttackDescs.emplace_back(COdur::FOOT_R, AttackDesc);
 	m_AttackDescs.emplace_back(COdur::FOOT_R, AttackDesc);
 
-	AttackDesc.eAttackType = KNOCKBACK;
+	AttackDesc.eEnemyAttackType = KNOCKBACK;
 
 	m_AttackDescs.emplace_back(COdur::SWORD, AttackDesc);
 }

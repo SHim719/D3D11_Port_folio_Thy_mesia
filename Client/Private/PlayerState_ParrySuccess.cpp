@@ -32,18 +32,27 @@ void CPlayerState_ParrySuccess::OnState_Start(void* pArg)
 	
 }
 
-void CPlayerState_ParrySuccess::OnGoing(_float fTimeDelta)
+void CPlayerState_ParrySuccess::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+
+}
+
+void CPlayerState_ParrySuccess::Late_Update(_float fTimeDelta)
+{
+	PlayerState ePlayerState = Decide_State();
+	if (PlayerState::State_End != ePlayerState)
+		m_pPlayer->Change_State((_uint)ePlayerState);
 }
 
 void CPlayerState_ParrySuccess::OnState_End()
 {
 }
 
-void CPlayerState_ParrySuccess::OnHit(void* pArg)
+void CPlayerState_ParrySuccess::OnHit(const ATTACKDESC& AttackDesc)
 {
 	// 公利惑怕 贸府
 

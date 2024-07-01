@@ -66,7 +66,7 @@ void CProgressBar::Setting_World()
 
 	_float4 vPosition = m_vCenter;
 	vPosition.x = JoMath::Lerp(m_fLeftX, m_vCenter.x, m_fRatio);
-	m_pTransform->Set_Position(Convert_ScreenToWorld(XMLoadFloat4(&vPosition)));
+	m_pTransform->Set_Position(Convert_ScreenToRenderPos(XMLoadFloat4(&vPosition)));
 }
 
 void CProgressBar::Update_Center(_vector vCenter)

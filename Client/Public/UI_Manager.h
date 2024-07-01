@@ -24,15 +24,14 @@ private:
 
 	class CPlayer*						m_pPlayer = { nullptr };
 
-	unordered_map<string, class CUI*>	m_UIs;
+	unordered_map<string, pair<size_t, vector<class CUI*>>>	m_UIs;
 public:
-	void Active_UI(const string& strUITag, void* pArg = nullptr);
-	void InActive_UI(const string& strUITag);
+	size_t Active_UI(const string& strUITag, void* pArg = nullptr);
+	void InActive_UI(const string& strUITag, size_t iIdx = 0);
 
 	void Set_Player(CPlayer* pPlayer) {
 		m_pPlayer = pPlayer;
 	}
-
 private:
 	HRESULT Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 

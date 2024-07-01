@@ -17,6 +17,7 @@ void CCollision_Manager::Update()
 {
 	Execute_Collision("Player", "Enemy", COLLISION);
 	Execute_Collision("Player", "EventTrigger", TRIGGER);
+	Execute_Collision("Player", "PerceptionBounding", TRIGGER);
 	Execute_Collision("Enemy_HitBox", "Player_Weapon", TRIGGER);
 	Execute_Collision("Player_HitBox", "Enemy_Weapon", TRIGGER);
 
@@ -90,7 +91,7 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 
 			if (false == pDstCollider->Is_Active() || false == pSrcCollider->Is_Active() ||
 				false == pDstObj->Is_Active() || false == pSrcObj->Is_Active() ||
-				pDstObj->Is_Destroyed() || pSrcObj->Is_Destroyed())
+				pDstObj->Is_OutOfLayer() || pSrcObj->Is_OutOfLayer())
 			{
 				if (it->second)
 				{
@@ -171,15 +172,17 @@ void CCollision_Manager::Push_Object(CCollider* pDstCollider, CCollider* pSrcCol
 			_vector vSrcCenter = XMLoadFloat3(&(pSrcSphere->Center));
 
 			_float vDstRadius = pDstSphere->Radius;
-			_float vSrcRadius = pDstSphere->Radius;
+			_float vSrcRadius = pSrcSphere->Radius;
 
 			_vector vPushDir = vDstCenter - vSrcCenter;
 			
-			_float fDist = vDstRadius + vSrcRadius - XMVectorGetX(XMVector3Length(vPushDir));
+			_float fDist = vDstRadius + vSrcRadius - XMVectorGetX(XMVector3Length(vPushDir)) - 0.00001f;
 
-			vPushDir = XMVector3Normalize(XMVectorSetY(vPushDir, 0.f));
+			if (fDist > 0.f) {
+				vPushDir = XMVector3Normalize(XMVectorSetY(vPushDir, 0.f));
 
-			pDstTransform->Add_Position(vPushDir, fDist);
+				pDstTransform->Add_Position(vPushDir, fDist);
+			}
 		}
 	}
 }

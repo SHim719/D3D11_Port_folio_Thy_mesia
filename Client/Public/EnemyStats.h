@@ -21,12 +21,18 @@ private:
 	_int			m_iHp = { 0 };
 	_int			m_iMp = { 0 };
 
-private:
+	_bool			m_bHit = { false };
+public:
 	void Increase_Hp(_int iHp);
-	void Increase_Mp(_int iMp);
+	_int Increase_Mp(_int iMp);
+
 private:
 	void Broadcast_Update_Hp();
 	void Broadcast_Update_Mp();
+	void Broadcast_Hit();
+
+public:
+	void Broadcast_Death();
 
 public:
 	void Add_Observer(class CUI* pUI);

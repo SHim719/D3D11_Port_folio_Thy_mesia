@@ -10,7 +10,8 @@ HRESULT CPlayerState_LockOn::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Attack, PlayerState::State_Avoid, PlayerState::State_Parry};
+	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Attack,  PlayerState::State_ChargeStart, 
+		PlayerState::State_Avoid, PlayerState::State_Parry};
 
 	return S_OK;
 }
@@ -23,7 +24,7 @@ void CPlayerState_LockOn::OnState_Start(void* pArg)
 	m_pOwnerTransform->Set_Speed(m_fJogSpeed);
 }
 
-void CPlayerState_LockOn::OnGoing(_float fTimeDelta)
+void CPlayerState_LockOn::Update(_float fTimeDelta)
 {
 	if (false == m_pPlayer->Is_LockOn())
 	{
@@ -37,6 +38,10 @@ void CPlayerState_LockOn::OnGoing(_float fTimeDelta)
 
 	m_pOwnerTransform->Go_Dir(vNewLook, fTimeDelta, m_pNavigation);
 
+}
+
+void CPlayerState_LockOn::Late_Update(_float fTimeDelta)
+{
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
 		m_pPlayer->Change_State((_uint)ePlayerState);

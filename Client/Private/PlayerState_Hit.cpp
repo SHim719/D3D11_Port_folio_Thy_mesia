@@ -10,7 +10,7 @@ HRESULT CPlayerState_Hit::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry };
 
 
 	return S_OK;
@@ -22,11 +22,9 @@ void CPlayerState_Hit::OnState_Start(void* pArg)
 	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Inactive_AllWeaponColliders();
 
-	ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;
-	
-	ATTACKTYPE eAttackType = pAttackDesc->eAttackType;
+	ENEMYATTACKTYPE* pAttackType = (ENEMYATTACKTYPE*)pArg;
 
-	switch (eAttackType)
+	switch (*pAttackType)
 	{
 	case WEAK:
 		break;
@@ -46,22 +44,25 @@ void CPlayerState_Hit::OnState_Start(void* pArg)
 	}
 }							   
 
-void CPlayerState_Hit::OnGoing(_float fTimeDelta)
+void CPlayerState_Hit::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 
 
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+}
 
+void CPlayerState_Hit::Late_Update(_float fTimeDelta)
+{
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
 		m_pPlayer->Change_State((_uint)ePlayerState);
 }
 
-
 void CPlayerState_Hit::OnState_End()
 {
+
 	m_iHitDir = 0;
 }
 

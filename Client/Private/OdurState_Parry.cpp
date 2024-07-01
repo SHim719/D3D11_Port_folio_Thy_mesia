@@ -17,15 +17,18 @@ HRESULT COdurState_Parry::Initialize(void* pArg)
 
 void COdurState_Parry::OnState_Start(void* pArg)
 {
+	Reset_AttackIdx();
 	m_pOdur->Set_LookTarget(true);
 	m_pOdur->Set_Stanced(true);
-
+	
 	static_cast<CPlayer*>(m_pOdur->Get_Target())->SetState_Parried();
 
 	Decide_Animation();
+
+	m_pOdur->Update_AttackDesc();
 }
 
-void COdurState_Parry::OnGoing(_float fTimeDelta)
+void COdurState_Parry::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
@@ -47,14 +50,15 @@ void COdurState_Parry::Init_AttackDesc()
 	m_ParryAttackDescs[0].reserve(2);
 	m_ParryAttackDescs[1].reserve(2);
 
-	ATTACKDESC AttDesc;
-	AttDesc.eAttackType = NORMAL;
-	m_ParryAttackDescs[0].emplace_back(COdur::CANE, AttDesc);
-	m_ParryAttackDescs[1].emplace_back(COdur::SWORD, AttDesc);
-	m_ParryAttackDescs[1].emplace_back(COdur::SWORD, AttDesc);
+	ATTACKDESC AtkDesc;
+	AtkDesc.pAttacker = m_pOdur;
+	AtkDesc.eEnemyAttackType = NORMAL;
+	m_ParryAttackDescs[0].emplace_back(COdur::CANE, AtkDesc);
+	m_ParryAttackDescs[1].emplace_back(COdur::SWORD, AtkDesc);
+	m_ParryAttackDescs[1].emplace_back(COdur::SWORD, AtkDesc);
 	
-	AttDesc.eAttackType = KNOCKBACK;
-	m_ParryAttackDescs[0].emplace_back(COdur::FOOT_L, AttDesc);
+	AtkDesc.eEnemyAttackType = KNOCKBACK;
+	m_ParryAttackDescs[0].emplace_back(COdur::FOOT_L, AtkDesc);
 }
 
 void COdurState_Parry::Decide_Animation()

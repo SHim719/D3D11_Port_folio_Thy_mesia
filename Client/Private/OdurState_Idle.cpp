@@ -18,7 +18,7 @@ void COdurState_Idle::OnState_Start(void* pArg)
 	m_pModel->Change_Animation(Magician_Idle);
 }
 
-void COdurState_Idle::OnGoing(_float fTimeDelta)
+void COdurState_Idle::Update(_float fTimeDelta)
 {
 }
 
@@ -27,7 +27,7 @@ void COdurState_Idle::OnState_End()
 
 }
 
-void COdurState_Idle::OnHit(void* pArg)
+void COdurState_Idle::OnHit(const ATTACKDESC& AttackDesc)
 {
 	m_pOdur->Change_State((_uint)OdurState::State_Hit);
 }
