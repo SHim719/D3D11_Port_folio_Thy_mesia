@@ -13,6 +13,7 @@
 
 #include "Player.h"
 #include "Weapon.h"
+#include "PlagueWeapon.h"
 
 #include "Odur.h"
 #include "Odur_Card.h"
@@ -55,6 +56,9 @@ HRESULT CLevel_Tool::Initialize()
 	
 	if (FAILED(Ready_Player()))
 		return E_FAIL;
+	
+	if (FAILED(Ready_PlagueWeapon()))
+		return E_FAIL;
 
 	if (FAILED(Ready_Odur()))
 		return E_FAIL;
@@ -75,6 +79,9 @@ HRESULT CLevel_Tool::Initialize()
 		return E_FAIL;
 
 	if (FAILED(Ready_Player()))
+		return E_FAIL;
+
+	if (FAILED(Ready_PlagueWeapon()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Odur()))
@@ -101,8 +108,6 @@ HRESULT CLevel_Tool::Initialize()
 
 	if (FAILED(Ready_Etc()))
 		return E_FAIL;
-
-
 
 #endif
 
@@ -162,6 +167,19 @@ HRESULT CLevel_Tool::Ready_Player()
 		"../../Resources/Models/Corvus/", "Corvus_Saber.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Player", CPlayer::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_PlagueWeapon()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_Axe", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Axe.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_Hammer", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Hammer.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_PlagueWeapon", CPlagueWeapon::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -261,7 +279,6 @@ HRESULT CLevel_Tool::Ready_UIResource()
 		return E_FAIL;
 #pragma endregion
 
-
 #pragma region EnemyBar
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpBarHead_R.png"))))
 		return E_FAIL;
@@ -284,9 +301,27 @@ HRESULT CLevel_Tool::Ready_UIResource()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_DamageFont", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/DamageFont/%d.png", 10))))
 		return E_FAIL;
-
 #pragma endregion 
 
+#pragma region SkillSlot
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlunderSlot", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillSlot/UI_PlunderSlot.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillSlot", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillSlot/UI_SkillSlot.png"))))
+		return E_FAIL;
+
+#pragma endregion
+
+#pragma region SkillIcon
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Axe", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_SkillIcon_Axe.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Hammer", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_SkillIcon_Hammer.dds"))))
+		return E_FAIL;
+
+#pragma endregion
 
 	return S_OK;
 }
@@ -297,6 +332,9 @@ HRESULT CLevel_Tool::Ready_UI()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_ProgressBar", CProgressBar::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_SkillIcon", CUI_SkillIcon::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

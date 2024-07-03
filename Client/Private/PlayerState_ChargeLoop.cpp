@@ -10,7 +10,8 @@ HRESULT CPlayerState_ChargeLoop::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_StealRush, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack, 
+		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_PlunderRush };
 
 	return S_OK;
 }
@@ -40,7 +41,7 @@ void CPlayerState_ChargeLoop::Late_Update(_float fTimeDelta)
 {
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
-		m_pPlayer->Change_State((_uint)ePlayerState);
+		Check_ExtraStateChange(ePlayerState);
 }
 
 

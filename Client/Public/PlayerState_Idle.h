@@ -11,7 +11,6 @@ private:
 	CPlayerState_Idle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CPlayerState_Idle() = default;
 
-public:
 	HRESULT Initialize(void* pArg)		override;
 	void OnState_Start(void* pArg)		override;
 	void Update(_float fTimeDelta)		override;

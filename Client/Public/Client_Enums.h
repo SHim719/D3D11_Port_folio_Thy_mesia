@@ -16,3 +16,11 @@ enum OBJTYPE
 	OBJTYPE_END,
 };
 
+enum SKILLTYPE
+{
+	NONE,
+	AXE,
+	HAMMER,
+	SKILLTYPE_END,
+};
+

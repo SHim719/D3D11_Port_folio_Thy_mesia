@@ -139,6 +139,12 @@ HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pConte
 
 	m_UIs.emplace("UI_StunnedMark", make_pair(0, StunnedMarks));
 
+	pUI = CUI_PlunderSlot::Create(pDevice, pContext);
+	if (FAILED(pUI->Initialize(m_pPlayer->Get_PlayerStats())))
+		return E_FAIL;
+
+	m_UIs.emplace("UI_PlunderSlot", make_pair(0, vector<CUI*>{pUI}));
+
 	return S_OK;
 }
 

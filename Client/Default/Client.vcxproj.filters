@@ -151,9 +151,6 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\99. PlayerState_Cutscene">
       <UniqueIdentifier>{dfaac50f-ceee-44fb-b441-2ceb73289741}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\97. PlayerState_Finish">
-      <UniqueIdentifier>{f771ba8d-7a6c-4a71-b6f4-6367e081ba84}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\PlayerStat">
       <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
     </Filter>
@@ -222,12 +219,6 @@
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Short">
       <UniqueIdentifier>{8c682f0e-8907-413f-b804-3bfb89dd7872}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Steal">
-      <UniqueIdentifier>{c91b6dfc-e49b-4f54-8f7c-18a62b5dcf52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Steal\PlayerState_StealRush">
-      <UniqueIdentifier>{17b6e646-8e52-4f0d-a23a-af64c2a9cdb9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Short\ClawAttack_ShortEnd">
       <UniqueIdentifier>{e8e21138-a123-4958-952a-c0cb4d07ef3b}</UniqueIdentifier>
@@ -490,6 +481,36 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_End">
       <UniqueIdentifier>{3f31955e-1ab6-46df-a6e0-276b62e59be2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. UI\InGameUI\08. UI_PlunderSlot">
+      <UniqueIdentifier>{1f562c16-299c-4fe8-94d1-f0db7d8191c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\09. UI_SkillIcon">
+      <UniqueIdentifier>{2c865bca-0373-45d3-8d9e-a266dc2d7e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\07. UI_SkillSlot">
+      <UniqueIdentifier>{ca12db51-d09e-4090-8ffa-7f2713abebd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\NewFilter1">
+      <UniqueIdentifier>{03b26fda-71dd-4575-8d50-ea58c74620f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder">
+      <UniqueIdentifier>{c91b6dfc-e49b-4f54-8f7c-18a62b5dcf52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder\PlayerState_PlunderRush">
+      <UniqueIdentifier>{17b6e646-8e52-4f0d-a23a-af64c2a9cdb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Weapon\PlagueWeapon">
+      <UniqueIdentifier>{64c61017-3ead-4a1d-b9bd-12f5f3d7447a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack">
+      <UniqueIdentifier>{eede8110-7385-4087-a321-4f074537491a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Hammer">
+      <UniqueIdentifier>{c951c813-0685-44b5-bc23-162512d1b768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe">
+      <UniqueIdentifier>{771e8313-e393-410e-a3a1-96a105126cec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -687,9 +708,6 @@
     <ClInclude Include="..\Public\PlayerState_Cutscene.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\99. PlayerState_Cutscene</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_Finish.h">
-      <Filter>02. GameObjects\02. Character\01. Player\State\97. PlayerState_Finish</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Executed.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\98. PlayerState_Executed</Filter>
     </ClInclude>
@@ -747,7 +765,6 @@
     <ClInclude Include="..\Public\ProgressBar.h">
       <Filter>04. UI\UI_Component\ProgressBar</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\MyText.h" />
     <ClInclude Include="..\Public\UI_EnemyBar.h">
       <Filter>04. UI\InGameUI\03. UI_EnemyBar</Filter>
     </ClInclude>
@@ -757,20 +774,17 @@
     <ClInclude Include="..\Public\PlayerState_ChargeStart.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Start</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_ChargeComplete.h">
-      <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Complete</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PlayerState_ClawAttack_Long.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Long</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_ChargeLoop.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Loop</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_Steal.h">
-      <Filter>02. GameObjects\02. Character\01. Player\State\12. PlayerState_Steal</Filter>
+    <ClInclude Include="..\Public\PlayerState_Plunder.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_StealRush.h">
-      <Filter>02. GameObjects\02. Character\01. Player\State\12. PlayerState_Steal\PlayerState_StealRush</Filter>
+    <ClInclude Include="..\Public\PlayerState_PlunderRush.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder\PlayerState_PlunderRush</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Player.h">
       <Filter>02. GameObjects\02. Character\01. Player</Filter>
@@ -924,6 +938,24 @@
     </ClInclude>
     <ClInclude Include="..\Public\JokerState_Executed_End.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillSlot.h">
+      <Filter>04. UI\InGameUI\07. UI_SkillSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PlunderSlot.h">
+      <Filter>04. UI\InGameUI\08. UI_PlunderSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SkillIcon.h">
+      <Filter>04. UI\InGameUI\09. UI_SkillIcon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlagueWeapon.h">
+      <Filter>02. GameObjects\03. Weapon\PlagueWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_PW_Axe.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_ChargeComplete.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Complete</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1089,9 +1121,6 @@
     <ClCompile Include="..\Private\PlayerState_Cutscene.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\99. PlayerState_Cutscene</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_Finish.cpp">
-      <Filter>02. GameObjects\02. Character\01. Player\State\97. PlayerState_Finish</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Executed.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\98. PlayerState_Executed</Filter>
     </ClCompile>
@@ -1140,7 +1169,6 @@
     <ClCompile Include="..\Private\ProgressBar.cpp">
       <Filter>04. UI\UI_Component\ProgressBar</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\MyText.cpp" />
     <ClCompile Include="..\Private\UI_EnemyBar.cpp">
       <Filter>04. UI\InGameUI\03. UI_EnemyBar</Filter>
     </ClCompile>
@@ -1159,11 +1187,11 @@
     <ClCompile Include="..\Private\PlayerState_ChargeLoop.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Loop</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_Steal.cpp">
-      <Filter>02. GameObjects\02. Character\01. Player\State\12. PlayerState_Steal</Filter>
+    <ClCompile Include="..\Private\PlayerState_Plunder.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_StealRush.cpp">
-      <Filter>02. GameObjects\02. Character\01. Player\State\12. PlayerState_Steal\PlayerState_StealRush</Filter>
+    <ClCompile Include="..\Private\PlayerState_PlunderRush.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder\PlayerState_PlunderRush</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Player.cpp">
       <Filter>02. GameObjects\02. Character\01. Player</Filter>
@@ -1302,6 +1330,21 @@
     </ClCompile>
     <ClCompile Include="..\Private\JokerState_Executed_End.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillSlot.cpp">
+      <Filter>04. UI\InGameUI\07. UI_SkillSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PlunderSlot.cpp">
+      <Filter>04. UI\InGameUI\08. UI_PlunderSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SkillIcon.cpp">
+      <Filter>04. UI\InGameUI\09. UI_SkillIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlagueWeapon.cpp">
+      <Filter>02. GameObjects\03. Weapon\PlagueWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_PW_Axe.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

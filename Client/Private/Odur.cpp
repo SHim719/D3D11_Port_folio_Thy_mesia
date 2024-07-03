@@ -199,17 +199,6 @@ void COdur::Update_WeaponAlpha()
 }
 
 
-void COdur::OnCollisionEnter(CGameObject* pOther)
-{
-	__super::OnCollisionEnter(pOther);
-
-	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
-	{
-		m_States[m_iState]->OnHit(static_cast<CWeapon*>(pOther)->Get_AttackDesc());
-	}
-
-}
-
 HRESULT COdur::Ready_Components(void* pArg)
 {
 	LOADOBJDESC* pLoadDesc = (LOADOBJDESC*)pArg;

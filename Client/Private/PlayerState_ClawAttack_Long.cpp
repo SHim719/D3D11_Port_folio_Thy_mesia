@@ -10,7 +10,8 @@ HRESULT CPlayerState_ClawAttack_Long::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack,
+		PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
 }
@@ -51,10 +52,9 @@ void CPlayerState_ClawAttack_Long::Late_Update(_float fTimeDelta)
 		return;
 	}
 		
-
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
-		m_pPlayer->Change_State((_uint)ePlayerState);
+		Check_ExtraStateChange(ePlayerState);
 }
 
 

@@ -131,17 +131,6 @@ void CVillager_F::Bind_KeyFrames()
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 }
 
-void CVillager_F::OnCollisionEnter(CGameObject* pOther)
-{
-	__super::OnCollisionEnter(pOther);
-
-	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
-	{
-		m_States[m_iState]->OnHit(static_cast<CWeapon*>(pOther)->Get_AttackDesc());
-	}
-
-}
-
 void CVillager_F::Percept_Target()
 {
 	_int iRandNum = JoRandom::Random_Int(0, 1);

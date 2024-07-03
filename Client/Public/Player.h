@@ -9,7 +9,8 @@ BEGIN(Client)
 class CPlayer final : public CCharacter, public CCutscene_Actor
 {
 public:
-	enum PLAYER_WEAPON { SABER, DAGGER, CLAW_L, CLAW_R, WEAPON_END};
+	enum PLAYER_WEAPON { SABER, DAGGER, CLAW_L, CLAW_R
+		, PW_AXE, PW_HAMMER, WEAPON_END};
 
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -55,17 +56,18 @@ public:
 		return m_pExecutionTarget;
 	}
 
-
 private:
-	CTransform*		m_pTargetTransform = { nullptr };
-	_bool			m_bLockOn = { false };
+	SKILLTYPE				m_eNowUsingSkill = { SKILLTYPE::NONE };
 
-	_bool			m_bCanNextState = { false };
-	_bool			m_bCanNextAttack = { false };
-	_bool			m_bCanRotation = { true };
-	_bool			m_bInvincible = { false };
+	CTransform*				m_pTargetTransform = { nullptr };
+	_bool					m_bLockOn = { false };
+
+	_bool					m_bCanNextState = { false };
+	_bool					m_bCanNextAttack = { false };
+	_bool					m_bCanRotation = { true };
+	_bool					m_bInvincible = { false };
 	
-	_float4x4		m_PrevWorldMatrix; // 컷신시작전 위치
+	_float4x4				m_PrevWorldMatrix; // 컷신시작전 위치
 
 public:
 	_bool Is_LockOn() const { 
@@ -99,24 +101,36 @@ public:
 		m_bCanNextAttack = bCanNextAttack;
 	}
 
+	void Set_NowUsingSkill(SKILLTYPE eType) {
+		m_eNowUsingSkill = eType;
+	}
+
 	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
+
 	void SetState_Parried();
 	void SetState_Executed(void* pArg);
+	void SetState_Plunder(void* pArg);
+
 	void Inactive_AllWeaponColliders();
+
 	void Set_Active_DefaultWeapons(_bool bActive);
 	void Set_Active_Claws(_bool bActive);
 
-private:
-	void OnCollisionEnter(CGameObject* pOther)	override;
-	
-public:
+	void Set_Active_WeaponCollider(PLAYER_WEAPON eWeapon, _bool bActive);
+
+	void Set_Active_NowPWCollider(_bool bActive);
+
 	_int Take_Damage(const ATTACKDESC& AttackDesc)	override;
 
+private:
+	void OnCollisionEnter(CGameObject* pOther)	override;
 
+	
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_States();
 	HRESULT Ready_Weapons();
+	HRESULT Ready_PlagueWeapons();
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

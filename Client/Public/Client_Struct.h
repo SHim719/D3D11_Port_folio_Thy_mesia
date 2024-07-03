@@ -25,7 +25,9 @@ namespace Client
 
 	enum PLAYERATTACKTYPE
 	{
-		STEAL_TALENT,
+		ATTACK_NORMAL,
+		PLUNDER,
+		IGNORE_STANCE,
 		PLAYERATTACKTYPE_END,
 	};
 
@@ -33,7 +35,7 @@ namespace Client
 	{
 		class CCharacter*	pAttacker = nullptr;
 		ENEMYATTACKTYPE		eEnemyAttackType;
-		PLAYERATTACKTYPE	ePlayerAttackType;
+		PLAYERATTACKTYPE	ePlayerAttackType = ATTACK_NORMAL;
 		_int				iDamage = 0;
 		_int				iPlagueDamage = 0;
 	}ATTACKDESC;

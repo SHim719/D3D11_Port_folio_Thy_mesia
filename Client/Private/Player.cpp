@@ -3,7 +3,7 @@
 #include "Player_States.h"
 #include "PlayerStats.h"
 
-#include "Weapon.h"
+#include "PlagueWeapon.h"
 
 #include "Enemy.h"
 
@@ -40,6 +40,9 @@ HRESULT CPlayer::Initialize(void* pArg)
 	if (FAILED(Ready_Weapons()))
 		return E_FAIL;
 
+	if (FAILED(Ready_PlagueWeapons()))
+		return E_FAIL;
+
 	Bind_KeyFrames();
 
 	CEnemy::Set_Target(this);
@@ -71,7 +74,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
-	if (m_pGameInstance->GetKeyNone(eKeyCode::One))
+	if (m_pGameInstance->GetKeyNone(eKeyCode::MButton))
 		m_States[m_iState]->Update(fTimeDelta);
 
 	m_pModel->Play_Animation(fTimeDelta);
@@ -79,7 +82,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-	if (m_pGameInstance->GetKeyNone(eKeyCode::One))
+	if (m_pGameInstance->GetKeyNone(eKeyCode::MButton))
 		m_States[m_iState]->Late_Update(fTimeDelta);
 
 	if (m_bAdjustNaviY)
@@ -163,6 +166,8 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_NextAttack", bind(&CPlayer::Set_CanNextAttack, this, false));
 	m_pModel->Bind_Func("Set_Vulnerable", bind(&CPlayer::Set_Invincible, this, false));
 	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));
+	m_pModel->Bind_Func("Active_PlagueWeapon_Collider", bind(&CPlayer::Set_Active_NowPWCollider, this, true));
+	m_pModel->Bind_Func("Inactive_PlagueWeapon_Collider", bind(&CPlayer::Set_Active_NowPWCollider, this, false));
 }
 
 void CPlayer::Update_CanExecutionEnemy()
@@ -172,7 +177,7 @@ void CPlayer::Update_CanExecutionEnemy()
 	if (m_bLockOn)
 	{
 		_float fAngle = JoMath::Calc_AngleToTarget(m_pTransform->Get_Position(), m_pTargetTransform->Get_Position(), m_pTransform->Get_GroundLook());
-		if (fabsf(fAngle) < To_Radian(70.f))
+		if (fabsf(fAngle) < To_Radian(60.f))
 		{
 			_float fDist = XMVector3Length(m_pTransform->Get_Position() - m_pTargetTransform->Get_Position()).m128_f32[0];
 			if (fDist < m_fExecutionDist)
@@ -211,7 +216,7 @@ void CPlayer::Update_CanExecutionEnemy()
 			if ((*it)->Is_Stunned())
 			{
 				_float fAngle = JoMath::Calc_AngleToTarget(m_pTransform->Get_Position(), (*it)->Get_Transform()->Get_Position(), m_pTransform->Get_GroundLook());
-				if (fabsf(fAngle) < To_Radian(70.f))
+				if (fabsf(fAngle) < To_Radian(60.f))
 				{
 					_float fDist = XMVector3Length(m_pTransform->Get_Position() - (*it)->Get_Transform()->Get_Position()).m128_f32[0];
 					if (fDist < m_fExecutionDist && fDist < fMaxDist)
@@ -273,6 +278,11 @@ void CPlayer::SetState_Executed(void* pArg)
 	Change_State((_uint)PlayerState::State_Executed, pArg);
 }
 
+void CPlayer::SetState_Plunder(void* pArg)
+{
+	Change_State((_uint)PlayerState::State_Plunder, pArg);
+}
+
 void CPlayer::Set_Active_DefaultWeapons(_bool bActive)
 {
 	m_Weapons[SABER]->Set_Active(bActive); 
@@ -283,6 +293,19 @@ void CPlayer::Set_Active_Claws(_bool bActive)
 {
 	m_Weapons[CLAW_L]->Set_Active(bActive); 
 	m_Weapons[CLAW_R]->Set_Active(bActive);
+}
+
+void CPlayer::Set_Active_WeaponCollider(PLAYER_WEAPON eWeapon, _bool bActive)
+{
+	if (m_Weapons[eWeapon])
+		m_Weapons[eWeapon]->Set_Active_Collider(bActive);
+}
+
+void CPlayer::Set_Active_NowPWCollider(_bool bActive)
+{
+	_uint iIdx = CLAW_R + m_eNowUsingSkill;
+	if (m_Weapons[iIdx])
+		m_Weapons[iIdx]->Set_Active_Collider(bActive);
 }
 
 void CPlayer::OnCollisionEnter(CGameObject* pOther)
@@ -377,13 +400,16 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_ClawAttack_Long] = CPlayerState_ClawAttack_Long::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_ClawAttack_Short] = CPlayerState_ClawAttack_Short::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_ClawAttack_ShortEnd] = CPlayerState_ClawAttack_ShortEnd::Create(m_pDevice, m_pContext, this);
-	m_States[(_uint)PlayerState::State_StealRush] = CPlayerState_StealRush::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_PlunderRush] = CPlayerState_PlunderRush::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Plunder] = CPlayerState_Plunder::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Parried] = CPlayerState_Parried::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Execution_Default] = CPlayerState_Execution_Default::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Execution_Joker] = CPlayerState_Execution_Joker::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Executed] = CPlayerState_Executed::Create(m_pDevice, m_pContext, this);
-	m_States[(_uint)PlayerState::State_Finish] = CPlayerState_Finish::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
+
+	m_States[(_uint)PlayerState::State_PW_Axe] = CPlayerState_PW_Axe::Create(m_pDevice, m_pContext, this);
+	//m_States[(_uint)PlayerState::State_PW_Hammer] = CPlayerState_PW_Hammer::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }
@@ -442,6 +468,45 @@ HRESULT CPlayer::Ready_Weapons()
 
 	m_Weapons[CLAW_L]->Set_Active(false);
 	m_Weapons[CLAW_R]->Set_Active(false);
+
+	return S_OK;
+}
+
+HRESULT CPlayer::Ready_PlagueWeapons()
+{
+	CCollider::COLLIDERDESC ColliderDesc = {};
+	ColliderDesc.eType = CCollider::SPHERE;
+	ColliderDesc.strCollisionLayer = "Player_Weapon";
+	ColliderDesc.pOwner = this;
+	ColliderDesc.vCenter = { 0.7f, 0.f, 0.f };
+	ColliderDesc.vSize = { 0.8f, 0.1f, 0.1f };
+	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
+	ColliderDesc.bActive = false;
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.iTag = (_uint)TAG_PLAYER_WEAPON;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Axe";
+	WeaponDesc.pOwner = this;
+	WeaponDesc.pColliderDesc = &ColliderDesc;
+	
+	m_Weapons[PW_AXE] = static_cast<CPlagueWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_PlagueWeapon", &WeaponDesc));
+	if (nullptr == m_Weapons[PW_AXE])
+		return E_FAIL;
+
+	m_Weapons[PW_AXE]->Set_Active(false);
+
+	ColliderDesc.vCenter = { 1.f, 0.f, 0.f };
+	ColliderDesc.vSize = { 1.f, 0.1f, 0.1f };
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
+
+	m_Weapons[PW_HAMMER] = static_cast<CPlagueWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_PlagueWeapon", &WeaponDesc));
+	if (nullptr == m_Weapons[PW_HAMMER])
+		return E_FAIL;
+	
+	m_Weapons[PW_HAMMER]->Set_Active(false);
 
 	return S_OK;
 }

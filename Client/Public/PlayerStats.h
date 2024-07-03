@@ -23,7 +23,7 @@ private:
 	_int			m_iPlague = { 10 };
 	_int			m_iVitality = { 10 };
 
-
+	SKILLTYPE		m_ePlunderSkill = { NONE };
 public:
 	void Upgrade_Attack() { 
 		m_bAttackUpgraded = true; }
@@ -32,10 +32,15 @@ public:
 		return m_bAttackUpgraded ? 5 : 3;
 	}
 
+	SKILLTYPE Get_PlunderSkillType() const {
+		return m_ePlunderSkill;
+	}
+
 	_bool Is_ShortClaw() const {
 		return m_bShortClaw;
 	}
 
+	void Update_PlunderSkill(const SKILLTYPE ePlunderSkill);
 
 	_int Increase_Hp(_int iHp);
 	void Increase_MaxHp(_int iHp);
@@ -48,6 +53,9 @@ public:
 	
 public:
 	void Add_Observer(class CUI* pUI);
+	void Set_PlunderSlot(class CUI_PlunderSlot* pPlunderSlot) {
+		m_pPlunderSlot = pPlunderSlot;
+	}
 
 private:
 	void Broadcast_Update_Hp()	const;
@@ -56,6 +64,7 @@ private:
 private:
 	list<class CUI*>	m_ObserverUIs;
 
+	class CUI_PlunderSlot* m_pPlunderSlot = { nullptr };
 
 public:
 	static CPlayerStats* Create();

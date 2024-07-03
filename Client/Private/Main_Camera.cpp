@@ -25,11 +25,10 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) 
 		return E_FAIL;
 
-	_matrix OffsetMatrix = XMMatrixRotationX(To_Radian(-90.f));
-	OffsetMatrix *= XMMatrixRotationAxis(OffsetMatrix.r[1], To_Radian(90.f));
+	_matrix OffsetMatrix = XMMatrixRotationX(-XM_PIDIV2);
+	OffsetMatrix *= XMMatrixRotationAxis(OffsetMatrix.r[1], XM_PIDIV2);
 
 	XMStoreFloat4x4(&m_CutsceneOffsetMatrix, OffsetMatrix);
-
 
 	return S_OK;
 }
@@ -77,6 +76,8 @@ void CMain_Camera::LateTick(_float fTimeDelta)
 	if (g_hWnd != GetFocus())
 		return;
 
+	Shaking(fTimeDelta);
+
 	switch (m_eState)
 	{
 	case CMain_Camera::DEFAULT:
@@ -91,6 +92,7 @@ void CMain_Camera::LateTick(_float fTimeDelta)
 	case CMain_Camera::UI:
 		break;
 	}
+
 	__super::Update_View();
 }
 
@@ -177,6 +179,21 @@ void CMain_Camera::Reset_State()
 	m_eState = DEFAULT;
 }
 
+void CMain_Camera::Add_ShakingDesc(const SHAKINGDESC& ShakingDesc)
+{
+	XMStoreFloat4(&m_vOriginPos, m_pTransform->Get_Position());
+
+	m_tShakingDesc = ShakingDesc;
+	m_bShaking = true;
+}
+
+void CMain_Camera::Add_DeltaFovYDesc(const DELTAFOVYDESC& DeltaFovYDesc)
+{
+	m_tDeltaFovYDesc = DeltaFovYDesc;
+	m_bDeltaFovY = true;
+	m_bIncreaseFovY = true;
+}
+
 CBone* CMain_Camera::Find_TargetBone(CModel* pModel)
 {
 	if (nullptr == pModel)
@@ -230,6 +247,51 @@ void CMain_Camera::Cutscene_State(_float fTimeDelta)
 	m_pTransform->Attach_To_Bone(m_pCutsceneBone, m_pCutsceneTargetTransform, XMLoadFloat4x4(&m_CutsceneOffsetMatrix));
 }
 
+void CMain_Camera::Shaking(_float fTimeDelta)
+{
+	if (false == m_bShaking)
+		return;
+
+	m_tShakingDesc.fShakeTime -= fTimeDelta;
+
+	if (m_tShakingDesc.fShakeTime > 0.f)
+	{
+		_vector vCamPos = XMLoadFloat4(&m_vOriginPos);
+		_vector vShakeOffset = 
+			XMVectorSet(JoRandom::Random_Float(0.f, 1.f), JoRandom::Random_Float(0.f, 1.f), JoRandom::Random_Float(0.f, 1.f), 0.f)
+			* m_tShakingDesc.fShakingForce;
+
+		XMStoreFloat4(&m_vShakingOffset, vShakeOffset);
+	}
+	else
+	{
+		m_tShakingDesc.fShakeTime = 0.f;
+		XMStoreFloat4(&m_vShakingOffset, XMVectorZero());
+		m_bShaking = false;
+	}
+}
+
+void CMain_Camera::Delta_FovY(_float fTimeDelta)
+{
+	if (false == m_bDeltaFovY)
+		return;
+
+	if (m_bIncreaseFovY)
+	{
+		m_CameraDesc.fFovy += m_tDeltaFovYDesc.fToTargetSpeed * fTimeDelta;
+		if (m_CameraDesc.fFovy >= m_tDeltaFovYDesc.fTargetFovY)
+		{
+			m_CameraDesc.fFovy = m_tDeltaFovYDesc.fTargetFovY;
+			m_bIncreaseFovY = false;
+		}
+		else
+		{
+
+		}
+	}
+
+}
+
 
 _vector CMain_Camera::Get_LerpedTargetPos(_fvector vTargetPos, _float fTimeDelta)
 {
@@ -280,7 +342,7 @@ void CMain_Camera::Follow_Target(_float fTimeDelta)
 
 	_vector vCameraOffset = YAXIS * m_vOffset.y + m_pTransform->Get_Look() * m_vOffset.z;
 
-	_vector vCameraPos = vLerpedTargetPos + vCameraOffset;
+	_vector vCameraPos = vLerpedTargetPos + vCameraOffset + XMLoadFloat4(&m_vShakingOffset);
 
 	m_pTransform->Set_Position(XMVectorSetW(vCameraPos, 1.f));
 }

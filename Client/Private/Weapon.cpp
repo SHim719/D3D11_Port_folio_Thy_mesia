@@ -54,7 +54,10 @@ void CWeapon::LateTick(_float fTimeDelta)
 	if (m_pCollider)
 		m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	if (true == m_bAlphaBlend)
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_BLEND, this);
+	else
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CWeapon::Render()

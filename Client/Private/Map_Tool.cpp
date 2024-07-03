@@ -291,7 +291,15 @@ void CMap_Tool::Key_Input_MapTool()
 {
     if (KEY_DOWN(eKeyCode::Delete))
     {
+        if (-1 == m_iSelObj)
+            return;
         m_MapObjects[m_iSelObj]->Set_Destroy(true);
+        m_iSelObj = -1;
+    }
+
+    if (KEY_PUSHING(eKeyCode::LCtrl))
+    {
+        
     }
 
 }

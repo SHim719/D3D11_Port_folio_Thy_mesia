@@ -19,6 +19,8 @@ private:
 	void Check_ExtraStateChange(PlayerState eState)	override;
 
 	void Decide_ExecutionState(class CEnemy* pExecutionEnemy);
+
+	void Check_NextAttack();
 private:
 	_uint			m_iNowComboCnt = 0;
 

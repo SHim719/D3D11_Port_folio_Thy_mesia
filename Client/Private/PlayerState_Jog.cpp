@@ -11,25 +11,26 @@ HRESULT CPlayerState_Jog::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Sprint, PlayerState::State_LockOn, PlayerState::State_ChargeStart,
-		PlayerState::State_Attack, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Sprint, 
+		PlayerState::State_LockOn, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
+		,PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
 }
 
 void CPlayerState_Jog::OnState_Start(void* pArg)
 {
-	if (m_pPlayer->Is_LockOn())
-	{
-		m_pPlayer->Change_State((_uint)PlayerState::State_LockOn);
-		return;
-	}
-
-	if (Check_StateChange(PlayerState::State_Sprint))
-	{
-		m_pPlayer->Change_State((_uint)PlayerState::State_Sprint);
-		return;
-	}
+	//if (m_pPlayer->Is_LockOn())
+	//{
+	//	m_pPlayer->Change_State((_uint)PlayerState::State_LockOn);
+	//	return;
+	//}
+	//
+	//if (Check_StateChange(PlayerState::State_Sprint))
+	//{
+	//	m_pPlayer->Change_State((_uint)PlayerState::State_Sprint);
+	//	return;
+	//}
 
 	m_pPlayer->Set_CanNextState(true);
 	m_pPlayer->Set_CanRotation(true);
@@ -56,7 +57,7 @@ void CPlayerState_Jog::Late_Update(_float fTimeDelta)
 {
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
-		m_pPlayer->Change_State((_uint)ePlayerState);
+		Check_ExtraStateChange(ePlayerState);
 }
 
 void CPlayerState_Jog::OnState_End()

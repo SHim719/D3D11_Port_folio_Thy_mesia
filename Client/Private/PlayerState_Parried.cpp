@@ -10,7 +10,8 @@ HRESULT CPlayerState_Parried::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	//m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_Avoid, PlayerState::State_Parry };
+	//m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack
+	//	, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
 }
@@ -26,23 +27,21 @@ void CPlayerState_Parried::OnState_Start(void* pArg)
 
 void CPlayerState_Parried::Update(_float fTimeDelta)
 {
-	if (m_pModel->Is_AnimComplete())
-	{
-		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
-		return;
-	}
-		
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
-
-	//PlayerState ePlayerState = Decide_State();
-	//if (PlayerState::State_End != ePlayerState)
-	//	m_pPlayer->Change_State((_uint)ePlayerState);
 }
 
 
 void CPlayerState_Parried::OnState_End()
 {
-	
+	if (m_pModel->Is_AnimComplete())
+	{
+		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
+		return;
+	}
+
+	//PlayerState ePlayerState = Decide_State();
+	//if (PlayerState::State_End != ePlayerState)
+	//	Check_ExtraStateChange(ePlayerState);	
 }
 
 CPlayerState_Parried* CPlayerState_Parried::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

@@ -10,7 +10,8 @@ HRESULT CPlayerState_ChargeStart::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_ClawAttack_Long, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack,
+		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_ClawAttack_Long };
 
 	m_pModel->Bind_Func("Enable_ClawAttackLong", bind(&CPlayerState_ChargeStart::Set_CanClawLongAttack, this, true));
 
@@ -45,7 +46,8 @@ void CPlayerState_ChargeStart::Update(_float fTimeDelta)
 void CPlayerState_ChargeStart::Late_Update(_float fTimeDelta)
 {
 	PlayerState ePlayerState = Decide_State();
-	Check_ExtraStateChange(ePlayerState);
+	if (PlayerState::State_End != ePlayerState)
+		Check_ExtraStateChange(ePlayerState);
 
 }
 
@@ -58,12 +60,28 @@ void CPlayerState_ChargeStart::OnState_End()
 
 void CPlayerState_ChargeStart::Check_ExtraStateChange(PlayerState eState)
 {
-	if (PlayerState::State_ClawAttack_Long == eState)
+	switch (eState)
+	{
+	case PlayerState::State_ClawAttack_Long:
 	{
 		if (m_pPlayerStats->Is_ShortClaw())
 			m_pPlayer->Change_State((_uint)PlayerState::State_ClawAttack_Short);
 		else if (m_bCanClawLong)
 			m_pPlayer->Change_State((_uint)PlayerState::State_ClawAttack_Long);
+		break;
+	}
+
+	case PlayerState::State_PlagueAttack:
+	{
+		Check_PlagueAttack();
+		break;
+	}
+
+	default:
+	{
+		m_pPlayer->Change_State((_uint)eState);
+		break;
+	}
 	}
 }
 

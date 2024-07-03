@@ -123,20 +123,29 @@ HRESULT CToolAnimObj::Ready_Corvus()
 	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_Player", L"Model", (CComponent**)&m_pModel)))
 		return E_FAIL;
 
-	CWeapon::WEAPONDESC WeaponDesc;
-	WeaponDesc.pParentTransform = m_pTransform;
-	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
-	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
+	//CWeapon::WEAPONDESC WeaponDesc;
+	//WeaponDesc.pParentTransform = m_pTransform;
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
+	//
+	//CGameObject* pDagger = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	//if (nullptr == pDagger)
+	//	return E_FAIL;
+	//
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
+	//CGameObject* pSaber = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	//if (nullptr == pSaber)
+	//	return E_FAIL;
 
-	CGameObject* pDagger = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
-	if (nullptr == pDagger)
-		return E_FAIL;
-
-	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
-	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
-	CGameObject* pSaber = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
-	if (nullptr == pSaber)
-		return E_FAIL;
+	//CWeapon::WEAPONDESC WeaponDesc;
+	//WeaponDesc.pParentTransform = m_pTransform;
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
+	//
+	//CGameObject* pPWAxe = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	//if (nullptr == pPWAxe)
+	//	return E_FAIL;
 
 	return S_OK;
 }

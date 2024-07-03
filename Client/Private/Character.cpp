@@ -28,6 +28,11 @@ void CCharacter::Change_State(_uint eState, void* pArg)
 	m_States[m_iState]->OnState_Start(pArg);
 }
 
+void CCharacter::Hit(const ATTACKDESC& AttackDesc)
+{
+	m_States[m_iState]->OnHit(AttackDesc);
+}
+
 _int CCharacter::Take_Damage(const ATTACKDESC& AttackDesc)
 {
 	return 0;

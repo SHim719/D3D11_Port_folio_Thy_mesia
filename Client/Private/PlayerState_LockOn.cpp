@@ -9,9 +9,9 @@ HRESULT CPlayerState_LockOn::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Attack,  PlayerState::State_ChargeStart, 
-		PlayerState::State_Avoid, PlayerState::State_Parry};
+	
+	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
+		, PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
 }
@@ -44,7 +44,7 @@ void CPlayerState_LockOn::Late_Update(_float fTimeDelta)
 {
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
-		m_pPlayer->Change_State((_uint)ePlayerState);
+		Check_ExtraStateChange(ePlayerState);
 }
 
 void CPlayerState_LockOn::OnState_End()

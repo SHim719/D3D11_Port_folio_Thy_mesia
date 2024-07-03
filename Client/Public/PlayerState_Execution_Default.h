@@ -16,6 +16,8 @@ public:
 	void OnState_End()					override;
 
 	void Check_ExtraStateChange(PlayerState eState)	override;
+
+	void Check_Execution_Default();
 private:
 	_float			m_fRushSpeed = { 25.f };
 	_int			m_iExecutionCount = 0;

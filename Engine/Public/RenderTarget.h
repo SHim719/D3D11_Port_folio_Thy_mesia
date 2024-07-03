@@ -7,8 +7,8 @@ class ENGINE_DLL CRenderTarget : public CBase
 public:
 	typedef struct tagRenderTargetDesc
 	{
-		_uint iWinSizeX = 0;
-		_uint iWinSizeY = 0;
+		_uint iWidth = 0;
+		_uint iHeight = 0;
 		DXGI_FORMAT eFormat = DXGI_FORMAT_UNKNOWN;
 	}RT_DESC;
 

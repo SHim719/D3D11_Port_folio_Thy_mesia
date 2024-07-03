@@ -28,8 +28,6 @@ private:
 	_float	m_fRotRate = { 6.f };
 
 private:
-	void OnCollisionEnter(CGameObject* pOther)	override;
-
 	void Percept_Target()						override;
 	void SetState_Executed(void* pArg)			override;
 	void SetState_Death()						override;

@@ -10,8 +10,8 @@ HRESULT CPlayerState_ClawAttack_Short::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
-
-	m_PossibleStates = { PlayerState::State_ClawAttack_Short, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack,
+		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_ClawAttack_Short };
 
 	m_pModel->Bind_Func("ChangeToNextClawAnim", bind(&CPlayerState_ClawAttack_Short::Change_To_NextAttackAnim, this));
 		
@@ -57,12 +57,10 @@ void CPlayerState_ClawAttack_Short::Late_Update(_float fTimeDelta)
 
 		return;
 	}
-		
 
 	PlayerState ePlayerState = Decide_State();
-	if (PlayerState::State_End == ePlayerState)
-		return;
-	Check_ExtraStateChange(ePlayerState);
+	if (PlayerState::State_End != ePlayerState)
+		Check_ExtraStateChange(ePlayerState);
 
 }
 

@@ -20,6 +20,7 @@ CVillager_M::CVillager_M(const CVillager_M& rhs)
 HRESULT CVillager_M::Initialize_Prototype()
 {
 	m_iTag = (_uint)TAG_ENEMY;
+	m_eSkillType = SKILLTYPE::AXE;
 	return S_OK;
 }
 
@@ -75,7 +76,7 @@ void CVillager_M::LateTick(_float fTimeDelta)
 {
 	m_States[m_iState]->Late_Update(fTimeDelta);
 
-	m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+	Compute_YPos();
 
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
@@ -130,17 +131,6 @@ void CVillager_M::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Set_Stanced, this, true));
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
-}
-
-void CVillager_M::OnCollisionEnter(CGameObject* pOther)
-{
-	__super::OnCollisionEnter(pOther);
-
-	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
-	{
-		m_States[m_iState]->OnHit(static_cast<CWeapon*>(pOther)->Get_AttackDesc());
-	}
-
 }
 
 void CVillager_M::Percept_Target()

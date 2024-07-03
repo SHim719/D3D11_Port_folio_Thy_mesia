@@ -12,7 +12,11 @@ HRESULT CPlayerState_Avoid::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_fRotRate = 30.f;
-	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Parry, PlayerState::State_Avoid};
+
+	m_PossibleStates = {  PlayerState::State_Jog, PlayerState::State_LockOn
+		, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
+		, PlayerState::State_Avoid, PlayerState::State_Parry };
+
 	return S_OK;
 }
 
@@ -28,24 +32,23 @@ void CPlayerState_Avoid::OnState_Start(void* pArg)
 
 void CPlayerState_Avoid::Update(_float fTimeDelta)
 {
-	if (m_pModel->Is_AnimComplete())
-	{
-   		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
-		return;
-	}
-
 	if (m_pPlayer->Can_Rotation() && false == m_pPlayer->Is_LockOn())
 		Rotate_To_Look(m_pOwnerTransform->Get_MoveLook(), fTimeDelta);
 	
-
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
-	
 }
 
 void CPlayerState_Avoid::Late_Update(_float fTimeDelta)
 {
+	if (m_pModel->Is_AnimComplete())
+	{
+		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
+		return;
+	}
+
 	PlayerState ePlayerState = Decide_State();
-	
+	if (PlayerState::State_End != ePlayerState)
+		Check_ExtraStateChange(ePlayerState);
 
 }
 
@@ -64,16 +67,27 @@ void CPlayerState_Avoid::OnHit(const ATTACKDESC& AttackDesc)
 
 void CPlayerState_Avoid::Check_ExtraStateChange(PlayerState eState)
 {
-	if (PlayerState::State_End == eState)
-		return;
+	switch (eState)
+	{
+	case PlayerState::State_PlagueAttack:
+		Check_PlagueAttack();
+		break;
+	case PlayerState::State_Avoid:
+		Check_AvoidOneMore();
+		break;
+	default:
+		m_pPlayer->Change_State((_uint)eState);
+		break;
+	}
+}
 
-	if (PlayerState::State_Avoid == eState && m_bOneMore)
+void CPlayerState_Avoid::Check_AvoidOneMore()
+{
+	if (m_bOneMore)
 	{
 		m_bOneMore = false;
-		m_pPlayer->Change_State((_uint)eState);
+		m_pPlayer->Change_State((_uint)PlayerState::State_Avoid);
 	}
-	else
-		m_pPlayer->Change_State((_uint)eState);
 }
 
 void CPlayerState_Avoid::Decide_Animation()

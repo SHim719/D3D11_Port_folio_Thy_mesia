@@ -10,7 +10,8 @@ HRESULT CPlayerState_Parry::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Attack,  PlayerState::State_ChargeStart, 
+	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_LockOn
+		, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart,
 		PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	m_pModel->Bind_Func("Enable_Parry", bind(&CPlayerState_Parry::Enable_Parry, this));
@@ -52,9 +53,8 @@ void CPlayerState_Parry::Late_Update(_float fTimeDelta)
 {
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
-		m_pPlayer->Change_State((_uint)ePlayerState);
+		Check_ExtraStateChange(ePlayerState);
 }
-
 
 void CPlayerState_Parry::OnState_End()
 {

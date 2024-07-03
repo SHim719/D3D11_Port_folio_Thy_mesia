@@ -21,6 +21,7 @@ HRESULT CJoker::Initialize_Prototype()
 {
 	m_iTag = (_uint)TAG_ENEMY;
 	m_eExecutionTag = JOKER;
+	m_eSkillType = SKILLTYPE::HAMMER;
 	return S_OK;
 }
 
@@ -142,16 +143,6 @@ void CJoker::Bind_KeyFrames()
 	m_pModel->Bind_Func("ChangeToNextAttack", bind(&CJoker::Change_To_NextComboAnim, this));
 }
 
-void CJoker::OnCollisionEnter(CGameObject* pOther)
-{
-	__super::OnCollisionEnter(pOther);
-
-	if (TAG_PLAYER_WEAPON == pOther->Get_Tag())
-	{
-		m_States[m_iState]->OnHit(static_cast<CWeapon*>(pOther)->Get_AttackDesc());
-	}
-
-}
 
 void CJoker::SetState_Executed(void* pArg)
 {

@@ -25,14 +25,7 @@ void CPlayerState_Execution_Default::OnState_Start(void* pArg)
 	m_pExecutionEnemy = (CEnemy*)pArg;
 	m_pExecutionEnemy->Set_Active_Colliders(false);
 
-	if (false == m_pPlayer->Is_LockOn())
-		m_pOwnerTransform->LookAt2D(m_pExecutionEnemy->Get_Transform()->Get_Position());
-
-	m_pOwnerTransform->Set_Speed(m_fRushSpeed);
-
-	XMStoreFloat4(&m_vStartPos, m_pOwnerTransform->Get_Position());
-
-	m_pModel->Change_Animation(Corvus_StunExecute_StartRDown_L + m_iExecutionCount % 2);
+	m_pModel->Change_Animation(Corvus_VS_LightExecute01L + m_iExecutionCount % 2);
 }
 
 void CPlayerState_Execution_Default::Update(_float fTimeDelta)
@@ -47,20 +40,11 @@ void CPlayerState_Execution_Default::Update(_float fTimeDelta)
 		}
 	}
 
-	if (m_bNoRootMove)
-	{
-		m_pOwnerTransform->Go_Straight(fTimeDelta, m_pNavigation);
-
-		if (XMVector3Length(XMLoadFloat4(&m_vStartPos) - m_pOwnerTransform->Get_Position()).m128_f32[0] >= 4.f)
-			m_bNoRootMove = false;
-	}
-	else
-		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 void CPlayerState_Execution_Default::Late_Update(_float fTimeDelta)
 {
-
 	if (m_pModel->Is_AnimComplete())
 	{
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
@@ -68,7 +52,8 @@ void CPlayerState_Execution_Default::Late_Update(_float fTimeDelta)
 	}
 		
 	PlayerState ePlayerState = Decide_State();
-	Check_ExtraStateChange(ePlayerState);
+	if (PlayerState::State_End != ePlayerState)
+		Check_ExtraStateChange(ePlayerState);
 }
 
 
@@ -79,21 +64,29 @@ void CPlayerState_Execution_Default::OnState_End()
 
 void CPlayerState_Execution_Default::Check_ExtraStateChange(PlayerState eState)
 {
-	if (PlayerState::State_End == eState)
-		return;
+	switch (eState)
+	{
+	case PlayerState::State_PlagueAttack:
+		Check_PlagueAttack();
+		break;
 
-	if (PlayerState::State_Execution_Default == eState)
-	{
-		CEnemy* pExecutionEnemy = m_pPlayer->Get_ExecutionEnemy();
-		if (nullptr != pExecutionEnemy)
-			OnState_Start(pExecutionEnemy);
-		else
-			m_pPlayer->Change_State((_uint)PlayerState::State_Attack);
-	}
-	else
-	{
+	case PlayerState::State_Execution_Default:
+		Check_Execution_Default();
+		break;
+
+	default:
 		m_pPlayer->Change_State((_uint)eState);
+		break;
 	}
+}
+
+void CPlayerState_Execution_Default::Check_Execution_Default()
+{
+	CEnemy* pExecutionEnemy = m_pPlayer->Get_ExecutionEnemy();
+	if (nullptr != pExecutionEnemy)
+		OnState_Start(pExecutionEnemy);
+	else
+		m_pPlayer->Change_State((_uint)PlayerState::State_Attack);
 }
 
 CPlayerState_Execution_Default* CPlayerState_Execution_Default::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

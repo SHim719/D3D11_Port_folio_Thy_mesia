@@ -12,7 +12,8 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Attack,  PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
+		, PlayerState::State_Avoid, PlayerState::State_Parry };
 
 	return S_OK;
 }
@@ -60,11 +61,8 @@ void CPlayerState_Attack::Late_Update(_float fTimeDelta)
 	}
 
 	PlayerState ePlayerState = Decide_State();
-	if (PlayerState::State_End == ePlayerState)
-		return;
-
-	Check_ExtraStateChange(ePlayerState);
-	
+	if (PlayerState::State_End != ePlayerState)
+		Check_ExtraStateChange(ePlayerState);
 }
 
 void CPlayerState_Attack::OnState_End()
@@ -80,18 +78,20 @@ void CPlayerState_Attack::Init_AttackDesc()
 
 void CPlayerState_Attack::Check_ExtraStateChange(PlayerState eState)
 {
-	if (PlayerState::State_Attack == eState)
+	switch (eState)
 	{
-		if (true == m_pPlayer->Can_NextAttack() && m_iNowComboCnt < m_pPlayerStats->Get_MaxAttackCnt() - 1)
-		{
-			++m_iNowComboCnt;
-			OnState_Start(nullptr);
-		}
-	}
-	else
-	{
+	case PlayerState::State_PlagueAttack:
+		Check_PlagueAttack();
+		break;
+	case PlayerState::State_Attack:
+		Check_NextAttack();
+		break;
+	default:
 		m_pPlayer->Change_State((_uint)eState);
+		break;
 	}
+
+
 }
 
 void CPlayerState_Attack::Decide_ExecutionState(CEnemy* pExecutionEnemy)
@@ -108,6 +108,15 @@ void CPlayerState_Attack::Decide_ExecutionState(CEnemy* pExecutionEnemy)
 		break;
 	case CEnemy::URD:
 		break;
+	}
+}
+
+void CPlayerState_Attack::Check_NextAttack()
+{
+	if (true == m_pPlayer->Can_NextAttack() && m_iNowComboCnt < m_pPlayerStats->Get_MaxAttackCnt() - 1)
+	{
+		++m_iNowComboCnt;
+		OnState_Start(nullptr);
 	}
 }
 

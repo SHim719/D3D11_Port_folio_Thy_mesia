@@ -42,6 +42,7 @@ void CTestPlay_Tool::Start_Tool()
     UIMGR->Set_Player(m_pPlayer);
     UIMGR->Initialize(m_pDevice, m_pContext);
     UIMGR->Active_UI("UI_PlayerBar");
+    UIMGR->Active_UI("UI_PlunderSlot");
 
     if (FAILED(Load_TestMap()))
         return;

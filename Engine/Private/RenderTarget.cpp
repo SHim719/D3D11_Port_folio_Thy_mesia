@@ -12,17 +12,17 @@ HRESULT CRenderTarget::Initialize(void* pArg)
 
 	D3D11_TEXTURE2D_DESC TextureDesc = {};
 
-	TextureDesc.Width = pRTDesc->iWinSizeX;
-	TextureDesc.Height = pRTDesc->iWinSizeY;
+	TextureDesc.Width = pRTDesc->iWidth;
+	TextureDesc.Height = pRTDesc->iHeight;
 	TextureDesc.Format = pRTDesc->eFormat;
 	TextureDesc.MipLevels = 1;
 	TextureDesc.ArraySize = 1;
 	TextureDesc.SampleDesc.Quality = 0;
 	TextureDesc.SampleDesc.Count = 1;
 
-	TextureDesc.Usage = D3D11_USAGE_DYNAMIC;
+	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
 	TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-	TextureDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
 
 	if (FAILED(m_pDevice->CreateTexture2D(&TextureDesc, nullptr, &m_pTexture)))
@@ -63,10 +63,10 @@ CRenderTarget* CRenderTarget::Create(ID3D11Device* pDevice, ID3D11DeviceContext*
 
 void CRenderTarget::Free()
 {
-	Safe_Release(m_pTexture);
 	Safe_Release(m_pSRV);
 	Safe_Release(m_pRTV);
-
+	Safe_Release(m_pTexture);
+	
 	Safe_Release(m_pDevice);
 	Safe_Release(m_pContext);
 }

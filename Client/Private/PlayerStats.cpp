@@ -1,9 +1,17 @@
 #include "PlayerStats.h"
 #include "UI.h"
 
+#include "UI_PlunderSlot.h"
+
 
 CPlayerStats::CPlayerStats()
 {
+}
+
+void CPlayerStats::Update_PlunderSkill(const SKILLTYPE ePlunderSkill)
+{
+	m_ePlunderSkill = ePlunderSkill;
+	m_pPlunderSlot->Update_SkillIcon(ePlunderSkill);
 }
 
 _int CPlayerStats::Increase_Hp(_int iHp)
@@ -45,7 +53,7 @@ ATTACKDESC CPlayerStats::Get_NormalAttackDesc() const
 ATTACKDESC CPlayerStats::Get_PlagueAttackDesc() const
 {
 	ATTACKDESC AttackDesc;
-	AttackDesc.iDamage = 0;
+	AttackDesc.iDamage = m_iStrength >> 2;
 	AttackDesc.iPlagueDamage = m_bShortClaw == true ? m_iPlague : m_iPlague * 2;
 
 	return AttackDesc;

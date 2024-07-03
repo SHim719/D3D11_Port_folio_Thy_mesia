@@ -43,8 +43,9 @@ protected:
 	_bool m_bLookTarget = { true };
 	_bool m_bCollPlayer = { false };
 
-	size_t m_iStunnedMarkIdx = { ULLONG_MAX };
-	EXECUTION_TAG m_eExecutionTag = { DEFAULT };
+	size_t			m_iStunnedMarkIdx = { ULLONG_MAX };
+	EXECUTION_TAG	m_eExecutionTag = { DEFAULT };
+	SKILLTYPE		m_eSkillType = { SKILLTYPE_END };
 
 public:
 	virtual void Percept_Target();
@@ -67,6 +68,11 @@ public:
 	EXECUTION_TAG Get_ExecutionTag() const {
 		return m_eExecutionTag; 
 	}
+
+	SKILLTYPE Get_SkillType() const {
+		return m_eSkillType;
+	}
+
 
 protected:
 	void OnCollisionEnter(CGameObject* pOther)	override;

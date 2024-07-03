@@ -71,9 +71,6 @@ private:
 	void Update_WeaponAlpha();
 
 private:
-	void OnCollisionEnter(CGameObject* pOther)	override;
-
-private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_States();
 	HRESULT Ready_Weapons();

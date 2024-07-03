@@ -29,6 +29,7 @@ protected:
 	PlayerState Decide_State();
 
 	virtual void Check_ExtraStateChange(PlayerState eState);
+	void Check_PlagueAttack();
 
 protected:
 	CPlayer*			m_pPlayer = { nullptr };

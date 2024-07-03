@@ -148,14 +148,15 @@ _bool CPlayerState_Base::Check_StateChange(PlayerState eState)
 		bStateChange =  KEY_PUSHING(eKeyCode::F);
 		break;
 	case PlayerState::State_ChargeStart:
+	case PlayerState::State_ClawAttack_Short:
 		bStateChange = KEY_PUSHING(eKeyCode::RButton);
 		break;
 	case PlayerState::State_ClawAttack_Long:
-	case PlayerState::State_StealRush:
+	case PlayerState::State_PlunderRush:
 		bStateChange = KEY_NONE(eKeyCode::RButton);
 		break;
-	case PlayerState::State_ClawAttack_Short:
-		bStateChange = KEY_PUSHING(eKeyCode::RButton);
+	case PlayerState::State_PlagueAttack:
+		bStateChange = KEY_PUSHING(eKeyCode::One) || KEY_PUSHING(eKeyCode::Two);
 		break;
 	case PlayerState::State_End:
 		break;
@@ -179,7 +180,45 @@ PlayerState CPlayerState_Base::Decide_State()
 
 void CPlayerState_Base::Check_ExtraStateChange(PlayerState eState)
 {
+	switch (eState)
+	{
+	case PlayerState::State_PlagueAttack:
+		Check_PlagueAttack();
+		break;
 
+	default:
+		m_pPlayer->Change_State((_uint)eState);
+		break;
+	}
+}
+
+void CPlayerState_Base::Check_PlagueAttack()
+{
+	//if (KEY_PUSHING(eKeyCode::One))
+	//{
+	//
+	//}
+
+	SKILLTYPE ePlunderSkillType = m_pPlayerStats->Get_PlunderSkillType();
+
+	if (SKILLTYPE::NONE == ePlunderSkillType)
+		return;
+
+	PlayerState eState = PlayerState::State_End;
+
+	switch (ePlunderSkillType)
+	{
+	case SKILLTYPE::AXE:
+		eState = PlayerState::State_PW_Axe;
+		break;
+	case SKILLTYPE::HAMMER:
+		eState = PlayerState::State_PW_Hammer;
+		break;
+	}
+
+	m_pPlayerStats->Update_PlunderSkill(SKILLTYPE::NONE);
+	m_pPlayer->Set_NowUsingSkill(ePlunderSkillType);
+	m_pPlayer->Change_State((_uint)eState);
 }
 
 void CPlayerState_Base::Free()

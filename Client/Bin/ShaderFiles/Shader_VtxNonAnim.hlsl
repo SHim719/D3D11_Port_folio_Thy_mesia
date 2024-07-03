@@ -7,6 +7,7 @@ matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 texture2D		g_DiffuseTexture;
 texture2D		g_NormalTexture;
 
+float4			g_vColor;
 float4			g_vPickingColor;
 float			g_fAlpha;
 
@@ -116,6 +117,21 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_PLAGUEWEAPON(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    float4 vColor = float4(134.f, 217.f, 196.f, 1.f) / 255.f;
+    vColor.a = 1.f;
+	
+    Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV) * vColor;
+	
+    if (Out.vDiffuse.a < 0.1f)
+        discard;
+
+    return Out;
+}
+
 struct VS_OUT_PICKING
 {
     float4 vPosition : SV_POSITION;
@@ -190,6 +206,17 @@ technique11 DefaultTechinque
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHABLEND();
+    }
+
+    pass PlagueWeapon // 3
+    {
+        SetBlendState(BS_None, vector(1.f, 1.f, 1.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_PLAGUEWEAPON();
     }
 	
 }

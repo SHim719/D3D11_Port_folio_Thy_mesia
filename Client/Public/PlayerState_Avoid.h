@@ -17,7 +17,8 @@ private:
 
 	void OnHit(const ATTACKDESC& AttackDesc)		override;
 	void Check_ExtraStateChange(PlayerState eState)	override;
-
+	
+	void Check_AvoidOneMore();
 private:
 	_bool m_bOneMore = { false };
 

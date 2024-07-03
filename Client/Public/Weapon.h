@@ -31,14 +31,13 @@ protected:
 	CWeapon(const CWeapon& rhs);
 	virtual ~CWeapon() = default;
 
-private:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-private:
+protected:
 	CGameObject*	m_pOwner = { nullptr };
 	CBone*			m_pSocketBone = { nullptr };
 	CTransform*		m_pParentTransform = { nullptr };
@@ -64,7 +63,7 @@ public:
 		return m_AttackDesc;
 	}
 
-private:
+protected:
 	_bool			m_bAlphaBlend = { false };
 	_float			m_fAlpha = { 1.f };
 
@@ -73,7 +72,7 @@ public:
 	void Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
 
 
-private:
+protected:
 	CShader*	m_pShader = nullptr;
 	CModel*		m_pModel = nullptr;
 	CCollider*	m_pCollider = nullptr;
@@ -85,7 +84,7 @@ public:
 			m_pCollider->Set_Active(bActive);
 	}
 	
-private:
+protected:
 	HRESULT Ready_Components(WEAPONDESC* pDesc);
 
 public:

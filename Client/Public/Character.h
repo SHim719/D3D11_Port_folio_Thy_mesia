@@ -24,6 +24,7 @@ public:
 	_uint Get_PrevState() const { return m_iPrevState; }
 
 public:
+	void Hit(const ATTACKDESC& AttackDesc);
 	virtual _int Take_Damage(const ATTACKDESC& AttackDesc);
 
 protected:
@@ -45,7 +46,6 @@ public:
 	void Update_AttackDesc();
 
 	void Set_Active_Weapon(_uint iWeaponIdx, _bool bActive);
-
 
 	void Set_Active_Colliders(_bool bActive) {
 		m_pCollider->Set_Active(bActive);
