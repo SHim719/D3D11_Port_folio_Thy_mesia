@@ -56,8 +56,8 @@ private:
 
 public:
 	static CToolMapObj* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg);
-	virtual void Free() override;
+	CGameObject* Clone(void* pArg)	override;
+	void Free() override;
 };
 
 END

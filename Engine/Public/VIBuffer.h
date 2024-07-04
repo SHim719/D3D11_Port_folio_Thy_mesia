@@ -19,20 +19,20 @@ public:
 	virtual _bool Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist);
 
 protected:
-	ID3D11Buffer*		m_pVB = nullptr;
-	ID3D11Buffer*		m_pIB = nullptr;
+	ID3D11Buffer*		m_pVB = {nullptr};
+	ID3D11Buffer*		m_pIB = { nullptr };
 
 protected:
 	D3D11_BUFFER_DESC				m_BufferDesc;
 	D3D11_SUBRESOURCE_DATA			m_SubResourceData;
 	D3D11_PRIMITIVE_TOPOLOGY		m_eTopology;
 
-	_uint						m_iNumVertexBuffers = 0;
-	_uint						m_iNumVertices = 0;
-	_uint						m_iStride = 0;
-	_uint						m_iNumPrimitives = 0;
-	_uint						m_iIndexSizeofPrimitive = 0;
-	_uint						m_iNumIndicesofPrimitive = 0;
+	_uint						m_iNumVertexBuffers = { 0 };
+	_uint						m_iNumVertices = { 0 };
+	_uint						m_iStride = { 0 };
+	_uint						m_iNumPrimitives = { 0 };
+	_uint						m_iIndexSizeofPrimitive = { 0 };
+	_uint						m_iNumIndicesofPrimitive = { 0 };
 	DXGI_FORMAT					m_eIndexFormat;
 
 protected:

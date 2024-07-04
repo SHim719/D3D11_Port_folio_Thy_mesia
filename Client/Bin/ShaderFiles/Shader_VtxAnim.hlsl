@@ -1,15 +1,13 @@
 
 #include "Shader_Defines.hlsli"
 
-
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 matrix			g_BoneMatrices[256];
 
 float			g_fAlpha;
 
-//texture2D		g_VTF;
-
 texture2D		g_DiffuseTexture;
+texture2D		g_NormalTexture;
 
 struct VS_IN
 {

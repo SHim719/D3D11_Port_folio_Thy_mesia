@@ -6,11 +6,14 @@
 #include "Texture.h"
 #include "Shader.h"
 #include "Transform.h"
+
 #include "VIBuffer_Rect.h"
 #include "VIBuffer_Point.h"
 #include "VIBuffer_Cell.h"
 #include "VIBuffer_Sphere.h"
+
 #include "Model.h"
+#include "Model_Instance.h"
 
 #include "Navigation.h"
 

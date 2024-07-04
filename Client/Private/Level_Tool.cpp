@@ -2,6 +2,7 @@
 #include "GameInstance.h"
 
 #include "ToolMapObj.h"
+#include "ToolMapObjInstance.h"
 #include "ToolAnimObj.h"
 #include "ToolColliderObj.h"
 #include "ToolNaviCell.h"
@@ -129,6 +130,7 @@ HRESULT CLevel_Tool::Render()
 HRESULT CLevel_Tool::Ready_ToolObjects()
 {
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolMapObj", CToolMapObj::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolMapObj_Instance", CToolMapObjInstance::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolAnimObj", CToolAnimObj::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolColliderObj", CToolColliderObj::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolNaviCell", CToolNaviCell::Create(m_pDevice, m_pContext));

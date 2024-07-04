@@ -2,6 +2,8 @@
 #include "ToolNaviCell.h"
 #include "ToolNaviCellPoint.h"
 
+#include "ToolMapObjInstance.h"
+
 
 CMap_Tool::CMap_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CToolState(pDevice, pContext)
@@ -34,6 +36,11 @@ void CMap_Tool::LateTick(_float fTimeDelta)
 {
     Destroy_MapObjects();
     Destroy_Cells();
+
+    Ready_InstanceObj();
+
+    for (auto& Pair : m_MapObjectInstances)
+        Pair.second->Ready_RenderInstance();
 }
 
 HRESULT CMap_Tool::Ready_Picking()
@@ -89,7 +96,10 @@ void CMap_Tool::Enemy_Window()
 {
     if (ImGui::InputInt("NaviIdx", &m_iNowNaviIdx))
     {
-        m_MapObjects[m_iSelObj]->Set_NaviIdx(m_iNowNaviIdx);
+        if (m_SelectObjIndices.empty())
+            return;
+
+        m_MapObjects[*m_SelectObjIndices.begin()]->Set_NaviIdx(m_iNowNaviIdx);
     }
 }
 
@@ -97,11 +107,17 @@ void CMap_Tool::Trigger_Window()
 {
     if (ImGui::InputInt("TriggerIdx", &m_iTriggerIdx))
     {
-        m_MapObjects[m_iSelObj]->Set_TriggerIdx(m_iTriggerIdx);
+        if (m_SelectObjIndices.empty()) 
+            return;
+        m_MapObjects[*m_SelectObjIndices.begin()]->Set_TriggerIdx(m_iTriggerIdx);
     }
 
     if (ImGui::InputFloat3("Size", &m_vColliderSize.x))
-        m_MapObjects[m_iSelObj]->Set_ColliderSize(m_vColliderSize);
+    {
+        if (m_SelectObjIndices.empty())
+            return;
+        m_MapObjects[*m_SelectObjIndices.begin()]->Set_ColliderSize(m_vColliderSize);
+    } 
 }
 
 void CMap_Tool::Camera_Window()
@@ -133,7 +149,12 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
            ,entry.path().parent_path().generic_string() + "/", entry.path().filename().generic_string()))))
            return E_FAIL;
 
-       m_strPlacable_Objects[m_eNowObjMode].push_back(fileTitle.generic_string());
+       wstrPrototypeTag += L"_Instance";
+       if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel_Instance::Create(m_pDevice, m_pContext
+           , entry.path().parent_path().generic_string() + "/", entry.path().filename().generic_string()))))
+           return E_FAIL;
+
+       m_strPlacable_Objects[m_eNowObjMode].emplace_back(fileTitle.generic_string());
    }
 
 
@@ -184,9 +205,21 @@ HRESULT CMap_Tool::Create_ObjectInLevel()
     if (nullptr == pObj)
         return E_FAIL;
 
+    string strObj = m_strPlacable_Objects[m_eNowObjMode][m_iSelPlacableObj];
+
     m_MapObjects.emplace_back(pObj);
-    m_strCreatedObjects.emplace_back(m_strPlacable_Objects[m_eNowObjMode][m_iSelPlacableObj]);
-    m_MapLayers.emplace(m_strPlacable_Objects[m_eNowObjMode][m_iSelPlacableObj], pObj);
+    m_strCreatedObjects.emplace_back(strObj);
+    m_MapLayers.emplace(strObj, pObj);
+
+    if (m_eNowObjMode < ENEMY)
+    {
+        auto it = m_MapObjectInstances.find(strObj);
+        if (m_MapObjectInstances.end() == it)
+        {
+            CToolMapObjInstance* pInstanceObj = static_cast<CToolMapObjInstance*>(m_pGameInstance->Clone_GameObject(L"Prototype_ToolMapObj_Instance", &Desc.wstrModelTag));
+            m_MapObjectInstances.emplace(strObj, pInstanceObj);
+        }
+    }
 
     return S_OK;
 }
@@ -291,15 +324,30 @@ void CMap_Tool::Key_Input_MapTool()
 {
     if (KEY_DOWN(eKeyCode::Delete))
     {
-        if (-1 == m_iSelObj)
+        if (m_SelectObjIndices.empty())
             return;
-        m_MapObjects[m_iSelObj]->Set_Destroy(true);
-        m_iSelObj = -1;
+
+        for (auto iSelObjIdx : m_SelectObjIndices)
+            m_MapObjects[iSelObjIdx]->Set_Destroy(true);
+        
+        m_SelectObjIndices.clear();
     }
 
     if (KEY_PUSHING(eKeyCode::LCtrl))
     {
-        
+        if (KEY_DOWN(eKeyCode::D))
+        {
+            if (m_SelectObjIndices.empty())
+                return;
+
+           //for (_int iSelObjIdx : m_SelectObjIndices)
+           //{
+           //    CToolMapObj* pClonedObj = static_cast<CToolMapObj*>(m_MapObjects[iSelObjIdx]->Clone(nullptr));
+           //    m_MapObjects.emplace_back(pClonedObj);
+           //    m_strCreatedObjects.emplace_back(m_strCreatedObjects[iSelObjIdx]);
+           //    m_MapLayers.emplace(m_strPlacable_Objects[m_eNowObjMode][iSelObjIdx], pClonedObj);
+           //}
+        }
     }
 
 }
@@ -336,24 +384,31 @@ void CMap_Tool::Transform_View()
     ImGui::SeparatorText("Transform");
     if (ImGui::InputFloat3("Position", &m_vPosition.x))
     {
-        if (-1 == m_iSelObj)
+        if (m_SelectObjIndices.empty())
             return;
-        m_MapObjects[m_iSelObj]->Get_Transform()->Set_Position(XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+
+        for (_int iSelObjIdx : m_SelectObjIndices)
+            m_MapObjects[iSelObjIdx]->Get_Transform()->Set_Position(XMVectorSetW(XMLoadFloat3(&m_vPosition), 1.f));
+        
     }
 
     if (ImGui::InputFloat3("Rotation", &m_vRotation.x))
     {
-        if (-1 == m_iSelObj)
+        if (m_SelectObjIndices.empty())
             return;
+
         _vector vQuat = XMQuaternionRotationRollPitchYaw(To_Radian(m_vRotation.x), To_Radian(m_vRotation.y), To_Radian(m_vRotation.z));
-        m_MapObjects[m_iSelObj]->Get_Transform()->Rotation_Quaternion(vQuat);
+        for (_int iSelObjIdx : m_SelectObjIndices)
+             m_MapObjects[iSelObjIdx]->Get_Transform()->Rotation_Quaternion(vQuat);
     }
 
     if (ImGui::InputFloat3("Scale", &m_vScale.x))
     {
-        if (-1 == m_iSelObj)
+        if (m_SelectObjIndices.empty())
             return;
-        m_MapObjects[m_iSelObj]->Get_Transform()->Set_Scale(m_vScale);
+
+        for (_int iSelObjIdx : m_SelectObjIndices)
+            m_MapObjects[iSelObjIdx]->Get_Transform()->Set_Scale(m_vScale);
     }
 }
 
@@ -361,7 +416,11 @@ void CMap_Tool::Placable_ComboBox()
 {
     const char* combo_value[] = { "MapObject" , "Enemy", "Trigger" };
     if (ImGui::Combo("##Object", (_int*)&m_eNowObjMode, combo_value, IM_ARRAYSIZE(combo_value)))
+    {
         m_iSelPlacableObj = -1;
+        m_SelectObjIndices.clear();
+    }
+       
 }
 
 
@@ -379,15 +438,15 @@ void CMap_Tool::Reset_Transform(_fmatrix WorldMatrix)
 
 void CMap_Tool::Transform_Gizmo()
 {
+    if (m_SelectObjIndices.empty() || m_SelectObjIndices.size() > 1)
+        return;
+
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGuizmo::BeginFrame();
     ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
     _float4x4 ViewMatrix = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_VIEW);
     _float4x4 ProjMatrix = m_pGameInstance->Get_TransformFloat4x4(CPipeLine::D3DTS_PROJ);
-
-    if (-1 == m_iSelObj)
-        return;
 
 #pragma region InputKey
     if (false == m_pGameInstance->GetKey(eKeyCode::RButton))
@@ -416,7 +475,7 @@ void CMap_Tool::Transform_Gizmo()
     }
 #pragma endregion 
     
-    _float4x4 WorldMatrix = m_MapObjects[m_iSelObj]->Get_Transform()->Get_WorldFloat4x4();
+    _float4x4 WorldMatrix = m_MapObjects[*(m_SelectObjIndices.begin())]->Get_Transform()->Get_WorldFloat4x4();
     if (ImGuizmo::Manipulate(*ViewMatrix.m, *ProjMatrix.m
         , m_tGizmoDesc.CurrentGizmoOperation
         , m_tGizmoDesc.CurrentGizmoMode
@@ -424,7 +483,7 @@ void CMap_Tool::Transform_Gizmo()
         , m_tGizmoDesc.boundSizingSnap ? m_tGizmoDesc.boundsSnap : NULL))
     {   
         Reset_Transform(XMLoadFloat4x4(&WorldMatrix));
-        m_MapObjects[m_iSelObj]->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
+        m_MapObjects[*m_SelectObjIndices.begin()]->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&WorldMatrix));
     }
     
 }
@@ -485,28 +544,56 @@ void CMap_Tool::ForObject_Buttons(ImVec2 vNowCursorPos)
 void CMap_Tool::Object_ListBox()
 {
     ImGui::SeparatorText("Created Objects");
-    const _char** szObjects = new const _char * [m_strCreatedObjects.size()];
 
     for (size_t i = 0; i < m_strCreatedObjects.size(); ++i)
-        szObjects[i] = m_strCreatedObjects[i].c_str();
-
-    if (ImGui::ListBox("##CreatedObj_ListBox", &m_iSelObj, szObjects, (_int)m_strCreatedObjects.size(), 10))
     {
-        _float4x4 WorldMatrix = m_MapObjects[m_iSelObj]->Get_Transform()->Get_WorldFloat4x4();
-        Reset_Transform(XMLoadFloat4x4(&WorldMatrix));
+        _bool bSelected = static_cast<_bool>(m_SelectObjIndices.count(static_cast<const int>(i)));
 
-        switch (m_eNowObjMode)
+        string strObject = m_strCreatedObjects[i] + to_string(i);
+
+        if (ImGui::Selectable(strObject.c_str(), bSelected))
         {
-        case ENEMY:
-            m_iNowNaviIdx = m_MapObjects[m_iSelObj]->Get_NaviIdx();
-            break;
-        case TRIGGER:
-            m_iTriggerIdx = m_MapObjects[m_iSelObj]->Get_TriggerIdx();
-            break;
+            if (false == KEY_PUSHING(eKeyCode::LCtrl))
+                m_SelectObjIndices.clear();
+
+            if (bSelected)
+            {
+                auto it = m_SelectObjIndices.find((_int)i);
+                m_SelectObjIndices.erase(it);
+            }
+            else
+            {
+                m_SelectObjIndices.insert((_int)i);
+
+                _matrix WorldMatrix = m_MapObjects[i]->Get_Transform()->Get_WorldMatrix();
+
+                Reset_Transform(WorldMatrix);
+
+                switch (m_eNowObjMode)
+                {
+                case ENEMY:
+                    m_iNowNaviIdx = m_MapObjects[i]->Get_NaviIdx();
+                    break;
+                case TRIGGER:
+                    m_iTriggerIdx = m_MapObjects[i]->Get_TriggerIdx();
+                    break;
+                }
+            }
         }
     }
-       
-    Safe_Delete_Array(szObjects);
+ 
+}
+
+void CMap_Tool::Ready_InstanceObj()
+{
+    for (size_t i = 0; i < m_MapObjects.size(); ++i)
+    {
+        auto it = m_MapObjectInstances.find(m_strCreatedObjects[i]);
+        if (m_MapObjectInstances.end() == it)
+            assert(false);
+
+        it->second->Add_Transform(m_MapObjects[i]->Get_Transform());
+    }
 }
 
 HRESULT CMap_Tool::Save_Map()
@@ -520,10 +607,10 @@ HRESULT CMap_Tool::Save_Map()
         for (const string& strObj : m_strPlacable_Objects[i])
         {
             auto Pair = m_MapLayers.equal_range(strObj);
+
+            wstring wstrFullPath = wstrFolderPath + L"\\" + Convert_StrToWStr(strObj) + L".dat";
             if (m_MapLayers.end() != Pair.first)
             {
-                wstring wstrFullPath = wstrFolderPath + L"\\" + Convert_StrToWStr(strObj) + L".dat";
-
                 ofstream fout(wstrFullPath, ios::binary);
                 if (!fout.is_open())
                     return E_FAIL;
@@ -586,11 +673,25 @@ HRESULT CMap_Tool::Load_Map()
             m_MapObjects.emplace_back(pObj);
             m_MapLayers.emplace(fileTitle.generic_string(), pObj);
             m_strCreatedObjects.emplace_back(fileTitle.generic_string());
+
+            if (LoadDesc.eObjType < ENEMY)
+            {
+                CToolMapObjInstance* pInstanceObj = nullptr;
+
+                auto it = m_MapObjectInstances.find(fileTitle.generic_string());
+                if (m_MapObjectInstances.end() == it)
+                {
+                    pInstanceObj = static_cast<CToolMapObjInstance*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"MapObject", L"Prototype_ToolMapObj_Instance", &wstring(LoadDesc.szModelTag)));
+                    m_MapObjectInstances.emplace(fileTitle.generic_string(), pInstanceObj);
+                } 
+            }
+                
         }
     }
 
     return S_OK;
 }
+
 
 void CMap_Tool::Navi_Tool()
 {
@@ -926,9 +1027,11 @@ void CMap_Tool::Object_Picking()
             return;
         else
         {
-            m_iSelObj = iPickingIdx;
-            _matrix WorldMatrix = m_MapObjects[m_iSelObj]->Get_Transform()->Get_WorldMatrix();
+            _matrix WorldMatrix = m_MapObjects[iPickingIdx]->Get_Transform()->Get_WorldMatrix();
             Reset_Transform(WorldMatrix);
+
+            m_SelectObjIndices.clear();
+            m_SelectObjIndices.insert(iPickingIdx);
         }
             
     }
@@ -1009,6 +1112,11 @@ CMap_Tool* CMap_Tool::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContex
 void CMap_Tool::Free()
 {
     __super::Free();
+
+    for (auto& Pair : m_MapObjectInstances)
+        Safe_Release(Pair.second);
+
+    m_MapObjectInstances.clear();
 
     Safe_Release(m_pColorRTV);
     Safe_Release(m_pColorTexture);

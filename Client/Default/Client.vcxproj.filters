@@ -511,6 +511,9 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe">
       <UniqueIdentifier>{771e8313-e393-410e-a3a1-96a105126cec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\1. ToolMapObj\ToolMapObjInstance">
+      <UniqueIdentifier>{fceba8fa-4c6b-4020-9984-cbac09cc0547}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -957,6 +960,9 @@
     <ClInclude Include="..\Public\PlayerState_ChargeComplete.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Complete</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ToolMapObjInstance.h">
+      <Filter>02. GameObjects\99. ToolObject\1. ToolMapObj\ToolMapObjInstance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1346,6 +1352,9 @@
     <ClCompile Include="..\Private\PlayerState_PW_Axe.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\ToolMapObjInstance.cpp">
+      <Filter>02. GameObjects\99. ToolObject\1. ToolMapObj\ToolMapObjInstance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1382,6 +1391,9 @@
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Point.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNonAnimInstance.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

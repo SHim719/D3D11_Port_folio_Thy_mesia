@@ -12,7 +12,6 @@ CMeshContainer::CMeshContainer(ID3D11Device* pDevice, ID3D11DeviceContext* pCont
 CMeshContainer::CMeshContainer(const CMeshContainer& rhs)
 	: CVIBuffer(rhs)
 {
-	strcpy_s(m_szName, rhs.m_szName);
 }
 
 HRESULT CMeshContainer::Initialize(ifstream& fin, CModel::TYPE eType)
@@ -20,37 +19,18 @@ HRESULT CMeshContainer::Initialize(ifstream& fin, CModel::TYPE eType)
 	fin.read((char*)&m_iNumVertices, sizeof(_uint));
 
 	if (CModel::TYPE_NONANIM == eType)
-		Ready_Vertices(fin);
+	{
+		if (FAILED(Ready_Vertices(fin)))
+			return E_FAIL;
+	}
 	else
-		Ready_AnimVertices(fin);
-
-#pragma region IndexBuffer
-	fin.read((char*)&m_iNumPrimitives, sizeof(_uint));
-
-	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
-	m_iNumIndicesofPrimitive = 3;
-	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
-	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
-	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
-	m_BufferDesc.ByteWidth = m_iNumPrimitives * m_iIndexSizeofPrimitive;
-	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	m_BufferDesc.CPUAccessFlags = 0;
-	m_BufferDesc.MiscFlags = 0;
-	m_BufferDesc.StructureByteStride = 0;
-
-	m_pIndices = new FACEINDICES32[m_iNumPrimitives];
-	ZeroMemory(m_pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
-	fin.read((char*)m_pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
-
-	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	m_SubResourceData.pSysMem = m_pIndices;
-
-	if (FAILED(__super::Create_IndexBuffer()))
+	{
+		if (FAILED(Ready_AnimVertices(fin)))
+			return E_FAIL;
+	}
+		
+	if (FAILED(Ready_IndexBuffer(fin)))
 		return E_FAIL;
-
-#pragma endregion 
 
 	return S_OK;
 }
@@ -58,6 +38,7 @@ HRESULT CMeshContainer::Initialize(ifstream& fin, CModel::TYPE eType)
 _bool CMeshContainer::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
 {
 	// Static Model에대해서만진행
+	// 
 	// 거리가 가장 짧은삼각형점을 피킹
 
 	_vector vRayStartLocalPos = XMVector3TransformCoord(vRayStartPos, InvWorldMat);
@@ -112,6 +93,10 @@ HRESULT CMeshContainer::Ready_Vertices(ifstream& fin)
 	if (FAILED(__super::Create_VertexBuffer()))
 		return E_FAIL;
 
+#ifndef _DEBUG
+	Safe_Delete_Array(m_pModelVertices);
+#endif
+
 	return S_OK;
 }
 
@@ -139,8 +124,46 @@ HRESULT CMeshContainer::Ready_AnimVertices(ifstream& fin)
 	if (FAILED(__super::Create_VertexBuffer()))
 		return E_FAIL;
 
+#ifndef _DEBUG
+	Safe_Delete_Array(m_pAnimVertices);
+#endif
+
 	return S_OK;
 
+}
+
+HRESULT CMeshContainer::Ready_IndexBuffer(ifstream& fin)
+{
+	fin.read((char*)&m_iNumPrimitives, sizeof(_uint));
+
+	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
+	m_iNumIndicesofPrimitive = 3;
+	m_eIndexFormat = DXGI_FORMAT_R32_UINT;
+	m_eTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	ZeroMemory(&m_BufferDesc, sizeof(D3D11_BUFFER_DESC));
+	m_BufferDesc.ByteWidth = m_iNumPrimitives * m_iIndexSizeofPrimitive;
+	m_BufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	m_BufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	m_BufferDesc.CPUAccessFlags = 0;
+	m_BufferDesc.MiscFlags = 0;
+	m_BufferDesc.StructureByteStride = 0;
+
+	m_pIndices = new FACEINDICES32[m_iNumPrimitives];
+	ZeroMemory(m_pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
+	fin.read((char*)m_pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
+
+	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+	m_SubResourceData.pSysMem = m_pIndices;
+
+	if (FAILED(__super::Create_IndexBuffer()))
+		return E_FAIL;
+
+#ifndef _DEBUG
+	Safe_Delete_Array(m_pIndices);
+#endif
+
+	return S_OK;
 }
 
 CMeshContainer* CMeshContainer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& fin, CModel::TYPE eModelType)

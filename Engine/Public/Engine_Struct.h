@@ -71,6 +71,12 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXMODEL_DECLARATION;
 
+	typedef struct ENGINE_DLL tagVertexModelInstance_Declaration
+	{
+		static const unsigned int	iNumElements = { 8 };
+		static const D3D11_INPUT_ELEMENT_DESC	Elements[iNumElements];
+	}VTXMODELINSTANCE_DECLARATION;
+
 
 	typedef struct tagVertexAnimModel
 	{
@@ -98,4 +104,11 @@ namespace Engine
 		static const unsigned int iNumElements = 1;
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXPOINT_DECLARATION;
+
+	typedef struct tagVertexMatrix
+	{
+		XMFLOAT4		vRight, vUp, vLook, vTranslation;
+	}VTXMATRIX;
+
+	
 }

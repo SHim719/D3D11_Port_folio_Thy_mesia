@@ -7,9 +7,7 @@
 #include "KeyFrameEvent.h"
 
 
-map<const string, class CTexture*>	CModel::g_ModelTextures;
-
-
+unordered_map<string, class CTexture*>	CModel::g_ModelTextures;
 
 CModel::CModel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
@@ -275,6 +273,7 @@ HRESULT CModel::Import_Model(const string& strFilePath, const string& strFileNam
 
 	ifstream fin;
 	fin.open(strFullPath, ios::binary);
+
 	if (!fin.is_open())
 		return E_FAIL;
 
@@ -310,7 +309,7 @@ HRESULT CModel::Import_Meshes(ifstream& fin)
 	for (_uint i = 0; i < m_iNumMeshes; ++i)
 	{
 		CMeshContainer* pMesh = CMeshContainer::Create(m_pDevice, m_pContext, fin, m_eModelType);
-		m_Meshes.push_back(pMesh);
+		m_Meshes.emplace_back(pMesh);
 	}
 
 	return S_OK;
@@ -346,7 +345,7 @@ HRESULT CModel::Import_MaterialInfo(ifstream& fin, const string& strFilePath)
 				if (nullptr == pMatTexture)
 					return E_FAIL;
 
-				g_ModelTextures.insert({ szFileName, pMatTexture });
+				g_ModelTextures.emplace(szFileName, pMatTexture);
 			}
 			else
 				pMatTexture = it->second;
@@ -370,7 +369,7 @@ HRESULT CModel::Import_Bones(ifstream& fin)
 		CBone* pBone = CBone::Create(fin, this);
 		if (nullptr == pBone)
 			return E_FAIL;
-		m_Bones.push_back(pBone);
+		m_Bones.emplace_back(pBone);
 	}
 
 	m_iNumBones = 0;
@@ -381,7 +380,7 @@ HRESULT CModel::Import_Bones(ifstream& fin)
 	{
 		_uint iBoneIdx = 0;
 		fin.read((char*)&iBoneIdx, sizeof(_uint));
-		m_BoneIndices.push_back(iBoneIdx);
+		m_BoneIndices.emplace_back(iBoneIdx);
 	}
 
 	m_iRootBoneIdx = Find_BoneIndex("root");
@@ -401,7 +400,7 @@ HRESULT CModel::Import_Animations(ifstream& fin)
 	for (size_t i = 0; i < m_iNumAnimations; ++i)
 	{
 		CAnimation* pAnim = CAnimation::Create(fin);
-		m_Animations.push_back(pAnim);
+		m_Animations.emplace_back(pAnim);
 	}
 	return S_OK;
 }

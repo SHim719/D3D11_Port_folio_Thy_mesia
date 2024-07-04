@@ -36,6 +36,7 @@ private:
 	void TabBar();
 
 	void Key_Input();
+
 #pragma region MapTool
 	void Map_Tool();
 	void Key_Input_MapTool();
@@ -46,19 +47,23 @@ private:
 	void ForObject_Buttons(ImVec2 vNowCursorPos);
 	void Object_ListBox();
 
+	void Ready_InstanceObj();
+
 	HRESULT Save_Map();
 	HRESULT Load_Map();
 
 private:
 	vector<string>										m_strPlacable_Objects[OBJTYPE_END];
-	vector<CToolMapObj*>								m_MapObjects;
+	vector<CToolMapObj*>								m_MapObjects;						// 위치나 네비메쉬셀등의 값 등은 다 얘로 조절.
 	vector<string>										m_strCreatedObjects;
-	unordered_map<string, CToolMapObj*>					m_MapLayers;
+	unordered_multimap<string, CToolMapObj*>			m_MapLayers;
+
+	unordered_map<string, class CToolMapObjInstance*>	m_MapObjectInstances;				// 렌더링을 위한 인스턴스 객체.
 
 	OBJTYPE												m_eNowObjMode = { MAPOBJECT };
 
 	_int												m_iSelPlacableObj = {};
-	_int												m_iSelObj = { -1 };
+	set<_int>											m_SelectObjIndices;
 
 #pragma region Transform_View
 	_float3 m_vPosition = {};
@@ -146,7 +151,7 @@ private:
 
 public:
 	static CMap_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
-	virtual void Free() override;
+	void Free() override;
 };
 
 END

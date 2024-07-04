@@ -27,6 +27,7 @@ using namespace DirectX;
 #include <vector>
 #include <queue>
 #include <stack>
+#include <set>
 #include <algorithm>
 #include <string>
 #include <assert.h>

@@ -163,6 +163,15 @@
     <Filter Include="01.Utility\99. Managers\97. Frustum">
       <UniqueIdentifier>{73f10387-e9b9-46da-be7f-1ebc12c68f2a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03. Components\03. VIBuffer\04. Instance">
+      <UniqueIdentifier>{3bb24b8c-a3b9-4197-b276-3c1be2dbff13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\05. Model\MeshContainer\Instance">
+      <UniqueIdentifier>{bbfade10-3a67-4955-a661-6bccb7f87b62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\05. Model\Model_Instance">
+      <UniqueIdentifier>{4714d92e-d649-42ab-8a02-bf0563227e4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -330,6 +339,15 @@
     <ClInclude Include="..\Public\Font_Manager.h">
       <Filter>01.Utility\99. Managers\09. Font_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Instance.h">
+      <Filter>01.Utility\03. Components\03. VIBuffer\04. Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Mesh_Instance.h">
+      <Filter>01.Utility\03. Components\05. Model\MeshContainer\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Model_Instance.h">
+      <Filter>01.Utility\03. Components\05. Model\Model_Instance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -475,6 +493,15 @@
     </ClCompile>
     <ClCompile Include="..\Private\Font_Manager.cpp">
       <Filter>01.Utility\99. Managers\09. Font_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Instance.cpp">
+      <Filter>01.Utility\03. Components\03. VIBuffer\04. Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Mesh_Instance.cpp">
+      <Filter>01.Utility\03. Components\05. Model\MeshContainer\Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Model_Instance.cpp">
+      <Filter>01.Utility\03. Components\05. Model\Model_Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

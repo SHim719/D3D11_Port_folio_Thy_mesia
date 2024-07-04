@@ -10,7 +10,11 @@ CToolMapObj::CToolMapObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 CToolMapObj::CToolMapObj(const CToolMapObj& rhs)
 	: CGameObject(rhs)
+	, m_eObjType(rhs.m_eObjType)
+	, m_iNaviIdx(rhs.m_iNaviIdx)
+	, m_iTriggerIdx(rhs.m_iTriggerIdx)
 {
+
 }
 
 HRESULT CToolMapObj::Initialize_Prototype()
@@ -29,6 +33,7 @@ HRESULT CToolMapObj::Initialize(void* pArg)
 
 	if (FAILED(Ready_Components(pDesc->wstrModelTag)))
 		return E_FAIL;
+
 
 	return S_OK;
 }
@@ -81,40 +86,16 @@ void CToolMapObj::Tick(_float fTimeDelta)
 void CToolMapObj::LateTick(_float fTimeDelta)
 {
 	if (m_pTriggerCollider)
+	{
 		m_pTriggerCollider->Update(m_pTransform->Get_WorldMatrix());
 
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	}
 }
 
 HRESULT CToolMapObj::Render()
 {
-	if (m_eObjType < TRIGGEROBJ)
-	{
-
-		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-			return E_FAIL;
-
-		if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-			return E_FAIL;
-
-		if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-			return E_FAIL;
-
-		_uint		iNumMeshes = m_pModel->Get_NumMeshes();
-
-		for (_uint j = 0; j < iNumMeshes; ++j)
-		{
-			if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture")))
-				return E_FAIL;
-
-			/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-				return E_FAIL;*/
-
-			if (FAILED(m_pModel->Render(m_pShader, j, 0)))
-				return E_FAIL;
-		}
-	}
-	else if (m_pTriggerCollider)
+	if (m_pTriggerCollider)
 		m_pTriggerCollider->Render();
 
 	return S_OK;

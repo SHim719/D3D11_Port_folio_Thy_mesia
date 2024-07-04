@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
-	enum TYPE { TYPE_NONANIM, TYPE_SKELETALMESH, TYPE_ANIM, TYPE_END };
+	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
 	typedef vector<class CBone*>			BONES;
 	typedef vector<class CMeshContainer*>	MESHES;
 	typedef vector<class CAnimation*>		ANIMATIONS;
@@ -31,7 +31,6 @@ public:
 		return XMLoadFloat4x4(&m_PivotMatrix);
 	}
 
-
 public:
 	HRESULT Initialize_Prototype(const string& strModelFilePath, const string& strModelFileName, const string& strKeyFrameFilePath);
 	HRESULT Initialize(const BONES& Bones, const ANIMATIONS& Anims, const KEYFRAMEEVENTS& Events);
@@ -48,24 +47,24 @@ private:
 	_float4x4					m_PivotMatrix;
 	TYPE						m_eModelType = TYPE_END;
 
-private:
-	_uint									m_iNumMeshes = 0;
+	_uint									m_iNumMeshes = { 0 };
 	vector<class CMeshContainer*>			m_Meshes;
 
 private:
-	static map<const string, class CTexture*>	g_ModelTextures;
-	_uint										m_iNumMaterials = 0;
-	vector<MATERIALDESC>						m_Materials;
+	static unordered_map<string, class CTexture*>			g_ModelTextures;
+	_uint													m_iNumMaterials = { 0 };
+	vector<MATERIALDESC>									m_Materials;
 
 private:
 	vector<class CBone*>					m_Bones;
 	vector<_uint>							m_BoneIndices;
-	_uint									m_iNumBones = 0;
-	_uint									m_iRootBoneIdx = 0;
+	_uint									m_iNumBones = { 0 };
+	_uint									m_iRootBoneIdx = { 0 };
 	_float4									m_vPrevRootPos = {};
 	_float4									m_vDeltaRootPos = {};
 public:
-	const BONES& Get_Bones() { return m_Bones; }
+	const BONES& Get_Bones() { 
+		return m_Bones; }
 
 	_vector Get_DeltaRootPos() {
 		return Organize_RootPos(XMLoadFloat4(&m_vDeltaRootPos));
@@ -82,15 +81,15 @@ private:
 	void Calc_DeltaRootPos();
 
 private:
-	_uint											m_iCurrentAnimIndex = 0;
-	_uint											m_iNumAnimations = 0;
+	_uint											m_iCurrentAnimIndex = { 0 };
+	_uint											m_iNumAnimations = { 0 };
 	vector<class CAnimation*>						m_Animations;
 
-	_bool											m_bPreview = false;
-	_bool											m_bIsPlaying = false;
-	_bool											m_bBlending = false;
-	_bool											m_bComplete = false;
-	_bool											m_bLoop = true;
+	_bool											m_bPreview = { false };
+	_bool											m_bIsPlaying = { false };
+	_bool											m_bBlending = { false };
+	_bool											m_bComplete = { false };
+	_bool											m_bLoop = { true };
 
 	unordered_map<string, class CKeyFrameEvent*>	m_AllKeyFrameEvents;
 public:
@@ -125,9 +124,12 @@ public:
 	static void Release_Textures();
 	virtual CComponent* Clone(void* pArg = nullptr);
 	virtual void Free() override;
+
+	friend class CModel_Instance;
 };
 
 END
+
 
 
 
