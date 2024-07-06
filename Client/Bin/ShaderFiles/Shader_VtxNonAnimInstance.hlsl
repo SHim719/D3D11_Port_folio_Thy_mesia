@@ -42,7 +42,7 @@ VS_OUT VS_MAIN(VS_IN In)
     vector vPosition = mul(float4(In.vPosition, 1.f), TransformMatrix);
     
     Out.vPosition = mul(vPosition, matVP);
-    Out.vNormal = mul(float4(In.vNormal, 0.f), TransformMatrix).xyz;
+    Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), TransformMatrix).xyz);
     Out.vTexUV = In.vTexUV;
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), TransformMatrix);
     Out.vProjPos = Out.vPosition;
@@ -62,7 +62,7 @@ struct PS_IN
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
-	//float4		vNormal : SV_TARGET1;
+	float4 vNormal : SV_TARGET1;
 	//float4		vDepth : SV_TARGET2;
 };
 
@@ -71,13 +71,14 @@ PS_OUT PS_MAIN(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
-
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	//
-	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-
+  
     if (Out.vDiffuse.a < 0.1f)
         discard;
+    
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
 
     return Out;
 }
@@ -93,7 +94,9 @@ technique11 DefaultTechinque
         SetRasterizerState(RS_Default);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
         GeometryShader = NULL;
+        DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 

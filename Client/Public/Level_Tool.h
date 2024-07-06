@@ -18,6 +18,8 @@ public:
 	HRESULT Render()				override;
 
 private:
+	HRESULT Ready_Lights();
+
 	HRESULT Ready_ToolObjects();
 	HRESULT Ready_Camera();
 	HRESULT Ready_Player();

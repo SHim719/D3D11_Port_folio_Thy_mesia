@@ -15,6 +15,7 @@ public:
 	HRESULT Initialize_Prototype(const string& strModelFilePath, const string& strModelFileName);
 
 	HRESULT SetUp_OnShader(class CShader* pShader, _uint iMaterialIndex, TextureType eTextureType, const char* pConstantName);
+	HRESULT Bind_Buffers(_uint iMeshIdx);
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0); 
 	
 private:

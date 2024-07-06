@@ -1,8 +1,6 @@
 #include "ToolMapObj.h"
 #include "Map_Tool.h"
 
-
-
 CToolMapObj::CToolMapObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {

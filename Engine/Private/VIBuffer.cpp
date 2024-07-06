@@ -33,11 +33,8 @@ HRESULT CVIBuffer::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer::Render()
+HRESULT CVIBuffer::Bind_Buffers()
 {
-	if (nullptr == m_pContext)
-		return E_FAIL;
-
 	ID3D11Buffer* pVertexBuffers[] = {
 		m_pVB,
 	};
@@ -56,6 +53,11 @@ HRESULT CVIBuffer::Render()
 
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
 
+	return S_OK;
+}
+
+HRESULT CVIBuffer::Render()
+{
 	m_pContext->DrawIndexed(m_iNumPrimitives * m_iNumIndicesofPrimitive, 0, 0);
 
 	return S_OK;

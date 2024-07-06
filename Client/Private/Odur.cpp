@@ -82,6 +82,13 @@ void COdur::Tick(_float fTimeDelta)
 
 	m_States[m_iState]->Update(fTimeDelta);
 
+	if (m_bAdjustNaviY)
+		m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+
+	__super::Update_Colliders();
+
+	__super::Tick_Weapons(fTimeDelta);
+
 	m_pModel->Play_Animation(fTimeDelta);
 }
 
@@ -89,26 +96,22 @@ void COdur::LateTick(_float fTimeDelta)
 {
 	Update_Alpha(fTimeDelta);
 
-	m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+	__super::LateTick_Weapons(fTimeDelta);
 
-	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
-	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
+	if (m_bNoRender)
+		return;
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_RenderComponent(m_pCollider);
+	m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
+#endif
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_BLEND, this);
 }
 
 HRESULT COdur::Render()
 {
-	if (m_bNoRender)
-		return E_FAIL;
-
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
@@ -127,12 +130,12 @@ HRESULT COdur::Render()
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
 
+		if (FAILED(m_pModel->Bind_Buffers(i)))
+			return E_FAIL;
+
 		if (FAILED(m_pModel->Render(m_pShader, i, 1)))
 			return E_FAIL;  
 	}
-
-	m_pCollider->Render();
-	m_pHitBoxCollider->Render();
 
 	return S_OK;
 }
@@ -295,7 +298,7 @@ HRESULT COdur::Ready_Weapons()
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 	WeaponDesc.bAlphaBlend = true;
 
-	m_Weapons[CANE] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[CANE] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[CANE])
 		return E_FAIL;
 
@@ -306,7 +309,7 @@ HRESULT COdur::Ready_Weapons()
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Sword");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Sword";
-	m_Weapons[SWORD] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[SWORD] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[SWORD])
 		return E_FAIL;
 
@@ -319,16 +322,14 @@ HRESULT COdur::Ready_Weapons()
 	ColliderDesc.vSize = { 1.f, 0.f, 0.f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
 
-	m_Weapons[FOOT_L] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[FOOT_L] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[FOOT_L])
 		return E_FAIL;
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("ball_r");
-	m_Weapons[FOOT_R] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[FOOT_R] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[FOOT_R])
 		return E_FAIL;
-
-
 
 	return S_OK;
 }

@@ -4,6 +4,8 @@
 
 #include "ToolMapObjInstance.h"
 
+#include "ToolBoundingSphere.h"
+
 
 CMap_Tool::CMap_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : CToolState(pDevice, pContext)
@@ -20,9 +22,24 @@ HRESULT CMap_Tool::Initialize(void* pArg)
 
     m_iSelPointIndices.reserve(3);
 
-    m_strPlacable_Objects[TRIGGEROBJ].push_back("EventTrigger");
+    m_strPlacable_Objects[TRIGGEROBJ].emplace_back("EventTrigger");
 
     return S_OK;
+}
+
+void CMap_Tool::Start_Tool()
+{
+    CCamera::CAMERADESC camDesc{};
+    camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+    camDesc.fNear = 0.1f;
+    camDesc.fFar = 300.f;
+    camDesc.fFovy = 70.f;
+    camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
+    camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
+
+    m_pCamera = static_cast<CFree_Camera*>(m_pGameInstance->Clone_GameObject(L"Prototype_Free_Camera", &camDesc));
+
+    m_pGameInstance->Change_MainCamera(m_pCamera);
 }
 
 void CMap_Tool::Tick(_float fTimeDelta)
@@ -133,6 +150,12 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
     if (L"" == wstrFolderPath)
         return E_FAIL;
 
+    if (m_strPlacable_Objects[MAPOBJECT].empty())
+    {
+        m_MapObjects.emplace_back(static_cast<CToolMapObj*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"MapObject", L"Prototype_ToolBoundingSphere")));
+        m_strCreatedObjects.emplace_back("BoundingSphere");
+    }
+
    fs::path folderPath(wstrFolderPath);
    
    for (const fs::directory_entry& entry : fs::directory_iterator(folderPath))
@@ -155,6 +178,8 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
            return E_FAIL;
 
        m_strPlacable_Objects[m_eNowObjMode].emplace_back(fileTitle.generic_string());
+
+       m_CullingRadiuses.emplace(fileTitle.generic_string(), 1.f);
    }
 
 
@@ -537,7 +562,23 @@ void CMap_Tool::ForObject_Buttons(ImVec2 vNowCursorPos)
     _bool bIsLocalMode = m_tGizmoDesc.CurrentGizmoMode == ImGuizmo::LOCAL;
     if (ImGui::Checkbox("Local?", &bIsLocalMode))
         m_tGizmoDesc.CurrentGizmoMode = !bIsLocalMode ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
-    
+
+    if (MAPOBJECT == m_eNowObjMode && m_iSelPlacableObj >= 0)
+    {
+        vNowCursorPos.y += yOffset;
+        ImGui::SetCursorPos(vNowCursorPos);
+
+        ImGui::Text("CullingRadius");
+
+        vNowCursorPos.y += yOffset - 10.f;
+        ImGui::SetCursorPos(vNowCursorPos);
+
+        string strSelectPlacableObject = m_strPlacable_Objects[m_eNowObjMode][m_iSelPlacableObj];
+        ImGui::PushItemWidth(50.f);
+        ImGui::InputFloat("##CullingRadius", &m_CullingRadiuses[strSelectPlacableObject]);
+        ImGui::PopItemWidth();
+    }
+
 }
 
 
@@ -590,7 +631,7 @@ void CMap_Tool::Ready_InstanceObj()
     {
         auto it = m_MapObjectInstances.find(m_strCreatedObjects[i]);
         if (m_MapObjectInstances.end() == it)
-            assert(false);
+            continue;
 
         it->second->Add_Transform(m_MapObjects[i]->Get_Transform());
     }
@@ -614,6 +655,10 @@ HRESULT CMap_Tool::Save_Map()
                 ofstream fout(wstrFullPath, ios::binary);
                 if (!fout.is_open())
                     return E_FAIL;
+
+                _float fCullingRadius = m_CullingRadiuses[strObj];
+     
+                fout.write((_char*)&fCullingRadius, sizeof(_float));
 
                 for (auto it = Pair.first; it != Pair.second; ++it)
                 {
@@ -654,6 +699,11 @@ HRESULT CMap_Tool::Load_Map()
         fs::path fileTitle = fileName.stem();
 
         LOADOBJDESC LoadDesc;
+
+        _float fCullingRadius = 1.f;
+        fin.read((_char*)&fCullingRadius, sizeof(_float));
+        
+        m_CullingRadiuses[fileTitle.generic_string()] = fCullingRadius;
 
         while (true)
         {

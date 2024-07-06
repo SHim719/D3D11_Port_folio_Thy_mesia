@@ -70,6 +70,8 @@ public:
 #pragma region RENDERER
 public:
 	HRESULT Add_RenderObject(CRenderer::RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
+	HRESULT Add_RenderComponent(CComponent* pRenderComponent);
+	void Add_UsingShader(class CShader* pShader);
 #pragma endregion
 
 #pragma region KEY_MANAGER
@@ -94,7 +96,7 @@ public:
 #pragma endregion
 
 #pragma region FRUSTUM
-	_bool In_WorldFrustum(_float3 vWorldPos, _float fRadius);
+	_bool In_WorldFrustum(_fvector vWorldPos, _float fRadius);
 #pragma endregion 
 
 #pragma region PIPELINE
@@ -115,6 +117,33 @@ public:
 	HRESULT Render_Font(const wstring& strFontTag, const wstring& strText, const _float2& vPosition, _float fScale = 1.f, _fvector vColor = XMVectorSet(1.f, 1.f, 1.f, 1.f), _float fRotation = 0.f);
 #pragma endregion
 
+#pragma region TARGET_MANAGER
+public:
+	HRESULT Add_RenderTarget(const wstring& strRenderTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixel, const _float4& vClearColor);
+	HRESULT Add_MRT(const wstring& strMRTTag, const wstring& strRenderTargetTag);
+	HRESULT Begin_MRT(const wstring& strMRTTag);
+	HRESULT End_MRT();
+	HRESULT Bind_RT_SRV(const wstring& strRenderTargetTag, class CShader* pShader, const _char* pConstantName);
+
+#ifdef _DEBUG
+	HRESULT Ready_RTDebug(const wstring& strRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
+	HRESULT Render_RTDebug(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+#endif
+#pragma endregion
+
+#pragma region LIGHT_MANAGER
+	const LIGHT_DESC* Get_LightDesc(_uint iIndex) const;
+	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+	HRESULT Render_Lights(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+#pragma endregion
+
+#pragma region CAMERA
+	class CCamera* m_pMain_Camera = { nullptr };
+
+	void Change_MainCamera(class CCamera* pCamera);
+	void Update_ViewProj();
+#pragma endregion
+
 
 private:
 	CGraphic_Device*		m_pGraphic_Device = { nullptr };
@@ -125,11 +154,13 @@ private:
 	CKey_Manager*			m_pKey_Manager = { nullptr };
 	CCollision_Manager*		m_pCollision_Manager = { nullptr };
 	CSound_Manager*			m_pSound_Manager = { nullptr };
-	//CFrustum*				m_pFrustum = { nullptr };
+	CFrustum*				m_pFrustum = { nullptr };
 	CRenderer*				m_pRenderer = { nullptr };
 	CPipeLine*				m_pPipeLine = { nullptr };
 	CEvent_Manager*			m_pEvent_Manager = { nullptr };
 	CFont_Manager*			m_pFont_Manager = { nullptr };
+	CTarget_Manager*		m_pTarget_Manager = { nullptr };
+	CLight_Manager*			m_pLight_Manager = { nullptr };
 	
 public:
 	static void Release_Engine();

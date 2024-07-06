@@ -29,8 +29,8 @@ public:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-protected:
-	void Update_View() const;
+public:
+	void Update_ViewProj() const;
 
 protected:
 	CAMERADESC					m_CameraDesc;

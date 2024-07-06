@@ -89,27 +89,6 @@ HRESULT CVIBuffer_Cell::Initialize(void* pArg)
 
 HRESULT CVIBuffer_Cell::Render()
 {
-	if (nullptr == m_pContext)
-		return E_FAIL;
-
-	ID3D11Buffer* pVertexBuffers[] = {
-		m_pVB,
-	};
-
-	_uint			iStrides[] = {
-		m_iStride
-	};
-
-	_uint			iOffsets[] = {
-		0,
-	};
-
-	m_pContext->IASetVertexBuffers(0, m_iNumVertexBuffers, pVertexBuffers, iStrides, iOffsets);
-
-	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
-
-	m_pContext->IASetPrimitiveTopology(m_eTopology);
-
 	m_pContext->DrawIndexed(4, 0, 0);
 
 	return S_OK;

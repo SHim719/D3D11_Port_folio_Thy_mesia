@@ -268,6 +268,7 @@
     <ClInclude Include="..\Public\TestGround.h" />
     <ClInclude Include="..\Public\TestPlay_Tool.h" />
     <ClInclude Include="..\Public\ToolAnimObj.h" />
+    <ClInclude Include="..\Public\ToolBoundingSphere.h" />
     <ClInclude Include="..\Public\ToolColliderObj.h" />
     <ClInclude Include="..\Public\ToolMapObj.h" />
     <ClInclude Include="..\Public\ToolMapObjInstance.h" />
@@ -407,6 +408,7 @@
     <ClCompile Include="..\Private\TestGround.cpp" />
     <ClCompile Include="..\Private\TestPlay_Tool.cpp" />
     <ClCompile Include="..\Private\ToolAnimObj.cpp" />
+    <ClCompile Include="..\Private\ToolBoundingSphere.cpp" />
     <ClCompile Include="..\Private\ToolColliderObj.cpp" />
     <ClCompile Include="..\Private\ToolMapObj.cpp" />
     <ClCompile Include="..\Private\ToolMapObjInstance.cpp" />
@@ -476,15 +478,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Point.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_UI.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

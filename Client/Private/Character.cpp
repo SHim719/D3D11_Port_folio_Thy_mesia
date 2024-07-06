@@ -38,6 +38,24 @@ _int CCharacter::Take_Damage(const ATTACKDESC& AttackDesc)
 	return 0;
 }
 
+void CCharacter::Tick_Weapons(_float fTimeDelta)
+{
+	for (auto& pWeapon : m_Weapons)
+	{
+		if (nullptr != pWeapon && pWeapon->Is_Active())
+			pWeapon->Tick(fTimeDelta);
+	}
+}
+
+void CCharacter::LateTick_Weapons(_float fTimeDelta)
+{
+	for (auto& pWeapon : m_Weapons)
+	{
+		if (nullptr != pWeapon && pWeapon->Is_Active())
+			pWeapon->LateTick(fTimeDelta);
+	}
+}
+
 void CCharacter::Update_AttackDesc()
 {
 	pair<_uint, ATTACKDESC> AtkDesc = m_States[m_iState]->Get_NowAttackDesc();
@@ -55,6 +73,15 @@ void CCharacter::Compute_YPos()
 	_vector vNowPosition = m_pTransform->Get_Position();
 	_float fY = m_pNavigation->Decide_YPos(vNowPosition);
 	m_pTransform->Set_Position(XMVectorSetY(vNowPosition, fY));
+}
+
+void CCharacter::Update_Colliders()
+{
+	if (m_pCollider)
+		m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+
+	if (m_pHitBoxCollider)
+		m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
 }
 
 void CCharacter::Free()

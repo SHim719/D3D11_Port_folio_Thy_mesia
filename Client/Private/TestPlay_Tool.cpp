@@ -28,9 +28,20 @@ void CTestPlay_Tool::Start_Tool()
     camDesc.fFar = 300.f;
     camDesc.fFovy = 70.f;
     camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
+    camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
+
+    m_pCamera = static_cast<CFree_Camera*>(m_pGameInstance->Clone_GameObject(L"Prototype_Free_Camera", &camDesc));
+
+    m_pGameInstance->Change_MainCamera(m_pCamera);
+
+    camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+    camDesc.fNear = 0.1f;
+    camDesc.fFar = 300.f;
+    camDesc.fFovy = 70.f;
+    camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
     camDesc.vEye = { 0.f, 10.f, 0.f, 1.f };
 
-    m_pMain_Camera = static_cast<CMain_Camera*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Camera", L"Prototype_Main_Camera", &camDesc));
+    m_pMain_Camera = static_cast<CMain_Camera*>(m_pGameInstance->Clone_GameObject(L"Prototype_Main_Camera", &camDesc));
     m_pPlayer = static_cast<CPlayer*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Player", L"Prototype_Player", nullptr));
 
     m_pMain_Camera->Set_Player(m_pPlayer);
@@ -65,25 +76,18 @@ void CTestPlay_Tool::Main_Window()
     //ImGui::End();
 }   //
 
-void CTestPlay_Tool::Camera_Window()
+void CTestPlay_Tool::Change_Camera()
 {
-    __super::Camera_Window();
-    ImGui::SetCursorPos(ImVec2(20, 140));
-    ImGui::Text("Free Camera?");
-
-
-    _bool bFreeCam = m_pCamera->Is_Active();
     if (KEY_DOWN(eKeyCode::NUMPAD0))
     {
-        bFreeCam = !bFreeCam;
-        m_pCamera->Set_Active(bFreeCam);
-        m_pMain_Camera->Set_Active(!bFreeCam);
+        if (m_bFreeCam)
+            m_pGameInstance->Change_MainCamera(m_pMain_Camera);
+        else
+            m_pGameInstance->Change_MainCamera(m_pCamera);
+
+        m_bFreeCam = !m_bFreeCam;
     }
 
-    ImGui::Checkbox("##CheckCamera", &bFreeCam);
-
-
-    ImGui::End();
 }
 
 HRESULT CTestPlay_Tool::Load_TestMap()

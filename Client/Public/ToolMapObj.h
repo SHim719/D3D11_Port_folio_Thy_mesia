@@ -4,7 +4,7 @@
 #include "GameObject.h"
 
 BEGIN(Client)
-class CToolMapObj final : public CGameObject
+class CToolMapObj : public CGameObject
 {
 public:
 	typedef struct tagToolMapObjDesc
@@ -13,7 +13,7 @@ public:
 		wstring wstrModelTag = L"";
 	}TOOLMAPOBJDESC;
 
-private:
+protected:
 	CToolMapObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CToolMapObj(const CToolMapObj& rhs);
 	virtual ~CToolMapObj() = default;
@@ -26,8 +26,8 @@ public:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
+public:
 	HRESULT Render_Picking(_int iSelectIdx);
-
 	_bool Ray_Cast(_fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist);
 
 public:
@@ -46,7 +46,7 @@ private:
 	_int		m_iNaviIdx = { -1 };
 	_int		m_iTriggerIdx = { 0 };
 
-private:
+protected:
 	CShader*		m_pShader = nullptr;
 	CModel*			m_pModel = nullptr;
 	CCollider*		m_pTriggerCollider = { nullptr };

@@ -38,6 +38,7 @@ public:
 public:
 	HRESULT SetUp_BoneMatrices(class CShader* pShader);
 	HRESULT SetUp_OnShader(class CShader* pShader, _uint iMaterialIndex, TextureType eTextureType, const char* pConstantName);
+	HRESULT Bind_Buffers(_uint iMeshIdx);
 	HRESULT Render(class CShader* pShader, _uint iMeshIndex, _uint iPassIndex = 0);
 
 	void Set_PivotMatrix(_fmatrix PivotMatrix);

@@ -77,6 +77,13 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_pGameInstance->GetKeyNone(eKeyCode::MButton))
 		m_States[m_iState]->Update(fTimeDelta);
 
+	if (m_bAdjustNaviY)
+		Compute_YPos();
+
+	__super::Update_Colliders();
+
+	__super::Tick_Weapons(fTimeDelta);
+
 	m_pModel->Play_Animation(fTimeDelta);
 }
 
@@ -85,50 +92,44 @@ void CPlayer::LateTick(_float fTimeDelta)
 	if (m_pGameInstance->GetKeyNone(eKeyCode::MButton))
 		m_States[m_iState]->Late_Update(fTimeDelta);
 
-	if (m_bAdjustNaviY)
-		Compute_YPos();
 
-	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
-	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
+	__super::LateTick_Weapons(fTimeDelta);
+
+	if (m_bNoRender)
+		return;
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_RenderComponent(m_pCollider);
+	m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
+	m_pGameInstance->Add_RenderComponent(m_pNavigation);
+#endif
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CPlayer::Render()
 {
-	if (m_bNoRender)
-		return S_OK;
-
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
 	m_pModel->SetUp_BoneMatrices(m_pShader);
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
-	for (_uint j = 0; j < iNumMeshes; ++j)
+	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture")))
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
-
 
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
 
+		if (FAILED(m_pModel->Bind_Buffers(i)))
+			return E_FAIL;
 
-		if (FAILED(m_pModel->Render(m_pShader, j, 0)))
+		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
 			return E_FAIL;
 	}
-
-	m_pCollider->Render();
-	m_pHitBoxCollider->Render();
-	m_pNavigation->Render();
 
 	return S_OK;
 }
@@ -426,7 +427,7 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = nullptr;
 
-	m_Weapons[DAGGER] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[DAGGER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[DAGGER])
 		return E_FAIL;
 
@@ -442,7 +443,7 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
 	WeaponDesc.pColliderDesc = &ColliderDesc;
-	m_Weapons[SABER] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[SABER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[SABER])
 		return E_FAIL;
 
@@ -457,12 +458,12 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("ik_hand_r");
 	WeaponDesc.wstrModelTag = L"";
 	WeaponDesc.pColliderDesc = &ColliderDesc;
-	m_Weapons[CLAW_R] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[CLAW_R] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[CLAW_R])
 		return E_FAIL;
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("ik_hand_l");
-	m_Weapons[CLAW_L] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[CLAW_L] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[CLAW_L])
 		return E_FAIL;
 
@@ -491,7 +492,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 	
-	m_Weapons[PW_AXE] = static_cast<CPlagueWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_AXE] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Player_Weapon", L"Prototype_PlagueWeapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_AXE])
 		return E_FAIL;
 
@@ -502,7 +503,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
 
-	m_Weapons[PW_HAMMER] = static_cast<CPlagueWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Player_Weapon", L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_HAMMER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Player_Weapon", L"Prototype_PlagueWeapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_HAMMER])
 		return E_FAIL;
 	

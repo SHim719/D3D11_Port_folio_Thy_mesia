@@ -67,7 +67,7 @@ struct PS_IN
 struct PS_OUT
 {
 	float4		vDiffuse : SV_TARGET0;
-	//float4		vNormal : SV_TARGET1;
+	float4		vNormal : SV_TARGET1;
 	//float4		vDepth : SV_TARGET2;
 };
 
@@ -76,6 +76,13 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;	
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	
+    if (Out.vDiffuse.a < 0.1f)
+        discard;
+	
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	
+	
 	//vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexUV);
 	//
 	//float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
@@ -86,9 +93,6 @@ PS_OUT PS_MAIN(PS_IN In)
 
 	//Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-
-	if (Out.vDiffuse.a < 0.1f)
-		discard;
 
 	return Out;
 }
@@ -98,6 +102,14 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+
+    Out.vDiffuse.a *= g_fAlpha;
+	
+    if (Out.vDiffuse.a < 0.1f)
+        discard;
+	
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	
 	//vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexUV);
 	//
 	//float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
@@ -109,10 +121,8 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
 	//Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	
-    Out.vDiffuse.a *= g_fAlpha;
+   
 	
-    if (Out.vDiffuse.a < 0.1f)
-        discard;
 
     return Out;
 }
@@ -125,9 +135,11 @@ PS_OUT PS_MAIN_PLAGUEWEAPON(PS_IN In)
     vColor.a = 1.f;
 	
     Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV) * vColor;
-	
+   
     if (Out.vDiffuse.a < 0.1f)
         discard;
+	
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 
     return Out;
 }
@@ -181,7 +193,9 @@ technique11 DefaultTechinque
 		SetRasterizerState(RS_Default);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
-		GeometryShader = NULL;
+        HullShader = NULL;
+        GeometryShader = NULL;
+        DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}	
 
@@ -192,7 +206,9 @@ technique11 DefaultTechinque
 		SetRasterizerState(RS_Default);
 
 		VertexShader = compile vs_5_0 VS_MAIN_PICKING();
-		GeometryShader = NULL;
+        HullShader = NULL;
+        GeometryShader = NULL;
+        DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_PICKING();
 	}
 
@@ -204,7 +220,9 @@ technique11 DefaultTechinque
         SetRasterizerState(RS_Default);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
         GeometryShader = NULL;
+        DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHABLEND();
     }
 

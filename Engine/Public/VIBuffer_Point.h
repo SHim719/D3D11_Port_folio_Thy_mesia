@@ -14,6 +14,7 @@ private:
 public:
 	HRESULT Initialize_Prototype()	override;
 	HRESULT Initialize(void* pArg)	override;
+	HRESULT Bind_Buffers()			override;
 	HRESULT Render()				override;
 
 public:

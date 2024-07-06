@@ -13,6 +13,7 @@ private:
 
 public:
 	HRESULT Initialize(void* pArg)		override;
+	void Start_Tool()					override;
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 
@@ -54,6 +55,8 @@ private:
 
 private:
 	vector<string>										m_strPlacable_Objects[OBJTYPE_END];
+	unordered_map<string, _float>						m_CullingRadiuses;
+
 	vector<CToolMapObj*>								m_MapObjects;						// 위치나 네비메쉬셀등의 값 등은 다 얘로 조절.
 	vector<string>										m_strCreatedObjects;
 	unordered_multimap<string, CToolMapObj*>			m_MapLayers;
@@ -62,7 +65,7 @@ private:
 
 	OBJTYPE												m_eNowObjMode = { MAPOBJECT };
 
-	_int												m_iSelPlacableObj = {};
+	_int												m_iSelPlacableObj = { -1};
 	set<_int>											m_SelectObjIndices;
 
 #pragma region Transform_View

@@ -56,6 +56,9 @@ void CMain_Camera::PriorityTick(_float fTimeDelta)
 
 void CMain_Camera::Tick(_float fTimeDelta)
 {
+	if (g_hWnd != GetFocus())
+		return;
+
 	if (KEY_DOWN(eKeyCode::NUMPAD0))
 		m_eState = DEFAULT;
 	if (KEY_DOWN(eKeyCode::NUMPAD1))
@@ -68,14 +71,10 @@ void CMain_Camera::Tick(_float fTimeDelta)
 		else
 			SetState_LockOn_To_Default();
 	}
-
 }
 
 void CMain_Camera::LateTick(_float fTimeDelta)
 {
-	if (g_hWnd != GetFocus())
-		return;
-
 	Shaking(fTimeDelta);
 
 	switch (m_eState)
@@ -92,8 +91,7 @@ void CMain_Camera::LateTick(_float fTimeDelta)
 	case CMain_Camera::UI:
 		break;
 	}
-
-	__super::Update_View();
+	
 }
 
 void CMain_Camera::Set_Player(CGameObject* pPlayer)

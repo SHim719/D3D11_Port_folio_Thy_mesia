@@ -27,6 +27,18 @@ HRESULT CAnim_Tool::Initialize(void* pArg)
 void CAnim_Tool::Start_Tool()
 {
     m_pGameInstance->Add_Clone(LEVEL_TOOL, L"TestGround", L"Prototype_TestGround");
+
+    CCamera::CAMERADESC camDesc{};
+    camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
+    camDesc.fNear = 0.1f;
+    camDesc.fFar = 300.f;
+    camDesc.fFovy = 70.f;
+    camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
+    camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
+
+    m_pCamera = static_cast<CFree_Camera*>(m_pGameInstance->Clone_GameObject(L"Prototype_Free_Camera", &camDesc));
+
+    m_pGameInstance->Change_MainCamera(m_pCamera);
 }
 
 void CAnim_Tool::Tick(_float fTimeDelta)

@@ -7,6 +7,7 @@
 #include "ToolColliderObj.h"
 #include "ToolNaviCell.h"
 #include "ToolNaviCellPoint.h"
+#include "ToolBoundingSphere.h"
 
 #include "TestGround.h"
 #include "Free_Camera.h"
@@ -53,8 +54,10 @@ HRESULT CLevel_Tool::Initialize()
 	if (FAILED(Ready_Camera()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Lights()))
+		return E_FAIL;
+
 #ifdef AnimTool
-	
 	if (FAILED(Ready_Player()))
 		return E_FAIL;
 	
@@ -127,6 +130,22 @@ HRESULT CLevel_Tool::Render()
 	return S_OK;
 }
 
+HRESULT CLevel_Tool::Ready_Lights()
+{
+	LIGHT_DESC			LightDesc{};
+
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDirection = _float4(1.f, -1.f, 1.f, 0.f);
+
+	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CLevel_Tool::Ready_ToolObjects()
 {
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolMapObj", CToolMapObj::Create(m_pDevice, m_pContext));
@@ -135,6 +154,7 @@ HRESULT CLevel_Tool::Ready_ToolObjects()
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolColliderObj", CToolColliderObj::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolNaviCell", CToolNaviCell::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolNaviCellPoint", CToolNaviCellPoint::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolBoundingSphere", CToolBoundingSphere::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -143,16 +163,6 @@ HRESULT CLevel_Tool::Ready_Camera()
 {
 	m_pGameInstance->Add_Prototype(L"Prototype_Free_Camera", CFree_Camera::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_Main_Camera", CMain_Camera::Create(m_pDevice, m_pContext));
-
-	CCamera::CAMERADESC camDesc{};
-	camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
-	camDesc.fNear = 0.1f;
-	camDesc.fFar = 300.f;
-	camDesc.fFovy = 60.f;
-	camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
-	camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
-
-	m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Camera", L"Prototype_Free_Camera", &camDesc);
 
 	return S_OK;
 }

@@ -65,7 +65,7 @@ VS_OUT VS_MAIN(VS_IN In)
 	vPosition = mul(vPosition, matWVP);
 
 	Out.vPosition = vPosition;
-	Out.vNormal = mul(vNormal, g_WorldMatrix).xyz;
+    Out.vNormal = normalize(mul(vNormal, g_WorldMatrix).xyz);
 	Out.vTexUV = In.vTexUV;
 	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
 	Out.vProjPos = vPosition;
@@ -85,7 +85,7 @@ struct PS_IN
 struct PS_OUT
 {
 	float4		vDiffuse : SV_TARGET0;
-	//float4		vNormal : SV_TARGET1;
+	float4		vNormal : SV_TARGET1;
 	//float4		vDepth : SV_TARGET2;
 };
 
@@ -94,13 +94,15 @@ PS_OUT PS_MAIN(PS_IN In)
 	PS_OUT		Out = (PS_OUT)0;	
 
 	Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
-
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	
+    if (Out.vDiffuse.a < 0.1f)
+        discard;
+	
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	
 	//
 	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 
-	if (Out.vDiffuse.a < 0.1f)
-		discard;
 
 	return Out;
 }
@@ -110,15 +112,17 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	
+    if (Out.vDiffuse.a < 0.1f)
+        discard;
 
-	//Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	//
 	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
 	
     Out.vDiffuse.a *= g_fAlpha;
 
-    if (Out.vDiffuse.a < 0.1f)
-        discard;
+   
 
     return Out;
 }
@@ -134,7 +138,9 @@ technique11 DefaultTechinque
 		SetRasterizerState(RS_Default);
 
 		VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
 		GeometryShader = NULL;
+        DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
 	}
 
@@ -145,7 +151,9 @@ technique11 DefaultTechinque
         SetRasterizerState(RS_Default);
 
         VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
         GeometryShader = NULL;
+        DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHABLEND();
     }
 	

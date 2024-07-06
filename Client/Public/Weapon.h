@@ -31,6 +31,7 @@ protected:
 	CWeapon(const CWeapon& rhs);
 	virtual ~CWeapon() = default;
 
+public:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;

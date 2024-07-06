@@ -6,6 +6,13 @@ sampler DefaultSampler = sampler_state
     AddressV = wrap;
 };
 
+sampler PointSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = WRAP;
+    AddressV = WRAP;
+};
+
 RasterizerState RS_Default
 {
 	FillMode = solid;

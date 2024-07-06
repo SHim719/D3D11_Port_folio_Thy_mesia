@@ -26,7 +26,7 @@ HRESULT CVIBuffer_Instance::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Instance::Render()
+HRESULT CVIBuffer_Instance::Bind_Buffers()
 {
 	ID3D11Buffer* pVertexBuffers[] = {
 		m_pVB,
@@ -47,8 +47,13 @@ HRESULT CVIBuffer_Instance::Render()
 	m_pContext->IASetIndexBuffer(m_pIB, m_eIndexFormat, 0);
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
 
-	m_pContext->DrawIndexedInstanced(m_iNumIndexPerInstance, m_iNumInstance, 0, 0, 0);
+	return S_OK;
+}
 
+
+HRESULT CVIBuffer_Instance::Render()
+{
+	m_pContext->DrawIndexedInstanced(m_iNumIndexPerInstance, m_iNumInstance, 0, 0, 0);
 	return S_OK;
 }
 

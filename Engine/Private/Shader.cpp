@@ -1,5 +1,7 @@
 #include "..\Public\Shader.h"
 
+#include "GameInstance.h"
+
 CShader::CShader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 {
@@ -20,7 +22,7 @@ CShader::CShader(const CShader& rhs)
 	Safe_AddRef(m_pEffect);
 }
 
-HRESULT CShader::Initialize_Prototype(const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+HRESULT CShader::Initialize_Prototype(const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool bInRenderer)
 {
 	_uint		iFlag = 0;
 
@@ -71,6 +73,9 @@ HRESULT CShader::Initialize_Prototype(const wstring& strShaderFilePath, const D3
 
 		m_Passes.push_back(PassDesc);
 	}
+
+	if (bInRenderer)
+		CGameInstance::Get_Instance()->Add_UsingShader(this);
 
 	return S_OK;
 }
@@ -125,11 +130,11 @@ HRESULT CShader::Begin(_uint iPassIndex)
 	return S_OK;
 }
 
-CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements)
+CShader* CShader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& strShaderFilePath, const D3D11_INPUT_ELEMENT_DESC* pElements, _uint iNumElements, _bool bInRenderer)
 {
 	CShader* pInstance = new CShader(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(strShaderFilePath, pElements, iNumElements)))
+	if (FAILED(pInstance->Initialize_Prototype(strShaderFilePath, pElements, iNumElements, bInRenderer)))
 	{
 		assert(false);
 		Safe_Release(pInstance);

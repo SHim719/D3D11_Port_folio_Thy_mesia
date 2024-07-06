@@ -17,14 +17,15 @@ public:
 
 private:
 	void Main_Window();
-	void Camera_Window() override;
 
+	void Change_Camera();
 
 	HRESULT Load_TestMap();
 private:
-	class CMain_Camera* m_pMain_Camera = nullptr;
-	class CPlayer*		m_pPlayer = nullptr;
+	class CMain_Camera* m_pMain_Camera = { nullptr };
+	class CPlayer*		m_pPlayer = { nullptr };
 
+	_bool				m_bFreeCam = { true };
 public:
 	static CTestPlay_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;

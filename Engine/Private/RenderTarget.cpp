@@ -1,9 +1,14 @@
 #include "RenderTarget.h"
+#include "Shader.h"
+#include "VIBuffer_Rect.h"
+
 
 CRenderTarget::CRenderTarget(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
 {
+	Safe_AddRef(m_pDevice);
+	Safe_AddRef(m_pContext);
 }
 
 HRESULT CRenderTarget::Initialize(void* pArg)
@@ -34,19 +39,62 @@ HRESULT CRenderTarget::Initialize(void* pArg)
 	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture, nullptr, &m_pSRV)))
 		return E_FAIL;
 
+	m_vClearColor = pRTDesc->vClearColor;
+
 	return S_OK;
 }
 
-void CRenderTarget::Clear_RTV(_vector vClearColor)
+void CRenderTarget::Clear()
 {
-	if (nullptr == m_pContext)
-		return;
-
-	_float4 vColor;
-	XMStoreFloat4(&vColor, vClearColor);
-
-	m_pContext->ClearRenderTargetView(m_pRTV, (_float*)&vColor);
+	m_pContext->ClearRenderTargetView(m_pRTV, (_float*)&m_vClearColor);
 }
+
+HRESULT CRenderTarget::Bind_ShaderResourceView(CShader* pShader, const _char* pConstantName)
+{
+	return pShader->Set_ShaderResourceView(pConstantName, m_pSRV);
+}
+
+#ifdef _DEBUG
+
+HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	_matrix WorldMatrix = XMMatrixIdentity();
+
+	WorldMatrix.r[0].m128_f32[0] = fSizeX;
+	WorldMatrix.r[1].m128_f32[1] = fSizeY;
+
+	D3D11_VIEWPORT			ViewportDesc{};
+	_uint					iNumViewports = { 1 };
+	m_pContext->RSGetViewports(&iNumViewports, &ViewportDesc);
+
+	WorldMatrix.r[3].m128_f32[0] = fX - ViewportDesc.Width * 0.5f;
+	WorldMatrix.r[3].m128_f32[1] = -fY + ViewportDesc.Height * 0.5f;
+
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixTranspose(WorldMatrix));
+
+	return S_OK;
+}
+
+HRESULT CRenderTarget::Render_Debug(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	/* 월드행렬을 따로 셋팅하는 이유 : 렌더타겟을 확인해뵉위한 디버긍요 사각형 버퍼를 각기 다른 위치에 다른 사이즈로 직교투영햐아여 그려주기위해ㅓㅅ. */
+	if (FAILED(pShader->Set_RawValue("g_WorldMatrix", &m_WorldMatrix, sizeof(_float4x4))))
+		return E_FAIL;
+
+	/* 렌더타겟에 뭐가 그려지는 지를 확인하기위해서 레[ㄴ터타겟텍스쳐를 쉐이더로 던진다. */
+	if (FAILED(pShader->Set_ShaderResourceView("g_Texture", m_pSRV)))
+		return E_FAIL;
+
+	if (FAILED(pShader->Begin(0)))
+		return E_FAIL;
+
+	if (FAILED(pVIBuffer->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+#endif
 
 CRenderTarget* CRenderTarget::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {

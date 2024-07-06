@@ -43,6 +43,11 @@ HRESULT CModel_Instance::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, 
 	return m_Materials[iMaterialIndex].pTexture[eTextureType]->Set_SRV(pShader, pConstantName);
 }
 
+HRESULT CModel_Instance::Bind_Buffers(_uint iMeshIdx)
+{
+	return m_InstanceMeshes[iMeshIdx]->Bind_Buffers();
+}
+
 HRESULT CModel_Instance::Render(CShader* pShader, _uint iMeshIndex, _uint iPassIndex)
 {
 	pShader->Begin(iPassIndex);

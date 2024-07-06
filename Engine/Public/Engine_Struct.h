@@ -20,6 +20,20 @@ namespace Engine
 		bool			isWindowed;
 	}GRAPHIC_DESC;
 
+	typedef struct
+	{
+		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_SPOT, TYPE_END };
+		TYPE		eType;
+		XMFLOAT4	vDiffuse;
+		XMFLOAT4	vAmbient;
+		XMFLOAT4	vSpecular;
+
+		XMFLOAT4	vDirection;
+		XMFLOAT4	vPosition;
+		float		fRange;
+
+	}LIGHT_DESC;
+
 	typedef struct tagLineIndices16
 	{
 		unsigned short		_0, _1;

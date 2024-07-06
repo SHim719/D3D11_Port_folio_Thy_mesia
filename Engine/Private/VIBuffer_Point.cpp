@@ -55,11 +55,8 @@ HRESULT CVIBuffer_Point::Initialize(void* pArg)
 	return S_OK;
 }
 
-HRESULT CVIBuffer_Point::Render()
+HRESULT CVIBuffer_Point::Bind_Buffers()
 {
-	if (nullptr == m_pContext)
-		return E_FAIL;
-
 	ID3D11Buffer* pVertexBuffers[] = {
 		m_pVB,
 	};
@@ -76,6 +73,11 @@ HRESULT CVIBuffer_Point::Render()
 
 	m_pContext->IASetPrimitiveTopology(m_eTopology);
 
+	return S_OK;
+}
+
+HRESULT CVIBuffer_Point::Render()
+{
 	m_pContext->Draw(m_iNumVertices, 0);
 
 	return S_OK;

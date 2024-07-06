@@ -44,7 +44,6 @@ HRESULT CVillager_M::Initialize(void* pArg)
 	if (FAILED(Ready_UI()))
 		return E_FAIL;
 	
-
 	Bind_KeyFrames();
 
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"PerceptionBounding", L"Prototype_PerceptionBounding", this);
@@ -69,6 +68,13 @@ void CVillager_M::Tick(_float fTimeDelta)
 
 	m_States[m_iState]->Update(fTimeDelta);
 
+	if (m_bAdjustNaviY)
+		m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+
+	__super::Update_Colliders();
+
+	__super::Tick_Weapons(fTimeDelta);
+
 	m_pModel->Play_Animation(fTimeDelta);
 }
 
@@ -76,10 +82,15 @@ void CVillager_M::LateTick(_float fTimeDelta)
 {
 	m_States[m_iState]->Late_Update(fTimeDelta);
 
-	Compute_YPos();
+	__super::LateTick_Weapons(fTimeDelta);
 
-	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
-	m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
+	if (m_bNoRender)
+		return;
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_RenderComponent(m_pCollider);
+	m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
+#endif
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
@@ -90,12 +101,6 @@ HRESULT CVillager_M::Render()
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
 	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
@@ -111,12 +116,12 @@ HRESULT CVillager_M::Render()
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
 
+		if (FAILED(m_pModel->Bind_Buffers(i)))
+			return E_FAIL;
+
 		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
 			return E_FAIL;
 	}
-
-	m_pCollider->Render();
-	m_pHitBoxCollider->Render();
 
 	return S_OK;
 }
@@ -234,7 +239,7 @@ HRESULT CVillager_M::Ready_Weapon()
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 
-	m_Weapons[AXE] = static_cast<CWeapon*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Enemy_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[AXE] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[AXE])
 		return E_FAIL;
 

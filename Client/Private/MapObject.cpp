@@ -50,15 +50,18 @@ HRESULT CMapObject::Render()
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
-	for (_uint j = 0; j < iNumMeshes; ++j)
+	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, j, TextureType_DIFFUSE, "g_DiffuseTexture")))
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
 
-		if (FAILED(m_pModel->Render(m_pShader, j, 0)))
+		if (FAILED(m_pModel->Bind_Buffers(i)))
+			return E_FAIL;
+
+		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
 			return E_FAIL;
 	}
 

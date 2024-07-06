@@ -64,7 +64,9 @@ protected:
 	_bool	m_bReturnToPool = { false }; // For Object Pool
 	_bool	m_bNoRender = { false };
 
-	_uint m_iTag = 0;
+	_uint	m_iTag = { 0 };
+
+	_float	m_fCullingRadius = { 1.f };
 public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
 	_bool Is_Destroyed() { 
@@ -97,6 +99,10 @@ public:
 
 	_bool No_Render() const {
 		return m_bNoRender;
+	}
+
+	void Set_CullingRadius(_float fRadius) {
+		m_fCullingRadius = fRadius;
 	}
 
 public:

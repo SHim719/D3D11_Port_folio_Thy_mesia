@@ -2,6 +2,8 @@
 
 #include "Layer.h"
 
+#include "MyCamera.h"
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -19,10 +21,6 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (nullptr == m_pKey_Manager)
 		return E_FAIL;
 
-	m_pTimer_Manager = CTimer_Manager::Create();
-	if (nullptr == m_pTimer_Manager)
-		return E_FAIL;
-
 	m_pLevel_Manager = CLevel_Manager::Create();
 	if (nullptr == m_pLevel_Manager)
 		return E_FAIL;
@@ -35,6 +33,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (nullptr == m_pComponent_Manager)
 		return E_FAIL;
 
+	m_pTarget_Manager = CTarget_Manager::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pTarget_Manager)
+		return E_FAIL;
+
 	m_pCollision_Manager = CCollision_Manager::Create();
 	if (nullptr == m_pComponent_Manager)
 		return E_FAIL;
@@ -43,9 +45,9 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (nullptr == m_pSound_Manager)
 		return E_FAIL;
 
-	//m_pFrustum = CFrustum::Create(*ppOut);
-	//if (nullptr == m_pFrustum)
-	//	return E_FAIL;
+	m_pFrustum = CFrustum::Create();
+	if (nullptr == m_pFrustum)
+		return E_FAIL;
 
 	m_pRenderer = CRenderer::Create(*ppDevice, *ppContext);
 	if (nullptr == m_pRenderer)
@@ -63,6 +65,14 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (nullptr == m_pFont_Manager)
 		return E_FAIL;
 
+	m_pLight_Manager = CLight_Manager::Create();
+	if (nullptr == m_pLight_Manager)
+		return E_FAIL;
+
+	m_pTimer_Manager = CTimer_Manager::Create();
+	if (nullptr == m_pTimer_Manager)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -76,13 +86,14 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->PriorityTick(fTimeDelta * m_fTimeScale);
 	m_pObject_Manager->Tick(fTimeDelta * m_fTimeScale);
+	m_pMain_Camera->Tick(fTimeDelta);
+
+	m_pPipeLine->Update();
+	m_pFrustum->Update();
+
 	m_pObject_Manager->LateTick(fTimeDelta * m_fTimeScale);
 
 	m_pCollision_Manager->Update();
-
-	//m_pFrustum->Tick();
-
-	m_pPipeLine->Update();
 
 	m_pLevel_Manager->Tick(fTimeDelta);
 }
@@ -288,6 +299,18 @@ HRESULT CGameInstance::Add_RenderObject(CRenderer::RENDERGROUP eRenderGroup, CGa
 
 	return m_pRenderer->Add_RenderObject(eRenderGroup, pRenderObject);
 }
+
+HRESULT CGameInstance::Add_RenderComponent(CComponent* pRenderComponent)
+{
+	if (nullptr == m_pRenderer)
+		return E_FAIL;
+
+	return m_pRenderer->Add_RenderComponent(pRenderComponent);
+}
+void CGameInstance::Add_UsingShader(CShader* pShader)
+{
+	m_pRenderer->Add_UsingShader(pShader);
+}
 #pragma endregion
 
 #pragma region COLLISION_MANAGER
@@ -360,9 +383,9 @@ _bool CGameInstance::Is_Playing(const wstring& strSoundTag)
 
 
 #pragma region FRUSTUM
-_bool CGameInstance::In_WorldFrustum(_float3 vWorldPos, _float fRadius)
+_bool CGameInstance::In_WorldFrustum(_fvector vWorldPos, _float fRadius)
 {
-	return true;//m_pFrustum->In_WorldFrustum(vWorldPos, fRadius);
+	return m_pFrustum->In_WorldFrustum(vWorldPos, fRadius);
 }
 #pragma endregion
 
@@ -433,6 +456,87 @@ HRESULT CGameInstance::Render_Font(const wstring& strFontTag, const wstring& str
 }
 #pragma endregion
 
+#pragma region TARGET_MANAGER
+
+HRESULT CGameInstance::Add_RenderTarget(const wstring& strRenderTargetTag, _uint iWidth, _uint iHeight, DXGI_FORMAT ePixel, const _float4& vClearColor)
+{
+	return m_pTarget_Manager->Add_RenderTarget(strRenderTargetTag, iWidth, iHeight, ePixel, vClearColor);
+}
+
+HRESULT CGameInstance::Add_MRT(const wstring& strMRTTag, const wstring& strRenderTargetTag)
+{
+	return m_pTarget_Manager->Add_MRT(strMRTTag, strRenderTargetTag);
+}
+
+HRESULT CGameInstance::Begin_MRT(const wstring& strMRTTag)
+{
+	return m_pTarget_Manager->Begin_MRT(strMRTTag);
+}
+
+HRESULT CGameInstance::End_MRT()
+{
+	return m_pTarget_Manager->End_MRT();
+}
+
+HRESULT CGameInstance::Bind_RT_SRV(const wstring& strRenderTargetTag, CShader* pShader, const _char* pConstantName)
+{
+	return m_pTarget_Manager->Bind_RT_SRV(strRenderTargetTag, pShader, pConstantName);
+}
+
+#ifdef _DEBUG
+
+HRESULT CGameInstance::Ready_RTDebug(const wstring& strRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
+{
+	return m_pTarget_Manager->Ready_Debug(strRenderTargetTag, fX, fY, fSizeX, fSizeY);
+}
+
+HRESULT CGameInstance::Render_RTDebug(const wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
+}
+
+#endif
+
+#pragma endregion
+
+#pragma region LIGHT_MANAGER
+
+const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iIndex) const
+{
+	return m_pLight_Manager->Get_LightDesc(iIndex);
+}
+
+HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
+{
+	return m_pLight_Manager->Add_Light(LightDesc);
+}
+
+HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	return m_pLight_Manager->Render(pShader, pVIBuffer);
+}
+
+#pragma endregion
+
+
+#pragma region CAMERA
+
+void CGameInstance::Change_MainCamera(CCamera* pCamera)
+{
+	Safe_Release(m_pMain_Camera);
+
+	m_pMain_Camera = pCamera;
+
+	Safe_AddRef(m_pMain_Camera);
+}
+
+void CGameInstance::Update_ViewProj()
+{
+	m_pMain_Camera->Update_ViewProj();
+}
+
+#pragma endregion
+
 
 void CGameInstance::Release_Engine()
 {
@@ -445,7 +549,9 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {	
+	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pRenderer);
+	Safe_Release(m_pLight_Manager);
 	Safe_Release(m_pComponent_Manager);
 	Safe_Release(m_pObject_Manager);
 	Safe_Release(m_pTimer_Manager);
@@ -455,7 +561,7 @@ void CGameInstance::Free()
 	Safe_Release(m_pSound_Manager);
 	Safe_Release(m_pEvent_Manager);
 	Safe_Release(m_pFont_Manager);
-	//Safe_Release(m_pFrustum);
+	Safe_Release(m_pFrustum);
 	Safe_Release(m_pPipeLine);
 	Safe_Release(m_pGraphic_Device);
 }

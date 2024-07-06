@@ -126,6 +126,11 @@ HRESULT CModel::SetUp_OnShader(CShader* pShader, _uint iMaterialIndex, TextureTy
 	return m_Materials[iMaterialIndex].pTexture[eTextureType]->Set_SRV(pShader, pConstantName);
 }
 
+HRESULT CModel::Bind_Buffers(_uint iMeshIdx)
+{
+	return m_Meshes[iMeshIdx]->Bind_Buffers();
+}
+
 
 void CModel::Reset_PrevRootPos()
 {

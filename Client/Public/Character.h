@@ -42,6 +42,10 @@ public:
 protected:
 	vector<class CWeapon*>		m_Weapons;
 
+protected:
+	void Tick_Weapons(_float fTimeDelta);
+	void LateTick_Weapons(_float fTimeDelta);
+
 public:
 	void Update_AttackDesc();
 
@@ -60,6 +64,7 @@ public:
 
 protected:
 	void Compute_YPos();
+	void Update_Colliders();
 
 protected:
 	CShader*		m_pShader = { nullptr };

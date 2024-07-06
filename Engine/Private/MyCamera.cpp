@@ -41,7 +41,7 @@ void CCamera::LateTick(_float fTimeDelta)
 	
 }
 
-void CCamera::Update_View() const
+void CCamera::Update_ViewProj() const
 {
 	m_pGameInstance->Set_Transform(CPipeLine::D3DTS_VIEW, m_pTransform->Get_WorldMatrixInverse());
 	m_pGameInstance->Set_Transform(CPipeLine::D3DTS_PROJ, XMMatrixPerspectiveFovLH(To_Radian(m_CameraDesc.fFovy), m_CameraDesc.fAspect, m_CameraDesc.fNear, m_CameraDesc.fFar));

@@ -12,7 +12,8 @@ END
 BEGIN(Client)
 class CImGui_Main :  public CBase
 {
-enum ToolState { MAP, ANIM, EFFECT, CUTSCENE, TESTPLAY, TOOL_END};
+private:
+	enum ToolState { MAP, ANIM, EFFECT, CUTSCENE, TESTPLAY, TOOL_END};
 
 private:
 	CImGui_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -30,7 +31,7 @@ private:
 	ID3D11DeviceContext*			m_pContext = nullptr;
 	CGameInstance*					m_pGameInstance = nullptr;
 
-	
+	CFree_Camera*					m_pFree_Camera = { nullptr };
 private:
 	void ComboBox_ToolSelect();
 

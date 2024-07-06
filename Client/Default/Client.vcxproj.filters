@@ -490,9 +490,6 @@
     <Filter Include="04. UI\InGameUI\07. UI_SkillSlot">
       <UniqueIdentifier>{ca12db51-d09e-4090-8ffa-7f2713abebd8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. UI\InGameUI\NewFilter1">
-      <UniqueIdentifier>{03b26fda-71dd-4575-8d50-ea58c74620f5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder">
       <UniqueIdentifier>{c91b6dfc-e49b-4f54-8f7c-18a62b5dcf52}</UniqueIdentifier>
     </Filter>
@@ -513,6 +510,9 @@
     </Filter>
     <Filter Include="02. GameObjects\99. ToolObject\1. ToolMapObj\ToolMapObjInstance">
       <UniqueIdentifier>{fceba8fa-4c6b-4020-9984-cbac09cc0547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\5. ToolBoundingSphere">
+      <UniqueIdentifier>{9193230b-7863-480a-a2d2-4d6e00da7621}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -963,6 +963,9 @@
     <ClInclude Include="..\Public\ToolMapObjInstance.h">
       <Filter>02. GameObjects\99. ToolObject\1. ToolMapObj\ToolMapObjInstance</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\ToolBoundingSphere.h">
+      <Filter>02. GameObjects\99. ToolObject\5. ToolBoundingSphere</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1355,6 +1358,9 @@
     <ClCompile Include="..\Private\ToolMapObjInstance.cpp">
       <Filter>02. GameObjects\99. ToolObject\1. ToolMapObj\ToolMapObjInstance</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\ToolBoundingSphere.cpp">
+      <Filter>02. GameObjects\99. ToolObject\5. ToolBoundingSphere</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1390,10 +1396,10 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Cell.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_Point.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNonAnimInstance.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNonAnimInstance.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
