@@ -37,6 +37,9 @@ HRESULT CToolMapObjInstance::Initialize(void* pArg)
 
 void CToolMapObjInstance::Ready_RenderInstance()
 {
+	if (m_pInstance_Transforms.empty())
+		return;
+
 	m_pModel_Instance->Ready_Instancing(m_pInstance_Transforms);
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);

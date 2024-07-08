@@ -458,12 +458,12 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("ik_hand_r");
 	WeaponDesc.wstrModelTag = L"";
 	WeaponDesc.pColliderDesc = &ColliderDesc;
-	m_Weapons[CLAW_R] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[CLAW_R] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[CLAW_R])
 		return E_FAIL;
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("ik_hand_l");
-	m_Weapons[CLAW_L] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Player_Weapon", L"Prototype_Weapon", &WeaponDesc));
+	m_Weapons[CLAW_L] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[CLAW_L])
 		return E_FAIL;
 
@@ -492,7 +492,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 	
-	m_Weapons[PW_AXE] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Player_Weapon", L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_AXE] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_AXE])
 		return E_FAIL;
 
@@ -503,7 +503,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
 
-	m_Weapons[PW_HAMMER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Player_Weapon", L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_HAMMER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_HAMMER])
 		return E_FAIL;
 	

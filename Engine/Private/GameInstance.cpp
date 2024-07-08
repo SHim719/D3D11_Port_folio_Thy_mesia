@@ -86,14 +86,17 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->PriorityTick(fTimeDelta * m_fTimeScale);
 	m_pObject_Manager->Tick(fTimeDelta * m_fTimeScale);
+
 	m_pMain_Camera->Tick(fTimeDelta);
+
+	m_pCollision_Manager->Update();
+
+	m_pMain_Camera->LateTick(fTimeDelta);
 
 	m_pPipeLine->Update();
 	m_pFrustum->Update();
 
 	m_pObject_Manager->LateTick(fTimeDelta * m_fTimeScale);
-
-	m_pCollision_Manager->Update();
 
 	m_pLevel_Manager->Tick(fTimeDelta);
 }
@@ -549,6 +552,7 @@ void CGameInstance::Release_Engine()
 
 void CGameInstance::Free()
 {	
+	Safe_Release(m_pMain_Camera);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pLight_Manager);

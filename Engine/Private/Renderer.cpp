@@ -56,7 +56,7 @@ HRESULT CRenderer::Initialize()
 	if (nullptr == m_pVIBuffer)
 		return E_FAIL;
 
-	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements);
+	m_pShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Deferred.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements, false);
 	if (nullptr == m_pShader)
 		return E_FAIL;
 

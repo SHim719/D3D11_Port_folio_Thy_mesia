@@ -365,13 +365,16 @@ void CMap_Tool::Key_Input_MapTool()
             if (m_SelectObjIndices.empty())
                 return;
 
-           //for (_int iSelObjIdx : m_SelectObjIndices)
-           //{
-           //    CToolMapObj* pClonedObj = static_cast<CToolMapObj*>(m_MapObjects[iSelObjIdx]->Clone(nullptr));
-           //    m_MapObjects.emplace_back(pClonedObj);
-           //    m_strCreatedObjects.emplace_back(m_strCreatedObjects[iSelObjIdx]);
-           //    m_MapLayers.emplace(m_strPlacable_Objects[m_eNowObjMode][iSelObjIdx], pClonedObj);
-           //}
+           for (_int iSelObjIdx : m_SelectObjIndices)
+           {
+               CToolMapObj* pClonedObj = static_cast<CToolMapObj*>(m_MapObjects[iSelObjIdx]->Clone(nullptr));
+
+               m_pGameInstance->Insert_GameObject(LEVEL_TOOL, L"MapObject", pClonedObj);
+
+               m_MapObjects.emplace_back(pClonedObj);
+               m_strCreatedObjects.emplace_back(m_strCreatedObjects[iSelObjIdx]);
+               m_MapLayers.emplace(m_strCreatedObjects[iSelObjIdx], pClonedObj);
+           }
         }
     }
 
@@ -600,7 +603,8 @@ void CMap_Tool::Object_ListBox()
             if (bSelected)
             {
                 auto it = m_SelectObjIndices.find((_int)i);
-                m_SelectObjIndices.erase(it);
+                if (m_SelectObjIndices.end() != it)
+                    m_SelectObjIndices.erase(it);
             }
             else
             {
@@ -1135,7 +1139,7 @@ _int CMap_Tool::ColorPicking_Object()
     m_pContext->Unmap(m_pPickingTexture, 0);
 
     iResult = 0;
-    iResult += (_int)pickColor[0];
+    iResult += (_int)pickColor[0] + (_int)pickColor[1] + (_int)pickColor[2] + (_int)pickColor[3];
 
     m_pContext->OMSetRenderTargets(1, &pBackRTV, pBackDSV);
 

@@ -56,7 +56,7 @@ HRESULT CMainApp::Render()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.5f, 0.f, 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 0.f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
 	m_pGameInstance->Draw();

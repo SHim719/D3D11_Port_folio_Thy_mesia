@@ -3,6 +3,11 @@
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
 vector      g_vLightDir;
+
+float4      g_vLightAmbient;
+float4      g_vLightDiffuse;
+float4      g_vLightSpecular;
+
 texture2D   g_NormalTexture;
 
 texture2D   g_DiffuseTexture;
@@ -71,8 +76,9 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 
 	/* 0 ~ 1 -> -1 ~ 1 */
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
-
-    Out.vShade = max(dot(normalize(g_vLightDir) * -1.f, normalize(vNormal)), 0.f);
+   
+    Out.vShade = saturate(saturate(dot(normalize(g_vLightDir) * -1.f, vNormal)) + g_vLightAmbient);
+    Out.vShade.a = 1.f;
 
     return Out;
 }

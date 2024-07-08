@@ -12,8 +12,21 @@ CToolMapObj::CToolMapObj(const CToolMapObj& rhs)
 	, m_iNaviIdx(rhs.m_iNaviIdx)
 	, m_iTriggerIdx(rhs.m_iTriggerIdx)
 {
+	if (rhs.m_pShader)
+		m_pShader = static_cast<CShader*>(rhs.m_pShader->Clone(nullptr));
 
-}
+	if (rhs.m_pModel)
+		m_pModel = static_cast<CModel*>(rhs.m_pModel->Clone(nullptr));
+
+	if (rhs.m_pTriggerCollider)
+		m_pTriggerCollider = static_cast<CCollider*>(rhs.m_pTriggerCollider->Clone(nullptr));
+
+	if (rhs.m_pTransform)
+	{
+		m_pTransform = static_cast<CTransform*>(rhs.m_pTransform->Clone(nullptr));
+		m_pTransform->Set_WorldMatrix(rhs.m_pTransform->Get_WorldMatrix());
+	}
+}	
 
 HRESULT CToolMapObj::Initialize_Prototype()
 {
@@ -87,14 +100,14 @@ void CToolMapObj::LateTick(_float fTimeDelta)
 	{
 		m_pTriggerCollider->Update(m_pTransform->Get_WorldMatrix());
 
+		m_pGameInstance->Add_RenderComponent(m_pTriggerCollider);
+	
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 	}
 }
 
 HRESULT CToolMapObj::Render()
 {
-	if (m_pTriggerCollider)
-		m_pTriggerCollider->Render();
 
 	return S_OK;
 }
@@ -136,9 +149,12 @@ HRESULT CToolMapObj::Render_Picking(_int iSelectIdx)
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
-	for (_uint j = 0; j < iNumMeshes; ++j)
+	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
-		if (FAILED(m_pModel->Render(m_pShader, j, 1)))
+		if (FAILED(m_pModel->Bind_Buffers(i)))
+			return E_FAIL;
+
+		if (FAILED(m_pModel->Render(m_pShader, i, 1)))
 			return E_FAIL;
 	}
 

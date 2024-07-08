@@ -41,8 +41,16 @@ _bool CMeshContainer::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvec
 	// 
 	// 거리가 가장 짧은삼각형점을 피킹
 
-	_vector vRayStartLocalPos = XMVector3TransformCoord(vRayStartPos, InvWorldMat);
-	_vector vRayLocalDir = XMVector3TransformNormal(vRayDir, InvWorldMat);
+	XMVECTOR vRayStartLocalPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);//XMVector3TransformCoord(vRayStartPos, InvWorldMat);
+	XMVECTOR vRayLocalDir = XMVector3TransformNormal(vRayDir, InvWorldMat);
+
+	_float fx;
+
+	DirectX::TriangleTests::Intersects(XMVectorSet(0.f, 0.f ,0.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f)
+		, XMVectorSet(0.f, 0.f, 0.f, 1.f)
+		, XMVectorSet(0.f, 0.f, 0.f, 1.f)
+		, XMVectorSet(0.f, 0.f, 0.f, 1.f)
+		, fx);
 
 	_bool bResult = false;
 	fDist = FLT_MAX;
@@ -56,6 +64,7 @@ _bool CMeshContainer::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvec
 			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._1].vPosition), 1.f)
 			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._2].vPosition), 1.f)
 			, fNowDist);
+
 
 		if (fNowDist > 0.f && fNowDist < fDist)
 		{

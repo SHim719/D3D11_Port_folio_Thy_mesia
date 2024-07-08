@@ -17,6 +17,9 @@ HRESULT CLight::Render(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
 {
 	_uint		iPassIndex = { 0 };
 
+	if (FAILED(pShader->Set_RawValue("g_vLightAmbient", &m_LightDesc.vAmbient, sizeof(_float4))))
+		return E_FAIL;
+
 	switch (m_LightDesc.eType)
 	{
 	case LIGHT_DESC::TYPE_DIRECTIONAL:
