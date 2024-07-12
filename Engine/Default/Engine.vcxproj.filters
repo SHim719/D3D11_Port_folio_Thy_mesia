@@ -178,6 +178,9 @@
     <Filter Include="01.Utility\99. Managers\10. Light_Manager">
       <UniqueIdentifier>{cdc1c1c2-9daf-4a3f-a6ea-3b87f0ae6401}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\02. GameObjects\Instancing_Object">
+      <UniqueIdentifier>{b0741d9d-81c6-4d3a-8ab9-bce18890b6ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -366,6 +369,9 @@
     <ClInclude Include="..\Public\Light_Manager.h">
       <Filter>01.Utility\99. Managers\10. Light_Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Instancing_Object.h">
+      <Filter>01.Utility\02. GameObjects\Instancing_Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -532,6 +538,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\Light_Manager.cpp">
       <Filter>01.Utility\99. Managers\10. Light_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Instancing_Object.cpp">
+      <Filter>01.Utility\02. GameObjects\Instancing_Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

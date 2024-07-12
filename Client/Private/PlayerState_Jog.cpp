@@ -15,6 +15,8 @@ HRESULT CPlayerState_Jog::Initialize(void* pArg)
 		PlayerState::State_LockOn, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
 		,PlayerState::State_Avoid, PlayerState::State_Parry };
 
+	m_bCanClimb = true;
+
 	return S_OK;
 }
 

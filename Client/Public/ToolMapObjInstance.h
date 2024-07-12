@@ -18,11 +18,11 @@ public:
 
 	void Ready_RenderInstance();
 private:
-	vector<CTransform*>		m_pInstance_Transforms;
+	vector<_float4x4>		m_WorldMatrices;
 
 public:
-	void Add_Transform(CTransform* pTransform) {
-		m_pInstance_Transforms.emplace_back(pTransform);
+	void Add_WorldMatrix(const _float4x4& WorldMatrix) {
+		m_WorldMatrices.emplace_back(WorldMatrix);
 	}
 
 private:

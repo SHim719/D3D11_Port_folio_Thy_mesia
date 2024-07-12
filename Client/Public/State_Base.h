@@ -22,16 +22,20 @@ public:
 
 	virtual void OnHit(const ATTACKDESC& AttackDesc);
 
-protected:
-	ID3D11Device*			m_pDevice = nullptr;
-	ID3D11DeviceContext*	m_pContext = nullptr;
-
-	CGameInstance*			m_pGameInstance = nullptr;
+	void Set_Navigation(CNavigation* pNavigation) {
+		m_pNavigation = pNavigation;
+	}
 
 protected:
-	CModel*				m_pModel = nullptr;
-	CTransform*			m_pOwnerTransform = nullptr;
-	CNavigation*		m_pNavigation = nullptr;
+	ID3D11Device*			m_pDevice = { nullptr };
+	ID3D11DeviceContext*	m_pContext = { nullptr };
+
+	CGameInstance*			m_pGameInstance = { nullptr };
+
+protected:
+	CModel*				m_pModel = { nullptr };
+	CTransform*			m_pOwnerTransform = { nullptr };
+	CNavigation*		m_pNavigation = { nullptr };
 
 protected:
 	_float				m_fPatternTime = { 0.f };

@@ -105,7 +105,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../Public/;../../External/Inc/FMOD/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../Public/;../../External/Inc/FMOD/;../../External/Inc/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -147,7 +147,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../Public/;../../External/Inc/FMOD/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../EngineSDK/Inc/;../Public/;../../External/Inc/FMOD/;../../External/Inc/</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -169,6 +169,7 @@
     <ClInclude Include="..\Public\Anim_Tool.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Character.h" />
+    <ClInclude Include="..\Public\ClientLevel.h" />
     <ClInclude Include="..\Public\Client_Components.h" />
     <ClInclude Include="..\Public\Client_Enums.h" />
     <ClInclude Include="..\Public\Client_Functions.h" />
@@ -183,6 +184,12 @@
     <ClInclude Include="..\Public\FadeScreen.h" />
     <ClInclude Include="..\Public\Fade_Manager.h" />
     <ClInclude Include="..\Public\Free_Camera.h" />
+    <ClInclude Include="..\Public\HalberdKnight.h" />
+    <ClInclude Include="..\Public\HalberdKnightState_Base.h" />
+    <ClInclude Include="..\Public\HalberdKnightState_Idle.h" />
+    <ClInclude Include="..\Public\HalberdKnightState_Walk.h" />
+    <ClInclude Include="..\Public\HalberdKnight_Enums.h" />
+    <ClInclude Include="..\Public\HalberdKnight_States.h" />
     <ClInclude Include="..\Public\ImGui_Main.h" />
     <ClInclude Include="..\Public\Joker.h" />
     <ClInclude Include="..\Public\JokerState_Base.h" />
@@ -203,8 +210,10 @@
     <ClInclude Include="..\Public\JokerState_WheelWind_Start.h" />
     <ClInclude Include="..\Public\Joker_Enums.h" />
     <ClInclude Include="..\Public\Joker_States.h" />
+    <ClInclude Include="..\Public\Ladder_Down.h" />
+    <ClInclude Include="..\Public\Ladder_Up.h" />
     <ClInclude Include="..\Public\Levels_Header.h" />
-    <ClInclude Include="..\Public\Level_GamePlay.h" />
+    <ClInclude Include="..\Public\Level_Stage1.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Tool.h" />
     <ClInclude Include="..\Public\Loader.h" />
@@ -212,6 +221,7 @@
     <ClInclude Include="..\Public\Main_Camera.h" />
     <ClInclude Include="..\Public\MapObject.h" />
     <ClInclude Include="..\Public\Map_Tool.h" />
+    <ClInclude Include="..\Public\Object_Headers.h" />
     <ClInclude Include="..\Public\Odur.h" />
     <ClInclude Include="..\Public\OdurState_Appear.h" />
     <ClInclude Include="..\Public\OdurState_Base.h" />
@@ -242,8 +252,12 @@
     <ClInclude Include="..\Public\PlayerState_ClawAttack_ShortEnd.h" />
     <ClInclude Include="..\Public\PlayerState_ClawAttack_Long.h" />
     <ClInclude Include="..\Public\PlayerState_ClawAttack_Short.h" />
+    <ClInclude Include="..\Public\PlayerState_Climb.h" />
+    <ClInclude Include="..\Public\PlayerState_Climb_End.h" />
+    <ClInclude Include="..\Public\PlayerState_Climb_Start.h" />
     <ClInclude Include="..\Public\PlayerState_Execution_Default.h" />
     <ClInclude Include="..\Public\PlayerState_Execution_Joker.h" />
+    <ClInclude Include="..\Public\PlayerState_Climb_Idle.h" />
     <ClInclude Include="..\Public\PlayerState_PW_Axe.h" />
     <ClInclude Include="..\Public\PlayerState_Plunder.h" />
     <ClInclude Include="..\Public\PlayerState_PlunderRush.h" />
@@ -266,7 +280,6 @@
     <ClInclude Include="..\Public\ProgressBar.h" />
     <ClInclude Include="..\Public\State_Base.h" />
     <ClInclude Include="..\Public\TestGround.h" />
-    <ClInclude Include="..\Public\TestPlay_Tool.h" />
     <ClInclude Include="..\Public\ToolAnimObj.h" />
     <ClInclude Include="..\Public\ToolBoundingSphere.h" />
     <ClInclude Include="..\Public\ToolColliderObj.h" />
@@ -321,6 +334,7 @@
     <ClCompile Include="..\Private\Anim_Tool.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
+    <ClCompile Include="..\Private\ClientLevel.cpp" />
     <ClCompile Include="..\Private\Client_Functions.cpp" />
     <ClCompile Include="..\Private\Cutscene_Actor.cpp" />
     <ClCompile Include="..\Private\Cutscene_Manager.cpp" />
@@ -330,6 +344,10 @@
     <ClCompile Include="..\Private\FadeScreen.cpp" />
     <ClCompile Include="..\Private\Fade_Manager.cpp" />
     <ClCompile Include="..\Private\Free_Camera.cpp" />
+    <ClCompile Include="..\Private\HalberdKnight.cpp" />
+    <ClCompile Include="..\Private\HalberdKnightState_Base.cpp" />
+    <ClCompile Include="..\Private\HalberdKnightState_Idle.cpp" />
+    <ClCompile Include="..\Private\HalberdKnightState_Walk.cpp" />
     <ClCompile Include="..\Private\ImGui_Main.cpp" />
     <ClCompile Include="..\Private\Joker.cpp" />
     <ClCompile Include="..\Private\JokerState_Base.cpp" />
@@ -348,7 +366,9 @@
     <ClCompile Include="..\Private\JokerState_WheelWind_End.cpp" />
     <ClCompile Include="..\Private\JokerState_WheelWind_Loop.cpp" />
     <ClCompile Include="..\Private\JokerState_WheelWind_Start.cpp" />
-    <ClCompile Include="..\Private\Level_GamePlay.cpp" />
+    <ClCompile Include="..\Private\Ladder_Down.cpp" />
+    <ClCompile Include="..\Private\Ladder_Up.cpp" />
+    <ClCompile Include="..\Private\Level_Stage1.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Tool.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
@@ -384,8 +404,12 @@
     <ClCompile Include="..\Private\PlayerState_ClawAttack_ShortEnd.cpp" />
     <ClCompile Include="..\Private\PlayerState_ClawAttack_Long.cpp" />
     <ClCompile Include="..\Private\PlayerState_ClawAttack_Short.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Climb.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Climb_End.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Climb_Start.cpp" />
     <ClCompile Include="..\Private\PlayerState_Execution_Default.cpp" />
     <ClCompile Include="..\Private\PlayerState_Execution_Joker.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Climb_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_PW_Axe.cpp" />
     <ClCompile Include="..\Private\PlayerState_Plunder.cpp" />
     <ClCompile Include="..\Private\PlayerState_PlunderRush.cpp" />
@@ -406,7 +430,6 @@
     <ClCompile Include="..\Private\ProgressBar.cpp" />
     <ClCompile Include="..\Private\State_Base.cpp" />
     <ClCompile Include="..\Private\TestGround.cpp" />
-    <ClCompile Include="..\Private\TestPlay_Tool.cpp" />
     <ClCompile Include="..\Private\ToolAnimObj.cpp" />
     <ClCompile Include="..\Private\ToolBoundingSphere.cpp" />
     <ClCompile Include="..\Private\ToolColliderObj.cpp" />

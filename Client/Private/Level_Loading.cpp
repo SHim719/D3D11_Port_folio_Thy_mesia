@@ -18,8 +18,6 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 
 	m_eNextLevel = eNextLevel;
 
-	m_pGameInstance->Add_Clone(m_iLevelID, L"Background", L"Prototype_Loading_BG");
-
 	m_pLoader = CLoader::Create(m_pDevice, m_pContext, eNextLevel);
 	if (nullptr == m_pLoader)
 		return E_FAIL;
@@ -31,26 +29,20 @@ void CLevel_Loading::Tick(_float TimeDelta)
 {
 	if (true == m_pLoader->isFinished())
 	{
-		if (GetKeyState(VK_SPACE) & 0x8000)
+		if (GetKeyState(VK_RETURN) & 0x8000)
 		{
 			CLevel* pLevel = { nullptr };
 
 			switch (m_eNextLevel)
 			{
-			//case LEVEL_TITLE:
-
-			case LEVEL_GAMEPLAY:
-				pLevel = CLevel_GamePlay::Create(m_pDevice, m_pContext);
-				break;
-			case LEVEL_TOOL:
-				pLevel = CLevel_Tool::Create(m_pDevice, m_pContext);
+			case LEVEL_STAGE1:
+				pLevel = CLevel_Stage1::Create(m_pDevice, m_pContext);
 				break;
 			}
 			if (nullptr == pLevel)
 				return;
 
-			if (FAILED(m_pGameInstance->Change_Level(pLevel)))
-				return;
+			ADD_EVENT(bind(&CGameInstance::Change_Level, m_pGameInstance, pLevel));
 		}
 	}
 }
@@ -59,7 +51,7 @@ void CLevel_Loading::Tick(_float TimeDelta)
 HRESULT CLevel_Loading::Render()
 {
 	if (m_pLoader)
-		SetWindowText(g_hWnd, m_pLoader->Get_LoadingText());
+		m_pGameInstance->Render_Font(L"Main_Font", m_pLoader->Get_LoadingText(), _float2(0.f, 0.f));
 
 	return S_OK;
 }

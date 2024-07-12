@@ -85,9 +85,10 @@ void CSphere::Remake_Collider(COLLIDERDESC* pColliderDesc)
 }
 
 
+#ifdef _DEBUG
 HRESULT CSphere::Render()
 {
-#ifdef _DEBUG
+
 	if (false == m_bActive)
 		return E_FAIL;
 
@@ -98,10 +99,11 @@ HRESULT CSphere::Render()
 	DX::Draw(m_pBatch, *m_pSphere, XMLoadFloat4(&m_vColor));
 
 	m_pBatch->End();
-#endif
 
 	return S_OK;
 }
+
+#endif
 
 
 CSphere* CSphere::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

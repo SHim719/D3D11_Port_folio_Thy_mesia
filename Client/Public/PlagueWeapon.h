@@ -15,7 +15,7 @@ protected:
 	CPlagueWeapon(const CPlagueWeapon& rhs);
 	virtual ~CPlagueWeapon() = default;
 
-	HRESULT Render()					override;
+	HRESULT Render()	override;
 
 public:
 	static CPlagueWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

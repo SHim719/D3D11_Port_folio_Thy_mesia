@@ -91,8 +91,6 @@ HRESULT CAnimation::Initialize(const CModel::KEYFRAMEEVENTS& Events, const ANIME
 	return S_OK;
 }
 
-
-
 _bool CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool bLoop, _bool bPlay)
 {
 	m_fPlayTime += m_fTickPerSecond * fTimeDelta * (_float)bPlay;
@@ -113,9 +111,9 @@ _bool CAnimation::Play_Animation(_float fTimeDelta, vector<CBone*>& Bones, _bool
 
 		if (bLoop)
 			Reset();
+
 		return true;
 	}
-
 	return false;
 }
 
@@ -144,6 +142,7 @@ _bool CAnimation::Play_Animation_Blend(_float fTimeDelta, vector<CBone*>& Bones,
 void CAnimation::Reset()
 {
 	m_fPlayTime = 0.f;
+
 	m_iPrevKeyFrame = 0;
 	m_fBlendingAcc = 0.f;
 
@@ -199,13 +198,16 @@ void CAnimation::Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent)
 void CAnimation::Check_KeyFrameEvent()
 {
 	_int iNowKeyFrame = (_int)Get_NowKeyFrame();
+	_int iPrevKeyFrame = m_iPrevKeyFrame;
 
-	for (_int i = m_iPrevKeyFrame; i <= iNowKeyFrame; ++i)
+	if (iNowKeyFrame < iPrevKeyFrame)
+		swap(iNowKeyFrame, iPrevKeyFrame);
+
+	for (_int i = iPrevKeyFrame; i <= iNowKeyFrame; ++i)
 	{
 		if (true == m_bCheckKeyFrames[i])
 			continue;
 		
-	
 		auto Pair = m_KeyFrameEvents.equal_range(i);
 		if (m_KeyFrameEvents.end() != Pair.first)
 		{

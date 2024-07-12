@@ -17,7 +17,6 @@ private:
 	CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer() = default;
 
-private:
 	HRESULT Initialize_Prototype()			override;
 	HRESULT Initialize(void* pArg)			override;
 	void PriorityTick(_float fTimeDelta)	override;
@@ -30,6 +29,10 @@ private:
 	void OnEnd_Cutscene()									override;
 
 	void Bind_KeyFrames()									override;
+
+public:
+	HRESULT Reset_NaviData(LEVEL eLevel);
+
 
 private:
 	class CPlayerStats*	m_pStats = { nullptr };
@@ -67,7 +70,12 @@ private:
 	_bool					m_bCanRotation = { true };
 	_bool					m_bInvincible = { false };
 	
-	_float4x4				m_PrevWorldMatrix; // 컷신시작전 위치
+	_float4x4				m_PrevWorldMatrix = {}; // 컷신시작전 위치
+
+	_uint					m_iTargetNaviIdx = { 0 }; // 사다리를 다 타면 나오는 네비메쉬 인덱스
+	_uint					m_iNowLadderHeight = { 0 }; // 사다리의 높이
+	_uint					m_iPlayerLadderHeight = { 0 }; // 플레이어 사다리높이 - 왼쪽 발 기준(제일 낮은높이)
+	_bool					m_bIsClimbStartDown = { false };
 
 public:
 	_bool Is_LockOn() const { 
@@ -84,6 +92,26 @@ public:
 	}
 	_bool Is_Invincible() const { 
 		return m_bInvincible; }
+
+	_uint Get_NowLadderHeight() const {
+		return m_iNowLadderHeight;
+	}
+
+	_uint Add_PlayerLadderHeight(_uint iHeight) {
+		return m_iPlayerLadderHeight += iHeight;
+	}
+
+	_uint Get_PlayerLadderHeight() const {
+		return m_iPlayerLadderHeight;
+	}
+
+	_int Get_TargetNaviIdx() const {
+		return m_iTargetNaviIdx;
+	}
+
+	_bool Is_ClimbStartDown() const {
+		return m_bIsClimbStartDown;
+	}
 
 	void Set_CanNextState(_bool bCanNextState) {
 		m_bCanNextState = bCanNextState;
@@ -110,6 +138,7 @@ public:
 	void SetState_Parried();
 	void SetState_Executed(void* pArg);
 	void SetState_Plunder(void* pArg);
+	void SetState_ClimbStart(void* pArg);
 
 	void Inactive_AllWeaponColliders();
 
@@ -125,7 +154,6 @@ public:
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 
-	
 private:
 	HRESULT Ready_Components();
 	HRESULT Ready_States();

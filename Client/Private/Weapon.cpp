@@ -60,6 +60,9 @@ void CWeapon::LateTick(_float fTimeDelta)
 	m_pGameInstance->Add_RenderComponent(m_pCollider);
 #endif
 
+	if (nullptr == m_pModel)
+		return;
+
 	if (true == m_bAlphaBlend)
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_BLEND, this);
 	else
@@ -108,7 +111,7 @@ HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)
 
 	if (L"" != pDesc->wstrModelTag)
 	{
-		if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), pDesc->wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
+		if (FAILED(__super::Add_Component(pDesc->iLevelID, pDesc->wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
 			return E_FAIL;
 	}
 	

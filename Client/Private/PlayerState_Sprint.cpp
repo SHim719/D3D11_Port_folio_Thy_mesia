@@ -18,6 +18,7 @@ HRESULT CPlayerState_Sprint::Initialize(void* pArg)
 	m_PossibleStates.emplace_back(PlayerState::State_Idle);
 	m_PossibleStates.emplace_back(PlayerState::State_LockOn);
 
+	m_bCanClimb = true;
 
 	return S_OK;
 }

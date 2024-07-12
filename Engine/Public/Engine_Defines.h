@@ -10,14 +10,15 @@
 #include <dxgi.h>
 #include <d3dcompiler.h>
 #include <d3dx11effect.h>
-#include <directxtk/DDSTextureLoader.h>
-#include <directxtk/WICTextureLoader.h>
-#include <directxtk/PrimitiveBatch.h>
-#include <directxtk/VertexTypes.h>
-#include <directxtk/Effects.h>
-#include <directxtk/SpriteBatch.h>
-#include <directxtk/SpriteFont.h>
-#include <DirectXCollision.h>
+#include <DirectXTK/DDSTextureLoader.h>
+#include <DirectXTK/WICTextureLoader.h>
+#include <DirectXTK/PrimitiveBatch.h>
+#include <DirectXTK/VertexTypes.h>
+#include <DirectXTK/Effects.h>
+#include <DirectXTK/SpriteBatch.h>
+#include <DirectXTK/SpriteFont.h>
+#include <DirectXTK/DirectXCollision.h>
+
 
 #include <DirectXMath.h>
 using namespace DirectX;

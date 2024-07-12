@@ -11,7 +11,7 @@ class ENGINE_DLL CRenderer final : public CBase
 {
 public:
 	/* 그리는 순서대로 열거체를 정의했다. */
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_UI, RENDER_END };
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -44,6 +44,7 @@ private:
 	void Bind_ViewProj();
 
 	HRESULT Render_NonBlend();
+	HRESULT Render_NonLight();
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
 	HRESULT Render_LightAcc();
@@ -59,6 +60,8 @@ private:
 	list<class CGameObject*>			m_RenderObjects[RENDER_END];
 	list<class CComponent*>				m_RenderComponents;
 	list<class CShader*>				m_UsingShaders;
+
+	class CVIBuffer*					 m_pVIBuffer_UI = { nullptr };
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

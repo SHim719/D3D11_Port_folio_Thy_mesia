@@ -22,6 +22,10 @@ public:
 		return m_KeyFrames[1].fTime - m_KeyFrames[0].fTime;
 	}
 
+	_float Get_LastFrameTime() const {
+		return m_KeyFrames.back().fTime;
+	}
+
 public:
 	HRESULT Initialize(ifstream& fin);
 

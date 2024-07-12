@@ -7,6 +7,7 @@
 
 
 #define GET_CURLEVEL m_pGameInstance->Get_CurrentLevelID()
+#define SET_CURLEVEL(LEVEL) m_pGameInstance->Set_CurrentLevelID(LEVEL)
 #define ADD_EVENT(FUNC) m_pGameInstance->Add_Event(FUNC)
 
 

@@ -55,8 +55,6 @@ void CTestPlay_Tool::Start_Tool()
     UIMGR->Active_UI("UI_PlayerBar");
     UIMGR->Active_UI("UI_PlunderSlot");
 
-    if (FAILED(Load_TestMap()))
-        return;
 }
 
 void CTestPlay_Tool::Tick(_float fTimeDelta)
@@ -90,11 +88,12 @@ void CTestPlay_Tool::Change_Camera()
 
 }
 
-HRESULT CTestPlay_Tool::Load_TestMap()
+HRESULT CTestPlay_Tool::Loading_Stage1()
 {
-    string strMapDataPath = "../../Resources/Maps/SaveTest/";
+    string strMapModelPath = "../../Resources/MapObjects/Stage1/";
+    string strEnemyModelPath = "../../Resources/MapObjects/Enemy/";
 
-    fs::path MapDataPath(strMapDataPath);
+    fs::path MapDataPath(strMapModelPath);
 
     for (const fs::directory_entry& entry : fs::directory_iterator(MapDataPath))
     {
@@ -108,6 +107,36 @@ HRESULT CTestPlay_Tool::Load_TestMap()
 
         fs::path fileName = entry.path().filename();
         fs::path fileTitle = fileName.stem();
+
+
+    }
+    return S_OK;
+}
+
+HRESULT CTestPlay_Tool::Ready_Stage1()
+{
+    string strMapDataPath = "../../Resources/Maps/Stage1/";
+    string strStage1ModelPath = "../../Resources/MapObjects/Stage1/";
+    string strEnemyModelPath = "../../Resources/MapObjects/Stage1/";
+
+    fs::path MapDataPath(strMapDataPath);
+    fs::path Stage1ModelPath(strStage1ModelPath);
+    fs::path EnemyModelPath(strEnemyModelPath);
+
+    for (const fs::directory_entry& entry : fs::directory_iterator(MapDataPath))
+    {
+        if (entry.is_directory())
+            continue;
+
+        ifstream fin(entry.path().c_str(), ios::binary);
+
+        if (!fin.is_open())
+            return E_FAIL;
+
+        fs::path fileName = entry.path().filename();
+        fs::path fileTitle = fileName.stem();
+
+        vector<LOADOBJDESC> LoadObjDescs;
 
         LOADOBJDESC LoadDesc;
 
@@ -123,26 +152,9 @@ HRESULT CTestPlay_Tool::Load_TestMap()
 
             wsprintf(LoadDesc.szModelTag, L"Prototype_Model_%s", fileTitle.c_str());
 
-            wstring wstrLayerTag;
-            switch (LoadDesc.eObjType)
-            {
-            case MAPOBJECT:
-                wstrLayerTag = L"Object";
-                break;
-            case ENEMY:
-                wstrLayerTag = L"Enemy";
-                break;
-            case TRIGGEROBJ:
-                wstrLayerTag = L"TriggerObject";
-                break;
-            }
-
-            CGameObject* pObj = m_pGameInstance->Add_Clone(LEVEL_TOOL, wstrLayerTag, wstrPrototypeTag, &LoadDesc);
-            if (nullptr == pObj)
-                m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Object", L"Prototype_MapObject", &LoadDesc);
+            LoadObjDescs.emplace_back(LoadDesc);
         }
     }
-
 
     return S_OK;
 }

@@ -33,24 +33,10 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CMain_Camera::OnActive()
-{
-	
-}
-
-void CMain_Camera::OnInActive()
-{
-}
 
 void CMain_Camera::PriorityTick(_float fTimeDelta)
 {
-	__super::PriorityTick(fTimeDelta);
-
-	if (nullptr != m_pTarget)
-	{
-		if (m_pTarget->Is_Death())
-			SetState_LockOn_To_Default();
-	}
+	
 }
 
 
@@ -63,6 +49,16 @@ void CMain_Camera::Tick(_float fTimeDelta)
 		m_eState = DEFAULT;
 	if (KEY_DOWN(eKeyCode::NUMPAD1))
 		m_eState = UI;
+
+	if (nullptr != m_pTarget)
+	{
+		if (m_pTarget->Is_Death())
+		{
+			SetState_LockOn_To_Default();
+			return;
+		}
+			
+	}
 
 	if (KEY_DOWN(eKeyCode::Q))
 	{

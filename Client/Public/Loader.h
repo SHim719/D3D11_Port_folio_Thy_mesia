@@ -25,7 +25,27 @@ public:
 	unsigned int Loading();
 
 private:
-	HRESULT Loading_Tool();
+	HRESULT Loading_Default();
+	HRESULT Loading_Stage1();
+
+private:
+	HRESULT Ready_Camera();
+	HRESULT Ready_Weapon();
+	HRESULT Ready_Player();
+	HRESULT Ready_PlagueWeapon();
+
+	HRESULT Ready_Odur();
+	HRESULT Ready_Villager_F();
+	HRESULT Ready_Villager_M();
+	HRESULT Ready_Joker();
+
+	HRESULT Ready_Stage1Objects();
+
+	HRESULT Ready_UIResource();
+	HRESULT Ready_UI();
+
+	HRESULT Ready_Etc();
+
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

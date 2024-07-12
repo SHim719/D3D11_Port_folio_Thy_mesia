@@ -34,6 +34,9 @@ public:
 	static CMeshContainer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& fin, CModel::TYPE eModelType);
 	virtual CComponent* Clone(void* pArg = nullptr) override;
 	virtual void Free() override;
+
+
+	friend class CMesh_Instance;
 };
 
 END

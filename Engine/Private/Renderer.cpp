@@ -139,6 +139,7 @@ HRESULT CRenderer::Draw()
 	if (FAILED(Render_Deferred()))
 		return E_FAIL;
 
+	Render_NonLight();
 	Render_Blend();
 	Render_UI();
 
@@ -201,6 +202,13 @@ HRESULT CRenderer::Render_NonBlend()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_NonLight()
+{
+	Draw_Objects(RENDER_NONLIGHT);
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Blend()
 {
 	//Alpha Sorting
@@ -212,6 +220,12 @@ HRESULT CRenderer::Render_Blend()
 
 HRESULT CRenderer::Render_UI()
 {
+	if (nullptr == m_pVIBuffer_UI)
+		m_pVIBuffer_UI = static_cast<CVIBuffer*>(m_pGameInstance->Clone_Component(0, L"Prototype_VIBuffer_Point"));
+
+	if (FAILED(m_pVIBuffer_UI->Bind_Buffers()))
+		return E_FAIL;
+
 	Draw_Objects(RENDER_UI);
 
 	return S_OK;
@@ -266,6 +280,8 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_Components()
 {
+	m_pContext->GSSetShader(nullptr, nullptr, 0);
+
 	for (auto& pRenderComponent : m_RenderComponents)
 	{
 		if (nullptr != pRenderComponent)
@@ -279,6 +295,7 @@ HRESULT CRenderer::Render_Components()
 	return S_OK;
 }
 
+#ifdef _DEBUG
 HRESULT CRenderer::Render_Debug()
 {
 	if (FAILED(m_pGameInstance->Render_RTDebug(TEXT("MRT_GameObjects"), m_pShader, m_pVIBuffer)))
@@ -288,6 +305,7 @@ HRESULT CRenderer::Render_Debug()
 
 	return S_OK;
 }
+#endif
 
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -308,10 +326,11 @@ void CRenderer::Free()
 	Safe_Release(m_pShader);
 	Safe_Release(m_pVIBuffer);
 
+	Safe_Release(m_pVIBuffer_UI);
+
 	for (auto& pShader : m_UsingShaders)
-	{
 		Safe_Release(pShader);
-	}
+	
 	m_UsingShaders.clear();
 
 	for (auto& RenderObjects : m_RenderObjects)

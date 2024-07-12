@@ -87,11 +87,13 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->PriorityTick(fTimeDelta * m_fTimeScale);
 	m_pObject_Manager->Tick(fTimeDelta * m_fTimeScale);
 
-	m_pMain_Camera->Tick(fTimeDelta);
+	if (nullptr != m_pMain_Camera)
+		m_pMain_Camera->Tick(fTimeDelta);
 
 	m_pCollision_Manager->Update();
 
-	m_pMain_Camera->LateTick(fTimeDelta);
+	if (nullptr != m_pMain_Camera)
+		m_pMain_Camera->LateTick(fTimeDelta * m_fTimeScale);
 
 	m_pPipeLine->Update();
 	m_pFrustum->Update();
@@ -155,17 +157,18 @@ HRESULT CGameInstance::Present()
 #pragma endregion 
 
 #pragma region LEVEL_MANAGER
-HRESULT CGameInstance::Change_Level(CLevel * pNewLevel)
+void CGameInstance::Change_Level(CLevel * pNewLevel)
 {
-	if (nullptr == m_pLevel_Manager)
-		return E_FAIL;
-
-	return m_pLevel_Manager->Change_Level(pNewLevel);
+	m_pLevel_Manager->Change_Level(pNewLevel);
 }
 
 _uint CGameInstance::Get_CurrentLevelID()
 {
 	return m_pLevel_Manager->Get_CurrentLevelID();
+}
+void CGameInstance::Set_CurrentLevelID(_uint iLevelID)
+{
+	m_pLevel_Manager->Set_CurrentLevelID(iLevelID);
 }
 #pragma endregion
 
@@ -239,6 +242,11 @@ CGameObject* CGameInstance::Find_GameObject(_uint iLevelIndex, const wstring& st
 	return m_pObject_Manager->Find_GameObject(iLevelIndex, strLayerTag, iIndex);
 }
 
+CGameObject* CGameInstance::Find_Prototype(const wstring& strPrototypeTag)
+{
+	return m_pObject_Manager->Find_Prototype(strPrototypeTag);
+}
+
 CLayer* CGameInstance::Find_Layer(_uint iLevelIndex, const wstring& strLayerTag)
 {
 	if (nullptr == m_pObject_Manager)
@@ -290,6 +298,10 @@ CComponent * CGameInstance::Clone_Component(_uint iLevelIndex, const wstring & s
 		return nullptr;
 	
 	return m_pComponent_Manager->Clone_Component(iLevelIndex, strPrototypeTag, pArg);
+}
+CComponent* CGameInstance::Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag)
+{
+	return m_pComponent_Manager->Find_Prototype(iLevelIndex, strPrototypeTag);
 }
 #pragma endregion
 
@@ -529,13 +541,12 @@ void CGameInstance::Change_MainCamera(CCamera* pCamera)
 	Safe_Release(m_pMain_Camera);
 
 	m_pMain_Camera = pCamera;
-
-	Safe_AddRef(m_pMain_Camera);
 }
 
 void CGameInstance::Update_ViewProj()
 {
-	m_pMain_Camera->Update_ViewProj();
+	if (nullptr != m_pMain_Camera)
+		m_pMain_Camera->Update_ViewProj();
 }
 
 #pragma endregion

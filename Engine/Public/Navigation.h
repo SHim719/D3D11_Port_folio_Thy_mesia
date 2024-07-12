@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include "Component.h"
 
 /* 현재 내 지형을 타고 다닐 수 있도록 삼각형들을 가지고 있는다. */
@@ -31,6 +29,9 @@ public:
 	_float Decide_YPos(_fvector vPosition);
 
 	void Set_CurrentIdx(_fvector vPosition);
+	void Set_CurrentIdx(_uint iIdx) {
+		m_iCurrentIndex = iIdx;
+	}
 
 private:
 	vector<class CCell*>				m_Cells;

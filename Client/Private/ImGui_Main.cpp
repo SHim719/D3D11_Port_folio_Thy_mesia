@@ -3,7 +3,6 @@
 
 #include "Anim_Tool.h"
 #include "Map_Tool.h"
-#include "TestPlay_Tool.h"
 
 CImGui_Main::CImGui_Main(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
     : m_pDevice(pDevice)
@@ -33,7 +32,6 @@ HRESULT CImGui_Main::Initialize()
 
     m_ToolStates[MAP] = CMap_Tool::Create(m_pDevice, m_pContext);
     m_ToolStates[ANIM] = CAnim_Tool::Create(m_pDevice, m_pContext);
-    m_ToolStates[TESTPLAY] = CTestPlay_Tool::Create(m_pDevice, m_pContext);   
 
     ToolState eState = MAP;
 

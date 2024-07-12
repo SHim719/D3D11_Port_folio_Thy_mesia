@@ -31,6 +31,8 @@ protected:
 	virtual void Check_ExtraStateChange(PlayerState eState);
 	void Check_PlagueAttack();
 
+	void Decide_ClimbState(_int iDir);
+
 protected:
 	CPlayer*			m_pPlayer = { nullptr };
 	CMain_Camera*		m_pMain_Camera = { nullptr };
@@ -42,6 +44,13 @@ protected:
 	_float				m_fRotRate = { 10.f };
 	_float				m_fJogSpeed = { 4.5f };
 	_float				m_fSprintSpeed = { 6.f };
+
+	_bool				m_bCanClimb = { false };
+
+public:
+	_bool Can_Climb() const {
+		return m_bCanClimb;
+	}
 public:
 	void Free() override;
 };

@@ -45,6 +45,7 @@ private:
 	OBJTYPE		m_eObjType = { MAPOBJECT };
 	_int		m_iNaviIdx = { -1 };
 	_int		m_iTriggerIdx = { 0 };
+	_float3		m_vColliderSize = {};
 
 protected:
 	CShader*		m_pShader = nullptr;

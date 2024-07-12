@@ -51,7 +51,7 @@ void CToolNaviCell::Tick(_float fTimeDelta)
 
 void CToolNaviCell::LateTick(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONLIGHT, this);
 }
 
 HRESULT CToolNaviCell::Render()

@@ -241,13 +241,11 @@ void CTransform::LookAt(_fvector vAt)
 
 void CTransform::LookAt2D(_fvector vAt)
 {
-	_fvector		vLook = vAt - Get_State(CTransform::STATE_POSITION);
+	_fvector		vLook = XMVectorSetY(vAt - Get_State(CTransform::STATE_POSITION), 0.f);
 	_fvector		vRight = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vLook);
 	_fvector		vUp = XMVector3Cross(vLook, vRight);
 
 	_float3		vScale = Get_Scale();
-
-	XMVectorSetY(vLook, 0.f);
 
 	Set_State(CTransform::STATE_RIGHT, XMVectorSetW(XMVector3Normalize(vRight) * vScale.x, 0.f));
 	Set_State(CTransform::STATE_UP, XMVectorSetW(XMVector3Normalize(vUp) * vScale.y, 0.f));

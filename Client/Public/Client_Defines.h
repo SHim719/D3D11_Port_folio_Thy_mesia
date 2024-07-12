@@ -9,8 +9,8 @@
 #include "Client_Macro.h"
 #include "Client_Functions.h"
 
-//#define AnimTool
-//#define testplay
+//#define InGame
+#define AnimTool
 
 
 /* 클라이언트에서 제작하는 모든 클래스들이 공통적으로 자주 사용하는 정의들을 모아둔다. */
@@ -21,7 +21,10 @@ namespace Client
 
 	enum LEVEL { LEVEL_STATIC, 
 		LEVEL_LOADING,
-		LEVEL_GAMEPLAY,
+		LEVEL_STAGE1,
+		LEVEL_ODUR,
+		LEVEL_URD,
+		LEVEL_CORVUS,
 		LEVEL_TOOL,
 		LEVEL_END };
 

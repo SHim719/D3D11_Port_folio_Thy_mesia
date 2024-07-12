@@ -59,7 +59,7 @@ public:
 protected:
 	_bool	m_bDestroyed = { false };
 	_bool	m_bActive = { true };
-	_bool	m_bCreatedThisFrame = { true };
+	_bool	m_bInstancing = { false }; // 인스턴싱되는 오브젝트면 렌더링을 하지않아 물체자체의 로직만 돌아가게만듬.
 
 	_bool	m_bReturnToPool = { false }; // For Object Pool
 	_bool	m_bNoRender = { false };
@@ -75,9 +75,6 @@ public:
 	void Set_Active(_bool b);
 	_bool Is_Active() { 
 		return m_bActive; }
-
-	_bool Is_CreatedThisFrame() const { 
-		return m_bCreatedThisFrame; }
 
 	_uint Get_Tag() const { return m_iTag; }
 
@@ -105,9 +102,13 @@ public:
 		m_fCullingRadius = fRadius;
 	}
 
+	void Set_Instancing(_bool bInstancing) {
+		m_bInstancing = bInstancing;
+	}
+
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
-	virtual void Free() override;
+	void Free() override;
 };
 
 END

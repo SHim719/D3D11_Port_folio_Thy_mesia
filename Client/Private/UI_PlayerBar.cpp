@@ -92,7 +92,7 @@ HRESULT CUI_PlayerBar::Render()
 	Draw_HpText();
 	Draw_MpText();
 
-	return S_OK;
+	return m_pVIBuffer->Bind_Buffers();
 }
 
 HRESULT CUI_PlayerBar::Render_HpBar()

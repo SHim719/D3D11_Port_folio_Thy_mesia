@@ -44,12 +44,12 @@ private:
 	map<const wstring, class CComponent*>*			m_pPrototypes = { nullptr };
 	typedef map<const wstring, class CComponent*>	PROTOTYPES;
 
-private:
+public:
 	class CComponent* Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag);
 
 public:
 	static CComponent_Manager* Create(_uint iNumLevels);
-	virtual void Free() override;
+	void Free() override;
 };
 
 END

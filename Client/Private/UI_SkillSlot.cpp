@@ -72,8 +72,6 @@ HRESULT CUI_DefaultSkillSlot::OnEnter_Layer(void* pArg)
 	if (FAILED(__super::OnEnter_Layer(pArg)))
 		return E_FAIL;
 
-	m_bCreatedThisFrame = true;
-
 	return S_OK;
 }
 

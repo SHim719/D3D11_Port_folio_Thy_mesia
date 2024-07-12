@@ -172,4 +172,12 @@ namespace JoRandom
 
 }
 
+namespace JoMapLoad
+{
+	HRESULT JoMapLoad::Load_Maps(_uint iLevelID, const wstring& wstrFolderPath)
+	{
+		return E_NOTIMPL;
+	}
+}
+
 

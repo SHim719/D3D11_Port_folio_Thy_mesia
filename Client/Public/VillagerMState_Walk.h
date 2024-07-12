@@ -19,7 +19,7 @@ public:
 private:
 	_float	m_fTimeAcc = { 0.f };
 	_float	m_fWalkTime = { 0.f };
-	_float  m_fWalkSpeed = { 2.5f };
+	_float  m_fWalkSpeed = { 2.f };
 
 	_int	m_iDir = { 0 };
 

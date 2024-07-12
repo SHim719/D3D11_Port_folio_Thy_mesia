@@ -28,6 +28,17 @@ void CCharacter::Change_State(_uint eState, void* pArg)
 	m_States[m_iState]->OnState_Start(pArg);
 }
 
+void CCharacter::Change_Navigation(CNavigation* pNavigation)
+{
+	for (auto& pState : m_States)
+	{
+		if (nullptr != pState)
+			pState->Set_Navigation(pNavigation);
+	}
+		
+}
+
+
 void CCharacter::Hit(const ATTACKDESC& AttackDesc)
 {
 	m_States[m_iState]->OnHit(AttackDesc);
@@ -90,6 +101,10 @@ void CCharacter::Free()
 
 	for (size_t i = 0; i < m_States.size(); ++i)
 		Safe_Release(m_States[i]);
+
+	for (auto& pWeapon : m_Weapons)
+		Safe_Release(pWeapon);
+	m_Weapons.clear();
 
 	Safe_Release(m_pShader);
 	Safe_Release(m_pModel);

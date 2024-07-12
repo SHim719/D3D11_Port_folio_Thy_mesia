@@ -48,7 +48,7 @@ _bool CFrustum::In_WorldFrustum(_fvector vWorldPos, _float fRadius)
 {
 	for (_uint i = 0; i < 6; ++i)
 	{
-		if (fRadius >= XMPlaneDotCoord(XMLoadFloat4(&m_WorldFrustumPlane[i]), vWorldPos).m128_f32[0])
+		if (XMPlaneDotCoord(XMLoadFloat4(&m_WorldFrustumPlane[i]), vWorldPos).m128_f32[0] > fRadius)
 			return false;
 	}
 

@@ -40,3 +40,8 @@ namespace JoRandom
 	_float Random_Float(_float _fMin, _float _fMax);
 }
 
+namespace JoMapLoad
+{
+	HRESULT Load_Maps(_uint iLevelID, const wstring& wstrFolderPath);
+}
+

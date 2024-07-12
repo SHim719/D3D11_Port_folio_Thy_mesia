@@ -70,4 +70,14 @@ namespace Client
 		_tchar		szModelTag[MAX_PATH];
 	}LOADOBJDESC;
 
+	typedef struct tagLadderDesc
+	{
+		_float4x4*	pWorldMatrix;
+		_float4		vOffset;
+		_uint		iTargetNaviIdx;
+		_uint		iLadderHeight;
+		_uint		iStartHeight;
+		_uint		iPlayerAnimIdx;
+	}LADDERDESC;
+
 }

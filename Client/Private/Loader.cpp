@@ -2,9 +2,28 @@
 
 #include "GameInstance.h"
 
-#include "Free_Camera.h"
+#include "Main_Camera.h"
 #include "Player.h"
-#include "Enemy.h"
+#include "PlagueWeapon.h"
+
+#include "Odur.h"
+#include "Odur_Card.h"
+#include "Odur_Card_Cutscene.h"
+
+#include "Villager_F.h"
+#include "Villager_M.h"
+#include "Joker.h"
+
+#include "PerceptionBounding.h"
+
+#include "MapObject.h"
+#include "EventTrigger.h"
+#include "Loader.h"
+
+#include "UI_Headers.h"
+#include "UI_Manager.h"
+
+#include "Object_Headers.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -40,12 +59,14 @@ unsigned int CLoader::Loading()
 {
 	EnterCriticalSection(&m_CriticalSection);
 
+	CoInitializeEx(nullptr, 0);
+
 	HRESULT hr = S_OK;
 
 	switch (m_eNextLevelID)
 	{
-	case LEVEL_TOOL:
-		hr = Loading_Tool();
+	case LEVEL_STAGE1:
+		hr = Loading_Stage1();
 	}
 
 	LeaveCriticalSection(&m_CriticalSection);
@@ -57,24 +78,61 @@ unsigned int CLoader::Loading()
 
 }
 
-HRESULT CLoader::Loading_Tool()
+HRESULT CLoader::Loading_Default()
 {
-	lstrcpy(m_szLoadingText, TEXT("Load Model."));
-
-	lstrcpy(m_szLoadingText, TEXT("Load Prototype."));
-
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_Free_Camera"), CFree_Camera::Create(m_pDevice, m_pContext))))
+	if (FAILED(Ready_Camera()))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_Prototype(TEXT("Prototype_Player"), CPlayer::Create(m_pDevice, m_pContext))))
+	if (FAILED(Ready_Weapon()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Player()))
+		return E_FAIL;
+
+	if (FAILED(Ready_PlagueWeapon()))
+		return E_FAIL;
+
+	if (FAILED(Ready_UIResource()))
+		return E_FAIL;
+
+	if (FAILED(Ready_UI()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Etc()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_Stage1()
+{
+	lstrcpy(m_szLoadingText, TEXT("Loading..."));
+
+	if (FAILED(Loading_Default()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Villager_F()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Villager_M()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Joker()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Stage1Objects()))
+		return E_FAIL;
+		
+	m_pGameInstance->Add_Prototype(LEVEL_STAGE1, L"Prototype_Navigation", CNavigation::Create(m_pDevice, m_pContext,
+		TEXT("../../Resources/NaviData/Stage1_Navi.dat")));
 
 	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
 
 	m_bIsFinished = true;
+
 	return S_OK;
 }
+
 
 CLoader* CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
 {
@@ -101,3 +159,253 @@ void CLoader::Free()
 	Safe_Release(m_pContext);
 	Safe_Release(m_pDevice);
 }
+
+HRESULT CLoader::Ready_Camera()
+{
+	m_pGameInstance->Add_Prototype(L"Prototype_Main_Camera", CMain_Camera::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Weapon()
+{
+	m_pGameInstance->Add_Prototype(L"Prototype_Weapon", CWeapon::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Player()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_Player", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/", "Corvus_No1.dat", "../../Resources/KeyFrame/Player/"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_Player_Dagger", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/", "Corvus_Dagger.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_Player_Saber", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/", "Corvus_Saber.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Player", CPlayer::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_PlagueWeapon()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Axe", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Axe.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Hammer", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Hammer.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_PlagueWeapon", CPlagueWeapon::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Odur()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_ODUR, L"Prototype_Model_Odur", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Odur/", "Odur.dat", "../../Resources/KeyFrame/Odur/"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_ODUR, L"Prototype_Model_Odur_Cane", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Odur/", "Odur_Cane.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_ODUR, L"Prototype_Model_Odur_Sword", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Odur/", "Odur_Sword.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_ODUR, L"Prototype_Model_Odur_Card", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Odur/", "Odur_Card.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Odur_Card", COdur_Card::Create(m_pDevice, m_pContext));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Odur_Card_Cutscene", COdur_Card_Cutscene::Create(m_pDevice, m_pContext));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Odur", COdur::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Villager_F()
+{
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Villager_F", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Villager_F/", "Villager_F.dat", "../../Resources/KeyFrame/Villager_F/"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Villager_F", CVillager_F::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Villager_M()
+{
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Villager_M", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Villager_M/", "Villager_M.dat", "../../Resources/KeyFrame/Villager_M/"));
+
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Villager_M_Axe", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Villager_M/", "Villager_Axe.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Villager_M", CVillager_M::Create(m_pDevice, m_pContext));
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Joker()
+{
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Joker", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Joker/", "Joker.dat", "../../Resources/KeyFrame/Joker/"));
+
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Joker_Hammer", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Joker/", "Joker_Hammer.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Joker", CJoker::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Stage1Objects()
+{
+	wstring wstrStage1Path = L"../../Resources/MapObjects/Stage1/";
+
+	fs::path Stage1ObjectPath(wstrStage1Path);
+
+	for (const fs::directory_entry& entry : fs::directory_iterator(Stage1ObjectPath))
+	{
+		if (entry.is_directory())
+			continue;
+
+		fs::path fileName = entry.path().filename();
+		fs::path fileTitle = fileName.stem();
+
+		wstring wstrPrototypeTag = L"Prototype_Model_";
+		wstrPrototypeTag += fileTitle.c_str();
+
+		if (m_pGameInstance->Find_Prototype(LEVEL_STATIC, wstrPrototypeTag))
+			continue;
+
+		CModel* pModel = CModel::Create(m_pDevice, m_pContext, entry.path().parent_path().generic_string() + "/", entry.path().filename().generic_string());
+
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, wstrPrototypeTag, pModel)))
+			return E_FAIL;
+
+		wstrPrototypeTag += L"_Instance";
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, wstrPrototypeTag, CModel_Instance::Create(m_pDevice, m_pContext, pModel))))
+			return E_FAIL;
+	}
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_UIResource()
+{
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_FadeScreen", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/FadeScreen/FadeScreen.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_LockOn", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Target.png"))))
+		return E_FAIL;
+
+#pragma region PlayerHpBar
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_Right.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_Left.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_BG.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerHpBar_MainBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_HPBar_MainBar.dds"))))
+		return E_FAIL;
+
+#pragma endregion
+
+#pragma region PlayerMpBar
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_Right.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_Left.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_BG.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlayerMpBar_MainBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/PlayerBar/Player_MPBar_MainBar.dds"))))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region EnemyBar
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpBarHead_R.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpBarHead_L.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpBorder.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_MainHpBar", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_HpMain.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_EnemyBar_StunnedSign", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/EnemyBar/Enemy_StunnedShine1.png"))))
+		return E_FAIL;
+
+#pragma endregion
+
+#pragma region DamageFont
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_DamageFont", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/DamageFont/%d.png", 10))))
+		return E_FAIL;
+#pragma endregion 
+
+#pragma region SkillSlot
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PlunderSlot", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillSlot/UI_PlunderSlot.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillSlot", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillSlot/UI_SkillSlot.png"))))
+		return E_FAIL;
+
+#pragma endregion
+
+#pragma region SkillIcon
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Axe", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_SkillIcon_Axe.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Hammer", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_SkillIcon_Hammer.dds"))))
+		return E_FAIL;
+
+#pragma endregion
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_UI()
+{
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_FadeScreen", CFadeScreen::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_ProgressBar", CProgressBar::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_SkillIcon", CUI_SkillIcon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Etc()
+{
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_PerceptionBounding", CPerceptionBounding::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Ladder_Down", CLadder_Down::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Ladder_Up", CLadder_Up::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+
+
+	return S_OK;
+}
+
+

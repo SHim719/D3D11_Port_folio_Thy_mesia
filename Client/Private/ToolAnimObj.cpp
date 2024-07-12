@@ -57,6 +57,18 @@ HRESULT CToolAnimObj::Initialize(void* pArg)
 			return E_FAIL;
 		break;
 	}
+	case HalberdKnight:
+	{
+		if (FAILED(Ready_HalberdKnight()))
+			return E_FAIL;
+		break;
+	}
+	case TwinBladeKnight:
+	{
+		if (FAILED(Ready_TwinBladeKnight()))
+			return E_FAIL;
+		break;
+	}
 		
 	}
 
@@ -122,6 +134,7 @@ HRESULT CToolAnimObj::Ready_Corvus()
 
 	//CWeapon::WEAPONDESC WeaponDesc;
 	//WeaponDesc.pParentTransform = m_pTransform;
+	// WeaponDesc.iLevelID = LEVEL_TOOL;
 	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
 	//WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";
 	//
@@ -166,6 +179,7 @@ HRESULT CToolAnimObj::Ready_Odur()
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.iLevelID = LEVEL_TOOL;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_Cane");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Cane";
 	WeaponDesc.pColliderDesc = nullptr;
@@ -209,6 +223,7 @@ HRESULT CToolAnimObj::Ready_Villager_M()
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.iLevelID = LEVEL_TOOL;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Villager_M_Axe";
 	WeaponDesc.pColliderDesc = nullptr;
@@ -230,11 +245,61 @@ HRESULT CToolAnimObj::Ready_Joker()
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.iLevelID = LEVEL_TOOL;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Hammer");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Joker_Hammer";
 	WeaponDesc.pColliderDesc = nullptr;
 
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	return S_OK;
+}
+
+HRESULT CToolAnimObj::Ready_HalberdKnight()
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_HalberdKnight", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.iLevelID = LEVEL_TOOL;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_pivot");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Spear";
+	WeaponDesc.pColliderDesc = nullptr;
+
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	return S_OK;
+}
+
+HRESULT CToolAnimObj::Ready_TwinBladeKnight()
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_TwinBladeKnight", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.iLevelID = LEVEL_TOOL;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Sword";
+	WeaponDesc.pColliderDesc = nullptr;
+
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+
 	return S_OK;
 }
 

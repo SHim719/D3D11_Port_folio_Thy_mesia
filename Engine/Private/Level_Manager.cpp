@@ -9,7 +9,7 @@ CLevel_Manager::CLevel_Manager()
 	Safe_AddRef(m_pGameInstance);
 }
 
-HRESULT CLevel_Manager::Change_Level(CLevel * pNewLevel)
+void CLevel_Manager::Change_Level(CLevel * pNewLevel)
 {
 	/* 기존 레벨용으로 할당됐던 메모리도 해소하낟.  */
 	if(nullptr != m_pCurrentLevel)
@@ -18,8 +18,7 @@ HRESULT CLevel_Manager::Change_Level(CLevel * pNewLevel)
 	Safe_Release(m_pCurrentLevel);
 
 	m_pCurrentLevel = pNewLevel;	
-	
-	return S_OK;
+
 }
 
 void CLevel_Manager::Tick(_float fTimeDelta)
@@ -42,7 +41,7 @@ HRESULT CLevel_Manager::Render()
 
 _uint CLevel_Manager::Get_CurrentLevelID()
 {
-	return m_pCurrentLevel->Get_LevelID();
+	return m_iCurrentLevelID;
 }
 
 CLevel_Manager * CLevel_Manager::Create()

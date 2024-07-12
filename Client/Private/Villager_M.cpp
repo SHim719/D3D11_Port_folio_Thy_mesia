@@ -69,7 +69,7 @@ void CVillager_M::Tick(_float fTimeDelta)
 	m_States[m_iState]->Update(fTimeDelta);
 
 	if (m_bAdjustNaviY)
-		m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+		Compute_YPos();
 
 	__super::Update_Colliders();
 
@@ -195,7 +195,10 @@ HRESULT CVillager_M::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &(pLoadDesc->iNaviIdx))))
+	CNavigation::NAVIGATION_DESC NaviDesc;
+	NaviDesc.iCurrentCellIndex = pLoadDesc->iNaviIdx;
+
+	if (FAILED(__super::Add_Component(GET_CURLEVEL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &NaviDesc)))
 		return E_FAIL;
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
@@ -233,6 +236,7 @@ HRESULT CVillager_M::Ready_Weapon()
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.iTag = (_uint)TAG_ENEMY_WEAPON;
+	WeaponDesc.iLevelID = GET_CURLEVEL;
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Villager_M_Axe";

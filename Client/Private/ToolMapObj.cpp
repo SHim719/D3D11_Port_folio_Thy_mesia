@@ -59,6 +59,9 @@ HRESULT CToolMapObj::Initialize_Load(void* pArg)
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pDesc->WorldMatrix));
 
 	m_eObjType = pDesc->eObjType;
+	m_iNaviIdx = pDesc->iNaviIdx;
+	m_iTriggerIdx = pDesc->iTriggerIdx;
+	m_vColliderSize = pDesc->vColliderSize;
 
 	if (m_eObjType < TRIGGEROBJ)
 	{
@@ -67,8 +70,6 @@ HRESULT CToolMapObj::Initialize_Load(void* pArg)
 
 		if (FAILED(__super::Add_Component(LEVEL_TOOL, pDesc->szModelTag, L"Model", (CComponent**)&m_pModel)))
 			return E_FAIL;
-
-		m_iNaviIdx = pDesc->iNaviIdx;
 	}
 	else
 	{
@@ -82,8 +83,6 @@ HRESULT CToolMapObj::Initialize_Load(void* pArg)
 
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, L"Prototype_AABB", L"Collider", (CComponent**)&m_pTriggerCollider, &CollisionDesc)))
 			return E_FAIL;
-
-		m_iTriggerIdx = pDesc->iTriggerIdx;
 	}
 
 	return S_OK;
@@ -163,7 +162,7 @@ HRESULT CToolMapObj::Render_Picking(_int iSelectIdx)
 
 _bool CToolMapObj::Ray_Cast(_fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
 {
-	return m_pModel->Picking(m_pTransform->Get_WorldMatrixInverse(), vRayStartPos, vRayDir, vPickedPos, fDist);
+	return m_pModel->Picking(m_pTransform->Get_WorldMatrix(), vRayStartPos, vRayDir, vPickedPos, fDist);
 }
 
 _float3 CToolMapObj::Get_ColliderSize() const
@@ -174,12 +173,12 @@ _float3 CToolMapObj::Get_ColliderSize() const
 		XMStoreFloat3(&vSize, m_pTriggerCollider->Get_Size());
 		return vSize;
 	}
-
-	return _float3(1.f, 1.f, 1.f);
+	return m_vColliderSize;
 }
 
 void CToolMapObj::Set_ColliderSize(const _float3& vSize)
 {
+	m_vColliderSize = vSize;
 	if (m_pTriggerCollider)
 		m_pTriggerCollider->Set_Size(XMLoadFloat3(&vSize));
 }

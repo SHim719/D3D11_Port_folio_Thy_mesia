@@ -12,29 +12,27 @@ private:
 	virtual ~CMesh_Instance() = default;
 
 public:
-	HRESULT Initialize_Prototype(ifstream& fin);
+	HRESULT Initialize_Prototype(class CMeshContainer* pMesh);
 	HRESULT Initialize(void* pArg) override;
 
-	HRESULT Update_InstanceBuffer(vector<class CTransform*>& InstanceTransforms);
+	HRESULT Update_InstanceBuffer(vector<_float4x4>& WorldMatrices);
 
 private:
-	VTXMODEL*		m_pModelVertices = { nullptr };
 	VTXMATRIX*		m_pInstanceVertices = { nullptr };
-	FACEINDICES32*	m_pIndices = { nullptr };
 
 private:
-	void Culling_Frustum(vector<class CTransform*>& InstanceTransforms, OUT vector<CTransform*>& InstanceDatas);
+	void Culling_Frustum(vector<_float4x4>& WorldMatrices, OUT vector<_float4x4>& InstanceDatas);
 
 private:
-	HRESULT Ready_Vertices(ifstream& fin);
-	HRESULT Ready_IndexBuffer(ifstream& fin);
+	HRESULT Ready_Vertices(class CMeshContainer* pMesh);
+	HRESULT Ready_IndexBuffer(class CMeshContainer* pMesh);
 
 	HRESULT Init_InstanceBuffer(_uint iInstanceCount);
 	
 public:
-	static CMesh_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& fin);
-	virtual CComponent* Clone(void* pArg) override;
-	virtual void Free() override;
+	static CMesh_Instance* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, class CMeshContainer* pMesh);
+	CComponent* Clone(void* pArg) override;
+	void Free() override;
 };
 
 END

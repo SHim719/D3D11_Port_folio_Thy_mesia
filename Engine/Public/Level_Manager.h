@@ -16,7 +16,7 @@ private:
 	virtual ~CLevel_Manager() = default;
 
 public:
-	HRESULT Change_Level(class CLevel* pNewLevel);
+	void Change_Level(class CLevel* pNewLevel);
 	void Tick(_float fTimeDelta);
 	HRESULT Render();
 
@@ -24,8 +24,13 @@ private:
 	class CLevel*			m_pCurrentLevel = { nullptr };
 	class CGameInstance*	m_pGameInstance = { nullptr };
 
+	_uint					m_iCurrentLevelID = { 0 };
 public:
 	_uint Get_CurrentLevelID();
+
+	void Set_CurrentLevelID(_uint iLevelID) {
+		m_iCurrentLevelID = iLevelID;
+	}
 
 public:
 	static CLevel_Manager* Create();

@@ -12,8 +12,6 @@ CToolState::CToolState(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 HRESULT CToolState::Initialize(void* pArg)
 {
-    m_pCamera = static_cast<CFree_Camera*>(m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Camera"));
-    Safe_AddRef(m_pCamera);
 	return S_OK;
 }
 
@@ -70,8 +68,6 @@ bool _stdcall CToolState::VectorOfStringGetter(void* data, _int n, const char** 
 void CToolState::Free()
 {
 	__super::Free();
-
-    Safe_Release(m_pCamera);
 
     Safe_Release(m_pDevice);
     Safe_Release(m_pContext);

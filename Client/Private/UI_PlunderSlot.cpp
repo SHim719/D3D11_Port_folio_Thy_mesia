@@ -73,6 +73,9 @@ HRESULT CUI_PlunderSlot::Render()
 	if (FAILED(m_pShader->Begin(0)))
 		return E_FAIL;
 
+	//if (FAILED(m_pVIBuffer->Bind_Buffers()))
+	//	return E_FAIL;
+
 	if (FAILED(m_pVIBuffer->Render()))
 		return E_FAIL;
 
@@ -86,8 +89,6 @@ HRESULT CUI_PlunderSlot::OnEnter_Layer(void* pArg)
 {
 	if (FAILED(__super::OnEnter_Layer(pArg)))
 		return E_FAIL;
-
-	m_bCreatedThisFrame = true;
 
 	return S_OK;
 }

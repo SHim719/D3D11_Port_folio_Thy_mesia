@@ -22,7 +22,6 @@ public:
 	_bool Play_Animation_Blend(_float fTimeDelta, vector<class CBone*>& Bones, _bool bPlay);
 
 	void Reset();
-
 private:
 	string						m_strAnimName = "";
 	_uint						m_iNumChannels = 0;
@@ -44,7 +43,6 @@ private:
 	unordered_multimap<_int, class CKeyFrameEvent*>	m_KeyFrameEvents;
 
 	_bool*											m_bCheckKeyFrames = { nullptr };
-
 public:
 	const string& Get_AnimName() { return m_strAnimName; }
 	void Set_BlendingTime(_float fTime) {

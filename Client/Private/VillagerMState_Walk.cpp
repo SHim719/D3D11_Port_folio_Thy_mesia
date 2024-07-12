@@ -59,9 +59,9 @@ void CVillagerMState_Walk::Decide_WalkAnimation()
 	}
 	else
 	{
-		_int iRandNum = JoRandom::Random_Int(2, 3);
+		m_iDir = JoRandom::Random_Int(2, 3);
 
-		m_pModel->Change_Animation(LV1Villager_M_WalkB + iRandNum);
+		m_pModel->Change_Animation(LV1Villager_M_WalkB + m_iDir);
 	}
 }
 

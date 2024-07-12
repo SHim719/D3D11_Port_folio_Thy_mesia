@@ -7,7 +7,7 @@ BEGIN(Engine)
 class ENGINE_DLL CModel final : public CComponent
 {
 public:
-	enum TYPE { TYPE_NONANIM, TYPE_ANIM, TYPE_END };
+	enum TYPE { TYPE_NONANIM, TYPE_SKELETALMESH, TYPE_ANIM, TYPE_END };
 	typedef vector<class CBone*>			BONES;
 	typedef vector<class CMeshContainer*>	MESHES;
 	typedef vector<class CAnimation*>		ANIMATIONS;

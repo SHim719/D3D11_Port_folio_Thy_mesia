@@ -37,14 +37,14 @@ HRESULT CToolMapObjInstance::Initialize(void* pArg)
 
 void CToolMapObjInstance::Ready_RenderInstance()
 {
-	if (m_pInstance_Transforms.empty())
+	if (m_WorldMatrices.empty())
 		return;
 
-	m_pModel_Instance->Ready_Instancing(m_pInstance_Transforms);
+	m_pModel_Instance->Ready_Instancing(m_WorldMatrices);
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 
-	m_pInstance_Transforms.clear();
+	m_WorldMatrices.clear();
 }
 
 HRESULT CToolMapObjInstance::Render()

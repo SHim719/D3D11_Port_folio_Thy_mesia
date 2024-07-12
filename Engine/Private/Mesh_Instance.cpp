@@ -1,5 +1,6 @@
 #include "Mesh_Instance.h"
 #include "GameInstance.h"
+#include "MeshContainer.h"
 
 
 CMesh_Instance::CMesh_Instance(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -13,12 +14,12 @@ CMesh_Instance::CMesh_Instance(const CMesh_Instance& rhs)
 {
 }
 
-HRESULT CMesh_Instance::Initialize_Prototype(ifstream& fin)
+HRESULT CMesh_Instance::Initialize_Prototype(CMeshContainer* pMesh)
 {
-	if (FAILED(Ready_Vertices(fin)))
+	if (FAILED(Ready_Vertices(pMesh)))
 		return E_FAIL;
 
-	if (FAILED(Ready_IndexBuffer(fin)))
+	if (FAILED(Ready_IndexBuffer(pMesh)))
 		return E_FAIL;
 
 	m_iInstanceVertexStride = sizeof(VTXMATRIX);
@@ -64,13 +65,13 @@ HRESULT CMesh_Instance::Init_InstanceBuffer(_uint iInstanceCount)
 	return S_OK;
 }
 
-HRESULT CMesh_Instance::Update_InstanceBuffer(vector<CTransform*>& InstanceTransforms)
+HRESULT CMesh_Instance::Update_InstanceBuffer(vector<_float4x4>& WorldMatrices)
 {
 	// ÄÃ¸µ
-	vector<CTransform*> InstanceDatas;
-	InstanceDatas.reserve(InstanceTransforms.size());
+	vector<_float4x4> InstanceDatas;
+	InstanceDatas.reserve(WorldMatrices.size());
 
-	Culling_Frustum(InstanceTransforms, InstanceDatas);
+	Culling_Frustum(WorldMatrices, InstanceDatas);
 
 	if (FAILED(Init_InstanceBuffer((_uint)InstanceDatas.size())))
 		return E_FAIL;
@@ -81,7 +82,7 @@ HRESULT CMesh_Instance::Update_InstanceBuffer(vector<CTransform*>& InstanceTrans
 
 	for (size_t i = 0; i < InstanceDatas.size(); ++i)
 	{
-		_matrix WorldMatrix = InstanceDatas[i]->Get_WorldMatrix();
+		_matrix WorldMatrix = XMLoadFloat4x4(&InstanceDatas[i]);
 
 		XMStoreFloat4(&(static_cast<VTXMATRIX*>(SubResource.pData)[i].vRight), WorldMatrix.r[0]);
 		XMStoreFloat4(&(static_cast<VTXMATRIX*>(SubResource.pData)[i].vUp), WorldMatrix.r[1]);
@@ -96,19 +97,19 @@ HRESULT CMesh_Instance::Update_InstanceBuffer(vector<CTransform*>& InstanceTrans
 }
 
 
-void CMesh_Instance::Culling_Frustum(vector<CTransform*>& InstanceTransforms, OUT vector<CTransform*>& InstanceDatas)
+void CMesh_Instance::Culling_Frustum(vector<_float4x4>& WorldMatrices, OUT vector<_float4x4>& InstanceDatas)
 {
-	for (auto& pTransform : InstanceTransforms)
+	for (auto& WorldMatrix : WorldMatrices)
 	{
 		// Culling
-		InstanceDatas.emplace_back(pTransform);
+		InstanceDatas.emplace_back(WorldMatrix);
 	}
 
 }
 
-HRESULT CMesh_Instance::Ready_Vertices(ifstream& fin)
+HRESULT CMesh_Instance::Ready_Vertices(CMeshContainer* pMesh)
 {
-	fin.read((char*)&m_iNumVertices, sizeof(_uint));
+	m_iNumVertices = pMesh->m_iNumVertices;
 
 	m_iNumVertexBuffers = 2;
 	m_iStride = sizeof(VTXMODEL);
@@ -121,27 +122,18 @@ HRESULT CMesh_Instance::Ready_Vertices(ifstream& fin)
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = m_iStride;
 
-	m_pModelVertices = new VTXMODEL[m_iNumVertices];
-	ZeroMemory(m_pModelVertices, sizeof(VTXMODEL) * m_iNumVertices);
-
-	fin.read((char*)m_pModelVertices, sizeof(VTXMODEL) * m_iNumVertices);
-
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	m_SubResourceData.pSysMem = m_pModelVertices;
+	m_SubResourceData.pSysMem = pMesh->m_pModelVertices;
 
 	if (FAILED(__super::Create_VertexBuffer()))
 		return E_FAIL;
 
-#ifndef _DEBUG
-	Safe_Delete_Array(m_pModelVertices);
-#endif
-
 	return S_OK;
 }
 
-HRESULT CMesh_Instance::Ready_IndexBuffer(ifstream& fin)
+HRESULT CMesh_Instance::Ready_IndexBuffer(CMeshContainer* pMesh)
 {
-	fin.read((char*)&m_iNumPrimitives, sizeof(_uint));
+	m_iNumPrimitives = pMesh->m_iNumPrimitives;
 
 	m_iIndexSizeofPrimitive = sizeof(FACEINDICES32);
 	m_iNumIndicesofPrimitive = 3;
@@ -156,28 +148,20 @@ HRESULT CMesh_Instance::Ready_IndexBuffer(ifstream& fin)
 	m_BufferDesc.MiscFlags = 0;
 	m_BufferDesc.StructureByteStride = 0;
 
-	m_pIndices = new FACEINDICES32[m_iNumPrimitives];
-	ZeroMemory(m_pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
-	fin.read((char*)m_pIndices, sizeof(FACEINDICES32) * m_iNumPrimitives);
-
 	ZeroMemory(&m_SubResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-	m_SubResourceData.pSysMem = m_pIndices;
+	m_SubResourceData.pSysMem = pMesh->m_pIndices;
 
 	if (FAILED(__super::Create_IndexBuffer()))
 		return E_FAIL;
 
-#ifndef _DEBUG
-	Safe_Delete_Array(m_pIndices);
-#endif
-
 	return S_OK;
 }
 
-CMesh_Instance* CMesh_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& fin)
+CMesh_Instance* CMesh_Instance::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, CMeshContainer* pMesh)
 {
 	CMesh_Instance* pInstance = new CMesh_Instance(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(fin)))
+	if (FAILED(pInstance->Initialize_Prototype(pMesh)))
 	{
 		MSG_BOX(TEXT("Failed to Created : CMesh_Instance"));
 		Safe_Release(pInstance);
@@ -204,8 +188,6 @@ void CMesh_Instance::Free()
 {
 	__super::Free();
 
-	Safe_Delete_Array(m_pModelVertices);
 	Safe_Delete_Array(m_pInstanceVertices);
-	Safe_Delete_Array(m_pIndices);
 
 }

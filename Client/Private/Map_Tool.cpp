@@ -168,13 +168,17 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
       
        wstring wstrPrototypeTag = L"Prototype_Model_";
        wstrPrototypeTag += fileTitle.c_str();
-       if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel::Create(m_pDevice, m_pContext
-           ,entry.path().parent_path().generic_string() + "/", entry.path().filename().generic_string()))))
+
+       if (nullptr != m_pGameInstance->Find_Prototype(LEVEL_STATIC, wstrPrototypeTag))
+           continue;
+
+       CModel* pModel = CModel::Create(m_pDevice, m_pContext, entry.path().parent_path().generic_string() + "/", entry.path().filename().generic_string());
+
+       if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, pModel)))
            return E_FAIL;
 
        wstrPrototypeTag += L"_Instance";
-       if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel_Instance::Create(m_pDevice, m_pContext
-           , entry.path().parent_path().generic_string() + "/", entry.path().filename().generic_string()))))
+       if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_TOOL, wstrPrototypeTag, CModel_Instance::Create(m_pDevice, m_pContext, pModel))))
            return E_FAIL;
 
        m_strPlacable_Objects[m_eNowObjMode].emplace_back(fileTitle.generic_string());
@@ -432,7 +436,7 @@ void CMap_Tool::Transform_View()
 
     if (ImGui::InputFloat3("Scale", &m_vScale.x))
     {
-        if (m_SelectObjIndices.empty())
+        if (m_SelectObjIndices.empty() || 0.f == m_vScale.x || 0.f == m_vScale.y || 0.f == m_vScale.z)
             return;
 
         for (_int iSelObjIdx : m_SelectObjIndices)
@@ -614,15 +618,9 @@ void CMap_Tool::Object_ListBox()
 
                 Reset_Transform(WorldMatrix);
 
-                switch (m_eNowObjMode)
-                {
-                case ENEMY:
-                    m_iNowNaviIdx = m_MapObjects[i]->Get_NaviIdx();
-                    break;
-                case TRIGGER:
-                    m_iTriggerIdx = m_MapObjects[i]->Get_TriggerIdx();
-                    break;
-                }
+                m_iNowNaviIdx = m_MapObjects[i]->Get_NaviIdx();
+                m_iTriggerIdx = m_MapObjects[i]->Get_TriggerIdx();
+                m_vColliderSize = m_MapObjects[i]->Get_ColliderSize();
             }
         }
     }
@@ -637,7 +635,7 @@ void CMap_Tool::Ready_InstanceObj()
         if (m_MapObjectInstances.end() == it)
             continue;
 
-        it->second->Add_Transform(m_MapObjects[i]->Get_Transform());
+        it->second->Add_WorldMatrix(m_MapObjects[i]->Get_Transform()->Get_WorldFloat4x4());
     }
 }
 
@@ -728,7 +726,7 @@ HRESULT CMap_Tool::Load_Map()
             m_MapLayers.emplace(fileTitle.generic_string(), pObj);
             m_strCreatedObjects.emplace_back(fileTitle.generic_string());
 
-            if (LoadDesc.eObjType < ENEMY)
+            if (LoadDesc.eObjType < TRIGGEROBJ)
             {
                 CToolMapObjInstance* pInstanceObj = nullptr;
 
@@ -741,6 +739,7 @@ HRESULT CMap_Tool::Load_Map()
             }
                 
         }
+        fin.close();
     }
 
     return S_OK;
@@ -793,6 +792,12 @@ void CMap_Tool::Navi_Tool_Options()
     ImGui::Checkbox("Picking?", &m_bCanPick);
     if (ImGui::Checkbox("Mesh Picking?", &m_bPickingMesh) && m_bPickingMesh)
         m_iSelPointIndices.clear();
+
+    if (ImGui::Button("Sort Clockwise"))
+    {
+
+
+    }
 }
 
 void CMap_Tool::Navi_ListBox()
@@ -859,10 +864,10 @@ void CMap_Tool::Picking_Point()
     Get_MouseRayInfo(f4RayStartPos, f4RayDir);
 
     _vector vRayStartPos = XMLoadFloat4(&f4RayStartPos);
-    _vector vRayDir = XMLoadFloat4(&f4RayDir);
+    _vector vRayDir = XMVector3Normalize(XMLoadFloat4(&f4RayDir));
 
     _int iPickingIdx = ColorPicking_Object();
-    if (-1 == iPickingIdx)
+    if (-1 == iPickingIdx || iPickingIdx >= (_int)m_MapObjects.size())
         return;
 
     _float4 vPickedPos = {};
@@ -1063,7 +1068,7 @@ void CMap_Tool::Get_MouseRayInfo(OUT _float4& _vRayStartPos, OUT _float4& _vRayD
     _vector vMouseWorld_Near = XMVector3TransformCoord(vMouseNDC_Near, InverseViewProj);
     _vector vMouseWorld_Far = XMVector3TransformCoord(vMouseNDC_Far, InverseViewProj);
 
-    _vector vRayDir = XMVector3Normalize(vMouseWorld_Far - vMouseWorld_Near);
+    _vector vRayDir = vMouseWorld_Far - vMouseWorld_Near;
 
     XMStoreFloat4(&_vRayStartPos, vMouseWorld_Near);
     XMStoreFloat4(&_vRayDir, vRayDir);
@@ -1083,6 +1088,10 @@ void CMap_Tool::Object_Picking()
         {
             _matrix WorldMatrix = m_MapObjects[iPickingIdx]->Get_Transform()->Get_WorldMatrix();
             Reset_Transform(WorldMatrix);
+
+            m_iNowNaviIdx = m_MapObjects[iPickingIdx]->Get_NaviIdx();
+            m_iTriggerIdx = m_MapObjects[iPickingIdx]->Get_TriggerIdx();
+            m_vColliderSize = m_MapObjects[iPickingIdx]->Get_ColliderSize();
 
             m_SelectObjIndices.clear();
             m_SelectObjIndices.insert(iPickingIdx);

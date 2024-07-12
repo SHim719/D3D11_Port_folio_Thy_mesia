@@ -88,8 +88,6 @@ HRESULT CUI_LockOn::OnEnter_Layer(void* pArg)
 	Safe_AddRef(m_pTargetTransform);
 	Safe_AddRef(m_pTargetBone);
 
-	m_bCreatedThisFrame = true;
-
 	return S_OK;
 }
 

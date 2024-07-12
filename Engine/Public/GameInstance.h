@@ -30,8 +30,9 @@ public:
 
 #pragma region LEVEL_MANAGER
 public: /* For.Level_Manager */
-	HRESULT Change_Level(class CLevel* pNewLevel);
+	void Change_Level(class CLevel* pNewLevel);
 	_uint Get_CurrentLevelID();
+	void Set_CurrentLevelID(_uint iLevelID);
 #pragma endregion
 
 #pragma region TIMER_MANAGER
@@ -52,6 +53,7 @@ public:
 	class CGameObject* Clone_GameObject(const wstring& strPrototypeTag, void* pArg = nullptr);
 	class CComponent* Find_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex = 0);
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, _uint iIndex = 0);
+	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);
 	class CLayer* Find_Layer(_uint iLevelIndex, const wstring& strLayerTag);
 	void Clear_Layer(_uint iLevelIndex, const wstring& strLayerTag);
 
@@ -64,6 +66,8 @@ public:
 public:
 	HRESULT Add_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag, class CComponent* pPrototype);
 	class CComponent* Clone_Component(_uint iLevelIndex, const wstring& strPrototypeTag, void* pArg = nullptr);
+
+	class CComponent* Find_Prototype(_uint iLevelIndex, const wstring& strPrototypeTag);
 #pragma endregion
 
 
@@ -142,6 +146,10 @@ public:
 
 	void Change_MainCamera(class CCamera* pCamera);
 	void Update_ViewProj();
+
+	class CCamera* Get_MainCamera() {
+		return m_pMain_Camera;
+	}
 #pragma endregion
 
 

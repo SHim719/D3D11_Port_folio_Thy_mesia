@@ -17,6 +17,7 @@ void CCollision_Manager::Update()
 {
 	Execute_Collision("Player", "Enemy", COLLISION);
 	Execute_Collision("Player", "EventTrigger", TRIGGER);
+	Execute_Collision("Player", "MapObject", TRIGGER);
 	Execute_Collision("Player", "PerceptionBounding", TRIGGER);
 	Execute_Collision("Enemy_HitBox", "Player_Weapon", TRIGGER);
 	Execute_Collision("Player_HitBox", "Enemy_Weapon", TRIGGER);

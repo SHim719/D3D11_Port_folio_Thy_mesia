@@ -33,6 +33,7 @@ private:
 	HRESULT	Ready_Prototype_Component();
 	HRESULT Ready_Prototype_Shader();
 	HRESULT Ready_Font();
+	HRESULT Ready_Default();
 
 public:
 	static CMainApp* Create();

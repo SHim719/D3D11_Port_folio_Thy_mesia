@@ -78,14 +78,12 @@ void CToolColliderObj::LateTick(_float fTimeDelta)
 
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 		
-
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	m_pGameInstance->Add_RenderComponent(m_pCollider);
 }
 
 HRESULT CToolColliderObj::Render()
 {
-	if (m_pCollider)
-		m_pCollider->Render();
+	
 	return S_OK;
 }
 

@@ -30,6 +30,7 @@ public:
 	void LateTick(_float fTimeDelta);
 
 public:
+	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);
 	class CComponent* Find_Component(_uint iLevelIndex, const wstring& strLayerTag, const wstring& strComponentTag, _uint iIndex);
 	class CGameObject* Find_GameObject(_uint iLevelIndex, const wstring& strLayerTag, _uint iIndex);
 	class CLayer* Find_Layer(_uint iLevelIndex, const wstring& strLayerTag);
@@ -44,12 +45,9 @@ private:
 	map<const wstring, class CLayer*>*				m_pLayers = { nullptr };
 	typedef map<const wstring, class CLayer*>		LAYERS;
 
-private:
-	class CGameObject* Find_Prototype(const wstring& strPrototypeTag);
-
 public:
 	static CObject_Manager* Create(_uint iNumLevels);
-	virtual void Free() override;
+	void Free() override;
 };
 
 END

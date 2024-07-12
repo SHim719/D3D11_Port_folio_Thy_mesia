@@ -25,7 +25,6 @@ private:
 public:
 	void Update_SkillIcon(const SKILLTYPE eSkillType);
 
-
 public:
 	static CUI_PlunderSlot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr)	override;

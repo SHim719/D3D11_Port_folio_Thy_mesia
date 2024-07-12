@@ -15,6 +15,8 @@ HRESULT CPlayerState_Idle::Initialize(void* pArg)
 		, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart,
 		PlayerState::State_Avoid, PlayerState::State_Parry };
 
+	m_bCanClimb = true;
+
 	return S_OK;
 }
 
@@ -29,13 +31,13 @@ void CPlayerState_Idle::OnState_Start(void* pArg)
 		
 	m_pPlayer->Set_CanNextState(true);
 	m_pPlayer->Set_CanRotation(true);
+	m_pPlayer->Set_Adjust_NaviY(true);
 
 	m_pModel->Change_Animation(Corvus_SD_Idle);
 }
 
 void CPlayerState_Idle::Update(_float fTimeDelta)
 {
-	
 }
 
 void CPlayerState_Idle::Late_Update(_float fTimeDelta)

@@ -95,9 +95,9 @@ void CAABB::Set_Size(_fvector vSize)
 	m_pOriginal_AABB->Extents.z = vSize.m128_f32[2] * 0.5f;
 }
 
+#ifdef _DEBUG
 HRESULT CAABB::Render()
 {
-#ifdef _DEBUG
 	if (false == m_bActive)
 		return E_FAIL;
 
@@ -108,9 +108,10 @@ HRESULT CAABB::Render()
 	DX::Draw(m_pBatch, *m_pAABB, XMLoadFloat4(&m_vColor));
 
 	m_pBatch->End();
-#endif
+
 	return S_OK;
 }
+#endif
 
 CAABB* CAABB::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

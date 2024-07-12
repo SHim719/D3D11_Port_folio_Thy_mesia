@@ -22,7 +22,12 @@ protected:
 public:
 	void Change_State(_uint eState, void* pArg = nullptr);
 	_uint Get_PrevState() const { return m_iPrevState; }
+	_uint Get_NowState() const { return m_iState; }
 
+	void Change_Navigation(CNavigation* pNavigation);
+	void Set_NaviIdx(_uint iNaviIdx) {
+		m_pNavigation->Set_CurrentIdx(iNaviIdx);
+	}
 public:
 	void Hit(const ATTACKDESC& AttackDesc);
 	virtual _int Take_Damage(const ATTACKDESC& AttackDesc);

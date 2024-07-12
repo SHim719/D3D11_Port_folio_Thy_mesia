@@ -48,6 +48,5 @@ namespace Engine
 			pPointer = nullptr;
 		}
 	}
-
 }
 

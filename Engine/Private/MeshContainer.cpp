@@ -35,22 +35,16 @@ HRESULT CMeshContainer::Initialize(ifstream& fin, CModel::TYPE eType)
 	return S_OK;
 }
 
-_bool CMeshContainer::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
+_bool CMeshContainer::Picking(_fmatrix WorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
 {
 	// Static Model에대해서만진행
 	// 
 	// 거리가 가장 짧은삼각형점을 피킹
 
-	XMVECTOR vRayStartLocalPos = XMVectorSet(0.f, 0.f, 0.f, 1.f);//XMVector3TransformCoord(vRayStartPos, InvWorldMat);
-	XMVECTOR vRayLocalDir = XMVector3TransformNormal(vRayDir, InvWorldMat);
+	_matrix InverseWorldMatrix = XMMatrixInverse(nullptr, WorldMat);
 
-	_float fx;
-
-	DirectX::TriangleTests::Intersects(XMVectorSet(0.f, 0.f ,0.f, 1.f), XMVectorSet(0.f, 0.f, 0.f, 1.f)
-		, XMVectorSet(0.f, 0.f, 0.f, 1.f)
-		, XMVectorSet(0.f, 0.f, 0.f, 1.f)
-		, XMVectorSet(0.f, 0.f, 0.f, 1.f)
-		, fx);
+	_vector vRayStartLocalPos = XMVector3TransformCoord(vRayStartPos, InverseWorldMatrix);
+	_vector vRayLocalDir = XMVector3TransformNormal(vRayDir, InverseWorldMatrix);
 
 	_bool bResult = false;
 	fDist = FLT_MAX;
@@ -58,18 +52,21 @@ _bool CMeshContainer::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvec
 	for (_uint i = 0; i < m_iNumPrimitives; ++i)
 	{
 		_float fNowDist = 0.f;
+		
+		_vector v0 = XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._0].vPosition), 1.f);
+		_vector v1 = XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._1].vPosition), 1.f);
+		_vector v2 = XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._2].vPosition), 1.f);
 
-		bResult += DirectX::TriangleTests::Intersects(vRayStartLocalPos, vRayLocalDir
-			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._0].vPosition), 1.f)
-			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._1].vPosition), 1.f)
-			, XMVectorSetW(XMLoadFloat3(&m_pModelVertices[m_pIndices[i]._2].vPosition), 1.f)
-			, fNowDist);
+		_bool bIntersect = DirectX::TriangleTests::Intersects(vRayStartLocalPos, vRayLocalDir
+			, v0, v1, v2, fNowDist);
 
+		if (false == bResult && bIntersect)
+			bResult = true;
 
 		if (fNowDist > 0.f && fNowDist < fDist)
 		{
 			fDist = fNowDist;
-			_vector _vPickedPos = vRayStartPos + vRayDir * fDist;
+			_vector _vPickedPos = vRayStartPos + vRayDir * fNowDist;
 			XMStoreFloat4(&vPickedPos, _vPickedPos);
 		}
 	}
@@ -103,7 +100,7 @@ HRESULT CMeshContainer::Ready_Vertices(ifstream& fin)
 		return E_FAIL;
 
 #ifndef _DEBUG
-	Safe_Delete_Array(m_pModelVertices);
+	//Safe_Delete_Array(m_pModelVertices);
 #endif
 
 	return S_OK;
@@ -134,7 +131,7 @@ HRESULT CMeshContainer::Ready_AnimVertices(ifstream& fin)
 		return E_FAIL;
 
 #ifndef _DEBUG
-	Safe_Delete_Array(m_pAnimVertices);
+	//Safe_Delete_Array(m_pAnimVertices);
 #endif
 
 	return S_OK;
@@ -169,7 +166,7 @@ HRESULT CMeshContainer::Ready_IndexBuffer(ifstream& fin)
 		return E_FAIL;
 
 #ifndef _DEBUG
-	Safe_Delete_Array(m_pIndices);
+	//Safe_Delete_Array(m_pIndices);
 #endif
 
 	return S_OK;

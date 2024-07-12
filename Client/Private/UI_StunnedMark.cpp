@@ -85,8 +85,6 @@ HRESULT CUI_StunnedMark::OnEnter_Layer(void* pArg)
 	Safe_AddRef(m_AttachDesc.pParentTransform);
 	Safe_AddRef(m_AttachDesc.pAttachBone);
 
-	m_bCreatedThisFrame = true;
-
 	return S_OK;
 }
 

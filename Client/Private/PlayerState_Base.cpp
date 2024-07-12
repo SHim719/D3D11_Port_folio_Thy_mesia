@@ -1,4 +1,5 @@
 #include "PlayerState_Base.h"
+#include "Main_Camera.h"
 
 
 CPlayerState_Base::CPlayerState_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -13,7 +14,7 @@ HRESULT CPlayerState_Base::Initialize(void* pArg)
 
 	m_pPlayer = (CPlayer*)pArg;
 
-	m_pMain_Camera = static_cast<CMain_Camera*>(m_pGameInstance->Find_GameObject(GET_CURLEVEL, L"Camera", 0));
+	m_pMain_Camera = static_cast<CMain_Camera*>(m_pGameInstance->Get_MainCamera());
 	if (nullptr == m_pMain_Camera)
 		return E_FAIL;
 
@@ -219,6 +220,33 @@ void CPlayerState_Base::Check_PlagueAttack()
 	m_pPlayerStats->Update_PlunderSkill(SKILLTYPE::NONE);
 	m_pPlayer->Set_NowUsingSkill(ePlunderSkillType);
 	m_pPlayer->Change_State((_uint)eState);
+}
+
+void CPlayerState_Base::Decide_ClimbState(_int iDir)
+{
+	if (KEY_PUSHING(eKeyCode::W))
+	{
+		iDir = (iDir + 1) % 2;
+		_uint iNowHeight = m_pPlayer->Add_PlayerLadderHeight(1) + 5;
+		if (m_pPlayer->Get_NowLadderHeight() == iNowHeight)
+			m_pPlayer->Change_State((_uint)PlayerState::State_Climb_End, &iDir);
+		else if (iNowHeight < m_pPlayer->Get_NowLadderHeight())
+			m_pPlayer->Change_State((_uint)PlayerState::State_Climb, &iDir);
+	}
+	else if (KEY_PUSHING(eKeyCode::S))
+	{
+		iDir = (iDir + 1) % 2;
+		_uint iNowHeight = m_pPlayer->Add_PlayerLadderHeight(-1);
+		if (iNowHeight <= 1)
+			m_pPlayer->Change_State((_uint)PlayerState::State_Climb_End, &iDir);
+		else if (iNowHeight > 1)
+			m_pPlayer->Change_State((_uint)PlayerState::State_Climb, &iDir);
+	}
+	else
+	{
+		if ((_uint)PlayerState::State_Climb_Idle != m_pPlayer->Get_NowState())
+			m_pPlayer->Change_State((_uint)PlayerState::State_Climb_Idle, &iDir);
+	}
 }
 
 void CPlayerState_Base::Free()

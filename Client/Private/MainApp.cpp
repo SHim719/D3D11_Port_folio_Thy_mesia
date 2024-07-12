@@ -9,6 +9,9 @@
 #include "UI_Manager.h"
 #include "Cutscene_Manager.h"
 
+#include "MapObject.h"
+#include "Instancing_Object.h"
+
 CMainApp::CMainApp()
 	: m_pGameInstance { CGameInstance::Get_Instance() }
 {
@@ -33,12 +36,23 @@ HRESULT CMainApp::Initialize()
 	if (FAILED(Ready_Font()))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Change_Level(CLevel_Tool::Create(m_pDevice, m_pContext))))
+	if (FAILED(Ready_Default()))
 		return E_FAIL;
+
+	CLevel* pStartLevel = nullptr;
+
+#ifndef InGame
+	pStartLevel = CLevel_Tool::Create(m_pDevice, m_pContext);
 
 	m_pImGui_Main = CImGui_Main::Create(m_pDevice, m_pContext);
 	if (nullptr == m_pImGui_Main)
 		return E_FAIL;
+#else
+	pStartLevel = CLevel_Loading::Create(LEVEL_STAGE1, m_pDevice, m_pContext);
+
+#endif
+
+	m_pGameInstance->Change_Level(pStartLevel);
 
 	return S_OK;
 }
@@ -47,8 +61,10 @@ void CMainApp::Tick(_float fTimeDelta)
 {
 	m_pGameInstance->Tick_Engine(fTimeDelta);
 
+#ifndef InGame
 	m_pImGui_Main->Tick(fTimeDelta);
 	m_pImGui_Main->LateTick(fTimeDelta);
+#endif
 }
 
 HRESULT CMainApp::Render()
@@ -61,7 +77,9 @@ HRESULT CMainApp::Render()
 
 	m_pGameInstance->Draw();
 
+#ifndef InGame
 	m_pImGui_Main->Render();
+#endif
 
 	m_pGameInstance->Present();
 	return S_OK;
@@ -136,6 +154,17 @@ HRESULT CMainApp::Ready_Prototype_Shader()
 HRESULT CMainApp::Ready_Font()
 {
 	if (FAILED(m_pGameInstance->Add_Font(TEXT("Main_Font"), TEXT("../../Resources/Fonts/MainFont11.spritefont"))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CMainApp::Ready_Default()
+{
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_MapObject", CMapObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_InstancingObj", CInstancing_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;

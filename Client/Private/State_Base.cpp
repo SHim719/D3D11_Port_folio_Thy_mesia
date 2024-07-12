@@ -28,8 +28,6 @@ HRESULT CState_Base::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pNavigation = static_cast<CNavigation*>(pOwner->Find_Component(L"Navigation"));
-	//if (nullptr == m_pNavigation)
-	//	return E_FAIL;
 
 	XMStoreFloat4x4(&m_OffsetMatrix, XMMatrixRotationX(-XM_PIDIV2));
 
@@ -55,6 +53,7 @@ void CState_Base::OnState_End()
 void CState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
 }
+
 
 void CState_Base::Init_AttackDesc()
 {

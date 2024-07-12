@@ -13,6 +13,9 @@
 
 #include "Bone.h"
 
+#include "Ladder_Down.h"
+#include "Ladder_Up.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)
 {
@@ -54,7 +57,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Change_State((_uint)PlayerState::State_Idle);
 	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);
 
-	m_pTransform->Set_Position(XMVectorSet(37.326f, 0.798f, -2.175f, 1.f));
+	m_pTransform->Set_Position(XMVectorSet(0.f, 0.594f, -3.832f, 1.f));
 
 	CUTSCENEMGR->Add_Actor(this);
 
@@ -74,8 +77,7 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_bLockOn)
 		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
-	if (m_pGameInstance->GetKeyNone(eKeyCode::MButton))
-		m_States[m_iState]->Update(fTimeDelta);
+	m_States[m_iState]->Update(fTimeDelta);
 
 	if (m_bAdjustNaviY)
 		Compute_YPos();
@@ -89,9 +91,7 @@ void CPlayer::Tick(_float fTimeDelta)
 
 void CPlayer::LateTick(_float fTimeDelta)
 {
-	if (m_pGameInstance->GetKeyNone(eKeyCode::MButton))
-		m_States[m_iState]->Late_Update(fTimeDelta);
-
+	m_States[m_iState]->Late_Update(fTimeDelta);
 
 	__super::LateTick_Weapons(fTimeDelta);
 
@@ -169,6 +169,8 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));
 	m_pModel->Bind_Func("Active_PlagueWeapon_Collider", bind(&CPlayer::Set_Active_NowPWCollider, this, true));
 	m_pModel->Bind_Func("Inactive_PlagueWeapon_Collider", bind(&CPlayer::Set_Active_NowPWCollider, this, false));
+	m_pModel->Bind_Func("Enable_NaviY", bind(&CPlayer::Set_Adjust_NaviY, this, true));
+	m_pModel->Bind_Func("Disable_NaviY", bind(&CPlayer::Set_Adjust_NaviY, this, false));
 }
 
 void CPlayer::Update_CanExecutionEnemy()
@@ -284,6 +286,30 @@ void CPlayer::SetState_Plunder(void* pArg)
 	Change_State((_uint)PlayerState::State_Plunder, pArg);
 }
 
+void CPlayer::SetState_ClimbStart(void* pArg)
+{
+	if (static_cast<CPlayerState_Base*>(m_States[m_iState])->Can_Climb())
+	{
+		LADDERDESC* pLadderDesc = (LADDERDESC*)pArg;
+
+		_float4* vLadderPos = (_float4*)&pLadderDesc->pWorldMatrix->m[3];
+		
+		_vector vPosition = XMLoadFloat4(vLadderPos) + XMLoadFloat4(&pLadderDesc->vOffset);
+		m_pTransform->Set_Position(vPosition);
+
+		// m_pTransform->LookAt2D(XMLoadFloat4(vLadderPos));
+		m_pTransform->LookTo(XMLoadFloat4((_float4*)&pLadderDesc->pWorldMatrix->m[2]));
+
+		m_iTargetNaviIdx = pLadderDesc->iTargetNaviIdx;
+		m_iNowLadderHeight = pLadderDesc->iLadderHeight;
+		m_iPlayerLadderHeight = pLadderDesc->iStartHeight;
+
+		m_bIsClimbStartDown = m_iPlayerLadderHeight == 1;
+
+		Change_State((_uint)PlayerState::State_Climb_Start, &pLadderDesc->iPlayerAnimIdx);
+	}
+}
+
 void CPlayer::Set_Active_DefaultWeapons(_bool bActive)
 {
 	m_Weapons[SABER]->Set_Active(bActive); 
@@ -330,6 +356,23 @@ _int CPlayer::Take_Damage(const ATTACKDESC& AttackDesc)
 	return m_pStats->Increase_Hp(-AttackDesc.iDamage);
 }
 
+HRESULT CPlayer::Reset_NaviData(LEVEL eLevel)
+{
+	Safe_Release(m_pNavigation);
+
+	CNavigation::NAVIGATION_DESC NaviDesc;
+
+	m_pNavigation = static_cast<CNavigation*>(m_pGameInstance->Clone_Component(eLevel, L"Prototype_Navigation", &NaviDesc));
+	if (nullptr == m_pNavigation)
+		return E_FAIL;
+
+	m_pNavigation->Set_CurrentIdx(m_pTransform->Get_Position());
+
+	Change_Navigation(m_pNavigation);
+
+	return S_OK;
+}
+
 HRESULT CPlayer::Ready_Components()
 {
 	CTransform::TRANSFORMDESC		TransformDesc;
@@ -344,7 +387,7 @@ HRESULT CPlayer::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(m_pGameInstance->Get_CurrentLevelID(), TEXT("Prototype_Model_Player"), TEXT("Model"), (CComponent**)&m_pModel)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Model_Player"), TEXT("Model"), (CComponent**)&m_pModel)))
 		return E_FAIL;
 
 
@@ -369,12 +412,6 @@ HRESULT CPlayer::Ready_Components()
 	Desc.strCollisionLayer = "Player_HitBox";
 	
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
-		return E_FAIL;
-
-	CNavigation::NAVIGATION_DESC NaviDesc;
-	NaviDesc.iCurrentCellIndex = 0;
-
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &NaviDesc)))
 		return E_FAIL;
 
 	return S_OK;
@@ -407,8 +444,13 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Execution_Default] = CPlayerState_Execution_Default::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Execution_Joker] = CPlayerState_Execution_Joker::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Executed] = CPlayerState_Executed::Create(m_pDevice, m_pContext, this);
-	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
 
+	m_States[(_uint)PlayerState::State_Climb_Start] = CPlayerState_Climb_Start::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Climb_Idle] = CPlayerState_Climb_Idle::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Climb] = CPlayerState_Climb::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Climb_End] = CPlayerState_Climb_End::Create(m_pDevice, m_pContext, this);
+
+	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_Axe] = CPlayerState_PW_Axe::Create(m_pDevice, m_pContext, this);
 	//m_States[(_uint)PlayerState::State_PW_Hammer] = CPlayerState_PW_Hammer::Create(m_pDevice, m_pContext, this);
 
@@ -421,6 +463,7 @@ HRESULT CPlayer::Ready_Weapons()
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.iTag = (_uint)TAG_PLAYER_WEAPON;
+	WeaponDesc.iLevelID = LEVEL_STATIC;
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Dagger";

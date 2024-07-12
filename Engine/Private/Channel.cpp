@@ -38,7 +38,7 @@ _uint CChannel::Update_Transformation(_float fPlayTime, _uint iCurrentKeyFrame, 
 	}
 	else
 	{
-		while (fPlayTime >= m_KeyFrames[iCurrentKeyFrame + 1].fTime)
+		while (iCurrentKeyFrame + 1 < (_uint)m_KeyFrames.size() && fPlayTime >= m_KeyFrames[iCurrentKeyFrame + 1].fTime)
 			++iCurrentKeyFrame;
 
 		_float		fRatio = (fPlayTime - m_KeyFrames[iCurrentKeyFrame].fTime) /
@@ -92,7 +92,7 @@ _uint CChannel::Blend_Transformation(_float fBlendRatio, _float fPlayTime, _uint
 	}
 	else
 	{
-		while (fPlayTime >= m_KeyFrames[iCurrentKeyFrame + 1].fTime)
+		while (iCurrentKeyFrame + 1 < (_uint)m_KeyFrames.size() && fPlayTime >= m_KeyFrames[iCurrentKeyFrame + 1].fTime)
 			++iCurrentKeyFrame;
 
 		_float		fCurAnimRatio = (fPlayTime - m_KeyFrames[iCurrentKeyFrame].fTime) /

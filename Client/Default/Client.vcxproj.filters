@@ -19,9 +19,6 @@
     <Filter Include="01. Levels\00. Loading\Loader">
       <UniqueIdentifier>{d7a516a4-2521-4980-a217-4807612ec8bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\02. GamePlay">
-      <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
-    </Filter>
     <Filter Include="98. Default">
       <UniqueIdentifier>{9a853736-99fd-4100-b927-5433508f68ad}</UniqueIdentifier>
     </Filter>
@@ -55,6 +52,69 @@
     <Filter Include="03. State">
       <UniqueIdentifier>{f7573f10-348a-408e-b9ba-957bc721571d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. UI\Define">
+      <UniqueIdentifier>{4c8b1b45-18f3-48e2-a62c-459d032d96bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\Manager">
+      <UniqueIdentifier>{49b2b2bd-e722-453c-a364-a1e51d4201ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\01. Title">
+      <UniqueIdentifier>{ed0f00ae-1f6c-491f-aba4-8aa13c98d29f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Interface">
+      <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. Interface\01. Cutscene_Actor">
+      <UniqueIdentifier>{a4aa2f76-17c5-4854-ae94-135abb7aa656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Managers\01. Cutscene_Manager">
+      <UniqueIdentifier>{c12a6fb0-7888-4a1e-8807-877159cb28db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Managers\02. Fade_Manager">
+      <UniqueIdentifier>{f20ef841-c559-459b-b396-f85be562a341}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI">
+      <UniqueIdentifier>{b1d2376f-80b3-49c2-9e38-de3e25bc92e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\00. FadeScreen">
+      <UniqueIdentifier>{e768a7cc-d3d2-42d7-84fe-0892d95fa1ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\01. UI_LockOn">
+      <UniqueIdentifier>{cd881789-e140-49b4-9b5d-22889b88dc1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerBar">
+      <UniqueIdentifier>{ed961139-4a30-42e1-bbef-6f013e7d2d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\UI_Component">
+      <UniqueIdentifier>{6d4ddae4-d103-4797-b1bc-dbbde6be4929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\UI_Component\ProgressBar">
+      <UniqueIdentifier>{b119a576-8c92-4a71-8bc9-3836f2b76962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\03. UI_EnemyBar">
+      <UniqueIdentifier>{33f34ad6-cd0b-4893-9096-2f5d015cbe50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\05 .UI_DamageFont">
+      <UniqueIdentifier>{baff3619-5e26-40eb-8256-f13cc86ed449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\04. UI_BossBar">
+      <UniqueIdentifier>{2f64f4f4-e12a-40b4-98bc-ec2a4e62cee9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\06. UI_StunnedMark">
+      <UniqueIdentifier>{b0fb57d9-67f0-4e22-9b4c-065174a48161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\08. UI_PlunderSlot">
+      <UniqueIdentifier>{1f562c16-299c-4fe8-94d1-f0db7d8191c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\09. UI_SkillIcon">
+      <UniqueIdentifier>{2c865bca-0373-45d3-8d9e-a266dc2d7e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\07. UI_SkillSlot">
+      <UniqueIdentifier>{ca12db51-d09e-4090-8ffa-7f2713abebd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\02. Stage1">
+      <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects">
       <UniqueIdentifier>{e561c34e-d6f4-478c-9e8b-6bb897b1098c}</UniqueIdentifier>
     </Filter>
@@ -73,35 +133,29 @@
     <Filter Include="02. GameObjects\99. ToolObject">
       <UniqueIdentifier>{a30fb29b-086b-471a-815d-25ec9dccaec7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="100. IMGUI\99. TestPlay_Tool">
-      <UniqueIdentifier>{1a9a7660-075b-4d31-91da-c017877d3d77}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\99. ToolObject\2. ToolAnimObj">
+      <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. UI\Define">
-      <UniqueIdentifier>{4c8b1b45-18f3-48e2-a62c-459d032d96bc}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\99. ToolObject\3. ToolColliderObj">
+      <UniqueIdentifier>{9db4c5a9-80e3-4486-9561-e6867fbf2c19}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. UI\Manager">
-      <UniqueIdentifier>{49b2b2bd-e722-453c-a364-a1e51d4201ce}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\99. ToolObject\4. ToolNaviCell">
+      <UniqueIdentifier>{3d56b1ac-c2b9-4a45-87b5-4e8813e6ff55}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\01. Title">
-      <UniqueIdentifier>{ed0f00ae-1f6c-491f-aba4-8aa13c98d29f}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint">
+      <UniqueIdentifier>{df7dcd97-b882-46c5-a831-49cd782e49dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\1. ToolMapObj">
+      <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\1. ToolMapObj\ToolMapObjInstance">
+      <UniqueIdentifier>{fceba8fa-4c6b-4020-9984-cbac09cc0547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\5. ToolBoundingSphere">
+      <UniqueIdentifier>{9193230b-7863-480a-a2d2-4d6e00da7621}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character">
       <UniqueIdentifier>{2f408878-5258-48e7-a250-cedd772a55bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05. Interface">
-      <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="05. Interface\01. Cutscene_Actor">
-      <UniqueIdentifier>{a4aa2f76-17c5-4854-ae94-135abb7aa656}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97. Managers\01. Cutscene_Manager">
-      <UniqueIdentifier>{c12a6fb0-7888-4a1e-8807-877159cb28db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="97. Managers\02. Fade_Manager">
-      <UniqueIdentifier>{f20ef841-c559-459b-b396-f85be562a341}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\03. Weapon">
-      <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player">
       <UniqueIdentifier>{aa72ff72-1ace-4fd0-a5c4-a7f304de7a43}</UniqueIdentifier>
@@ -151,59 +205,8 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\99. PlayerState_Cutscene">
       <UniqueIdentifier>{dfaac50f-ceee-44fb-b441-2ceb73289741}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\PlayerStat">
-      <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy">
-      <UniqueIdentifier>{c151c21c-0afd-4e07-a6ca-7a53edd2ef0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Stats">
-      <UniqueIdentifier>{58435bba-5ebc-4e65-ad6a-9fc346159b58}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\2. ToolAnimObj">
-      <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\3. ToolColliderObj">
-      <UniqueIdentifier>{9db4c5a9-80e3-4486-9561-e6867fbf2c19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\4. ToolNaviCell">
-      <UniqueIdentifier>{3d56b1ac-c2b9-4a45-87b5-4e8813e6ff55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint">
-      <UniqueIdentifier>{df7dcd97-b882-46c5-a831-49cd782e49dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\1. ToolMapObj">
-      <UniqueIdentifier>{3f98b10b-66ff-4b94-a7e2-234cfa61d894}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\04. MapObject">
-      <UniqueIdentifier>{da660398-3255-4bae-85c1-c53f7ba4521f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\04. MapObject\EventTrigger">
-      <UniqueIdentifier>{f2a7b51f-1f21-49bc-b543-b17733592bb9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI">
-      <UniqueIdentifier>{b1d2376f-80b3-49c2-9e38-de3e25bc92e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\00. FadeScreen">
-      <UniqueIdentifier>{e768a7cc-d3d2-42d7-84fe-0892d95fa1ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\01. UI_LockOn">
-      <UniqueIdentifier>{cd881789-e140-49b4-9b5d-22889b88dc1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\02. UI_PlayerBar">
-      <UniqueIdentifier>{ed961139-4a30-42e1-bbef-6f013e7d2d3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\UI_Component">
-      <UniqueIdentifier>{6d4ddae4-d103-4797-b1bc-dbbde6be4929}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\UI_Component\ProgressBar">
-      <UniqueIdentifier>{b119a576-8c92-4a71-8bc9-3836f2b76962}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge">
       <UniqueIdentifier>{afd2b791-cb5d-4a18-9a35-b6ee69fc7652}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack">
-      <UniqueIdentifier>{56ead3ec-0a72-4391-abdd-68eacf142f3e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Start">
       <UniqueIdentifier>{b3968483-1b83-4bb6-bd68-178dd6b88e6a}</UniqueIdentifier>
@@ -214,6 +217,9 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Loop">
       <UniqueIdentifier>{887a38b2-4b3a-4fb1-97c6-d9a1a54e8ea6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack">
+      <UniqueIdentifier>{56ead3ec-0a72-4391-abdd-68eacf142f3e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Long">
       <UniqueIdentifier>{b0042f06-b789-44d9-a736-34d173ca14cb}</UniqueIdentifier>
     </Filter>
@@ -222,6 +228,42 @@
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Short\ClawAttack_ShortEnd">
       <UniqueIdentifier>{e8e21138-a123-4958-952a-c0cb4d07ef3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution">
+      <UniqueIdentifier>{f28bcd6b-c7c8-430c-af35-9cf9ad4b5210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Default">
+      <UniqueIdentifier>{5d77c294-0fc1-411f-98ba-e9da35ce1bd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Joker">
+      <UniqueIdentifier>{55e195ca-285e-427e-8ae7-eda04d7351f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder">
+      <UniqueIdentifier>{c91b6dfc-e49b-4f54-8f7c-18a62b5dcf52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder\PlayerState_PlunderRush">
+      <UniqueIdentifier>{17b6e646-8e52-4f0d-a23a-af64c2a9cdb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack">
+      <UniqueIdentifier>{eede8110-7385-4087-a321-4f074537491a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Hammer">
+      <UniqueIdentifier>{c951c813-0685-44b5-bc23-162512d1b768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe">
+      <UniqueIdentifier>{771e8313-e393-410e-a3a1-96a105126cec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder">
+      <UniqueIdentifier>{21e2b80d-eefc-4ec8-8e03-3d718c1fd755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\PlayerStat">
+      <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy">
+      <UniqueIdentifier>{c151c21c-0afd-4e07-a6ca-7a53edd2ef0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Stats">
+      <UniqueIdentifier>{58435bba-5ebc-4e65-ad6a-9fc346159b58}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\PerceptionBounding">
       <UniqueIdentifier>{6d152870-113c-4085-9995-5d2e67a75a0e}</UniqueIdentifier>
@@ -310,6 +352,72 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker">
       <UniqueIdentifier>{ae487f91-5066-4db9-97fc-1671daf888e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\Define">
+      <UniqueIdentifier>{cb005002-63df-410c-a1fb-8aaa07fac120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State">
+      <UniqueIdentifier>{459a6edb-5caa-41fe-8593-9c5e1900aeed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\00. JokerState_Base">
+      <UniqueIdentifier>{e6401607-1fca-4dc0-b805-065cc688042e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack">
+      <UniqueIdentifier>{a3bd4526-8f00-4cd3-a9bf-aa82b93aaa5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ComboA">
+      <UniqueIdentifier>{68618f39-d76a-4805-adde-e52ae9891f4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ComboB">
+      <UniqueIdentifier>{f2f0d0fa-8dd9-445e-bf42-ff17dfcd8881}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_TurnAttack_R">
+      <UniqueIdentifier>{20807ea4-a968-48ca-a793-101f4518aa9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_TurnAttack_L">
+      <UniqueIdentifier>{d26f0332-9d8d-4531-a10c-d009769e2543}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_WheelWind">
+      <UniqueIdentifier>{c68d5600-1bb8-4772-b4dd-ae2f9a4f1907}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_WheelWind\WheelWind_Start">
+      <UniqueIdentifier>{2a6a2014-0cb4-4119-b71e-8bec28f55c36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_WheelWind\WheelWind_Loop">
+      <UniqueIdentifier>{04b39006-74f0-41d7-b1c5-9fdd20fc9681}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_WheelWind\WheelWind_End">
+      <UniqueIdentifier>{95b0a18d-1adf-4420-b354-147dfc4a2c33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_JumpAttack">
+      <UniqueIdentifier>{30aae543-26de-481e-8812-167f78e63140}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_StrongAttack">
+      <UniqueIdentifier>{f16f5c37-ef58-47b6-9d67-e70c6292268f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\02. JokerState_Walk">
+      <UniqueIdentifier>{d780b8a9-664e-400f-9836-3d0ea7d51305}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\01. JokerState_Idle">
+      <UniqueIdentifier>{85320ba4-b729-4d17-9e82-23fed63681c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\04. JokerState_Stunned">
+      <UniqueIdentifier>{d3df6b1d-d74a-4999-896c-6680704ff849}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\04. JokerState_Stunned\Stunned_Start">
+      <UniqueIdentifier>{f32be175-c129-49f4-a8d5-38e50ed464df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\04. JokerState_Stunned\Stunned_Loop">
+      <UniqueIdentifier>{ea5b1ec4-23bb-492d-aa85-41df8dc3b0b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed">
+      <UniqueIdentifier>{8ea42025-6d62-451d-af7b-ff3093325183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_Start">
+      <UniqueIdentifier>{2452f7eb-6a38-454c-9d9c-9b713072883f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_End">
+      <UniqueIdentifier>{3f31955e-1ab6-46df-a6e0-276b62e59be2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal">
       <UniqueIdentifier>{c5dbf081-bd20-4e28-9660-c69f5205a1bb}</UniqueIdentifier>
     </Filter>
@@ -349,6 +457,12 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F\State\05. VillagerFState_Stunned">
       <UniqueIdentifier>{72d8bbe8-b2ab-4909-af78-97b7cd9ee33b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F\State\05. VillagerFState_Stunned\Stunned_Start">
+      <UniqueIdentifier>{03a649f1-76e2-49b6-a375-6622da52e7ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F\State\05. VillagerFState_Stunned\Stunned_Loop">
+      <UniqueIdentifier>{40d84e14-e210-4ecb-ad2c-6c0b91c6ee8c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F\State\06. VillagerFState_Death">
       <UniqueIdentifier>{0f0d564e-15ab-490a-b88f-7591ac9c4025}</UniqueIdentifier>
     </Filter>
@@ -379,140 +493,68 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_M\State\05. VillagerMState_Stunned">
       <UniqueIdentifier>{9d002342-7e33-4ded-be4c-02e26036e282}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_M\State\06. VillagerMState_Death">
-      <UniqueIdentifier>{c14d7cb3-ddae-41c5-95bc-97fc46a1194b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\Define">
-      <UniqueIdentifier>{cb005002-63df-410c-a1fb-8aaa07fac120}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State">
-      <UniqueIdentifier>{459a6edb-5caa-41fe-8593-9c5e1900aeed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\00. JokerState_Base">
-      <UniqueIdentifier>{e6401607-1fca-4dc0-b805-065cc688042e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack">
-      <UniqueIdentifier>{a3bd4526-8f00-4cd3-a9bf-aa82b93aaa5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\02. JokerState_Walk">
-      <UniqueIdentifier>{d780b8a9-664e-400f-9836-3d0ea7d51305}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\01. JokerState_Idle">
-      <UniqueIdentifier>{85320ba4-b729-4d17-9e82-23fed63681c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ComboA">
-      <UniqueIdentifier>{68618f39-d76a-4805-adde-e52ae9891f4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ComboB">
-      <UniqueIdentifier>{f2f0d0fa-8dd9-445e-bf42-ff17dfcd8881}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_TurnAttack_R">
-      <UniqueIdentifier>{20807ea4-a968-48ca-a793-101f4518aa9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_TurnAttack_L">
-      <UniqueIdentifier>{d26f0332-9d8d-4531-a10c-d009769e2543}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_WheelWind">
-      <UniqueIdentifier>{c68d5600-1bb8-4772-b4dd-ae2f9a4f1907}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_WheelWind\WheelWind_Start">
-      <UniqueIdentifier>{2a6a2014-0cb4-4119-b71e-8bec28f55c36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_WheelWind\WheelWind_Loop">
-      <UniqueIdentifier>{04b39006-74f0-41d7-b1c5-9fdd20fc9681}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_WheelWind\WheelWind_End">
-      <UniqueIdentifier>{95b0a18d-1adf-4420-b354-147dfc4a2c33}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_JumpAttack">
-      <UniqueIdentifier>{30aae543-26de-481e-8812-167f78e63140}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_StrongAttack">
-      <UniqueIdentifier>{f16f5c37-ef58-47b6-9d67-e70c6292268f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\03. UI_EnemyBar">
-      <UniqueIdentifier>{33f34ad6-cd0b-4893-9096-2f5d015cbe50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\05 .UI_DamageFont">
-      <UniqueIdentifier>{baff3619-5e26-40eb-8256-f13cc86ed449}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\04. UI_BossBar">
-      <UniqueIdentifier>{2f64f4f4-e12a-40b4-98bc-ec2a4e62cee9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_M\State\05. VillagerMState_Stunned\Stunned_Start">
       <UniqueIdentifier>{9fd5ad23-19b8-4a43-927f-53c8d91ce675}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_M\State\05. VillagerMState_Stunned\Stunned_Loop">
       <UniqueIdentifier>{857e1f55-8262-4829-936a-65ddf5533ad2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. UI\InGameUI\06. UI_StunnedMark">
-      <UniqueIdentifier>{b0fb57d9-67f0-4e22-9b4c-065174a48161}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_M\State\06. VillagerMState_Death">
+      <UniqueIdentifier>{c14d7cb3-ddae-41c5-95bc-97fc46a1194b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution">
-      <UniqueIdentifier>{f28bcd6b-c7c8-430c-af35-9cf9ad4b5210}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Default">
-      <UniqueIdentifier>{5d77c294-0fc1-411f-98ba-e9da35ce1bd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F\State\05. VillagerFState_Stunned\Stunned_Start">
-      <UniqueIdentifier>{03a649f1-76e2-49b6-a375-6622da52e7ae}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F\State\05. VillagerFState_Stunned\Stunned_Loop">
-      <UniqueIdentifier>{40d84e14-e210-4ecb-ad2c-6c0b91c6ee8c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\04. JokerState_Stunned">
-      <UniqueIdentifier>{d3df6b1d-d74a-4999-896c-6680704ff849}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\04. JokerState_Stunned\Stunned_Start">
-      <UniqueIdentifier>{f32be175-c129-49f4-a8d5-38e50ed464df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\04. JokerState_Stunned\Stunned_Loop">
-      <UniqueIdentifier>{ea5b1ec4-23bb-492d-aa85-41df8dc3b0b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed">
-      <UniqueIdentifier>{8ea42025-6d62-451d-af7b-ff3093325183}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Joker">
-      <UniqueIdentifier>{55e195ca-285e-427e-8ae7-eda04d7351f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_Start">
-      <UniqueIdentifier>{2452f7eb-6a38-454c-9d9c-9b713072883f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_End">
-      <UniqueIdentifier>{3f31955e-1ab6-46df-a6e0-276b62e59be2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\08. UI_PlunderSlot">
-      <UniqueIdentifier>{1f562c16-299c-4fe8-94d1-f0db7d8191c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\09. UI_SkillIcon">
-      <UniqueIdentifier>{2c865bca-0373-45d3-8d9e-a266dc2d7e1b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\07. UI_SkillSlot">
-      <UniqueIdentifier>{ca12db51-d09e-4090-8ffa-7f2713abebd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder">
-      <UniqueIdentifier>{c91b6dfc-e49b-4f54-8f7c-18a62b5dcf52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder\PlayerState_PlunderRush">
-      <UniqueIdentifier>{17b6e646-8e52-4f0d-a23a-af64c2a9cdb9}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\03. Weapon">
+      <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\03. Weapon\PlagueWeapon">
       <UniqueIdentifier>{64c61017-3ead-4a1d-b9bd-12f5f3d7447a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack">
-      <UniqueIdentifier>{eede8110-7385-4087-a321-4f074537491a}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\04. MapObject">
+      <UniqueIdentifier>{da660398-3255-4bae-85c1-c53f7ba4521f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Hammer">
-      <UniqueIdentifier>{c951c813-0685-44b5-bc23-162512d1b768}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\04. MapObject\01. EventTrigger">
+      <UniqueIdentifier>{f2a7b51f-1f21-49bc-b543-b17733592bb9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe">
-      <UniqueIdentifier>{771e8313-e393-410e-a3a1-96a105126cec}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_End">
+      <UniqueIdentifier>{d5605f97-7f2e-403a-abe4-c05c7c7c064e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\1. ToolMapObj\ToolMapObjInstance">
-      <UniqueIdentifier>{fceba8fa-4c6b-4020-9984-cbac09cc0547}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Idle">
+      <UniqueIdentifier>{33247b12-3d0f-42ce-aeda-89d85d56662c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\5. ToolBoundingSphere">
-      <UniqueIdentifier>{9193230b-7863-480a-a2d2-4d6e00da7621}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start">
+      <UniqueIdentifier>{44ed6bae-4c11-4d91-b19a-7337732ee21a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\02. Ladder">
+      <UniqueIdentifier>{feab60a1-a45b-49fd-b4df-e23883a1fea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\02. Ladder\Ladder_Down">
+      <UniqueIdentifier>{8da2e94c-fdaa-4ba8-b391-511caf6b330c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\02. Ladder\Ladder_Up">
+      <UniqueIdentifier>{1d8c134e-f9f5-4d71-983b-99331eac70dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb">
+      <UniqueIdentifier>{fe4ec0b9-06a4-4b49-b649-a9b9368515d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight">
+      <UniqueIdentifier>{09c51e81-ffed-44ea-9518-001e8a0cfd6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\Define">
+      <UniqueIdentifier>{1b62cc60-3bb9-4479-8dac-6161bdcec0bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State">
+      <UniqueIdentifier>{32936585-dd97-4319-89e3-66c2019339a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\00. HalberdKnightState_Base">
+      <UniqueIdentifier>{6d5c9288-6196-4298-b20f-cb1752225c06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\01. HalberdKnightState_Idle">
+      <UniqueIdentifier>{41a083de-5a51-40e5-9f42-9c726186cc66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\02. HalberdKnightState_Walk">
+      <UniqueIdentifier>{865a1d45-fdd1-4b9f-81aa-a0d11f2e3710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\03. HalberdKnightState_Hit">
+      <UniqueIdentifier>{c3c838f6-1f98-443f-adf3-9c97892005a7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -543,8 +585,8 @@
     <ClInclude Include="..\Public\Loader.h">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\Level_GamePlay.h">
-      <Filter>01. Levels\02. GamePlay</Filter>
+    <ClInclude Include="..\Public\Level_Stage1.h">
+      <Filter>01. Levels\02. Stage1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Levels_Header.h">
       <Filter>99. Defines\Headers</Filter>
@@ -602,9 +644,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Weapon.h">
       <Filter>02. GameObjects\03. Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\TestPlay_Tool.h">
-      <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Attack.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\05. PlayerState_Attack</Filter>
@@ -727,7 +766,7 @@
       <Filter>02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\EventTrigger.h">
-      <Filter>02. GameObjects\04. MapObject\EventTrigger</Filter>
+      <Filter>02. GameObjects\04. MapObject\01. EventTrigger</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Client_Enums.h">
       <Filter>99. Defines</Filter>
@@ -966,6 +1005,48 @@
     <ClInclude Include="..\Public\ToolBoundingSphere.h">
       <Filter>02. GameObjects\99. ToolObject\5. ToolBoundingSphere</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Ladder_Up.h">
+      <Filter>02. GameObjects\04. MapObject\02. Ladder\Ladder_Up</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Ladder_Down.h">
+      <Filter>02. GameObjects\04. MapObject\02. Ladder\Ladder_Down</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Object_Headers.h">
+      <Filter>99. Defines\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ClientLevel.h">
+      <Filter>01. Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Climb_Start.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Climb_Idle.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Climb.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Climb_End.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnight_Enums.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnight_States.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnight.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Base.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\00. HalberdKnightState_Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Idle.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\01. HalberdKnightState_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Walk.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\02. HalberdKnightState_Walk</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -980,8 +1061,8 @@
     <ClCompile Include="..\Private\Loader.cpp">
       <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\Level_GamePlay.cpp">
-      <Filter>01. Levels\02. GamePlay</Filter>
+    <ClCompile Include="..\Private\Level_Stage1.cpp">
+      <Filter>01. Levels\02. Stage1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObjects\00. Background</Filter>
@@ -1036,9 +1117,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Weapon.cpp">
       <Filter>02. GameObjects\03. Weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\TestPlay_Tool.cpp">
-      <Filter>100. IMGUI\99. TestPlay_Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Attack.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\05. PlayerState_Attack</Filter>
@@ -1146,7 +1224,7 @@
       <Filter>02. GameObjects\99. ToolObject\4. ToolNaviCell\ToolNaviCellPoint</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\EventTrigger.cpp">
-      <Filter>02. GameObjects\04. MapObject\EventTrigger</Filter>
+      <Filter>02. GameObjects\04. MapObject\01. EventTrigger</Filter>
     </ClCompile>
     <ClCompile Include="..\private\OdurState_Cutscene.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\99. OdurState_Cutscene</Filter>
@@ -1360,6 +1438,39 @@
     </ClCompile>
     <ClCompile Include="..\Private\ToolBoundingSphere.cpp">
       <Filter>02. GameObjects\99. ToolObject\5. ToolBoundingSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ladder_Up.cpp">
+      <Filter>02. GameObjects\04. MapObject\02. Ladder\Ladder_Up</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Ladder_Down.cpp">
+      <Filter>02. GameObjects\04. MapObject\02. Ladder\Ladder_Down</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ClientLevel.cpp">
+      <Filter>01. Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Climb_Start.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Climb_Idle.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Climb.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Climb_End.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnight.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Base.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\00. HalberdKnightState_Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Idle.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\01. HalberdKnightState_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Walk.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\02. HalberdKnightState_Walk</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

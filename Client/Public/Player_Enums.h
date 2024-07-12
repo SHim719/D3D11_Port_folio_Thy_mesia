@@ -284,6 +284,7 @@ enum PlayerAnimName
 	Corvus_WalkN,
 	O_Corvus_SD1_SprintF,
 	O_Corvus_SD1_SprintF1,
+	Corvus_SD_Ladder_Descend,
 };
 
 enum class PlayerState
@@ -309,6 +310,10 @@ enum class PlayerState
 	State_PlagueAttack,
 	State_PW_Axe,
 	State_PW_Hammer,
+	State_Climb_Start,
+	State_Climb_Idle,
+	State_Climb,
+	State_Climb_End,
 	State_Execution_Default,
 	State_Execution_Joker,
 	State_Executed,

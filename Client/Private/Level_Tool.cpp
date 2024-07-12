@@ -24,6 +24,8 @@
 #include "Villager_F.h"
 #include "Villager_M.h"
 #include "Joker.h"
+#include "HalberdKnight.h"
+//#include "TwinbladeKnight.h"
 
 #include "MapObject.h"
 #include "EventTrigger.h"
@@ -42,14 +44,14 @@ HRESULT CLevel_Tool::Initialize()
 {
 	m_iLevelID = LEVEL_TOOL;
 
+	SET_CURLEVEL(m_iLevelID);
+
 	if (FAILED(Ready_ToolObjects()))
 		return E_FAIL;
 
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_BG_Texture", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/Thymesia.jpg"));
 	m_pGameInstance->Add_Prototype(L"Prototype_TestGround", CTestGround::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_Weapon", CWeapon::Create(m_pDevice, m_pContext));
-	m_pGameInstance->Add_Prototype(L"Prototype_MapObject", CMapObject::Create(m_pDevice, m_pContext));
-	m_pGameInstance->Add_Prototype(L"Prototype_EventTrigger", CEventTrigger::Create(m_pDevice, m_pContext)); 
 
 	if (FAILED(Ready_Camera()))
 		return E_FAIL;
@@ -75,45 +77,14 @@ HRESULT CLevel_Tool::Initialize()
 
 	if (FAILED(Ready_Joker()))
 		return E_FAIL;
+	
+	if (FAILED(Ready_HalberdKnight()))
+		return E_FAIL;
+
+	//if (FAILED(Ready_TwinBladeKnight()))
+	//	return E_FAIL;
 #endif
 
-#ifdef testplay
-
-	if (FAILED(Ready_UI()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Player()))
-		return E_FAIL;
-
-	if (FAILED(Ready_PlagueWeapon()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Odur()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Villager_F()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Villager_M()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Joker()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Navigation()))
-		return E_FAIL;
-
-	if (FAILED(Ready_UIResource()))
-		return E_FAIL;
-
-
-	if (FAILED(Ready_Stage1Boss()))
-		return E_FAIL;
-
-	if (FAILED(Ready_Etc()))
-		return E_FAIL;
-
-#endif
 
 	return S_OK;
 }
@@ -125,7 +96,7 @@ void CLevel_Tool::Tick(_float fTimeDelta)
 
 HRESULT CLevel_Tool::Render()
 {
-	
+
 	
 	return S_OK;
 }
@@ -250,6 +221,32 @@ HRESULT CLevel_Tool::Ready_Joker()
 		"../../Resources/Models/Joker/", "Joker_Hammer.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Joker", CJoker::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_HalberdKnight()
+{
+	m_pGameInstance->Add_Prototype(GET_CURLEVEL, L"Prototype_Model_HalberdKnight", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/HalberdKnight/", "HalberdKnight.dat", "../../Resources/KeyFrame/HalberdKnight/"));
+
+	m_pGameInstance->Add_Prototype(GET_CURLEVEL, L"Prototype_Model_Spear", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/HalberdKnight/", "Spear.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_HalberdKnight", CHalberdKnight::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_TwinBladeKnight()
+{
+	m_pGameInstance->Add_Prototype(GET_CURLEVEL, L"Prototype_Model_TwinBladeKnight", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/TwinBladeKnight/", "TwinBladeKnight.dat", "../../Resources/KeyFrame/TwinBladeKnight/"));
+
+	m_pGameInstance->Add_Prototype(GET_CURLEVEL, L"Prototype_Model_Sword", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/TwinBladeKnight/", "Sword.dat"));
+
+	//m_pGameInstance->Add_Prototype(L"Prototype_TwinBladeKnight", CTwinBladeKnight::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

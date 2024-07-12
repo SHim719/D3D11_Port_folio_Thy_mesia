@@ -21,6 +21,8 @@ HRESULT CAnim_Tool::Initialize(void* pArg)
     m_strModelLists.emplace_back("Prototype_Model_Villager_F");
     m_strModelLists.emplace_back("Prototype_Model_Villager_M");
     m_strModelLists.emplace_back("Prototype_Model_Joker");
+    m_strModelLists.emplace_back("Prototype_Model_HalberdKnight");
+    m_strModelLists.emplace_back("Prototype_Model_TwinBladeKnight");
 	return S_OK;
 }
 
@@ -68,6 +70,12 @@ HRESULT CAnim_Tool::Load_KeyFrameNames(_int iSelModelIdx)
         break;
     case 4:
         strFullPath = "../../Resources/KeyFrame/KeyFrames_Joker.txt";
+        break;
+    case 5:
+        strFullPath = "../../Resources/KeyFrame/KeyFrames_HalberdKnight.txt";
+        break;
+    case 6:
+        strFullPath = "../../Resources/KeyFrame/KeyFrames_TwinBladeKnight.txt";
         break;
     }
 

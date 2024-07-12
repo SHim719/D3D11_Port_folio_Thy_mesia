@@ -36,6 +36,10 @@ public:
 		return m_WorldMatrix;
 	}
 
+	_float4x4* Get_WorldMatrixPtr() {
+		return &m_WorldMatrix;
+	}
+
 	void Set_WorldMatrix(_fmatrix WorldMatrix) {
 		XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 	}

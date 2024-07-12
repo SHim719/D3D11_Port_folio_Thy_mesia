@@ -18,6 +18,7 @@ public:
 	typedef struct tagWeaponDesc
 	{
 		_uint						iTag = 0;
+		_uint						iLevelID = 0;
 		CBone*						pSocketBone = nullptr;
 		CTransform*					pParentTransform = nullptr;
 		wstring						wstrModelTag = L"";
