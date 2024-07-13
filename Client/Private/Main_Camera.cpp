@@ -165,8 +165,10 @@ void CMain_Camera::SetState_Cutscene(const ATTACHDESC& Desc)
 	m_eState = CUTSCENE;
 }
 
-void CMain_Camera::Reset_State()
+void CMain_Camera::Reset_CutsceneState()
 {
+	XMStoreFloat4(&m_vPrevTargetPos, m_pPlayerTransform->Get_Position());
+
 	Safe_Release(m_pCutsceneTargetTransform);
 	Safe_Release(m_pCutsceneBone);
 
@@ -239,6 +241,8 @@ void CMain_Camera::LockOn_State(_float fTimeDelta)
 void CMain_Camera::Cutscene_State(_float fTimeDelta)
 {
 	m_pTransform->Attach_To_Bone(m_pCutsceneBone, m_pCutsceneTargetTransform, XMLoadFloat4x4(&m_CutsceneOffsetMatrix));
+
+
 }
 
 void CMain_Camera::Shaking(_float fTimeDelta)

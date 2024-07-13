@@ -2,13 +2,12 @@
 #include "PlayerState_Base.h"
 
 BEGIN(Client)
-class CPlayerState_Execution_Joker final : public CPlayerState_Base
+class CPlayerState_Execution_Elite final : public CPlayerState_Base
 {
 private:
-	CPlayerState_Execution_Joker(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual ~CPlayerState_Execution_Joker() = default;
+	CPlayerState_Execution_Elite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	virtual ~CPlayerState_Execution_Elite() = default;
 
-public:
 	HRESULT Initialize(void* pArg)		override;
 	void OnState_Start(void* pArg)		override;
 	void Update(_float fTimeDelta)		override;
@@ -20,7 +19,7 @@ private:
 
 
 public:
-	static CPlayerState_Execution_Joker* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
+	static CPlayerState_Execution_Elite* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;
 };
 END

@@ -27,7 +27,7 @@ private:
 	void Camera_Window() override;
 
 	HRESULT Open_MeshesByFolder();
-	wstring Get_FolderPath();
+	wstring Get_FolderPath(const _tchar* szInitialPath = L"D:\\JaeookDX11Tool\\Resources\\");
 
 	HRESULT Create_ObjectInLevel();
 	void Check_DestroyObjects();

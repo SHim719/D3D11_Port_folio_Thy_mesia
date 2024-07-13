@@ -77,6 +77,8 @@ private:
 	_uint					m_iPlayerLadderHeight = { 0 }; // 플레이어 사다리높이 - 왼쪽 발 기준(제일 낮은높이)
 	_bool					m_bIsClimbStartDown = { false };
 
+	_float					m_fHitGap = { 0.2f };
+	_float					m_fHitGapAcc = { 0.f };
 public:
 	_bool Is_LockOn() const { 
 		return m_bLockOn; }
@@ -153,6 +155,8 @@ public:
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
+	
+	inline void Calc_HitGap(_float fTimeDelta);
 
 private:
 	HRESULT Ready_Components();

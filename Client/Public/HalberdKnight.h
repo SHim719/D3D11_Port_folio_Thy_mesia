@@ -28,7 +28,9 @@ private:
 	_float	m_fRotRate = { 8.f };
 
 private:
-	void Percept_Target() override;
+	void Change_To_NextComboAnim();
+
+	void Percept_Target()	override;
 	void SetState_Death()	override;
 
 	_bool Is_Death() override {

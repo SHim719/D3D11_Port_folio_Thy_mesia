@@ -52,16 +52,16 @@ void CVillagerFState_Walk::Decide_WalkAnimation()
 		m_iDir = 0;
 	}
 
-	else if (fDist < 1.f)
+	else if (fDist < 2.f)
 	{
 		m_pModel->Change_Animation(LV1Villager_F_WalkB);
 		m_iDir = 1;
 	}
 	else
 	{
-		_int iRandNum = JoRandom::Random_Int(2, 3);
+		m_iDir = JoRandom::Random_Int(2, 3);
 
-		m_pModel->Change_Animation(LV1Villager_F_WalkB + iRandNum);
+		m_pModel->Change_Animation(LV1Villager_F_WalkB + m_iDir);
 	}
 }
 

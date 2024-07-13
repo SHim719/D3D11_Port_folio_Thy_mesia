@@ -67,8 +67,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 void CPlayer::PriorityTick(_float fTimeDelta)
 {
-	__super::PriorityTick(fTimeDelta);
-
+	Calc_HitGap(fTimeDelta);
 	Update_CanExecutionEnemy();
 }
 
@@ -339,10 +338,22 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 {
 	if (TAG_ENEMY_WEAPON == pOther->Get_Tag())
 	{
+		if (m_fHitGapAcc > 0.f)
+			return;
+
+		m_fHitGapAcc = m_fHitGap;
 		CWeapon* pEnemyWeapon = static_cast<CWeapon*>(pOther);
 
 		m_States[m_iState]->OnHit(pEnemyWeapon->Get_AttackDesc());
 	}
+}
+
+inline void CPlayer::Calc_HitGap(_float fTimeDelta)
+{
+	if (m_fHitGapAcc < 0.f)
+		return;
+
+	m_fHitGapAcc -= fTimeDelta;
 }
 
 _int CPlayer::Take_Damage(const ATTACKDESC& AttackDesc)
@@ -366,8 +377,15 @@ HRESULT CPlayer::Reset_NaviData(LEVEL eLevel)
 	if (nullptr == m_pNavigation)
 		return E_FAIL;
 
-	m_pNavigation->Set_CurrentIdx(m_pTransform->Get_Position());
+	auto it = m_Components.find(L"Navigation");
+	if (m_Components.end() == it)
+		m_Components.emplace(L"Navigation", m_pNavigation);
+	else
+		it->second = m_pNavigation;
 
+	Safe_AddRef(m_pNavigation);
+
+	m_pNavigation->Set_CurrentIdx(m_pTransform->Get_Position());
 	Change_Navigation(m_pNavigation);
 
 	return S_OK;
@@ -442,9 +460,8 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Plunder] = CPlayerState_Plunder::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Parried] = CPlayerState_Parried::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Execution_Default] = CPlayerState_Execution_Default::Create(m_pDevice, m_pContext, this);
-	m_States[(_uint)PlayerState::State_Execution_Joker] = CPlayerState_Execution_Joker::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Execution_Elite] = CPlayerState_Execution_Elite::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Executed] = CPlayerState_Executed::Create(m_pDevice, m_pContext, this);
-
 	m_States[(_uint)PlayerState::State_Climb_Start] = CPlayerState_Climb_Start::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Climb_Idle] = CPlayerState_Climb_Idle::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Climb] = CPlayerState_Climb::Create(m_pDevice, m_pContext, this);

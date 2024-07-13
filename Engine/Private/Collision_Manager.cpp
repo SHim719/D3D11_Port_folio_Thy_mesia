@@ -182,7 +182,7 @@ void CCollision_Manager::Push_Object(CCollider* pDstCollider, CCollider* pSrcCol
 			if (fDist > 0.f) {
 				vPushDir = XMVector3Normalize(XMVectorSetY(vPushDir, 0.f));
 
-				pDstTransform->Add_Position(vPushDir, fDist);
+				pDstTransform->Add_Position(vPushDir, fDist, static_cast<CNavigation*>(pDstCollider->Get_Owner()->Find_Component(L"Navigation")));
 			}
 		}
 	}

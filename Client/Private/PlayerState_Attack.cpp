@@ -96,14 +96,20 @@ void CPlayerState_Attack::Check_ExtraStateChange(PlayerState eState)
 
 void CPlayerState_Attack::Decide_ExecutionState(CEnemy* pExecutionEnemy)
 {
+
 	switch (pExecutionEnemy->Get_ExecutionTag())
 	{
 	case CEnemy::DEFAULT:
 		m_pPlayer->Change_State((_uint)PlayerState::State_Execution_Default, pExecutionEnemy);
 		break;
 	case CEnemy::JOKER:
-		m_pPlayer->Change_State((_uint)PlayerState::State_Execution_Joker, pExecutionEnemy);
-		break; 
+		m_pPlayer->Change_State((_uint)PlayerState::State_Execution_Elite, pExecutionEnemy);
+		m_pModel->Change_Animation(Corvus_VSJoker_Execution);
+		break;
+	case CEnemy::TWINBLADEKNIGHT:
+		m_pPlayer->Change_State((_uint)PlayerState::State_Execution_Elite, pExecutionEnemy);
+		m_pModel->Change_Animation(Corvus_VSHArmorLV1_Execution);
+		break;
 	case CEnemy::ODUR:
 		break;
 	case CEnemy::URD:

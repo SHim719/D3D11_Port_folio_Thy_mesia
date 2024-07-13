@@ -15,7 +15,7 @@ HRESULT CHalberdKnightState_Idle::Initialize(void* pArg)
 
 void CHalberdKnightState_Idle::OnState_Start(void* pArg)
 {
-	//m_pModel->Change_Animation(LV1Villager_F_Idle);
+	m_pModel->Change_Animation(HArmorLV1_Halberds_Idle);
 }
 
 void CHalberdKnightState_Idle::Update(_float fTimeDelta)

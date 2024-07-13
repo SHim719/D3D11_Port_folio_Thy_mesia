@@ -80,7 +80,7 @@ void CSphere::Remake_Collider(COLLIDERDESC* pColliderDesc)
 	Safe_Delete(m_pSphere);
 
 	m_pOriginal_Sphere = new BoundingSphere(pColliderDesc->vCenter, pColliderDesc->vSize.x * 0.5f);
-
+	  
 	m_pSphere = new BoundingSphere(*m_pOriginal_Sphere);
 }
 

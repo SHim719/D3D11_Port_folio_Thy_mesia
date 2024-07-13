@@ -28,9 +28,6 @@
     <Filter Include="100. IMGUI">
       <UniqueIdentifier>{55cddb12-6c8e-4f86-bde0-c7a4d8eee25d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\03. Tool">
-      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="100. IMGUI\00. ImGui_Main">
       <UniqueIdentifier>{a254e204-3881-4607-8094-9dc2d0a7ee29}</UniqueIdentifier>
     </Filter>
@@ -235,9 +232,6 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Default">
       <UniqueIdentifier>{5d77c294-0fc1-411f-98ba-e9da35ce1bd6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Joker">
-      <UniqueIdentifier>{55e195ca-285e-427e-8ae7-eda04d7351f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder">
       <UniqueIdentifier>{c91b6dfc-e49b-4f54-8f7c-18a62b5dcf52}</UniqueIdentifier>
     </Filter>
@@ -255,6 +249,18 @@
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder">
       <UniqueIdentifier>{21e2b80d-eefc-4ec8-8e03-3d718c1fd755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_End">
+      <UniqueIdentifier>{d5605f97-7f2e-403a-abe4-c05c7c7c064e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Idle">
+      <UniqueIdentifier>{33247b12-3d0f-42ce-aeda-89d85d56662c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start">
+      <UniqueIdentifier>{44ed6bae-4c11-4d91-b19a-7337732ee21a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb">
+      <UniqueIdentifier>{fe4ec0b9-06a4-4b49-b649-a9b9368515d3}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\PlayerStat">
       <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
@@ -418,6 +424,30 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_End">
       <UniqueIdentifier>{3f31955e-1ab6-46df-a6e0-276b62e59be2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight">
+      <UniqueIdentifier>{1d47ea4d-22ab-4569-bf58-3ae9471db202}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\Define">
+      <UniqueIdentifier>{92e1049e-f3e9-4eb7-af51-d0d787ac26b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State">
+      <UniqueIdentifier>{a96a6242-1455-4f07-9cd0-510ab71e8e23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\00. TwinBladeKnightState_Base">
+      <UniqueIdentifier>{066a6af4-acbd-4dcb-bfc9-ae8fe06b8840}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\01. TwinBladeKnightState_Idle">
+      <UniqueIdentifier>{1722ce38-f2d5-4286-9028-443886433edd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\02. TwinBladeKnightState_Walk">
+      <UniqueIdentifier>{a686f451-ded7-4a7f-8d57-09a232ba0e41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned">
+      <UniqueIdentifier>{2323586c-0ba1-4a94-a26f-50298a1b8ece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\05. TwinBladeKnightState_Hit">
+      <UniqueIdentifier>{eedd5868-a5ec-4541-968d-8c455647334b}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal">
       <UniqueIdentifier>{c5dbf081-bd20-4e28-9660-c69f5205a1bb}</UniqueIdentifier>
     </Filter>
@@ -502,39 +532,6 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_M\State\06. VillagerMState_Death">
       <UniqueIdentifier>{c14d7cb3-ddae-41c5-95bc-97fc46a1194b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\03. Weapon">
-      <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\03. Weapon\PlagueWeapon">
-      <UniqueIdentifier>{64c61017-3ead-4a1d-b9bd-12f5f3d7447a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\04. MapObject">
-      <UniqueIdentifier>{da660398-3255-4bae-85c1-c53f7ba4521f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\04. MapObject\01. EventTrigger">
-      <UniqueIdentifier>{f2a7b51f-1f21-49bc-b543-b17733592bb9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_End">
-      <UniqueIdentifier>{d5605f97-7f2e-403a-abe4-c05c7c7c064e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Idle">
-      <UniqueIdentifier>{33247b12-3d0f-42ce-aeda-89d85d56662c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start">
-      <UniqueIdentifier>{44ed6bae-4c11-4d91-b19a-7337732ee21a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\04. MapObject\02. Ladder">
-      <UniqueIdentifier>{feab60a1-a45b-49fd-b4df-e23883a1fea7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\04. MapObject\02. Ladder\Ladder_Down">
-      <UniqueIdentifier>{8da2e94c-fdaa-4ba8-b391-511caf6b330c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\04. MapObject\02. Ladder\Ladder_Up">
-      <UniqueIdentifier>{1d8c134e-f9f5-4d71-983b-99331eac70dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb">
-      <UniqueIdentifier>{fe4ec0b9-06a4-4b49-b649-a9b9368515d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight">
       <UniqueIdentifier>{09c51e81-ffed-44ea-9518-001e8a0cfd6a}</UniqueIdentifier>
     </Filter>
@@ -555,6 +552,96 @@
     </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\03. HalberdKnightState_Hit">
       <UniqueIdentifier>{c3c838f6-1f98-443f-adf3-9c97892005a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\04. HalberdKnightState_Stunned">
+      <UniqueIdentifier>{fa542105-2dff-4468-b08c-d3d12253933e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\04. HalberdKnightState_Stunned\Stunned_Loop">
+      <UniqueIdentifier>{157e3d4e-395f-42a1-a0d1-1ad0e75e55b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\04. HalberdKnightState_Stunned\Stunned_Start">
+      <UniqueIdentifier>{729f28b4-06f5-454b-b0d1-bf1a007c2208}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\05. HalberdKnightState_Death">
+      <UniqueIdentifier>{f0bace3e-7829-4dc0-842c-e1fe9b39add7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack">
+      <UniqueIdentifier>{9539180a-f0ad-45d1-bc43-0960bf76d3cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack1">
+      <UniqueIdentifier>{d32c58a4-03e4-420e-8f45-03c04b5bce33}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack2">
+      <UniqueIdentifier>{da87eca6-db95-4e8e-a323-c9e7d6b8e1af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack3">
+      <UniqueIdentifier>{40cb64d5-df07-4bac-888f-2f8b7d8d2fb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Weapon">
+      <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\03. Weapon\PlagueWeapon">
+      <UniqueIdentifier>{64c61017-3ead-4a1d-b9bd-12f5f3d7447a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject">
+      <UniqueIdentifier>{da660398-3255-4bae-85c1-c53f7ba4521f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\01. EventTrigger">
+      <UniqueIdentifier>{f2a7b51f-1f21-49bc-b543-b17733592bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\02. Ladder">
+      <UniqueIdentifier>{feab60a1-a45b-49fd-b4df-e23883a1fea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\02. Ladder\Ladder_Down">
+      <UniqueIdentifier>{8da2e94c-fdaa-4ba8-b391-511caf6b330c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\02. Ladder\Ladder_Up">
+      <UniqueIdentifier>{1d8c134e-f9f5-4d71-983b-99331eac70dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Start">
+      <UniqueIdentifier>{6e73f79e-6787-49dd-92cf-8abdac23c6bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\06. TwinBladeKnightState_Dodge">
+      <UniqueIdentifier>{9a2b58c4-3ff1-48cf-82a1-487fef65a5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Loop">
+      <UniqueIdentifier>{3c281f44-297d-4771-8381-72dd518e1d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed">
+      <UniqueIdentifier>{fe47e937-b370-4a10-b190-05ed9127796c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\Start">
+      <UniqueIdentifier>{8c5df70a-c51c-4ff0-9513-df02cec15ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\End">
+      <UniqueIdentifier>{639bcf2c-33c2-4ddb-964e-fe8265b9155f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\99. Tool">
+      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\03. Stage_Odur">
+      <UniqueIdentifier>{fa72e65b-2a3d-4ef5-a873-3a2e88a51f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\04. Stage_Urd">
+      <UniqueIdentifier>{0d4346eb-41ee-4875-b8d3-17030437ad7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack">
+      <UniqueIdentifier>{b4a935b2-53ba-4061-bdf2-56b5556075af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboA">
+      <UniqueIdentifier>{f5e524de-1854-4e4f-a7c1-7fb4517b061c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboB">
+      <UniqueIdentifier>{abf5f651-d5d9-414f-bd9b-2c097de1b865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboC">
+      <UniqueIdentifier>{99c79cda-2f7d-4e02-8e6a-2e92527def44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ParryAttack">
+      <UniqueIdentifier>{1c1eb424-a32c-43d0-807f-9b6a25710cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Elite">
+      <UniqueIdentifier>{55e195ca-285e-427e-8ae7-eda04d7351f3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -598,7 +685,7 @@
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Tool.h">
-      <Filter>01. Levels\03. Tool</Filter>
+      <Filter>01. Levels\99. Tool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ImGui_Main.h">
       <Filter>100. IMGUI\00. ImGui_Main</Filter>
@@ -972,8 +1059,8 @@
     <ClInclude Include="..\Public\JokerState_Stunned_Loop.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\04. JokerState_Stunned\Stunned_Loop</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_Execution_Joker.h">
-      <Filter>02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Joker</Filter>
+    <ClInclude Include="..\Public\PlayerState_Execution_Elite.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Elite</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\JokerState_Executed_Start.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_Start</Filter>
@@ -1047,6 +1134,75 @@
     <ClInclude Include="..\Public\HalberdKnightState_Walk.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\02. HalberdKnightState_Walk</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnight.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnight_Enums.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnight_States.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Base.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\00. TwinBladeKnightState_Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Idle.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\01. TwinBladeKnightState_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Walk.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\02. TwinBladeKnightState_Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Hit.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\03. HalberdKnightState_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Stunned_Start.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\04. HalberdKnightState_Stunned\Stunned_Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Stunned_Loop.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\04. HalberdKnightState_Stunned\Stunned_Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Death.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\05. HalberdKnightState_Death</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Attack1.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Attack2.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\HalberdKnightState_Attack3.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Executed_Start.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Hit.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\05. TwinBladeKnightState_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Stunned_Start.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Stunned_Loop.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Dodge.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\06. TwinBladeKnightState_Dodge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_Executed_End.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\End</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_ComboA.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboA</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_ComboB.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_ComboC.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\TwinBladeKnightState_ParryAttack.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ParryAttack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1071,7 +1227,7 @@
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Tool.cpp">
-      <Filter>01. Levels\03. Tool</Filter>
+      <Filter>01. Levels\99. Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ImGui_Main.cpp">
       <Filter>100. IMGUI\00. ImGui_Main</Filter>
@@ -1409,8 +1565,8 @@
     <ClCompile Include="..\Private\JokerState_Stunned_Loop.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\04. JokerState_Stunned\Stunned_Loop</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_Execution_Joker.cpp">
-      <Filter>02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Joker</Filter>
+    <ClCompile Include="..\Private\PlayerState_Execution_Elite.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Elite</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\JokerState_Executed_Start.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_Start</Filter>
@@ -1471,6 +1627,69 @@
     </ClCompile>
     <ClCompile Include="..\Private\HalberdKnightState_Walk.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\02. HalberdKnightState_Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnight.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Base.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\00. TwinBladeKnightState_Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Idle.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\01. TwinBladeKnightState_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Walk.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\02. TwinBladeKnightState_Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Hit.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\03. HalberdKnightState_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Stunned_Start.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\04. HalberdKnightState_Stunned\Stunned_Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Stunned_Loop.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\04. HalberdKnightState_Stunned\Stunned_Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Death.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\05. HalberdKnightState_Death</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Attack1.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Attack2.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack2</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\HalberdKnightState_Attack3.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\HalberdKnight\State\06. HalberdKnightState_Attack\Attack3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Executed_Start.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Hit.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\05. TwinBladeKnightState_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Stunned_Start.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Stunned_Loop.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Dodge.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\06. TwinBladeKnightState_Dodge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_Executed_End.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\End</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_ComboA.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboA</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_ComboB.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_ComboC.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\TwinBladeKnightState_ParryAttack.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ParryAttack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

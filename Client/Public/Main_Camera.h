@@ -52,7 +52,7 @@ private:
 	CTransform*			m_pCutsceneTargetTransform = { nullptr };
 	_float4x4			m_CutsceneOffsetMatrix;
 	
-	_float4				m_vOffset = { 0.f, 2.0f, -2.8f, 0.f };
+	_float4				m_vOffset = { 0.f, 1.5f, -3.25f, 0.f };//{ 0.f, 2.0f, -2.8f, 0.f };
 	_float4				m_vPrevTargetPos = {};
 
 	_int				m_iSensitivity = 2;
@@ -74,7 +74,7 @@ public:
 	void SetState_LockOn();
 	void SetState_LockOn_To_Default();
 	void SetState_Cutscene(const ATTACHDESC& Desc);
-	void Reset_State();
+	void Reset_CutsceneState();
 
 	void Add_ShakingDesc(const SHAKINGDESC& ShakingDesc);
 	void Add_DeltaFovYDesc(const DELTAFOVYDESC& DeltaFovYDesc);

@@ -105,7 +105,7 @@ HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pConte
 
 	vector<CUI*> DamageFonts;
 	DamageFonts.reserve(5);
-	for (_int i = 0; i < 5; ++i)
+	for (_int i = 0; i < 10; ++i)
 	{
 		pUI = CUI_DamageFont::Create(pDevice, pContext);
 		if (FAILED(pUI->Initialize(nullptr)))
@@ -116,8 +116,8 @@ HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pConte
 	m_UIs.emplace("UI_DamageFont", make_pair(0, DamageFonts));
 
 	vector<CUI*> EnemyBars;
-	EnemyBars.reserve(5);
-	for (_int i = 0; i < 5; ++i)
+	EnemyBars.reserve(20);
+	for (_int i = 0; i < 20; ++i)
 	{
 		pUI = CUI_EnemyBar::Create(pDevice, pContext);
 		if (FAILED(pUI->Initialize(nullptr)))

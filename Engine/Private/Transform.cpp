@@ -146,6 +146,17 @@ void CTransform::Move_Root(_fvector vDeltaRoot, CNavigation* pNavigation)
 		Set_State(STATE_POSITION, vPos);
 }
 
+void CTransform::Add_Position(_fvector vDir, _float fDist, CNavigation* pNavigation)
+{
+	if (nullptr == pNavigation)
+		return;
+
+	_vector vPos = Get_Position() + vDir * fDist;
+
+	if (true == pNavigation->isMove(vPos, nullptr))
+		Set_Position(vPos);
+}
+
 void CTransform::Set_Scale(_float3 vScale)
 {
 	Set_State(CTransform::STATE_RIGHT,
@@ -265,7 +276,6 @@ void CTransform::LookTo(_fvector vTo)
 	Set_State(CTransform::STATE_UP, XMVectorSetW(XMVector3Normalize(vUp) * vScale.y, 0.f));
 	Set_State(CTransform::STATE_LOOK, XMVectorSetW(XMVector3Normalize(vLook) * vScale.z, 0.f));
 }
-
 
 void CTransform::Add_RollInput(_float fRadian)
 {

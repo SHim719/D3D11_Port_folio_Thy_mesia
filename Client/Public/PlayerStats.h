@@ -13,8 +13,8 @@ private:
 	_bool			m_bAttackUpgraded = { true };
 	_bool			m_bShortClaw = { true };
 
-	_int			m_iHp = { 300 };
-	_int			m_iMaxHp = { 300 };
+	_int			m_iHp = { 1000 };
+	_int			m_iMaxHp = { 1000 };
 
 	_int			m_iMp = { 150 };
 	_int			m_iMaxMp = { 150 };

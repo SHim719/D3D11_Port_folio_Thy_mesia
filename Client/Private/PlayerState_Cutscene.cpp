@@ -41,7 +41,7 @@ void CPlayerState_Cutscene::Update(_float fTimeDelta)
 void CPlayerState_Cutscene::OnState_End()
 {
 	m_pPlayer->Set_Active_Colliders(true);
-	m_pMain_Camera->Reset_State();
+	m_pMain_Camera->Reset_CutsceneState();
 }
 
 CPlayerState_Cutscene* CPlayerState_Cutscene::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

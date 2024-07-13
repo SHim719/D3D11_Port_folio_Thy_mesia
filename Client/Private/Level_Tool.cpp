@@ -25,7 +25,7 @@
 #include "Villager_M.h"
 #include "Joker.h"
 #include "HalberdKnight.h"
-//#include "TwinbladeKnight.h"
+#include "TwinBladeKnight.h"
 
 #include "MapObject.h"
 #include "EventTrigger.h"
@@ -81,10 +81,9 @@ HRESULT CLevel_Tool::Initialize()
 	if (FAILED(Ready_HalberdKnight()))
 		return E_FAIL;
 
-	//if (FAILED(Ready_TwinBladeKnight()))
-	//	return E_FAIL;
+	if (FAILED(Ready_TwinBladeKnight()))
+		return E_FAIL;
 #endif
-
 
 	return S_OK;
 }
@@ -246,7 +245,7 @@ HRESULT CLevel_Tool::Ready_TwinBladeKnight()
 	m_pGameInstance->Add_Prototype(GET_CURLEVEL, L"Prototype_Model_Sword", CModel::Create(m_pDevice, m_pContext,
 		"../../Resources/Models/TwinBladeKnight/", "Sword.dat"));
 
-	//m_pGameInstance->Add_Prototype(L"Prototype_TwinBladeKnight", CTwinBladeKnight::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_TwinBladeKnight", CTwinBladeKnight::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

@@ -5,7 +5,6 @@ enum HalberdKnightAnim
 {
 	HArmorLV1_Halberds_ComboA01,
 	HArmorLV1_Halberds_ComboA02,
-	HArmorLV1_Halberds_ComboA03,
 	HArmorLV1_Halberds_ComboB01,
 	HArmorLV1_Halberds_ComboC01,
 	HArmorLV1_Halberds_ComboC02,
@@ -25,18 +24,13 @@ enum HalberdKnightAnim
 	HArmorLV1_Halberds_HurtStunStart,
 	HArmorLV1_Halberds_HurtXL_F,
 	HArmorLV1_Halberds_Idle,
-	HArmorLV1_Halberds_IdleN,
-	HArmorLV1_Halberds_IdleN2Fight,
 	HArmorLV1_Halberds_Run_F,
 	HArmorLV1_Halberds_TurnL90,
 	HArmorLV1_Halberds_TurnR90,
-	HArmorLV1_Halberds_VS_TakeExecution,
-	HArmorLV1_Halberds_VS_TakeExecution02,
 	HArmorLV1_Halberds_WalkB,
 	HArmorLV1_Halberds_WalkF,
 	HArmorLV1_Halberds_WalkL,
 	HArmorLV1_Halberds_WalkR,
-
 };
 
 enum class HalberdKnight_State

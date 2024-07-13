@@ -315,7 +315,7 @@ enum class PlayerState
 	State_Climb,
 	State_Climb_End,
 	State_Execution_Default,
-	State_Execution_Joker,
+	State_Execution_Elite,
 	State_Executed,
 	State_Cutscene,
 	State_End,

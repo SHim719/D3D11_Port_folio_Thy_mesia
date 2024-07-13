@@ -80,6 +80,8 @@ HRESULT CUI_DamageFont::Render()
 
 HRESULT CUI_DamageFont::OnEnter_Layer(void* pArg)
 {
+	__super::OnEnter_Layer(nullptr);
+
 	DAMAGEFONTDESC* pDesc = (DAMAGEFONTDESC*)pArg;
 	
 	m_strDamage = pDesc->strDamage;

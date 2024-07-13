@@ -65,10 +65,6 @@ public:
 		Set_State(STATE_POSITION, vPosition);
 	}
 
-	void Add_Position(_fvector vDir, _float fDist) {
-		Set_Position(Get_Position() + vDir * fDist);
-	}
-
 	_vector Get_Right() const {
 		return XMVector3Normalize(Get_State(STATE_RIGHT));
 	}
@@ -104,6 +100,8 @@ public:
 	void Go_Dir(_fvector vDir, _float fTimeDelta, CNavigation* pNavigation = nullptr);
 	void Go_Root(_fvector vDeltaRoot, _fvector vLook, CNavigation* pNavigation = nullptr);
 	void Move_Root(_fvector vDeltaRoot, CNavigation* pNavigation = nullptr);
+
+	void Add_Position(_fvector vDir, _float fDist, CNavigation* pNavigation);
 
 	void Set_Scale(_float3 vScale);
 	_float3 Get_Scale() const;

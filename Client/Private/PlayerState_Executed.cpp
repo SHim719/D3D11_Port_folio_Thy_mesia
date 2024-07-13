@@ -42,7 +42,7 @@ void CPlayerState_Executed::Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
-		m_pMain_Camera->Reset_State();
+		m_pMain_Camera->Reset_CutsceneState();
 
 		//누워있게m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;

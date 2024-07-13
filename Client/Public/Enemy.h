@@ -12,7 +12,7 @@ BEGIN(Client)
 class CEnemy abstract : public CCharacter
 {
 public:
-	enum EXECUTION_TAG { DEFAULT, JOKER, ODUR, URD, TAG_END};
+	enum EXECUTION_TAG { DEFAULT, JOKER, TWINBLADEKNIGHT, ODUR, URD, TAG_END};
 
 protected:
 	CEnemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

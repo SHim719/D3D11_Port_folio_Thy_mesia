@@ -13,6 +13,8 @@
 #include "Villager_F.h"
 #include "Villager_M.h"
 #include "Joker.h"
+#include "HalberdKnight.h"
+#include "TwinBladeKnight.h"
 
 #include "PerceptionBounding.h"
 
@@ -118,6 +120,12 @@ HRESULT CLoader::Loading_Stage1()
 		return E_FAIL;
 
 	if (FAILED(Ready_Joker()))
+		return E_FAIL;
+	
+	if (FAILED(Ready_HalberdKnight()))
+		return E_FAIL;
+
+	if (FAILED(Ready_TwinBladeKnight()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Stage1Objects()))
@@ -257,6 +265,32 @@ HRESULT CLoader::Ready_Joker()
 		"../../Resources/Models/Joker/", "Joker_Hammer.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Joker", CJoker::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_HalberdKnight()
+{
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_HalberdKnight", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/HalberdKnight/", "HalberdKnight.dat", "../../Resources/KeyFrame/HalberdKnight/"));
+
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Spear", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/HalberdKnight/", "Spear.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_HalberdKnight", CHalberdKnight::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_TwinBladeKnight()
+{
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_TwinBladeKnight", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/TwinBladeKnight/", "TwinBladeKnight.dat", "../../Resources/KeyFrame/TwinBladeKnight/"));
+
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Sword", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/TwinBladeKnight/", "Sword.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_TwinBladeKnight", CTwinBladeKnight::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

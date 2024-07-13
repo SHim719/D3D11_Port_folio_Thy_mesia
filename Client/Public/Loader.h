@@ -38,6 +38,8 @@ private:
 	HRESULT Ready_Villager_F();
 	HRESULT Ready_Villager_M();
 	HRESULT Ready_Joker();
+	HRESULT Ready_HalberdKnight();
+	HRESULT Ready_TwinBladeKnight();
 
 	HRESULT Ready_Stage1Objects();
 

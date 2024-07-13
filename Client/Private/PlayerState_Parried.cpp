@@ -30,14 +30,17 @@ void CPlayerState_Parried::Update(_float fTimeDelta)
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
-
-void CPlayerState_Parried::OnState_End()
+void CPlayerState_Parried::Late_Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;
 	}
+}
+
+void CPlayerState_Parried::OnState_End()
+{
 
 	//PlayerState ePlayerState = Decide_State();
 	//if (PlayerState::State_End != ePlayerState)

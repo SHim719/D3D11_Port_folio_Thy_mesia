@@ -20,6 +20,8 @@ CHalberdKnight::CHalberdKnight(const CHalberdKnight& rhs)
 HRESULT CHalberdKnight::Initialize_Prototype()
 {
 	m_iTag = (_uint)TAG_ENEMY;
+	
+	m_eSkillType = SKILLTYPE::SPEAR;
 	return S_OK;
 }
 
@@ -65,10 +67,10 @@ void CHalberdKnight::Tick(_float fTimeDelta)
 				, m_fRotRate * fTimeDelta));
 	}
 
-	//m_States[m_iState]->Update(fTimeDelta);
+	m_States[m_iState]->Update(fTimeDelta);
 
 	if (m_bAdjustNaviY)
-		m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+		Compute_YPos();
 
 	__super::Update_Colliders();
 
@@ -79,7 +81,7 @@ void CHalberdKnight::Tick(_float fTimeDelta)
 
 void CHalberdKnight::LateTick(_float fTimeDelta)
 {
-	//m_States[m_iState]->Late_Update(fTimeDelta);
+	m_States[m_iState]->Late_Update(fTimeDelta);
 
 	__super::LateTick_Weapons(fTimeDelta);
 
@@ -124,23 +126,24 @@ HRESULT CHalberdKnight::Render()
 
 void CHalberdKnight::Bind_KeyFrames()
 {
-	//m_pModel->Bind_Func("Active_WeaponCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[HAND], true));
-	//m_pModel->Bind_Func("Inactive_WeaponCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[HAND], false));
-	//m_pModel->Bind_Func("Enable_LookTarget", bind(&CEnemy::Set_LookTarget, this, true));
-	//m_pModel->Bind_Func("Disable_LookTarget", bind(&CEnemy::Set_LookTarget, this, false));
-	//m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Set_Stanced, this, true));
-	//m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
-	//m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
+	m_pModel->Bind_Func("Active_WeaponCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SPEAR], true));
+	m_pModel->Bind_Func("Inactive_WeaponCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SPEAR], false));
+	m_pModel->Bind_Func("Enable_LookTarget", bind(&CEnemy::Set_LookTarget, this, true));
+	m_pModel->Bind_Func("Disable_LookTarget", bind(&CEnemy::Set_LookTarget, this, false));
+	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Set_Stanced, this, true));
+	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
+	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
+	m_pModel->Bind_Func("ChangeToNextAttackAnim", bind(&CHalberdKnight::Change_To_NextComboAnim, this));
+}
+
+void CHalberdKnight::Change_To_NextComboAnim()
+{
+	static_cast<CHalberdKnightState_Base*>(m_States[m_iState])->Change_To_NextComboAnim();
 }
 
 void CHalberdKnight::Percept_Target()
 {
-	_int iRandNum = JoRandom::Random_Int(0, 1);
-
-	if (iRandNum)
-		Change_State((_uint)HalberdKnight_State::State_Walk);
-	else
-		Change_State((_uint)HalberdKnight_State::State_Attack3);
+	Change_State((_uint)HalberdKnight_State::State_Walk);
 }
 
 void CHalberdKnight::SetState_Death()
@@ -190,7 +193,10 @@ HRESULT CHalberdKnight::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &(pLoadDesc->iNaviIdx))))
+	CNavigation::NAVIGATION_DESC NaviDesc{};
+	NaviDesc.iCurrentCellIndex = pLoadDesc->iNaviIdx;
+
+	if (FAILED(__super::Add_Component(GET_CURLEVEL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &NaviDesc)))
 		return E_FAIL;
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
@@ -202,16 +208,15 @@ HRESULT CHalberdKnight::Ready_States()
 {
 	m_States.resize((_uint)HalberdKnight_State::State_End);
 
-	//m_States[(_uint)HalberdKnight_State::State_Idle] = CHalberdKnightState_Idle::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)HalberdKnight_State::State_Walk] = CHalberdKnightState_Walk::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)HalberdKnight_State::State_Attack1] = CHalberdKnightState_Attack1::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)HalberdKnight_State::State_Attack2] = CHalberdKnightState_Attack2::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)HalberdKnight_State::State_Attack3] = CHalberdKnightState_Attack3::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)HalberdKnight_State::State_Stunned_Start] = CHalberdKnightState_Stunned_Start::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)HalberdKnight_State::State_Stunned_Loop] = CHalberdKnightState_Stunned_Loop::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)HalberdKnight_State::State_Death] = CHalberdKnightState_Death::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)HalberdKnight_State::State_Hit] = CHalberdKnightState_Hit::Create(m_pDevice, m_pContext, this);
-
+	m_States[(_uint)HalberdKnight_State::State_Idle] = CHalberdKnightState_Idle::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)HalberdKnight_State::State_Walk] = CHalberdKnightState_Walk::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)HalberdKnight_State::State_Attack1] = CHalberdKnightState_Attack1::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)HalberdKnight_State::State_Attack2] = CHalberdKnightState_Attack2::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)HalberdKnight_State::State_Attack3] = CHalberdKnightState_Attack3::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)HalberdKnight_State::State_Stunned_Start] = CHalberdKnightState_Stunned_Start::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)HalberdKnight_State::State_Stunned_Loop] = CHalberdKnightState_Stunned_Loop::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)HalberdKnight_State::State_Death] = CHalberdKnightState_Death::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)HalberdKnight_State::State_Hit] = CHalberdKnightState_Hit::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
 }
@@ -223,22 +228,24 @@ HRESULT CHalberdKnight::Ready_Weapon()
 	CCollider::COLLIDERDESC ColliderDesc = {};
 	ColliderDesc.eType = CCollider::OBB;
 	ColliderDesc.pOwner = this;
-	ColliderDesc.vCenter = { 0.6f, 0.f, 0.f };
-	ColliderDesc.vSize = { 2.f, 0.1f, 0.1f };
+	ColliderDesc.vCenter = { 0.f, 0.f, 0.f };
+	ColliderDesc.vSize = { 3.0f, 0.1f, 0.1f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
 	ColliderDesc.bActive = false;
 	ColliderDesc.strCollisionLayer = "Enemy_Weapon";
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.iTag = (_uint)TAG_ENEMY_WEAPON;
+	WeaponDesc.iLevelID = GET_CURLEVEL;
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_pivot");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Spear";
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 
-	//m_Weapons[HAND] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
-	//if (nullptr == m_Weapons[HAND])
-	//	return E_FAIL;
+	m_Weapons[SPEAR] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
+	if (nullptr == m_Weapons[SPEAR])
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -246,7 +253,7 @@ HRESULT CHalberdKnight::Ready_Weapon()
 HRESULT CHalberdKnight::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
-	EnemyDesc.wstrEnemyName = L"몬스터1";
+	EnemyDesc.wstrEnemyName = L"할버드기사";
 	EnemyDesc.iMaxHp = 100;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);

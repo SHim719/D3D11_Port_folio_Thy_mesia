@@ -45,24 +45,24 @@ void CHalberdKnightState_Walk::OnState_End()
 
 void CHalberdKnightState_Walk::Decide_WalkAnimation()
 {
-	//_float fDist = XMVector3Length(m_pTargetTransform->Get_Position() - m_pOwnerTransform->Get_Position()).m128_f32[0];
-	//if (fDist >= 4.f)
-	//{
-	//	m_pModel->Change_Animation(LV1HalberdKnight_WalkF);
-	//	m_iDir = 0;
-	//}
-	//
-	//else if (fDist < 1.f)
-	//{
-	//	m_pModel->Change_Animation(LV1HalberdKnight_WalkB);
-	//	m_iDir = 1;
-	//}
-	//else
-	//{
-	//	_int iRandNum = JoRandom::Random_Int(2, 3);
-	//
-	//	m_pModel->Change_Animation(LV1HalberdKnight_WalkB + iRandNum);
-	//}
+	_float fDist = XMVector3Length(m_pTargetTransform->Get_Position() - m_pOwnerTransform->Get_Position()).m128_f32[0];
+	if (fDist >= 7.f)
+	{
+		m_pModel->Change_Animation(HArmorLV1_Halberds_WalkF);
+		m_iDir = 0;
+	}
+	
+	else if (fDist < 1.f)
+	{
+		m_pModel->Change_Animation(HArmorLV1_Halberds_WalkB);
+		m_iDir = 1;
+	}
+	else
+	{
+		m_iDir = JoRandom::Random_Int(2, 3);
+	
+		m_pModel->Change_Animation(HArmorLV1_Halberds_WalkB + m_iDir);
+	}
 }
 
 void CHalberdKnightState_Walk::Decide_State()
@@ -86,13 +86,11 @@ void CHalberdKnightState_Walk::Decide_State()
 
 void CHalberdKnightState_Walk::Move(_float fTimeDelta)
 {
-	if (m_pHalberdKnight->Is_CollPlayer())
-		return;
-
 	switch (m_iDir)
 	{
 	case 0:
-		m_pOwnerTransform->Go_Straight(fTimeDelta, m_pNavigation);
+		if (false == m_pHalberdKnight->Is_CollPlayer())
+			m_pOwnerTransform->Go_Straight(fTimeDelta, m_pNavigation);
 		break;
 	case 1:
 		m_pOwnerTransform->Go_Backward(fTimeDelta, m_pNavigation);

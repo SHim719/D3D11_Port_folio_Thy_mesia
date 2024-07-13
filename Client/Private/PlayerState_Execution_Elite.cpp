@@ -1,13 +1,13 @@
-#include "PlayerState_Execution_Joker.h"
+#include "PlayerState_Execution_Elite.h"
 
 #include "Enemy.h"
 
-CPlayerState_Execution_Joker::CPlayerState_Execution_Joker(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CPlayerState_Execution_Elite::CPlayerState_Execution_Elite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayerState_Base(pDevice, pContext)
 {
 }
 
-HRESULT CPlayerState_Execution_Joker::Initialize(void* pArg)
+HRESULT CPlayerState_Execution_Elite::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -15,7 +15,7 @@ HRESULT CPlayerState_Execution_Joker::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CPlayerState_Execution_Joker::OnState_Start(void* pArg)
+void CPlayerState_Execution_Elite::OnState_Start(void* pArg)
 {
 	m_pPlayer->Set_CanNextState(false);
 
@@ -39,27 +39,30 @@ void CPlayerState_Execution_Joker::OnState_Start(void* pArg)
 	m_pMain_Camera->SetState_Cutscene(AttachDesc);
 
 	m_pPlayer->Set_Adjust_NaviY(false);
-
-	m_pModel->Change_Animation(Corvus_VSJoker_Execution, 0.f);
 }
 
-void CPlayerState_Execution_Joker::Update(_float fTimeDelta)
+void CPlayerState_Execution_Elite::Update(_float fTimeDelta)
 {
 }
 
-void CPlayerState_Execution_Joker::Late_Update(_float fTimeDelta)
+void CPlayerState_Execution_Elite::Late_Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
-		m_pMain_Camera->Reset_State();
-		m_pExecutionEnemy->SetState_Death();
+		if (false == m_pExecutionEnemy->Is_Death())
+			m_pExecutionEnemy->SetState_Death();
+
+		m_pMain_Camera->Reset_CutsceneState();
+
+		Setup_RootRotation();
+
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 	}
 		
 }
 
 
-void CPlayerState_Execution_Joker::OnState_End()
+void CPlayerState_Execution_Elite::OnState_End()
 {
 	Safe_Release(m_pExecutionEnemy);
 	m_pPlayer->Set_CanNextState(true);
@@ -67,20 +70,20 @@ void CPlayerState_Execution_Joker::OnState_End()
 }
 
 
-CPlayerState_Execution_Joker* CPlayerState_Execution_Joker::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
+CPlayerState_Execution_Elite* CPlayerState_Execution_Elite::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {
-	CPlayerState_Execution_Joker* pInstance = new CPlayerState_Execution_Joker(pDevice, pContext);
+	CPlayerState_Execution_Elite* pInstance = new CPlayerState_Execution_Elite(pDevice, pContext);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Created : CPlayerState_Execution_Joker"));
+		MSG_BOX(TEXT("Failed To Created : CPlayerState_Execution_Elite"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CPlayerState_Execution_Joker::Free()
+void CPlayerState_Execution_Elite::Free()
 {
 	__super::Free();
 }

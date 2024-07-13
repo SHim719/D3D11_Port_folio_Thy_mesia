@@ -191,10 +191,9 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
 }
 
 
-wstring CMap_Tool::Get_FolderPath()
+wstring CMap_Tool::Get_FolderPath(const _tchar* szInitialPath)
 {
     ITEMIDLIST* pidlRoot = nullptr;
-    _tchar szInitialPath[MAX_PATH] = L"D:\\JaeookDX11Tool\\Resources\\";
     if (!SUCCEEDED(SHParseDisplayName(szInitialPath, NULL, &pidlRoot, 0, NULL))) {
         pidlRoot = nullptr;
     }
@@ -240,7 +239,7 @@ HRESULT CMap_Tool::Create_ObjectInLevel()
     m_strCreatedObjects.emplace_back(strObj);
     m_MapLayers.emplace(strObj, pObj);
 
-    if (m_eNowObjMode < ENEMY)
+    if (m_eNowObjMode < TRIGGEROBJ)
     {
         auto it = m_MapObjectInstances.find(strObj);
         if (m_MapObjectInstances.end() == it)
@@ -641,7 +640,7 @@ void CMap_Tool::Ready_InstanceObj()
 
 HRESULT CMap_Tool::Save_Map()
 {
-    wstring wstrFolderPath = Get_FolderPath();
+    wstring wstrFolderPath = Get_FolderPath(L"D:\\JaeookDX11Tool\\Resources\\Maps\\");
     if (L"" == wstrFolderPath)
         return E_FAIL;
 
@@ -681,7 +680,7 @@ HRESULT CMap_Tool::Save_Map()
 
 HRESULT CMap_Tool::Load_Map()
 {
-    wstring wstrFolderPath = Get_FolderPath();
+    wstring wstrFolderPath = Get_FolderPath(L"D:\\JaeookDX11Tool\\Resources\\Maps\\");
     if (L"" == wstrFolderPath)
         return E_FAIL;
 

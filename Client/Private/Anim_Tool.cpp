@@ -302,7 +302,7 @@ void CAnim_Tool::KeyFrameEvent_ListBox()
     for (size_t i = 0; i < m_KeyFrameEvents[m_iSelAnimIdx].size(); ++i)
         szKeyFrames[i] = strKeyFrames[i].c_str();
 
-    ImGui::PushItemWidth(220);
+    ImGui::PushItemWidth(300);
     ImGui::ListBox("##KeyFrame_ListBox", &m_iSelKeyFrameIdx, szKeyFrames, (_int)m_KeyFrameEvents[m_iSelAnimIdx].size(), 10);
     ImGui::PopItemWidth();
 

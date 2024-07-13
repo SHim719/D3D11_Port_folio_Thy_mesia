@@ -68,7 +68,7 @@ void CVillager_F::Tick(_float fTimeDelta)
 	m_States[m_iState]->Update(fTimeDelta);
 
 	if (m_bAdjustNaviY)
-		m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+		Compute_YPos();
 
 	__super::Update_Colliders();
 
