@@ -60,9 +60,10 @@ void CPlayerState_Avoid::OnState_End()
 
 void CPlayerState_Avoid::OnHit(const ATTACKDESC& AttackDesc)
 {
-	if (m_pPlayer->Is_Invincible())
+	if (m_pPlayer->Is_Invincible() && VERY_BIG_HIT != AttackDesc.eEnemyAttackType)
 		m_bOneMore = true;
-	//else Hit;
+	else
+		__super::OnHit(AttackDesc);
 }
 
 void CPlayerState_Avoid::Check_ExtraStateChange(PlayerState eState)

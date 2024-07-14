@@ -34,15 +34,17 @@ private:
 	void Bind_KeyFrames()									override;
 
 private:
-	CBone*	m_pSwapBone = { nullptr };
-	_float	m_fRotRate = { 8.f };
+	CBone*		m_pSwapBone = { nullptr };
+	_float		m_fRotRate = { 8.f };
 
-	_float	m_fAlpha = { 1.f };
-	_float	m_fDeltaAlphaSpeed = { 2.f };
-	_bool	m_bAlphaEnable = { false };
-	_bool	m_bAlphaIncrease = { false };
+	_float		m_fAlpha = { 1.f };
+	_float		m_fDeltaAlphaSpeed = { 2.f };
+	_bool		m_bAlphaEnable = { false };
+	_bool		m_bAlphaIncrease = { false };
 
-	_bool	m_bCardPattern = { false };
+	_bool		m_bCardPattern = { false };
+
+	_float4x4	m_InitWorldMatrix = {};
 public:
 	void Swap_Bone();
 

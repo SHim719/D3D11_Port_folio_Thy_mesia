@@ -92,6 +92,9 @@ void CMain_Camera::LateTick(_float fTimeDelta)
 
 void CMain_Camera::Set_Player(CGameObject* pPlayer)
 {
+	Safe_Release(m_pPlayerTransform);
+	m_pTransform->Rotation_Quaternion(XMQuaternionRotationRollPitchYaw(0.f, 0.f, 0.f));
+
 	m_pPlayer = (CPlayer*)pPlayer;
 	m_pPlayerTransform = pPlayer->Get_Transform();
 	Safe_AddRef(m_pPlayerTransform);
@@ -143,7 +146,7 @@ void CMain_Camera::SetState_LockOn_To_Default()
 	Safe_Release(m_pTargetTransform);
 	Safe_Release(m_pTargetBone);
 
-	UIMGR->InActive_UI("UI_LockOn");
+	UIMGR->Inactive_UI("UI_LockOn");
 
 	m_pPlayer->Toggle_LockOn();
 

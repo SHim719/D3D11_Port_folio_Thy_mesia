@@ -43,14 +43,12 @@ void CPlayerState_Base::OnState_End()
 
 void CPlayerState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
-	ENEMYATTACKTYPE eEnemyAttackType = AttackDesc.eEnemyAttackType;
-
 	// 체력감소 죽음상태 체크
 	if (0 == m_pPlayer->Take_Damage(AttackDesc))
 		//Death
 		int x = 10;
-	else
-		m_pPlayer->Change_State((_uint)PlayerState::State_Hit, &eEnemyAttackType);
+	else if (false == m_pPlayer->Is_Stanced() || VERY_BIG_HIT == AttackDesc.eEnemyAttackType)
+		m_pPlayer->Change_State((_uint)PlayerState::State_Hit, const_cast<ATTACKDESC*>(&AttackDesc));
 }
 
 _vector CPlayerState_Base::Calc_MoveLook(_bool IsCamOriented)
@@ -205,21 +203,11 @@ void CPlayerState_Base::Check_PlagueAttack()
 	if (SKILLTYPE::NONE == ePlunderSkillType)
 		return;
 
-	PlayerState eState = PlayerState::State_End;
-
-	switch (ePlunderSkillType)
-	{
-	case SKILLTYPE::AXE:
-		eState = PlayerState::State_PW_Axe;
-		break;
-	case SKILLTYPE::HAMMER:
-		eState = PlayerState::State_PW_Hammer;
-		break;
-	}
+	_uint iState = (_uint)PlayerState::State_PlagueAttack + ePlunderSkillType;
 
 	m_pPlayerStats->Update_PlunderSkill(SKILLTYPE::NONE);
 	m_pPlayer->Set_NowUsingSkill(ePlunderSkillType);
-	m_pPlayer->Change_State((_uint)eState);
+	m_pPlayer->Change_State(iState);
 }
 
 void CPlayerState_Base::Decide_ClimbState(_int iDir)

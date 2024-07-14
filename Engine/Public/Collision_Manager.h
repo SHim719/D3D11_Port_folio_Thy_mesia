@@ -36,6 +36,7 @@ private:
 
 public:
 	void Add_ColliderToLayer(const string& strLayer, CCollider* pCollider);
+	void Clear();
 
 private:
 	void Execute_Collision(const string& strDstLayer, const string& strSrcLayer, CollisionType eType);

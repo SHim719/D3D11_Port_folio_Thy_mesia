@@ -22,25 +22,27 @@ void CPlayerState_Hit::OnState_Start(void* pArg)
 	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Inactive_AllWeaponColliders();
 
-	ENEMYATTACKTYPE* pAttackType = (ENEMYATTACKTYPE*)pArg;
+	ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;
 
-	switch (*pAttackType)
+	if (false == m_pPlayer->Is_LockOn())
+		m_pOwnerTransform->LookAt2D(pAttackDesc->pAttacker->Get_Transform()->Get_Position());
+
+	switch (pAttackDesc->eEnemyAttackType)
 	{
 	case WEAK:
-		break;
-	case NORMAL:
-	{
-		m_pModel->Change_Animation(Corvus_SD_HurtMFL + m_iHitDir);
-
+		m_pModel->Change_Animation(Corvus_SD_HurtSL + m_iHitDir);
 		m_iHitDir = (m_iHitDir + 1) % 2;
 		break;
-	}
-		
+	case NORMAL:
+		m_pModel->Change_Animation(Corvus_SD_HurtMFL + m_iHitDir);
+		m_iHitDir = (m_iHitDir + 1) % 2;
+		break;
 	case KNOCKBACK:
-	{
 		m_pModel->Change_Animation(Corvus_SD_KnockBackF);
 		break;
-	}
+	case VERY_BIG_HIT:
+		m_pModel->Change_Animation(Corvus_SD_HurtXXLF);
+		break;
 	}
 }							   
 
@@ -65,7 +67,6 @@ void CPlayerState_Hit::Late_Update(_float fTimeDelta)
 
 void CPlayerState_Hit::OnState_End()
 {
-
 	m_iHitDir = 0;
 }
 

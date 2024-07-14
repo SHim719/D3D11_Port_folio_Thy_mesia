@@ -22,6 +22,8 @@ HRESULT CLevel_Loading::Initialize(LEVEL eNextLevel)
 	if (nullptr == m_pLoader)
 		return E_FAIL;
 
+	m_pContext->GSSetShader(nullptr, nullptr, 0);
+
 	return S_OK;
 }
 
@@ -38,11 +40,16 @@ void CLevel_Loading::Tick(_float TimeDelta)
 			case LEVEL_STAGE1:
 				pLevel = CLevel_Stage1::Create(m_pDevice, m_pContext);
 				break;
+			case LEVEL_ODUR:
+				pLevel = CLevel_Odur::Create(m_pDevice, m_pContext);
+				break;
 			}
+
 			if (nullptr == pLevel)
 				return;
 
 			ADD_EVENT(bind(&CGameInstance::Change_Level, m_pGameInstance, pLevel));
+			   
 		}
 	}
 }

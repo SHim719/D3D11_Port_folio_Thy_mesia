@@ -220,6 +220,7 @@
     <ClInclude Include="..\Public\Ladder_Down.h" />
     <ClInclude Include="..\Public\Ladder_Up.h" />
     <ClInclude Include="..\Public\Levels_Header.h" />
+    <ClInclude Include="..\Public\Level_Odur.h" />
     <ClInclude Include="..\Public\Level_Stage1.h" />
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Tool.h" />
@@ -265,9 +266,12 @@
     <ClInclude Include="..\Public\PlayerState_Execution_Default.h" />
     <ClInclude Include="..\Public\PlayerState_Execution_Elite.h" />
     <ClInclude Include="..\Public\PlayerState_Climb_Idle.h" />
+    <ClInclude Include="..\Public\PlayerState_GetUp.h" />
     <ClInclude Include="..\Public\PlayerState_PW_Axe.h" />
     <ClInclude Include="..\Public\PlayerState_Plunder.h" />
     <ClInclude Include="..\Public\PlayerState_PlunderRush.h" />
+    <ClInclude Include="..\Public\PlayerState_PW_Spear.h" />
+    <ClInclude Include="..\Public\PlayerState_PW_TwinBlade.h" />
     <ClInclude Include="..\Public\PlayerStats.h" />
     <ClInclude Include="..\Public\PlayerState_Attack.h" />
     <ClInclude Include="..\Public\PlayerState_Avoid.h" />
@@ -398,6 +402,7 @@
     <ClCompile Include="..\Private\JokerState_WheelWind_Start.cpp" />
     <ClCompile Include="..\Private\Ladder_Down.cpp" />
     <ClCompile Include="..\Private\Ladder_Up.cpp" />
+    <ClCompile Include="..\Private\Level_Odur.cpp" />
     <ClCompile Include="..\Private\Level_Stage1.cpp" />
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Tool.cpp" />
@@ -440,9 +445,12 @@
     <ClCompile Include="..\Private\PlayerState_Execution_Default.cpp" />
     <ClCompile Include="..\Private\PlayerState_Execution_Elite.cpp" />
     <ClCompile Include="..\Private\PlayerState_Climb_Idle.cpp" />
+    <ClCompile Include="..\Private\PlayerState_GetUp.cpp" />
     <ClCompile Include="..\Private\PlayerState_PW_Axe.cpp" />
     <ClCompile Include="..\Private\PlayerState_Plunder.cpp" />
     <ClCompile Include="..\Private\PlayerState_PlunderRush.cpp" />
+    <ClCompile Include="..\Private\PlayerState_PW_Spear.cpp" />
+    <ClCompile Include="..\Private\PlayerState_PW_TwinBlade.cpp" />
     <ClCompile Include="..\Private\PlayerStats.cpp" />
     <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
     <ClCompile Include="..\Private\PlayerState_Avoid.cpp" />

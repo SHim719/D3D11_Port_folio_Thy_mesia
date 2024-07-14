@@ -8,8 +8,6 @@
 #include "../Public/MainApp.h"
 #include "GameInstance.h"
 
-
-
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
@@ -31,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(1820512);
+    //_CrtSetBreakAlloc(1905251);
 #endif
 
 #ifdef _DEBUG
@@ -135,8 +133,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	if (0 != Safe_Release(pMainApp))
 		MSG_BOX(TEXT("Failed to Delete : CMainApp"));
 
-
-   
     return (int) msg.wParam;
 }
 

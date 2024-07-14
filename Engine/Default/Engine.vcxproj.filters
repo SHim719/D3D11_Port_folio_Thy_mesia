@@ -372,6 +372,9 @@
     <ClInclude Include="..\Public\Instancing_Object.h">
       <Filter>01.Utility\02. GameObjects\Instancing_Object</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_Debug.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

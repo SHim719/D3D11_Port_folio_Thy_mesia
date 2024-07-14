@@ -85,7 +85,11 @@ public:
 		if (m_pCollider)
 			m_pCollider->Set_Active(bActive);
 	}
-	
+	void Enroll_Collider() {
+		if (m_pCollider)
+			m_pCollider->Enroll_Collider();
+	}
+
 protected:
 	HRESULT Ready_Components(WEAPONDESC* pDesc);
 

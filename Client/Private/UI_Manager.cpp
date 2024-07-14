@@ -62,8 +62,7 @@ size_t CUI_Manager::Active_UI(const string& strUITag, void* pArg)
 
 	return iUIIdx;
 }
-
-void CUI_Manager::InActive_UI(const string& strUITag, size_t iIdx)
+void CUI_Manager::Inactive_UI(const string& strUITag, size_t iIdx)
 {
 	auto it = m_UIs.find(strUITag);
 
@@ -76,6 +75,18 @@ void CUI_Manager::InActive_UI(const string& strUITag, size_t iIdx)
 
 	pDestUI->Set_ReturnToPool(true);
 }
+
+void CUI_Manager::Inactive_AllUIs()
+{
+	for (auto it = m_UIs.begin(); it != m_UIs.end(); ++it)
+	{
+		pair<size_t, vector<CUI*>>& UIPool = it->second;
+
+		for (CUI* pUI : UIPool.second)
+			pUI->Set_ReturnToPool(true);
+	}
+}
+
 
 HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {

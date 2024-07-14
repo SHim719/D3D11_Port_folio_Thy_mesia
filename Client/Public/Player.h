@@ -10,7 +10,7 @@ class CPlayer final : public CCharacter, public CCutscene_Actor
 {
 public:
 	enum PLAYER_WEAPON { SABER, DAGGER, CLAW_L, CLAW_R
-		, PW_AXE, PW_HAMMER, WEAPON_END};
+		, PW_AXE, PW_HAMMER, PW_SPEAR, PW_TWINBLADE_L, PW_TWINBLADE_R, WEAPON_END};
 
 private:
 	CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -32,7 +32,7 @@ private:
 
 public:
 	HRESULT Reset_NaviData(LEVEL eLevel);
-
+	void Enroll_AllColliders();
 
 private:
 	class CPlayerStats*	m_pStats = { nullptr };
@@ -155,8 +155,12 @@ public:
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
-	
-	inline void Calc_HitGap(_float fTimeDelta);
+	void ChangeToNextComboAnim();
+
+	inline void Calc_HitGap(_float fTimeDelta) {
+		if (m_fHitGapAcc < 0.f) return;
+		m_fHitGapAcc -= fTimeDelta;
+	}
 
 private:
 	HRESULT Ready_Components();
@@ -166,8 +170,8 @@ private:
 
 public:
 	static CPlayer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg);
-	virtual void Free() override;
+	CGameObject* Clone(void* pArg)	override;
+	void Free() override;
 };
 
 END

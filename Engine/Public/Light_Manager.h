@@ -18,12 +18,14 @@ public:
 	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
 	HRESULT Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 
+	void Clear_Lights();
+
 private:
 	list<class CLight*>			m_Lights;
 
 public:
 	static CLight_Manager* Create();
-	virtual void Free() override;
+	void Free() override;
 
 };
 

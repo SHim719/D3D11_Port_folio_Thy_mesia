@@ -35,7 +35,7 @@ void CPlayerState_Attack::OnState_Start(void* pArg)
 	m_AttackDescs[0].second = m_pPlayerStats->Get_NormalAttackDesc();
 	m_pPlayer->Update_AttackDesc();
 
-	m_pModel->Change_Animation(_uint(Corvus_SD_LAttack1 + m_iNowComboCnt), 0.f);
+	m_pModel->Change_Animation(_uint(Corvus_SD_LAttack1 + m_iNowComboCnt));
 }
 
 void CPlayerState_Attack::Update(_float fTimeDelta)
@@ -90,13 +90,10 @@ void CPlayerState_Attack::Check_ExtraStateChange(PlayerState eState)
 		m_pPlayer->Change_State((_uint)eState);
 		break;
 	}
-
-
 }
 
 void CPlayerState_Attack::Decide_ExecutionState(CEnemy* pExecutionEnemy)
 {
-
 	switch (pExecutionEnemy->Get_ExecutionTag())
 	{
 	case CEnemy::DEFAULT:

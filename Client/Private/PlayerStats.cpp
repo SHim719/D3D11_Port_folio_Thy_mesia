@@ -8,6 +8,10 @@ CPlayerStats::CPlayerStats()
 {
 }
 
+void CPlayerStats::Initialize()
+{
+}
+
 void CPlayerStats::Update_PlunderSkill(const SKILLTYPE ePlunderSkill)
 {
 	m_ePlunderSkill = ePlunderSkill;
@@ -82,7 +86,10 @@ void CPlayerStats::Broadcast_Update_Mp() const
 
 CPlayerStats* CPlayerStats::Create()
 {
-	return new CPlayerStats;
+	CPlayerStats* pStats = new CPlayerStats;
+	pStats->Initialize();
+
+	return pStats;
 }
 
 void CPlayerStats::Free()

@@ -12,8 +12,6 @@ COdur_Card::COdur_Card(const COdur_Card& rhs)
 
 HRESULT COdur_Card::Initialize_Prototype()
 {
-	m_iTag = TAG_ENEMY_WEAPON;
-
 	return S_OK;
 }
 
@@ -21,6 +19,8 @@ HRESULT COdur_Card::Initialize(void* pArg)
 {
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
+
+	m_iTag = TAG_ENEMY_WEAPON;
 
 	return S_OK;
 }
@@ -38,6 +38,8 @@ HRESULT COdur_Card::OnEnter_Layer(void* pArg)
 	m_pTransform->Set_MoveLook(ParamMatrix.r[2]);
 
 	m_pTransform->Set_Position(ParamMatrix.r[3]);
+
+	m_pCollider->Enroll_Collider();
 	return S_OK;
 }
 
@@ -57,24 +59,17 @@ void COdur_Card::LateTick(_float fTimeDelta)
 {
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+#ifdef _DEBUG
+	m_pGameInstance->Add_RenderComponent(m_pCollider);
+#endif
+
+	if (m_pGameInstance->In_WorldFrustum(m_pTransform->Get_Position(), 1.f))
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT COdur_Card::Render()
 {
-	if (nullptr == m_pModel ||
-		nullptr == m_pShader)
-	{
-		return E_FAIL;
-	}
-
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
 		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
@@ -86,12 +81,12 @@ HRESULT COdur_Card::Render()
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
 
+		if (FAILED(m_pModel->Bind_Buffers(i)))
+			return E_FAIL;
+
 		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
 			return E_FAIL;
 	}
-
-	if (m_pCollider)
-		m_pCollider->Render();
 
 	return S_OK;
 }
@@ -105,10 +100,12 @@ void COdur_Card::OnCollisionEnter(CGameObject* pOther)
 HRESULT COdur_Card::Ready_Component()
 {
 	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.fSpeedPerSec = 50.f;
+	TransformDesc.fSpeedPerSec = 40.f;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, &TransformDesc)))
 		return E_FAIL;
+
+	m_pTransform->Set_Scale({ 1.5f, 1.5f, 1.5f });
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;

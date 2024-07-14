@@ -27,7 +27,9 @@ private:
 	unordered_map<string, pair<size_t, vector<class CUI*>>>	m_UIs;
 public:
 	size_t Active_UI(const string& strUITag, void* pArg = nullptr);
-	void InActive_UI(const string& strUITag, size_t iIdx = 0);
+	void Inactive_UI(const string& strUITag, size_t iIdx = 0);
+
+	void Inactive_AllUIs();
 
 	void Set_Player(CPlayer* pPlayer) {
 		m_pPlayer = pPlayer;

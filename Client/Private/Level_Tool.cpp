@@ -161,6 +161,12 @@ HRESULT CLevel_Tool::Ready_PlagueWeapon()
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_Hammer", CModel::Create(m_pDevice, m_pContext,
 		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Hammer.dat"));
 
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_Spear", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Spear.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_TwinSword", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_TwinSword.dat"));
+
 	m_pGameInstance->Add_Prototype(L"Prototype_PlagueWeapon", CPlagueWeapon::Create(m_pDevice, m_pContext));
 
 	return S_OK;

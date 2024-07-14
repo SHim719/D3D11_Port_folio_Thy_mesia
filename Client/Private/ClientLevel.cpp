@@ -1,7 +1,11 @@
 #include "ClientLevel.h"
-
 #include "MapObject.h"
 #include "Instancing_Object.h"
+#include "Level_Loading.h"
+#include "Player.h"
+#include "UI_Manager.h"
+#include "GameInstance.h"
+#include "MyCamera.h"
 
 
 CClientLevel::CClientLevel(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -120,4 +124,15 @@ HRESULT CClientLevel::Load_MapObjects(vector<LOADOBJDESC>& LoadObjDescs, const _
     }
 
     return S_OK;
+}
+
+void CClientLevel::Ready_ChangeLevel(LEVEL eNextLevel)
+{
+    CPlayer* pPlayer = static_cast<CPlayer*>(m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Player"));
+    pPlayer->Set_Active(false);
+    UIMGR->Inactive_AllUIs();
+
+    m_pGameInstance->Get_MainCamera()->Set_Active(false);
+
+    m_pGameInstance->Change_Level(CLevel_Loading::Create(eNextLevel, m_pDevice, m_pContext));
 }

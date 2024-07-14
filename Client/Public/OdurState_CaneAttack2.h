@@ -17,6 +17,8 @@ public:
 
 private:
 	void Init_AttackDesc()				override;
+	
+	void ChangeAnim_Cane2ToCane1();
 
 public:
 	static COdurState_CaneAttack2* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

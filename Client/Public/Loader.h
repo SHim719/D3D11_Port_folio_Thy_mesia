@@ -27,6 +27,7 @@ public:
 private:
 	HRESULT Loading_Default();
 	HRESULT Loading_Stage1();
+	HRESULT Loading_StageOdur();
 
 private:
 	HRESULT Ready_Camera();
@@ -41,7 +42,7 @@ private:
 	HRESULT Ready_HalberdKnight();
 	HRESULT Ready_TwinBladeKnight();
 
-	HRESULT Ready_Stage1Objects();
+	HRESULT Ready_MapObjects(const wstring& wstrPath);
 
 	HRESULT Ready_UIResource();
 	HRESULT Ready_UI();

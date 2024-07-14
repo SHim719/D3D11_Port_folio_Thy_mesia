@@ -20,7 +20,7 @@ void COdurState_DisappearMove::OnState_Start(void* pArg)
 	m_pOdur->Set_LookTarget(false);
 	m_pOdur->Set_Stanced(true);
 
-	m_pOdur->Set_Alpha(0.f);
+  	m_pOdur->Set_Alpha(0.f);
 
 	if (nullptr != pArg)
 	{

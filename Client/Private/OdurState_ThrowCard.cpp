@@ -18,6 +18,9 @@ HRESULT COdurState_ThrowCard::Initialize(void* pArg)
 	m_AnimPlaylists[0] = { Magician_ShootCombo1_1, Magician_ShootCombo1_2 };
 	m_AnimPlaylists[1] = { Magician_Shoot_2_V1, Magician_Shoot3, Magician_Shoot2, Magician_Shoot1 };
 
+	m_StartFrames[0] = { 13, };
+	m_StartFrames[1] = { 24, 13, 4 };
+
 	m_Cards.resize(20);
 	for (size_t i = 0; i < m_Cards.size(); ++i)
 		m_Cards[i] = static_cast<COdur_Card*>(m_pGameInstance->Clone_GameObject(L"Prototype_Odur_Card"));
@@ -39,41 +42,26 @@ void COdurState_ThrowCard::OnState_Start(void* pArg)
 
 	m_iCurAnimIdx = 0;
 
-	m_iThrowState = m_iThrowCount == (m_iMaxThrowCount - 1) ? 1 : 0;
-	m_iThrowCount = (m_iThrowCount + 1) % m_iMaxThrowCount;
-
-	m_fTimeAcc = m_fThrowingGap;
+	//m_iThrowState = m_iThrowCount == (m_iMaxThrowCount - 1) ? 1 : 0;
+	m_iThrowState = 1;
 
 	m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);
 }
 
 void COdurState_ThrowCard::Update(_float fTimeDelta)
 {
+
+}
+
+void COdurState_ThrowCard::Late_Update(_float fTimeDelta)
+{
 	if (m_pModel->Is_AnimComplete())
 	{
-		Change_To_NextAnim();
-		return;
+		if (m_AnimPlaylists[m_iThrowState].size() == m_iCurAnimIdx && m_iThrowState)
+			m_pOdur->Change_State((_uint)OdurState::State_ExecutionDisappear);
+		else
+			Decide_State();
 	}
-
-
-	if (m_bThrowMultipleCard)
-	{
-		m_fTimeAcc += fTimeDelta;
-		if (m_fTimeAcc >= m_fThrowingGap)
-		{
-			m_fTimeAcc = 0.f;
-
-			Throw_Card(JoMath::Calc_GroundLook(m_pTargetTransform->Get_Position(), m_pOwnerTransform->Get_Position()));
-
-			++m_iNumCurrentThrowingCard;
-			if (m_iNumCurrentThrowingCard >= m_iNumThrowCard)
-			{
-				m_iNumCurrentThrowingCard = 0;
-				m_bThrowMultipleCard = false;
-			}
-		}	
-	}
-
 }
 
 void COdurState_ThrowCard::OnState_End()
@@ -82,22 +70,26 @@ void COdurState_ThrowCard::OnState_End()
 
 void COdurState_ThrowCard::Init_AttackDesc()
 {
-	m_CardAttackDescs[0].reserve(1);
-	m_CardAttackDescs[1].reserve(2);
+	m_CardAttackDescs[0].reserve(2);
+	m_CardAttackDescs[1].reserve(4);
 
-	ATTACKDESC AttDesc;
-	AttDesc.eEnemyAttackType = WEAK;
-	m_CardAttackDescs[0].emplace_back(AttDesc);
+	ATTACKDESC AtkDesc;
+	AtkDesc.pAttacker = m_pOdur;
+	AtkDesc.eEnemyAttackType = WEAK;
+	AtkDesc.iDamage = 23;
+	m_CardAttackDescs[0].emplace_back(AtkDesc);
+	m_CardAttackDescs[0].emplace_back(AtkDesc);
 
-	m_CardAttackDescs[1].emplace_back(AttDesc);
+	m_CardAttackDescs[1].emplace_back(AtkDesc);
+	m_CardAttackDescs[1].emplace_back(AtkDesc);
+	m_CardAttackDescs[1].emplace_back(AtkDesc);
 	
-	AttDesc.eEnemyAttackType = VERY_BIG_HIT;
+	AtkDesc.iDamage = 40;
+	AtkDesc.eEnemyAttackType = VERY_BIG_HIT;
 
-	m_CardAttackDescs[1].emplace_back(AttDesc);
+	m_CardAttackDescs[1].emplace_back(AtkDesc);
 
 }
-
-
 _vector COdurState_ThrowCard::Calc_LeftHandPos()
 {
 	_matrix BoneMatrix = m_pLeftHandBone->Get_CombinedTransformation() * m_pOwnerTransform->Get_WorldMatrix();
@@ -105,7 +97,7 @@ _vector COdurState_ThrowCard::Calc_LeftHandPos()
 	return BoneMatrix.r[3];
 }
 
-void COdurState_ThrowCard::Throw_Card(_vector vLook)
+void COdurState_ThrowCard::Throw_Card(_fvector vLook)
 {
 	_vector vLeftHandPos = Calc_LeftHandPos();
 
@@ -117,8 +109,10 @@ void COdurState_ThrowCard::Throw_Card(_vector vLook)
 	XMStoreFloat4x4(&ParamMatrix4x4, ParamMatrix);
 
 	m_Cards[m_iCurCardIdx]->OnEnter_Layer(&ParamMatrix4x4);
+	m_Cards[m_iCurCardIdx]->Set_AttackDesc(m_CardAttackDescs[m_iThrowState][m_iCurAnimIdx]);
 
 	ADD_EVENT(bind(&CGameInstance::Insert_GameObject, m_pGameInstance, GET_CURLEVEL, L"Enemy_Weapon", m_Cards[m_iCurCardIdx]));
+	Safe_AddRef(m_Cards[m_iCurCardIdx]);
 
 	m_iCurCardIdx = (m_iCurCardIdx + 1) % m_Cards.size();
 }
@@ -130,22 +124,31 @@ void COdurState_ThrowCard::Throw_SingleCard()
 
 void COdurState_ThrowCard::Throw_MultipleCards()
 {
-	m_bThrowMultipleCard = true;
+	_vector vLook = JoMath::Calc_GroundLook(m_pTargetTransform->Get_Position(), m_pOwnerTransform->Get_Position());
+	vLook.m128_f32[1] = -0.2f;
+	vLook = XMVector3Normalize(vLook);
+
+	_uint iNumCards = 5;
+
+	_float fSpreadAngle = 40.f;
+	_float fHalfAngle = fSpreadAngle * 0.5f;
+	_float fDeltaAngle = fSpreadAngle / (iNumCards - 1);
+
+	for (_uint i = 0; i < 5; ++i)
+	{
+		_float fAngle = -fHalfAngle + fDeltaAngle * i;
+		_matrix RotationMatrix = XMMatrixRotationAxis(YAXIS, To_Radian(fAngle));
+
+		_vector vCardDir = XMVector3TransformNormal(vLook, RotationMatrix);
+
+		Throw_Card(vCardDir);
+	}
 }
 
 void COdurState_ThrowCard::Change_To_NextAnim()
 {
-	if (m_AnimPlaylists[m_iThrowState].size() == m_iCurAnimIdx)
-	{
-		if (0 == m_iThrowState)
-			Decide_State();
-		else
-			m_pOdur->Change_State((_uint)OdurState::State_ExecutionDisappear);
-	}
-	else
-	{
-		m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);
-	}
+	m_pModel->Change_AnimationWithStartFrame(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx], m_StartFrames[m_iThrowState][m_iCurAnimIdx - 1]);
+	++m_iCurAnimIdx;
 }
 
 COdurState_ThrowCard* COdurState_ThrowCard::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

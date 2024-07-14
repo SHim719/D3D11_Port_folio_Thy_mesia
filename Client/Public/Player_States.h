@@ -27,7 +27,10 @@
 #include "PlayerState_Climb_Idle.h"
 #include "PlayerState_Climb.h"
 #include "PlayerState_Climb_End.h"
+#include "PlayerState_GetUp.h"
 
 #include "PlayerState_PW_Axe.h"
 //#include "PlayerState_PW_Hammer.h"
+#include "PlayerState_PW_Spear.h"
+#include "PlayerState_PW_TwinBlade.h"
 

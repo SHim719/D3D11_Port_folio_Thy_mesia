@@ -63,12 +63,16 @@ void CPlayerState_Parry::OnState_End()
 
 void CPlayerState_Parry::OnHit(const ATTACKDESC& AttackDesc)
 {
-	if (m_bCanParry)
+	if (m_bCanParry && VERY_BIG_HIT != AttackDesc.eEnemyAttackType)
 	{
 		m_pPlayer->Change_State((_uint)PlayerState::State_ParrySuccess, &m_iParryDir);
 
 		if (AttackDesc.pAttacker)
 			AttackDesc.pAttacker->Take_Damage(m_pPlayerStats->Get_NormalAttackDesc());
+	}
+	else
+	{
+		__super::OnHit(AttackDesc);
 	}
 }
 

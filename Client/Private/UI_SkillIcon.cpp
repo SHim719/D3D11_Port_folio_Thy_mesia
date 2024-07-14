@@ -89,6 +89,12 @@ void CUI_SkillIcon::Change_Texture(const SKILLTYPE eSkillType)
 	case HAMMER:
 		wstrTextureTag = L"Prototype_Texture_SkillIcon_Hammer";
 		break;
+	case TWINBLADE:
+		wstrTextureTag = L"Prototype_Texture_SkillIcon_TwinBlade";
+		break;
+	case SPEAR:
+		wstrTextureTag = L"Prototype_Texture_SkillIcon_Spear";
+		break;
 	}
 	
 	if (wstrTextureTag.size())

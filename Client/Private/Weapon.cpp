@@ -101,6 +101,7 @@ HRESULT CWeapon::Render()
 	return S_OK;
 }
 
+
 HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, nullptr)))

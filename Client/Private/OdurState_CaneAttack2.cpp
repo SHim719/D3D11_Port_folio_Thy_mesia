@@ -10,6 +10,8 @@ HRESULT COdurState_CaneAttack2::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pModel->Bind_Func("ChangeAnim_Cane2ToCane1", bind(&COdurState_CaneAttack2::ChangeAnim_Cane2ToCane1, this));
+
 	return S_OK;
 }
 
@@ -21,7 +23,7 @@ void COdurState_CaneAttack2::OnState_Start(void* pArg)
 
 	m_pOdur->Update_AttackDesc();
 
-	m_pModel->Change_Animation(Magician_CaneAttack1Appear);
+	m_pModel->Change_Animation(Magician_CaneAttack2);
 }
 
 void COdurState_CaneAttack2::Update(_float fTimeDelta)
@@ -43,17 +45,24 @@ void COdurState_CaneAttack2::OnState_End()
 
 void COdurState_CaneAttack2::Init_AttackDesc()
 {
-	m_AttackDescs.reserve(2);
+	m_AttackDescs.reserve(3);
 
 	ATTACKDESC AttackDesc;
 	AttackDesc.pAttacker = m_pOdur;
 	AttackDesc.eEnemyAttackType = NORMAL;
 
 	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
+	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
 
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
 
 	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
+
+}
+
+void COdurState_CaneAttack2::ChangeAnim_Cane2ToCane1()
+{
+	ADD_EVENT(bind(&CModel::Change_AnimationWithStartFrame, m_pModel, Magician_CaneAttack1Appear, 25, 0.1f, true));
 
 }
 

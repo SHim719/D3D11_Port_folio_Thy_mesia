@@ -36,6 +36,8 @@ void CTwinBladeKnightState_ParryAttack::Update(_float fTimeDelta)
 
 void CTwinBladeKnightState_ParryAttack::Late_Update(_float fTimeDelta)
 {
+	if (m_pModel->Is_AnimComplete())
+		Decide_State();
 }
 
 void CTwinBladeKnightState_ParryAttack::OnState_End()

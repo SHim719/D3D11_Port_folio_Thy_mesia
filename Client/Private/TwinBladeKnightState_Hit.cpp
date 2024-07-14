@@ -45,7 +45,7 @@ void CTwinBladeKnightState_Hit::Late_Update(_float fTimeDelta)
 		if (iRandNum)
 			Decide_State();
 		else
-			m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_ParryAttack);
+			m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_Dodge);
 	}
 		
 }
@@ -69,7 +69,7 @@ void CTwinBladeKnightState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 
 	if (iRandNum <= m_iHitCount)
 		Decide_Attack();
-	else if (iRandNum > m_iMaxHitCount - 5)
+	else if (iRandNum > m_iMaxHitCount - 5 && ATTACK_NORMAL == AttackDesc.ePlayerAttackType)
 		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_ParryAttack);
 	else
 		OnState_Start(const_cast<ATTACKDESC*>(&AttackDesc));

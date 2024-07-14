@@ -44,7 +44,7 @@ void CPlayerState_Executed::Update(_float fTimeDelta)
 	{
 		m_pMain_Camera->Reset_CutsceneState();
 
-		//누워있게m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
+		//m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;
 	}
 

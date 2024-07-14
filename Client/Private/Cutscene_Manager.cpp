@@ -26,7 +26,7 @@ void CCutscene_Manager::OnEnter_Cutscene(CUTSCENE_NUMBER eCutscene)
 		CFadeScreen::FADEDESC FadeDesc;
 		FadeDesc.eFadeColor = CFadeScreen::BLACK;
 		FadeDesc.fFadeOutSpeed = 0.5f;
-		FadeDesc.fFadeInSpeed = 1020.f;
+		FadeDesc.fFadeInSpeed = 2.f;
 		FadeDesc.pCallback_FadeOutEnd = move(bind(&CCutscene_Manager::OnStart_Cutscene, this));
 
 		UIMGR->Active_UI("FadeScreen", &FadeDesc);

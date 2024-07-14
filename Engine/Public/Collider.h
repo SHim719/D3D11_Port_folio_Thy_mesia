@@ -38,9 +38,12 @@ public:
 
 	virtual _vector Get_Size() const;
 	virtual void Set_Size(_fvector vSize);
+
+	void Enroll_Collider();
 protected:
 	static _uint		iCollisionID;
 	_uint				m_iCollisionID = { 0 };
+	string				m_strCollisionLayer = "";
 
 	ColliderType		m_eColliderType = { Collider_End };
 

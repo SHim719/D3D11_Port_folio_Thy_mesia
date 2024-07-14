@@ -55,11 +55,6 @@ HRESULT COdur_Card_Cutscene::Render()
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShader->Set_RawValue("g_ViewMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_ProjMatrix", &m_pGameInstance->Get_TransformFloat4x4_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
-		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
@@ -70,6 +65,9 @@ HRESULT COdur_Card_Cutscene::Render()
 
 		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
 			return E_FAIL;*/
+
+		if (FAILED(m_pModel->Bind_Buffers(i)))
+			return E_FAIL;
 
 		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
 			return E_FAIL;

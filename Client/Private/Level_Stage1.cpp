@@ -61,7 +61,8 @@ HRESULT CLevel_Stage1::Initialize()
 
 void CLevel_Stage1::Tick(_float fTimeDelta)
 {
-
+	if (KEY_DOWN(eKeyCode::L))
+		Ready_ChangeLevel(LEVEL_ODUR);
 }
 
 HRESULT CLevel_Stage1::Render()

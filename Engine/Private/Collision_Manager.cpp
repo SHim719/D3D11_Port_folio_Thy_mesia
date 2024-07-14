@@ -21,9 +21,7 @@ void CCollision_Manager::Update()
 	Execute_Collision("Player", "PerceptionBounding", TRIGGER);
 	Execute_Collision("Enemy_HitBox", "Player_Weapon", TRIGGER);
 	Execute_Collision("Player_HitBox", "Enemy_Weapon", TRIGGER);
-
 }
-
 
 void CCollision_Manager::Add_ColliderToLayer(const string& strLayer, CCollider* pCollider)
 {
@@ -40,6 +38,21 @@ void CCollision_Manager::Add_ColliderToLayer(const string& strLayer, CCollider* 
 		(it->second).push_back(pCollider);
 
 	Safe_AddRef(pCollider);
+}
+
+void CCollision_Manager::Clear()
+{
+	m_CollisionInfo.clear();
+
+	for (auto Pair : m_CollisionLayer)
+	{
+		for (auto pColl : Pair.second)
+		{
+			Safe_Release(pColl);
+		}
+	}
+
+	m_CollisionLayer.clear();
 }
 
 

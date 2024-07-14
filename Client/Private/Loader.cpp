@@ -69,6 +69,10 @@ unsigned int CLoader::Loading()
 	{
 	case LEVEL_STAGE1:
 		hr = Loading_Stage1();
+		break;
+	case LEVEL_ODUR:
+		hr = Loading_StageOdur();
+		break;
 	}
 
 	LeaveCriticalSection(&m_CriticalSection);
@@ -128,11 +132,31 @@ HRESULT CLoader::Loading_Stage1()
 	if (FAILED(Ready_TwinBladeKnight()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Stage1Objects()))
+	if (FAILED(Ready_MapObjects(L"../../Resources/MapObjects/Stage1/")))
 		return E_FAIL;
 		
 	m_pGameInstance->Add_Prototype(LEVEL_STAGE1, L"Prototype_Navigation", CNavigation::Create(m_pDevice, m_pContext,
 		TEXT("../../Resources/NaviData/Stage1_Navi.dat")));
+
+	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
+
+	m_bIsFinished = true;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Loading_StageOdur()
+{
+	lstrcpy(m_szLoadingText, TEXT("Loading..."));
+
+	if (FAILED(Ready_Odur()))
+		return E_FAIL;
+
+	if (FAILED(Ready_MapObjects(L"../../Resources/MapObjects/StageOdur/")))
+		return E_FAIL;
+
+	m_pGameInstance->Add_Prototype(LEVEL_ODUR, L"Prototype_Navigation", CNavigation::Create(m_pDevice, m_pContext,
+		TEXT("../../Resources/NaviData/StageOdur_Navi.dat")));
 
 	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
 
@@ -205,6 +229,12 @@ HRESULT CLoader::Ready_PlagueWeapon()
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Hammer", CModel::Create(m_pDevice, m_pContext,
 		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Hammer.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Spear", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Spear.dat"));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_TwinBlade", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_TwinSword.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_PlagueWeapon", CPlagueWeapon::Create(m_pDevice, m_pContext));
 
@@ -295,13 +325,11 @@ HRESULT CLoader::Ready_TwinBladeKnight()
 	return S_OK;
 }
 
-HRESULT CLoader::Ready_Stage1Objects()
+HRESULT CLoader::Ready_MapObjects(const wstring& wstrPath)
 {
-	wstring wstrStage1Path = L"../../Resources/MapObjects/Stage1/";
+	fs::path MapObjectPath(wstrPath);
 
-	fs::path Stage1ObjectPath(wstrStage1Path);
-
-	for (const fs::directory_entry& entry : fs::directory_iterator(Stage1ObjectPath))
+	for (const fs::directory_entry& entry : fs::directory_iterator(MapObjectPath))
 	{
 		if (entry.is_directory())
 			continue;
@@ -317,11 +345,11 @@ HRESULT CLoader::Ready_Stage1Objects()
 
 		CModel* pModel = CModel::Create(m_pDevice, m_pContext, entry.path().parent_path().generic_string() + "/", entry.path().filename().generic_string());
 
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, wstrPrototypeTag, pModel)))
+		if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, wstrPrototypeTag, pModel)))
 			return E_FAIL;
 
 		wstrPrototypeTag += L"_Instance";
-		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STAGE1, wstrPrototypeTag, CModel_Instance::Create(m_pDevice, m_pContext, pModel))))
+		if (FAILED(m_pGameInstance->Add_Prototype(m_eNextLevelID, wstrPrototypeTag, CModel_Instance::Create(m_pDevice, m_pContext, pModel))))
 			return E_FAIL;
 	}
 
@@ -407,6 +435,11 @@ HRESULT CLoader::Ready_UIResource()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Hammer", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_SkillIcon_Hammer.dds"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_TwinBlade", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_SkillIcon_TwinSword.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Spear", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_SkillIcon_Halberd.dds"))))
+		return E_FAIL;
 #pragma endregion
 
 	return S_OK;
@@ -429,6 +462,9 @@ HRESULT CLoader::Ready_UI()
 HRESULT CLoader::Ready_Etc()
 {
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_PerceptionBounding", CPerceptionBounding::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_EventTrigger", CEventTrigger::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Ladder_Down", CLadder_Down::Create(m_pDevice, m_pContext))))

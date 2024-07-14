@@ -36,7 +36,7 @@ void COdurState_Cutscene::OnState_Start(void* pArg)
 
 	attachDesc.pAttachBone = m_pModel->Get_Bone("camera");
 
-	static_cast<CMain_Camera*>(m_pGameInstance->Find_GameObject(GET_CURLEVEL, L"Camera", 0))->SetState_Cutscene(attachDesc);
+	static_cast<CMain_Camera*>(m_pGameInstance->Get_MainCamera())->SetState_Cutscene(attachDesc);
 
 	m_pModel->Change_Animation(MagicianLV1_Seq_BossFightStart, 0.f);
 

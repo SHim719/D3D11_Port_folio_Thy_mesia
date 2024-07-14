@@ -87,12 +87,12 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 	m_pObject_Manager->PriorityTick(fTimeDelta * m_fTimeScale);
 	m_pObject_Manager->Tick(fTimeDelta * m_fTimeScale);
 
-	if (nullptr != m_pMain_Camera)
+	if (nullptr != m_pMain_Camera && m_pMain_Camera->Is_Active())
 		m_pMain_Camera->Tick(fTimeDelta);
 
 	m_pCollision_Manager->Update();
 
-	if (nullptr != m_pMain_Camera)
+	if (nullptr != m_pMain_Camera && m_pMain_Camera->Is_Active())
 		m_pMain_Camera->LateTick(fTimeDelta * m_fTimeScale);
 
 	m_pPipeLine->Update();
@@ -119,6 +119,11 @@ void CGameInstance::Clear(_uint iLevelIndex)
 	m_pRenderer->Clear();
 	m_pObject_Manager->Clear(iLevelIndex);	
 	m_pComponent_Manager->Clear(iLevelIndex);
+
+	if (1 != iLevelIndex)
+	{
+		m_pCollision_Manager->Clear();
+	}
 }
 
 void CGameInstance::Clear_Level(_uint iLevelIndex)

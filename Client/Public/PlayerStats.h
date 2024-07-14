@@ -9,6 +9,8 @@ private:
 	CPlayerStats();
 	virtual ~CPlayerStats() = default;
 
+	void Initialize();
+
 private: 
 	_bool			m_bAttackUpgraded = { true };
 	_bool			m_bShortClaw = { true };
@@ -50,7 +52,6 @@ public:
 	ATTACKDESC Get_NormalAttackDesc() const;
 	ATTACKDESC Get_PlagueAttackDesc() const;
 
-	
 public:
 	void Add_Observer(class CUI* pUI);
 	void Set_PlunderSlot(class CUI_PlunderSlot* pPlunderSlot) {
@@ -62,9 +63,9 @@ private:
 	void Broadcast_Update_Mp()	const;
 	
 private:
-	list<class CUI*>	m_ObserverUIs;
+	list<class CUI*>		m_ObserverUIs;
 
-	class CUI_PlunderSlot* m_pPlunderSlot = { nullptr };
+	class CUI_PlunderSlot*	m_pPlunderSlot = { nullptr };
 
 public:
 	static CPlayerStats* Create();

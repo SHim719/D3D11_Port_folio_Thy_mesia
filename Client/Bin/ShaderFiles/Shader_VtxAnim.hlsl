@@ -122,8 +122,6 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
 	
     Out.vDiffuse.a *= g_fAlpha;
 
-   
-
     return Out;
 }
 

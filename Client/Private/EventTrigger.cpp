@@ -25,31 +25,22 @@ HRESULT CEventTrigger::Initialize(void* pArg)
 	if (FAILED(Ready_Components(pArg)))
 		return E_FAIL;
 
+	if (m_pCollider)
+		m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 	return S_OK;
 }
 
 
 void CEventTrigger::Tick(_float fTimeDelta)
 {
-	if (m_bNextFrameDestroy)
-		m_bDestroyed = true;
 
 }
 
 void CEventTrigger::LateTick(_float fTimeDelta)
 {
-	if (m_pCollider)
-		m_pCollider->Update(m_pTransform->Get_WorldMatrix());
-
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
-}
-
-HRESULT CEventTrigger::Render()
-{
-	if (m_pCollider)
-		m_pCollider->Render();
-
-	return S_OK;
+#ifdef _DEBUG
+	m_pGameInstance->Add_RenderComponent(m_pCollider);
+#endif
 }
 
 void CEventTrigger::OnCollisionEnter(CGameObject* pOther)
@@ -59,12 +50,12 @@ void CEventTrigger::OnCollisionEnter(CGameObject* pOther)
 	//case START_ODUR_CUTSCENE:
 	//	CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
 	//	break;
-	//case START_URD_CUTSCENE:
-	//	CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
-	//	break;
+	////case START_URD_CUTSCENE:
+	////	CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_URD);
+	////	break;
 	//}
-	//
-	//m_bNextFrameDestroy = true;
+	
+	ADD_EVENT(bind(&CGameObject::Set_Destroy, this, true));
 }
 
 

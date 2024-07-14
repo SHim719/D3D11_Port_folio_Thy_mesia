@@ -32,8 +32,6 @@ HRESULT CPerceptionBounding::Initialize(void* pArg)
 
 void CPerceptionBounding::Tick(_float fTimeDelta)
 {
-	if (m_bNextFrameDestroy)
-		Set_Destroy(true);
 
 }
 
@@ -52,7 +50,7 @@ HRESULT CPerceptionBounding::Render()
 
 void CPerceptionBounding::OnCollisionEnter(CGameObject* pOther)
 {
-	m_bNextFrameDestroy = true;
+	ADD_EVENT(bind(&CGameObject::Set_Destroy, this, true));
 	m_pOwner->Percept_Target();
 }
 

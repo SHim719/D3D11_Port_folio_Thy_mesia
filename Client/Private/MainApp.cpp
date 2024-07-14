@@ -51,7 +51,6 @@ HRESULT CMainApp::Initialize()
 	pStartLevel = CLevel_Loading::Create(LEVEL_STAGE1, m_pDevice, m_pContext);
 
 #endif
-
 	m_pGameInstance->Change_Level(pStartLevel);
 
 	return S_OK;

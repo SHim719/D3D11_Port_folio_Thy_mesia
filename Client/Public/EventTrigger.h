@@ -19,12 +19,10 @@ public:
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
-	HRESULT Render()					override;
 
 private:
 	TRIGGEREVENTS	m_eTriggerEvent = EVENT_END;
 
-	_bool			m_bNextFrameDestroy = { false };
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;

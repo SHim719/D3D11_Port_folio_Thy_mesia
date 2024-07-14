@@ -102,7 +102,7 @@ void CEnemy::InActive_StunnedMark()
 {
 	if (ULLONG_MAX != m_iStunnedMarkIdx)
 	{
-		UIMGR->InActive_UI("UI_StunnedMark", m_iStunnedMarkIdx);
+		UIMGR->Inactive_UI("UI_StunnedMark", m_iStunnedMarkIdx);
 		m_iStunnedMarkIdx = ULLONG_MAX;
 	}
 }

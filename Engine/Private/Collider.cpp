@@ -52,7 +52,10 @@ HRESULT CCollider::Initialize(void* pArg)
 	m_bActive = pDesc->bActive;
 
 	if (pDesc->strCollisionLayer != "")
+	{
 		m_pGameInstance->Add_ColliderToLayer(pDesc->strCollisionLayer, this);
+		m_strCollisionLayer = pDesc->strCollisionLayer;
+	}
 
 	return S_OK;
 }
@@ -71,6 +74,12 @@ _vector CCollider::Get_Size() const
 void CCollider::Set_Size(_fvector vSize)
 {
 }
+
+void CCollider::Enroll_Collider()
+{
+	m_pGameInstance->Add_ColliderToLayer(m_strCollisionLayer, this);
+}
+
 
 HRESULT CCollider::Render()
 {

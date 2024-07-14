@@ -290,7 +290,7 @@ HRESULT CTwinBladeKnight::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"╫жд╝аб";
-	EnemyDesc.iMaxHp = 10;
+	EnemyDesc.iMaxHp = 500;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 

@@ -54,7 +54,7 @@ void CTwinBladeKnightState_Walk::Decide_WalkAnimation()
 	{
 		if (LArmor_TwinSwords_WalkF == m_pModel->Get_CurrentAnimIndex())
 			return;
-		m_pModel->Change_Animation(LArmor_TwinSwords_WalkF, 0.f);
+		m_pModel->Change_Animation(LArmor_TwinSwords_WalkF);
 		m_iDir = 0;
 	}
 	else 
@@ -62,7 +62,7 @@ void CTwinBladeKnightState_Walk::Decide_WalkAnimation()
 		if (LArmor_TwinSwords_WalkB == m_pModel->Get_CurrentAnimIndex())
 			return;
 
-		m_pModel->Change_Animation(LArmor_TwinSwords_WalkB, 0.f);
+		m_pModel->Change_Animation(LArmor_TwinSwords_WalkB);
 		m_iDir = 1;
 	}
 }

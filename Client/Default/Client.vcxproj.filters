@@ -643,6 +643,15 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Elite">
       <UniqueIdentifier>{55e195ca-285e-427e-8ae7-eda04d7351f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear">
+      <UniqueIdentifier>{d8387c83-9f11-4b8c-a1ba-ab2bcfe8a609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\TwinBlade">
+      <UniqueIdentifier>{936557c9-da93-48b5-b9c1-e564e9031535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp">
+      <UniqueIdentifier>{f82ab60d-c45f-40e4-b4ad-a11e7fced790}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1203,6 +1212,18 @@
     <ClInclude Include="..\Public\TwinBladeKnightState_ParryAttack.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ParryAttack</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_PW_TwinBlade.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\TwinBlade</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_PW_Spear.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Odur.h">
+      <Filter>01. Levels\03. Stage_Odur</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_GetUp.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1690,6 +1711,18 @@
     </ClCompile>
     <ClCompile Include="..\Private\TwinBladeKnightState_ParryAttack.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ParryAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_PW_TwinBlade.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\TwinBlade</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_PW_Spear.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Odur.cpp">
+      <Filter>01. Levels\03. Stage_Odur</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_GetUp.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

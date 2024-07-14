@@ -105,7 +105,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_ENGINE_DEBUG;_WINDOWS;_USRDLL;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>../../External/Inc/FMOD/;../Public/;../../External/Inc/</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -195,6 +195,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\Public\Collision_Manager.h" />
     <ClInclude Include="..\Public\CustomFont.h" />
     <ClInclude Include="..\Public\DebugDraw.h" />
+    <ClInclude Include="..\Public\Engine_Debug.h" />
     <ClInclude Include="..\Public\Engine_Enums.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
     <ClInclude Include="..\Public\Font_Manager.h" />

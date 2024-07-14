@@ -29,17 +29,19 @@ void COdurState_ReadyExecution::OnState_Start(void* pArg)
 
 void COdurState_ReadyExecution::Update(_float fTimeDelta)
 {
+	if (false == m_pOdur->Is_CollPlayer())
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	else
+		ChangeState_Execution();	
+}
+
+void COdurState_ReadyExecution::Late_Update(_float fTimeDelta)
+{
 	if (m_pModel->Is_AnimComplete())
 	{
 		ChangeState_Execution();
 		return;
 	}
-
-	if (false == m_pOdur->Is_CollPlayer())
-		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
-	else
-		ChangeState_Execution();	
-
 }
 
 void COdurState_ReadyExecution::OnState_End()

@@ -67,9 +67,12 @@ void COdur::Tick(_float fTimeDelta)
 
 	if (KEY_DOWN(eKeyCode::O))
 	{
-		Change_State((_uint)OdurState::State_CaneAttack1);
-	}
+		//Change_State((_uint)OdurState::State_DisappearMove);
+
+		Change_State((_uint)OdurState::State_ThrowCard);
 		//Change_State((_uint)OdurState::State_ExecutionDisappear);
+	}
+		
 	
 		
 	if (m_bLookTarget)
@@ -105,8 +108,9 @@ void COdur::LateTick(_float fTimeDelta)
 	m_pGameInstance->Add_RenderComponent(m_pCollider);
 	m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
 #endif
+	CRenderer::RENDERGROUP RenderGroup = m_fAlpha != 1.f ? CRenderer::RENDER_BLEND : CRenderer::RENDER_NONBLEND;
 
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_BLEND, this);
+	m_pGameInstance->Add_RenderObject(RenderGroup, this);
 }
 
 HRESULT COdur::Render()
@@ -114,12 +118,18 @@ HRESULT COdur::Render()
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
-		return E_FAIL;
+	_uint iPassIdx = 0;
+
+	if (m_fAlpha <= 0.9f)
+	{
+		if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
+			return E_FAIL;
+
+		iPassIdx = 1;
+	}
 
 	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
 		return E_FAIL;
-
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
@@ -133,7 +143,7 @@ HRESULT COdur::Render()
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModel->Render(m_pShader, i, 1)))
+		if (FAILED(m_pModel->Render(m_pShader, i, iPassIdx)))
 			return E_FAIL;  
 	}
 
@@ -170,7 +180,7 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Set_Stanced, this, true));
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
-	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));
+	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));	
 }
 
 void COdur::Swap_Bone()
@@ -200,7 +210,6 @@ void COdur::Update_WeaponAlpha()
 	for (auto pWeapon : m_Weapons)
 		pWeapon->Set_Alpha(m_fAlpha);
 }
-
 
 HRESULT COdur::Ready_Components(void* pArg)
 {
@@ -244,10 +253,12 @@ HRESULT COdur::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &(pLoadDesc->iNaviIdx))))
+	if (FAILED(__super::Add_Component(GET_CURLEVEL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &(pLoadDesc->iNaviIdx))))
 		return E_FAIL;
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
+
+	m_InitWorldMatrix = pLoadDesc->WorldMatrix;
 
 	return S_OK;
 }
@@ -291,6 +302,7 @@ HRESULT COdur::Ready_Weapons()
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.iTag = (_uint)TAG_ENEMY_WEAPON;
+	WeaponDesc.iLevelID = LEVEL_ODUR;
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_Cane");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Cane";

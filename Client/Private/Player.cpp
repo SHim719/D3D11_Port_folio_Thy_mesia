@@ -57,10 +57,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Change_State((_uint)PlayerState::State_Idle);
 	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);
 
-	m_pTransform->Set_Position(XMVectorSet(0.f, 0.594f, -3.832f, 1.f));
-
 	CUTSCENEMGR->Add_Actor(this);
-
 
 	return S_OK;
 }
@@ -74,7 +71,10 @@ void CPlayer::PriorityTick(_float fTimeDelta)
 void CPlayer::Tick(_float fTimeDelta)
 {
 	if (m_bLockOn)
-		m_pTransform->LookAt2D(m_pTargetTransform->Get_Position());
+		m_pTransform->Rotation_Quaternion(
+			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
+				, JoMath::Calc_GroundLook(m_pTargetTransform->Get_Position(), m_pTransform->Get_Position())
+				, 10.f * fTimeDelta));
 
 	m_States[m_iState]->Update(fTimeDelta);
 
@@ -142,11 +142,17 @@ void CPlayer::OnEnter_Cutscene()
 void CPlayer::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
 {
 	Change_State((_uint)PlayerState::State_Cutscene, &eCutsceneNumber);
+
+	UIMGR->Inactive_UI("UI_PlayerBar");
+	UIMGR->Inactive_UI("UI_PlunderSlot");
 }
 
 void CPlayer::OnEnd_Cutscene()
 {
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&m_PrevWorldMatrix));
+
+	UIMGR->Active_UI("UI_PlayerBar");
+	UIMGR->Active_UI("UI_PlunderSlot");
 
 	Change_State((_uint)PlayerState::State_Idle);
 }
@@ -170,6 +176,11 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Inactive_PlagueWeapon_Collider", bind(&CPlayer::Set_Active_NowPWCollider, this, false));
 	m_pModel->Bind_Func("Enable_NaviY", bind(&CPlayer::Set_Adjust_NaviY, this, true));
 	m_pModel->Bind_Func("Disable_NaviY", bind(&CPlayer::Set_Adjust_NaviY, this, false));
+	m_pModel->Bind_Func("ChangeToNextComboAnim", bind(&CPlayer::ChangeToNextComboAnim, this));
+	m_pModel->Bind_Func("Active_PW_Twin_L_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_L, true));
+	m_pModel->Bind_Func("Inactive_PW_Twin_L_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_L, false));
+	m_pModel->Bind_Func("Active_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, true));
+	m_pModel->Bind_Func("Inactive_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, false));
 }
 
 void CPlayer::Update_CanExecutionEnemy()
@@ -348,12 +359,10 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 	}
 }
 
-inline void CPlayer::Calc_HitGap(_float fTimeDelta)
-{
-	if (m_fHitGapAcc < 0.f)
-		return;
 
-	m_fHitGapAcc -= fTimeDelta;
+void CPlayer::ChangeToNextComboAnim()
+{
+	m_pModel->Change_Animation(m_pModel->Get_CurrentAnimIndex() + 1);
 }
 
 _int CPlayer::Take_Damage(const ATTACKDESC& AttackDesc)
@@ -379,16 +388,33 @@ HRESULT CPlayer::Reset_NaviData(LEVEL eLevel)
 
 	auto it = m_Components.find(L"Navigation");
 	if (m_Components.end() == it)
+	{
 		m_Components.emplace(L"Navigation", m_pNavigation);
+	}
 	else
+	{
+		Safe_Release(it->second);
 		it->second = m_pNavigation;
-
+	}
+		
 	Safe_AddRef(m_pNavigation);
 
 	m_pNavigation->Set_CurrentIdx(m_pTransform->Get_Position());
 	Change_Navigation(m_pNavigation);
 
 	return S_OK;
+}
+
+void CPlayer::Enroll_AllColliders()
+{
+	m_pCollider->Enroll_Collider();
+	m_pHitBoxCollider->Enroll_Collider();
+
+	for (auto pWeapon : m_Weapons)
+	{
+		if (nullptr != pWeapon)
+			pWeapon->Enroll_Collider();
+	}
 }
 
 HRESULT CPlayer::Ready_Components()
@@ -466,11 +492,13 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Climb_Idle] = CPlayerState_Climb_Idle::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Climb] = CPlayerState_Climb::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Climb_End] = CPlayerState_Climb_End::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_GetUp] = CPlayerState_GetUp::Create(m_pDevice, m_pContext, this);
 
 	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_Axe] = CPlayerState_PW_Axe::Create(m_pDevice, m_pContext, this);
 	//m_States[(_uint)PlayerState::State_PW_Hammer] = CPlayerState_PW_Hammer::Create(m_pDevice, m_pContext, this);
-
+	m_States[(_uint)PlayerState::State_PW_Spear] = CPlayerState_PW_Spear::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_PW_TwinBlade] = CPlayerState_PW_TwinBlade::Create(m_pDevice, m_pContext, this);
 	return S_OK;
 }
 
@@ -568,6 +596,38 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 		return E_FAIL;
 	
 	m_Weapons[PW_HAMMER]->Set_Active(false);
+
+	ColliderDesc.eType = CCollider::OBB;
+	ColliderDesc.vCenter = { 0.5f, 0.f, 0.f };
+	ColliderDesc.vSize = { 3.f, 0.5f, 0.5f };
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Spear";
+
+	m_Weapons[PW_SPEAR] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
+	if (nullptr == m_Weapons[PW_SPEAR])
+		return E_FAIL;
+
+	m_Weapons[PW_SPEAR]->Set_Active(false);
+
+	ColliderDesc.eType = CCollider::SPHERE;
+	ColliderDesc.vCenter = { 0.5f, 0.f, 0.f };
+	ColliderDesc.vSize = { 1.f, 0.f, 0.f };
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_TwinBlade";
+
+	m_Weapons[PW_TWINBLADE_L] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
+	if (nullptr == m_Weapons[PW_TWINBLADE_L])
+		return E_FAIL;
+
+	m_Weapons[PW_TWINBLADE_L]->Set_Active(false);
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+
+	m_Weapons[PW_TWINBLADE_R] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
+	if (nullptr == m_Weapons[PW_TWINBLADE_R])
+		return E_FAIL;
+
+	m_Weapons[PW_TWINBLADE_R]->Set_Active(false);
 
 	return S_OK;
 }

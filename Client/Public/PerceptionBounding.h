@@ -22,7 +22,6 @@ private:
 private:
 	class CEnemy*	m_pOwner = { nullptr };
 	CCollider*		m_pPerceptionCollider = { nullptr };
-	_bool			m_bNextFrameDestroy = { false };
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
