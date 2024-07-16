@@ -141,8 +141,7 @@ HRESULT CRenderer::Draw()
 
 	Render_NonLight();
 	Render_Blend();
-	Render_UI();
-
+	
 #ifdef _DEBUG
 	if (FAILED(Render_Components()))
 		return E_FAIL;
@@ -151,6 +150,8 @@ HRESULT CRenderer::Draw()
 		return E_FAIL;
 
 #endif
+
+	Render_UI();
 
 	return S_OK;
 }

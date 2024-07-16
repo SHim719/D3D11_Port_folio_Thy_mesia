@@ -21,7 +21,6 @@ void CTwinBladeKnightState_Executed_Start::OnState_Start(void* pArg)
 	Safe_AddRef(m_AttachDesc.pAttachBone);
 	Safe_AddRef(m_AttachDesc.pParentTransform);
 
-	m_pTwinBladeKnight->Get_Stats()->Broadcast_Death();
 	m_pTwinBladeKnight->Set_LookTarget(false);
 	m_pTwinBladeKnight->Set_Active_Colliders(false);
 	m_pTwinBladeKnight->InActive_StunnedMark();

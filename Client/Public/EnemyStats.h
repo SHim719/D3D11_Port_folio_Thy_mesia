@@ -16,29 +16,23 @@ private:
 
 private:
 	wstring			m_wstrName = { L"" };
+	_bool			m_bIsBoss = { false };
 
 	_int			m_iMaxHp = { 0 };
 	_int			m_iHp = { 0 };
 	_int			m_iMp = { 0 };
 
-	_bool			m_bHit = { false };
+private:
+	class CUI_EnemyBar*	m_pEnemyBar = { nullptr };
+	class CUI_BossBar*	m_pBossBar = { nullptr };
+
+public:
+	void Set_EnemyBar(CUI_EnemyBar* pEnemyBar);
+	void Set_BossBar(CUI_BossBar* pBossBar);
+
 public:
 	void Increase_Hp(_int iHp);
 	_int Increase_Mp(_int iMp);
-
-private:
-	void Broadcast_Update_Hp();
-	void Broadcast_Update_Mp();
-	void Broadcast_Hit();
-
-public:
-	void Broadcast_Death();
-
-public:
-	void Add_Observer(class CUI* pUI);
-
-private:
-	list<class CUI*>	m_ObserverUIs;
 
 public:
 	const wstring& Get_Name() const {
@@ -48,6 +42,11 @@ public:
 	_int Get_MaxHp() const {
 		return m_iMaxHp;
 	}
+
+	_bool Is_Hit() const {
+		return m_iMaxHp != m_iHp;
+	}
+
 
 public:
 	static CEnemyStats* Create(const ENEMYDESC& EnemyDesc);

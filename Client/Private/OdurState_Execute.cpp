@@ -25,13 +25,13 @@ void COdurState_Execute::OnState_Start(void* pArg)
 
 void COdurState_Execute::Update(_float fTimeDelta)
 {
-	if (m_pModel->Is_AnimComplete())
-	{
-		Decide_State();
-		return;
-	}
-
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+}
+
+void COdurState_Execute::Late_Update(_float fTimeDelta)
+{
+	if (m_pModel->Is_AnimComplete())
+		Decide_State();
 }
 
 void COdurState_Execute::OnState_End()

@@ -22,6 +22,11 @@ HRESULT CJoker::Initialize_Prototype()
 	m_iTag = (_uint)TAG_ENEMY;
 	m_eExecutionTag = JOKER;
 	m_eSkillType = SKILLTYPE::HAMMER;
+
+	m_iDeathStateIdx = (_uint)JokerState::State_Death;
+	m_iExecutionStateIdx = (_uint)JokerState::State_Executed_Start;
+	m_iStunnedStateIdx = (_uint)JokerState::State_Stunned_Loop;
+
 	return S_OK;
 }
 
@@ -52,82 +57,15 @@ HRESULT CJoker::Initialize(void* pArg)
 	m_bLookTarget = false;
 	m_bStanced = true;
 
+	m_fRotRate = 6.f;
+
+	XMStoreFloat4(&m_vCullingOffset, XMVectorSet(0.f, 1.5f, 0.f, 0.f));
+
 	Change_State((_uint)JokerState::State_Idle);
 	m_pModel->Set_AnimPlay();
 
 	return S_OK;
 }
-
-void CJoker::Tick(_float fTimeDelta)
-{
-	if (KEY_DOWN(eKeyCode::K))
-	{
-		//static_cast<CJokerState_Base*>(m_States[m_iState])->Decide_Attack();
-		Change_State((_uint)JokerState::State_Walk);
-	}
-
-
-	if (m_bLookTarget)
-	{
-		m_pTransform->Rotation_Quaternion(
-			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
-				, JoMath::Calc_GroundLook(s_pTarget->Get_Transform()->Get_Position(), m_pTransform->Get_Position())
-				, m_fRotRate * fTimeDelta));
-	}
-
-	m_States[m_iState]->Update(fTimeDelta);
-
-	if (m_bAdjustNaviY)
-		m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
-
-	__super::Update_Colliders();
-
-	m_pModel->Play_Animation(fTimeDelta);
-}
-
-void CJoker::LateTick(_float fTimeDelta)
-{
-	m_States[m_iState]->Late_Update(fTimeDelta);
-
-	if (m_bNoRender)
-		return;
-
-#ifdef _DEBUG
-	m_pGameInstance->Add_RenderComponent(m_pCollider);
-	m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
-#endif
-
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
-}
-
-HRESULT CJoker::Render()
-{
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
-		return E_FAIL;
-
-
-	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; ++i)
-	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
-			return E_FAIL;
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
-
-		if (FAILED(m_pModel->Bind_Buffers(i)))
-			return E_FAIL;
-
-		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
-
 
 void CJoker::Bind_KeyFrames()
 {
@@ -142,16 +80,6 @@ void CJoker::Bind_KeyFrames()
 }
 
 
-void CJoker::SetState_Executed(void* pArg)
-{
-	Change_State((_uint)JokerState::State_Executed_Start, pArg);
-}
-
-void CJoker::SetState_Death()
-{
-	Change_State((_uint)JokerState::State_Death);
-}
-
 void CJoker::Percept_Target()
 {
 	_int iRandNum = JoRandom::Random_Int(0, 1);
@@ -164,7 +92,7 @@ void CJoker::Percept_Target()
 
 void CJoker::Change_To_NextComboAnim()
 {
-	static_cast<CJokerState_Base*>(m_States[m_iState])->Change_To_NextComboAnim();
+	ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, m_pModel->Get_CurrentAnimIndex() + 1, 0.1f, true));
 }
 
 HRESULT CJoker::Ready_Components(void* pArg)
@@ -209,7 +137,7 @@ HRESULT CJoker::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &(pLoadDesc->iNaviIdx))))
+	if (FAILED(__super::Add_Component(GET_CURLEVEL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &(pLoadDesc->iNaviIdx))))
 		return E_FAIL;
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
@@ -256,6 +184,7 @@ HRESULT CJoker::Ready_Weapon()
 
 	CWeapon::WEAPONDESC WeaponDesc;
 	WeaponDesc.iTag = (_uint)TAG_ENEMY_WEAPON;
+	WeaponDesc.iLevelID = GET_CURLEVEL;
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Hammer");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Joker_Hammer";
@@ -287,7 +216,7 @@ HRESULT CJoker::Ready_UI()
 	EnemyBarDesc.vOffset.y = 3.5f;
 	EnemyBarDesc.pOwnerTransform = m_pTransform;
 
-	UIMGR->Active_UI("UI_EnemyBar", &EnemyBarDesc);
+	m_pEnemyBar = static_cast<CUI_EnemyBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_EnemyBar", &EnemyBarDesc));
 
 	return S_OK;
 }

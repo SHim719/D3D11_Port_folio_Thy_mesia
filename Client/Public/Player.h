@@ -135,13 +135,19 @@ public:
 		m_eNowUsingSkill = eType;
 	}
 
+	void ChangeAnim_GetUp() {
+		m_pModel->Change_Animation(Corvus_ArchiveGetup);
+	}
+
 	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
 
 	void SetState_Parried();
 	void SetState_Executed(void* pArg);
 	void SetState_Plunder(void* pArg);
 	void SetState_ClimbStart(void* pArg);
-
+	void SetState_FoundBeacon(void* pArg);
+	void SetState_Sit(void* pArg);
+	
 	void Inactive_AllWeaponColliders();
 
 	void Set_Active_DefaultWeapons(_bool bActive);
@@ -156,6 +162,7 @@ public:
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 	void ChangeToNextComboAnim();
+
 
 	inline void Calc_HitGap(_float fTimeDelta) {
 		if (m_fHitGapAcc < 0.f) return;

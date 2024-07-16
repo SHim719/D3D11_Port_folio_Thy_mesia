@@ -17,27 +17,17 @@ private:
 private:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
-	void Tick(_float fTimeDelta)		override;
-	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-	void Update_EnemyHp(_int iHp)		override;
-	void Update_EnemyMp(_int iMp)		override;
-
 	HRESULT OnEnter_Layer(void* pArg)	override;
-private:
+
+	HRESULT Render_MainBar();
 	void Draw_BossNameText();
 
 private:
-	wstring m_wstrBossName = L"";
-	
-private:
-	HRESULT Render_MainBar();
-
-private:
+	wstring				m_wstrBossName = L"";
 	_float4				m_vRenderStartPos = {};
 	_float3				m_vBossBarScales[BOSSBAR_END] = {};
-
 
 	CTexture*			m_pBossBarTex[BOSSBAR_END] = {};
 
@@ -45,6 +35,11 @@ private:
 	class CProgressBar* m_pMpProgressBar = { nullptr };
 
 	_int				m_iMaxHp = { 0 };
+
+public:
+	void Update_EnemyHp(_int iHp);
+	void Update_EnemyMp(_int iMp);
+
 private:
 	HRESULT Ready_Component();
 

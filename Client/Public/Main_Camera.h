@@ -71,10 +71,14 @@ private:
 public:
 	void Set_Player(CGameObject* pPlayer);
 	
+	void SetState_Default();
 	void SetState_LockOn();
 	void SetState_LockOn_To_Default();
+	void SetState_UI();
+
 	void SetState_Cutscene(const ATTACHDESC& Desc);
 	void Reset_CutsceneState();
+
 
 	void Add_ShakingDesc(const SHAKINGDESC& ShakingDesc);
 	void Add_DeltaFovYDesc(const DELTAFOVYDESC& DeltaFovYDesc);

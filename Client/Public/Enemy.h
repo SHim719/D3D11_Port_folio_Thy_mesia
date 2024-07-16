@@ -19,6 +19,10 @@ protected:
 	CEnemy(const CEnemy& rhs);
 	virtual ~CEnemy() = default;
 
+	void Tick(_float fTimeDelta)		override;
+	void LateTick(_float fTimeDelta)	override;
+	HRESULT Render()					override;
+
 protected:
 	static CGameObject* s_pTarget;
 
@@ -40,21 +44,32 @@ public:
 	}
 
 protected:
-	_bool m_bLookTarget = { true };
-	_bool m_bCollPlayer = { false };
+	_bool	m_bLookTarget = { true };
+	_bool	m_bCollPlayer = { false };
+	_bool	m_bStunnedMarked = { false };
+	_float	m_fRotRate	= { 10.f };
 
-	size_t			m_iStunnedMarkIdx = { ULLONG_MAX };
-	EXECUTION_TAG	m_eExecutionTag = { DEFAULT };
-	SKILLTYPE		m_eSkillType = { SKILLTYPE_END };
+	_uint	m_iStunnedStateIdx = { 0 };
+	_uint	m_iDeathStateIdx = { 0 };
+	_uint	m_iExecutionStateIdx = { 0 };
 
+	EXECUTION_TAG			m_eExecutionTag = { DEFAULT };
+	SKILLTYPE				m_eSkillType = { SKILLTYPE_END };
+
+	class CUI_EnemyBar*		m_pEnemyBar = { nullptr };
 public:
 	virtual void Percept_Target();
 
-	virtual void SetState_Death();
-	virtual void SetState_Executed(void* pArg);
+	void SetState_Death();
+	void SetState_Executed(void* pArg);
 
-	virtual _bool Is_Stunned();
-	virtual _bool Is_Death();
+
+	_bool Is_Stunned() {
+		return m_iState == m_iStunnedStateIdx;
+	}
+	_bool Is_Death() {
+		return m_iState == m_iDeathStateIdx;
+	}
 
 	CBone* Find_SpineBone();
 	

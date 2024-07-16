@@ -40,6 +40,8 @@ HRESULT COdur_Card::OnEnter_Layer(void* pArg)
 	m_pTransform->Set_Position(ParamMatrix.r[3]);
 
 	m_pCollider->Enroll_Collider();
+
+	m_bUltimate = (ParamMatrix.r[1].m128_f32[0] == 1.f);
 	return S_OK;
 }
 
@@ -52,7 +54,17 @@ void COdur_Card::Tick(_float fTimeDelta)
 		m_bReturnToPool = true;
 	}
 
-	m_pTransform->Go_Dir(m_pTransform->Get_MoveLook(), fTimeDelta);
+	if (false == m_bUltimate)
+		m_pTransform->Go_Dir(m_pTransform->Get_MoveLook(), fTimeDelta);
+	else
+	{
+		_vector vPlayerPos = m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Player")->Get_Transform()->Get_Position();
+
+		_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - m_pTransform->Get_Position(), -0.1f));
+
+		m_pTransform->Go_Dir(vDir, fTimeDelta);
+	}
+		
 }
 
 void COdur_Card::LateTick(_float fTimeDelta)

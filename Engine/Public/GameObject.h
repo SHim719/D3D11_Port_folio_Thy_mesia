@@ -67,6 +67,7 @@ protected:
 	_uint	m_iTag = { 0 };
 
 	_float	m_fCullingRadius = { 1.f };
+	_float4 m_vCullingOffset = {};
 public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
 	_bool Is_Destroyed() { 

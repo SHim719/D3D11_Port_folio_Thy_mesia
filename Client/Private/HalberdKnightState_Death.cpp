@@ -21,8 +21,6 @@ void CHalberdKnightState_Death::OnState_Start(void* pArg)
 	m_pHalberdKnight->Set_Active_Colliders(false);
 	m_pHalberdKnight->InActive_StunnedMark();
 
-	m_pHalberdKnight->Get_Stats()->Broadcast_Death();
-
 	m_pModel->Change_Animation(HArmorLV1_Halberds_Dead, 0.1f, false);
 }
 

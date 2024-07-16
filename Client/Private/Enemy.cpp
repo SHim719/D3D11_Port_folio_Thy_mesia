@@ -1,10 +1,12 @@
 #include "Enemy.h"
 #include "State_Base.h"
 #include "Bone.h"
-#include "UI_Manager.h"
 #include "Weapon.h"
 #include "Player.h"
 
+#include "UI_Manager.h"
+
+#include "UI_EnemyBar.h"
 
 CGameObject* CEnemy::s_pTarget = nullptr;
 
@@ -17,8 +19,90 @@ CEnemy::CEnemy(const CEnemy& rhs)
 	: CCharacter(rhs)
 	, m_eExecutionTag(rhs.m_eExecutionTag)
 	, m_eSkillType(rhs.m_eSkillType)
+	, m_iStunnedStateIdx(rhs.m_iStunnedStateIdx)
+	, m_iDeathStateIdx(rhs.m_iDeathStateIdx)
+	, m_iExecutionStateIdx(rhs.m_iExecutionStateIdx)
 {
 
+}
+
+void CEnemy::Tick(_float fTimeDelta)
+{
+	if (m_bLookTarget)
+	{
+		m_pTransform->Rotation_Quaternion(
+			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
+				, JoMath::Calc_GroundLook(s_pTarget->Get_Transform()->Get_Position(), m_pTransform->Get_Position())
+				, m_fRotRate * fTimeDelta));
+	}
+
+	m_States[m_iState]->Update(fTimeDelta);
+
+	if (m_bAdjustNaviY)
+		Compute_YPos();
+
+	__super::Update_Colliders();
+
+	__super::Tick_Weapons(fTimeDelta);
+
+	if (m_pEnemyBar && m_pStats->Is_Hit())
+		m_pEnemyBar->Tick(fTimeDelta);
+
+	m_pModel->Play_Animation(fTimeDelta);
+
+}
+void CEnemy::LateTick(_float fTimeDelta)
+{
+	m_States[m_iState]->Late_Update(fTimeDelta);
+
+	__super::LateTick_Weapons(fTimeDelta);
+
+	if (m_pEnemyBar && m_pStats->Is_Hit())
+		m_pEnemyBar->LateTick(fTimeDelta);
+
+	if (m_bNoRender)
+		return;
+
+	if (m_pGameInstance->In_WorldFrustum(m_pTransform->Get_Position() + XMLoadFloat4(&m_vCullingOffset), m_fCullingRadius))
+	{
+#ifdef _DEBUG
+		m_pGameInstance->Add_RenderComponent(m_pCollider);
+		m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
+#endif
+		
+		if (m_pEnemyBar && m_pStats->Is_Hit())
+			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, m_pEnemyBar);
+
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	}
+}
+
+HRESULT CEnemy::Render()
+{
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
+		return E_FAIL;
+
+	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
+
+	for (_uint i = 0; i < iNumMeshes; ++i)
+	{
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
+			return E_FAIL;
+
+		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;*/
+
+		if (FAILED(m_pModel->Bind_Buffers(i)))
+			return E_FAIL;
+
+		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
+			return E_FAIL;
+	}
+
+	return S_OK;
 }
 void CEnemy::Percept_Target()
 {
@@ -26,21 +110,18 @@ void CEnemy::Percept_Target()
 
 void CEnemy::SetState_Death()
 {
+	Change_State(m_iDeathStateIdx);
+
+	Safe_Release(m_pEnemyBar);
 }
 
 void CEnemy::SetState_Executed(void* pArg)
 {
+	Change_State(m_iExecutionStateIdx, pArg);
+
+	Safe_Release(m_pEnemyBar);
 }
 
-_bool CEnemy::Is_Stunned()
-{
-	return false;
-}
-
-_bool CEnemy::Is_Death()
-{
-	return false;
-}
 
 CBone* CEnemy::Find_SpineBone()
 {
@@ -88,23 +169,26 @@ _int CEnemy::Take_Damage(const ATTACKDESC& AttackDesc)
 
 void CEnemy::Active_StunnedMark()
 {
-	if (ULLONG_MAX != m_iStunnedMarkIdx)
+	if (true == m_bStunnedMarked)
 		return;
+
+	m_bStunnedMarked = true;
 
 	ATTACHDESC AttachDesc = {};
 	AttachDesc.pParentTransform = m_pTransform;
 	AttachDesc.pAttachBone = Find_SpineBone();
 
-	m_iStunnedMarkIdx = UIMGR->Active_UI("UI_StunnedMark", &AttachDesc);
+	UIMGR->Active_UI("UI_StunnedMark", &AttachDesc);
 }
 
 void CEnemy::InActive_StunnedMark()
 {
-	if (ULLONG_MAX != m_iStunnedMarkIdx)
-	{
-		UIMGR->Inactive_UI("UI_StunnedMark", m_iStunnedMarkIdx);
-		m_iStunnedMarkIdx = ULLONG_MAX;
-	}
+	if (false == m_bStunnedMarked)
+		return;
+
+	m_bStunnedMarked = false;
+
+	UIMGR->Inactive_UI("UI_StunnedMark");
 }
 
 void CEnemy::Free()
@@ -112,4 +196,5 @@ void CEnemy::Free()
 	__super::Free();
 
 	Safe_Release(m_pStats);
+	Safe_Release(m_pEnemyBar);
 }

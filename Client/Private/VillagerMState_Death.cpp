@@ -21,8 +21,6 @@ void CVillagerMState_Death::OnState_Start(void* pArg)
 	m_pVillager_M->Set_Active_Colliders(false);
 	m_pVillager_M->InActive_StunnedMark();
 
-	m_pVillager_M->Get_Stats()->Broadcast_Death();
-
 	m_pModel->Change_Animation(LV1Villager_M_Die01, 0.1f, false); 
 }
 

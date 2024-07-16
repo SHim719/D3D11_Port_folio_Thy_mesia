@@ -79,9 +79,6 @@
     <Filter Include="04. UI\InGameUI\01. UI_LockOn">
       <UniqueIdentifier>{cd881789-e140-49b4-9b5d-22889b88dc1d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04. UI\InGameUI\02. UI_PlayerBar">
-      <UniqueIdentifier>{ed961139-4a30-42e1-bbef-6f013e7d2d3d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. UI\UI_Component">
       <UniqueIdentifier>{6d4ddae4-d103-4797-b1bc-dbbde6be4929}</UniqueIdentifier>
     </Filter>
@@ -99,15 +96,6 @@
     </Filter>
     <Filter Include="04. UI\InGameUI\06. UI_StunnedMark">
       <UniqueIdentifier>{b0fb57d9-67f0-4e22-9b4c-065174a48161}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\08. UI_PlunderSlot">
-      <UniqueIdentifier>{1f562c16-299c-4fe8-94d1-f0db7d8191c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\09. UI_SkillIcon">
-      <UniqueIdentifier>{2c865bca-0373-45d3-8d9e-a266dc2d7e1b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\07. UI_SkillSlot">
-      <UniqueIdentifier>{ca12db51-d09e-4090-8ffa-7f2713abebd8}</UniqueIdentifier>
     </Filter>
     <Filter Include="01. Levels\02. Stage1">
       <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
@@ -652,6 +640,51 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp">
       <UniqueIdentifier>{f82ab60d-c45f-40e4-b4ad-a11e7fced790}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\03. Door">
+      <UniqueIdentifier>{3b89a15d-d554-4794-9b82-c8284687db11}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\04. Archive_Chair">
+      <UniqueIdentifier>{c835e8a1-715f-4b1a-b251-8d86a7acb24d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\17. PlayerState_FoundBeacon">
+      <UniqueIdentifier>{24a43da0-03e2-4f28-b934-9939b53d7d0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\18. PlayerState_Sit">
+      <UniqueIdentifier>{42ec202f-f954-4660-94ed-f89478ebb920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\07. UI_SkillIcon">
+      <UniqueIdentifier>{2c865bca-0373-45d3-8d9e-a266dc2d7e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\08. UI_Message">
+      <UniqueIdentifier>{3087a920-f491-46d8-a733-9164df7a3dfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\08. UI_Message\UI_BeaconFound">
+      <UniqueIdentifier>{16520d6b-aeb4-4d81-89bd-c25a4ab71a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\09. UI_Menu">
+      <UniqueIdentifier>{fb730312-27b7-46d8-bdd3-d8d3a89a116f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault">
+      <UniqueIdentifier>{e1d3b3cb-e44a-41dc-b11d-686c2cac5be8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_PlayerBar">
+      <UniqueIdentifier>{ed961139-4a30-42e1-bbef-6f013e7d2d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_SkillSlot">
+      <UniqueIdentifier>{ca12db51-d09e-4090-8ffa-7f2713abebd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_PlunderSlot">
+      <UniqueIdentifier>{1f562c16-299c-4fe8-94d1-f0db7d8191c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_SoulBar">
+      <UniqueIdentifier>{ce3b883c-f78f-443b-ba45-7506f86ba278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\09. UI_Menu\UI_Stats">
+      <UniqueIdentifier>{abc98ee4-d042-47cc-a293-fa6a5d5d538b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\09. UI_Menu\UI_PW">
+      <UniqueIdentifier>{584584db-dcaf-49e6-af95-24b6f6546050}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -898,7 +931,7 @@
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_PlayerBar.h">
-      <Filter>04. UI\InGameUI\02. UI_PlayerBar</Filter>
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_PlayerBar</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ProgressBar.h">
       <Filter>04. UI\UI_Component\ProgressBar</Filter>
@@ -1078,13 +1111,13 @@
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_End</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_SkillSlot.h">
-      <Filter>04. UI\InGameUI\07. UI_SkillSlot</Filter>
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_SkillSlot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_PlunderSlot.h">
-      <Filter>04. UI\InGameUI\08. UI_PlunderSlot</Filter>
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_PlunderSlot</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\UI_SkillIcon.h">
-      <Filter>04. UI\InGameUI\09. UI_SkillIcon</Filter>
+      <Filter>04. UI\InGameUI\07. UI_SkillIcon</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlagueWeapon.h">
       <Filter>02. GameObjects\03. Weapon\PlagueWeapon</Filter>
@@ -1223,6 +1256,36 @@
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_GetUp.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Door.h">
+      <Filter>02. GameObjects\04. MapObject\03. Door</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Archive_Chair.h">
+      <Filter>02. GameObjects\04. MapObject\04. Archive_Chair</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_FoundBeacon.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\17. PlayerState_FoundBeacon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Sit.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\18. PlayerState_Sit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_BeaconFound.h">
+      <Filter>04. UI\InGameUI\08. UI_Message\UI_BeaconFound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Menu.h">
+      <Filter>04. UI\InGameUI\09. UI_Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PlayerDefault.h">
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_SoulBar.h">
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_SoulBar</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_Stats.h">
+      <Filter>04. UI\InGameUI\09. UI_Menu\UI_Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PW.h">
+      <Filter>04. UI\InGameUI\09. UI_Menu\UI_PW</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1428,7 +1491,7 @@
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_PlayerBar.cpp">
-      <Filter>04. UI\InGameUI\02. UI_PlayerBar</Filter>
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_PlayerBar</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ProgressBar.cpp">
       <Filter>04. UI\UI_Component\ProgressBar</Filter>
@@ -1596,13 +1659,13 @@
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\05. JokerState_Executed\Executed_End</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_SkillSlot.cpp">
-      <Filter>04. UI\InGameUI\07. UI_SkillSlot</Filter>
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_SkillSlot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_PlunderSlot.cpp">
-      <Filter>04. UI\InGameUI\08. UI_PlunderSlot</Filter>
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_PlunderSlot</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\UI_SkillIcon.cpp">
-      <Filter>04. UI\InGameUI\09. UI_SkillIcon</Filter>
+      <Filter>04. UI\InGameUI\07. UI_SkillIcon</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlagueWeapon.cpp">
       <Filter>02. GameObjects\03. Weapon\PlagueWeapon</Filter>
@@ -1723,6 +1786,36 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_GetUp.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Door.cpp">
+      <Filter>02. GameObjects\04. MapObject\03. Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Archive_Chair.cpp">
+      <Filter>02. GameObjects\04. MapObject\04. Archive_Chair</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_FoundBeacon.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\17. PlayerState_FoundBeacon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Sit.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\18. PlayerState_Sit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_BeaconFound.cpp">
+      <Filter>04. UI\InGameUI\08. UI_Message\UI_BeaconFound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Menu.cpp">
+      <Filter>04. UI\InGameUI\09. UI_Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PlayerDefault.cpp">
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_SoulBar.cpp">
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_SoulBar</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_Stats.cpp">
+      <Filter>04. UI\InGameUI\09. UI_Menu\UI_Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PW.cpp">
+      <Filter>04. UI\InGameUI\09. UI_Menu\UI_PW</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,48 +1,45 @@
 #include "PlayerStats.h"
-#include "UI.h"
-
-#include "UI_PlunderSlot.h"
-
+#include "UI_Manager.h"
+#include "UI_PlayerDefault.h"
 
 CPlayerStats::CPlayerStats()
 {
 }
 
-void CPlayerStats::Initialize()
-{
-}
 
 void CPlayerStats::Update_PlunderSkill(const SKILLTYPE ePlunderSkill)
 {
 	m_ePlunderSkill = ePlunderSkill;
-	m_pPlunderSlot->Update_SkillIcon(ePlunderSkill);
+	m_pPlayerUI->Update_PlunderSlot(ePlunderSkill);
 }
 
 _int CPlayerStats::Increase_Hp(_int iHp)
 {
 	m_iHp += iHp;	
 	m_iHp = clamp(m_iHp, 0, m_iMaxHp);
-	Broadcast_Update_Hp();
+
+	m_pPlayerUI->Update_HpBar(m_iMaxHp, m_iHp);
 	return m_iHp;
 }
 
 void CPlayerStats::Increase_MaxHp(_int iHp)
 {
 	m_iMaxHp += iHp;
-	Broadcast_Update_Hp();
+
+	m_pPlayerUI->Update_HpBar(m_iMaxHp, m_iHp);
 }
 
-void CPlayerStats::Increase_Mp(_int iMp)
+void CPlayerStats::SetHp_Full()
 {
-	m_iMp += iMp;
-	m_iMp = clamp(m_iMp, 0, m_iMaxMp);
-	Broadcast_Update_Mp();
+	m_iHp = m_iMaxHp;
+	m_pPlayerUI->Update_HpBar(m_iMaxHp, m_iHp);
 }
 
-void CPlayerStats::Increase_MaxMp(_int iMp)
+void CPlayerStats::Increase_SoulCount(_int iSoul)
 {
-	m_iMaxHp += iMp;
-	Broadcast_Update_Mp();
+	m_iSoulCount += iSoul;
+	if (iSoul > 0)
+		m_pPlayerUI->Update_SoulBar(m_iSoulCount);
 }
 
 ATTACKDESC CPlayerStats::Get_NormalAttackDesc() const
@@ -63,39 +60,21 @@ ATTACKDESC CPlayerStats::Get_PlagueAttackDesc() const
 	return AttackDesc;
 }
 
-void CPlayerStats::Add_Observer(CUI* pUI)
+void CPlayerStats::Set_PlayerDefaultUI(CUI_PlayerDefault* pUI)
 {
-	m_ObserverUIs.emplace_back(pUI);
-	Safe_AddRef(pUI);
+	m_pPlayerUI = pUI;
+	Safe_AddRef(m_pPlayerUI);
 
-	Broadcast_Update_Hp();
-	Broadcast_Update_Mp();
-}
-
-void CPlayerStats::Broadcast_Update_Hp() const
-{
-	for (auto& pUI : m_ObserverUIs)
-		pUI->Update_PlayerHp(m_iMaxHp, m_iHp);
-}
-
-void CPlayerStats::Broadcast_Update_Mp() const
-{
-	for (auto& pUI : m_ObserverUIs)
-		pUI->Update_PlayerMp(m_iMaxMp, m_iMp);
+	m_pPlayerUI->Update_HpBar(m_iMaxHp, m_iHp);
+	//m_pPlayerUI->Update_SoulBar(m_iSoulCount);
 }
 
 CPlayerStats* CPlayerStats::Create()
 {
-	CPlayerStats* pStats = new CPlayerStats;
-	pStats->Initialize();
-
-	return pStats;
+	return new CPlayerStats;
 }
 
 void CPlayerStats::Free()
 {
-	for (auto& pUI : m_ObserverUIs)
-		Safe_Release(pUI);
-
-	m_ObserverUIs.clear();
+	Safe_Release(m_pPlayerUI);
 }

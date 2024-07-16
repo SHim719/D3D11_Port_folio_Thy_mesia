@@ -102,10 +102,6 @@ void CJokerState_Base::Decide_Attack()
 	}
 }
 
-void CJokerState_Base::Change_To_NextComboAnim()
-{
-	ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, m_pModel->Get_CurrentAnimIndex() + 1, 0.1f, true));
-}
 
 void CJokerState_Base::Free()
 {

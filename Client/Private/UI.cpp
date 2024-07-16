@@ -46,30 +46,6 @@ HRESULT CUI::Render()
 	return S_OK;
 }
 
-void CUI::Update_PlayerHp(_int iMaxHp, _int iHp)
-{
-}
-
-void CUI::Update_PlayerMp(_int iMaxMp, _int iMp)
-{
-}
-
-void CUI::Update_EnemyHp(_int iHp)
-{
-}
-
-void CUI::Update_EnemyMp(_int iMp)
-{
-}
-
-void CUI::Enemy_FirstHit()
-{
-}
-
-void CUI::Broadcast_Death()
-{
-
-}
 
 _vector CUI::Convert_ScreenToRenderPos(_fvector vUIScreenPos)
 {

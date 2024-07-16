@@ -43,10 +43,6 @@ void CHalberdKnightState_Base::OnHit(const ATTACKDESC& AttackDesc)
 		m_pHalberdKnight->Change_State((_uint)HalberdKnight_State::State_Hit,  const_cast<ATTACKDESC*>(&AttackDesc));
 }
 
-void CHalberdKnightState_Base::Change_To_NextComboAnim()
-{
-	ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, m_pModel->Get_CurrentAnimIndex() + 1, 0.1f, true));
-}
 
 void CHalberdKnightState_Base::Decide_State()
 {

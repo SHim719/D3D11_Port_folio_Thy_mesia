@@ -116,9 +116,9 @@ void CPlayerState_Attack::Decide_ExecutionState(CEnemy* pExecutionEnemy)
 
 void CPlayerState_Attack::Check_NextAttack()
 {
-	if (true == m_pPlayer->Can_NextAttack() && m_iNowComboCnt < m_pPlayerStats->Get_MaxAttackCnt() - 1)
+	if (true == m_pPlayer->Can_NextAttack())
 	{
-		++m_iNowComboCnt;
+		m_iNowComboCnt = (m_iNowComboCnt + 1) % m_iMaxComboCnt;
 		OnState_Start(nullptr);
 	}
 }

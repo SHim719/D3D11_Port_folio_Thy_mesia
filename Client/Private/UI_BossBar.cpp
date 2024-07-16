@@ -51,20 +51,7 @@ HRESULT CUI_BossBar::Initialize(void* pArg)
 
 	m_pMpProgressBar = static_cast<CProgressBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_ProgressBar", &HpBarDesc));
 
-
 	return S_OK;
-}
-
-
-void CUI_BossBar::Tick(_float fTimeDelta)
-{
-
-}
-
-void CUI_BossBar::LateTick(_float fTimeDelta)
-{
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
-
 }
 
 HRESULT CUI_BossBar::Render()
@@ -82,6 +69,21 @@ HRESULT CUI_BossBar::Render()
 
 	Draw_BossNameText();
 
+	return m_pVIBuffer->Bind_Buffers();
+}
+
+HRESULT CUI_BossBar::OnEnter_Layer(void* pArg)
+{
+	m_bReturnToPool = false;
+
+	CEnemyStats* pStats = (CEnemyStats*)pArg;
+
+	m_iMaxHp = pStats->Get_MaxHp();
+
+	pStats->Set_BossBar(this);
+
+	m_wstrBossName = pStats->Get_Name();
+
 	return S_OK;
 }
 
@@ -95,26 +97,11 @@ void CUI_BossBar::Update_EnemyMp(_int iMp)
 	m_pHpProgressBar->Set_Ratio((_float)iMp / m_iMaxHp);
 }
 
-HRESULT CUI_BossBar::OnEnter_Layer(void* pArg)
-{
-	CEnemyStats* pStats = (CEnemyStats*)pArg;
-
-	m_iMaxHp = pStats->Get_MaxHp();
-
-	pStats->Add_Observer(this);
-
-	m_wstrBossName = pStats->Get_Name();
-
-	return S_OK;
-}
-
-
 void CUI_BossBar::Draw_BossNameText()
 {
 	_float2 vBossTextPos = { m_vRenderStartPos.x, m_vRenderStartPos.y + 5.f };
 
-	m_pGameInstance->Render_Font(L"Main_Font", m_wstrBossName, vBossTextPos, 1.f, XMVectorSet(1.f, 1.f, 1.f, 1.f));
-
+	m_pGameInstance->Render_Font(L"Main_Font", m_wstrBossName, vBossTextPos);
 }
 
 

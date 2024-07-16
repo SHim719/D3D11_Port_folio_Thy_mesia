@@ -11,7 +11,7 @@ private:
 	CUI_PlunderSlot(const CUI_PlunderSlot& rhs);
 	virtual ~CUI_PlunderSlot() = default;
 
-	HRESULT Initialize_Prototype()		override;
+public:
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;

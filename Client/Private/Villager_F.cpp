@@ -3,8 +3,6 @@
 #include "Weapon.h"
 #include "Bone.h"
 #include "PerceptionBounding.h"
-
-#include "UI_Manager.h"
 #include "UI_EnemyBar.h"
 
 CVillager_F::CVillager_F(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -20,6 +18,10 @@ CVillager_F::CVillager_F(const CVillager_F& rhs)
 HRESULT CVillager_F::Initialize_Prototype()
 {
 	m_iTag = (_uint)TAG_ENEMY;
+
+	m_iDeathStateIdx = (_uint)VillagerF_State::State_Death;
+	m_iStunnedStateIdx = (_uint)VillagerF_State::State_Stunned_Loop;
+
 	return S_OK;
 }
 
@@ -49,6 +51,9 @@ HRESULT CVillager_F::Initialize(void* pArg)
 
 	m_bLookTarget = false;
 
+	m_fCullingRadius = 1.5f;
+	XMStoreFloat4(&m_vCullingOffset, XMVectorSet(0.f, 1.2f, 0.f, 0.f));
+
 	Change_State((_uint)VillagerF_State::State_Idle);
 	m_pModel->Set_AnimPlay();
 
@@ -57,68 +62,10 @@ HRESULT CVillager_F::Initialize(void* pArg)
 
 void CVillager_F::Tick(_float fTimeDelta)
 {
-	if (m_bLookTarget)
-	{
-		m_pTransform->Rotation_Quaternion(
-			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
-				, JoMath::Calc_GroundLook(s_pTarget->Get_Transform()->Get_Position(), m_pTransform->Get_Position())
-				, m_fRotRate * fTimeDelta));
-	}
+	//if (KEY_DOWN(eKeyCode::B))
+	//	Change_State((_uint)VillagerF_State::State_Attack3);
 
-	m_States[m_iState]->Update(fTimeDelta);
-
-	if (m_bAdjustNaviY)
-		Compute_YPos();
-
-	__super::Update_Colliders();
-
-	__super::Tick_Weapons(fTimeDelta);
-
-	m_pModel->Play_Animation(fTimeDelta);
-}
-
-void CVillager_F::LateTick(_float fTimeDelta)
-{
-	m_States[m_iState]->Late_Update(fTimeDelta);
-
-	__super::LateTick_Weapons(fTimeDelta);
-
-	if (m_bNoRender)
-		return;
-
-#ifdef _DEBUG
-	m_pGameInstance->Add_RenderComponent(m_pCollider);
-	m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
-#endif
-
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
-}
-
-HRESULT CVillager_F::Render()
-{
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
-		return E_FAIL;
-
-	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; ++i)
-	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
-			return E_FAIL;
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
-
-		if (FAILED(m_pModel->Bind_Buffers(i)))
-			return E_FAIL;
-
-		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
-			return E_FAIL;
-	}
-
-	return S_OK;
+	__super::Tick(fTimeDelta);
 }
 
 
@@ -141,11 +88,6 @@ void CVillager_F::Percept_Target()
 		Change_State((_uint)VillagerF_State::State_Walk);
 	else
 		Change_State((_uint)VillagerF_State::State_Attack3);
-}
-
-void CVillager_F::SetState_Death()
-{
-	Change_State((_uint)VillagerF_State::State_Death);
 }
 
 HRESULT CVillager_F::Ready_Components(void* pArg)
@@ -190,7 +132,10 @@ HRESULT CVillager_F::Ready_Components(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("HitBox"), (CComponent**)&m_pHitBoxCollider, &Desc)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &(pLoadDesc->iNaviIdx))))
+	CNavigation::NAVIGATION_DESC NaviDesc;
+	NaviDesc.iCurrentCellIndex = pLoadDesc->iNaviIdx;
+
+	if (FAILED(__super::Add_Component(GET_CURLEVEL, TEXT("Prototype_Navigation"), TEXT("Navigation"), (CComponent**)&m_pNavigation, &NaviDesc)))
 		return E_FAIL;
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
@@ -261,7 +206,7 @@ HRESULT CVillager_F::Ready_UI()
 	EnemyBarDesc.vOffset.y = 2.5f;
 	EnemyBarDesc.pOwnerTransform = m_pTransform;
 
-	UIMGR->Active_UI("UI_EnemyBar", &EnemyBarDesc);
+	m_pEnemyBar = static_cast<CUI_EnemyBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_EnemyBar", &EnemyBarDesc));
 
 	return S_OK;
 }

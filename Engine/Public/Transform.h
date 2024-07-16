@@ -118,6 +118,8 @@ public:
 	void Set_Speed(_float fSpeed) { m_TransformDesc.fSpeedPerSec = fSpeed; }
 	_float Get_Speed() const { return m_TransformDesc.fSpeedPerSec; }
 
+	void Set_RotationSpeed(_float fSpeed) { m_TransformDesc.fRotationPerSec = fSpeed; }
+
 	void Add_RollInput(_float fRadian);
 	void Add_YAxisInput(_float fRadian);
 

@@ -167,6 +167,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Anim_Tool.h" />
+    <ClInclude Include="..\Public\Archive_Chair.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\ClientLevel.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="..\Public\Client_Defines.h" />
     <ClInclude Include="..\public\Cutscene_Actor.h" />
     <ClInclude Include="..\Public\Cutscene_Manager.h" />
+    <ClInclude Include="..\Public\Door.h" />
     <ClInclude Include="..\Public\Enemy.h" />
     <ClInclude Include="..\Public\EnemyStats.h" />
     <ClInclude Include="..\Public\EventTrigger.h" />
@@ -266,12 +268,14 @@
     <ClInclude Include="..\Public\PlayerState_Execution_Default.h" />
     <ClInclude Include="..\Public\PlayerState_Execution_Elite.h" />
     <ClInclude Include="..\Public\PlayerState_Climb_Idle.h" />
+    <ClInclude Include="..\Public\PlayerState_FoundBeacon.h" />
     <ClInclude Include="..\Public\PlayerState_GetUp.h" />
     <ClInclude Include="..\Public\PlayerState_PW_Axe.h" />
     <ClInclude Include="..\Public\PlayerState_Plunder.h" />
     <ClInclude Include="..\Public\PlayerState_PlunderRush.h" />
     <ClInclude Include="..\Public\PlayerState_PW_Spear.h" />
     <ClInclude Include="..\Public\PlayerState_PW_TwinBlade.h" />
+    <ClInclude Include="..\Public\PlayerState_Sit.h" />
     <ClInclude Include="..\Public\PlayerStats.h" />
     <ClInclude Include="..\Public\PlayerState_Attack.h" />
     <ClInclude Include="..\Public\PlayerState_Avoid.h" />
@@ -316,16 +320,22 @@
     <ClInclude Include="..\Public\TwinBladeKnight_Enums.h" />
     <ClInclude Include="..\Public\TwinBladeKnight_States.h" />
     <ClInclude Include="..\Public\UI.h" />
+    <ClInclude Include="..\Public\UI_BeaconFound.h" />
     <ClInclude Include="..\Public\UI_BossBar.h" />
     <ClInclude Include="..\Public\UI_DamageFont.h" />
     <ClInclude Include="..\Public\UI_EnemyBar.h" />
     <ClInclude Include="..\Public\UI_Headers.h" />
     <ClInclude Include="..\Public\UI_LockOn.h" />
     <ClInclude Include="..\Public\UI_Manager.h" />
+    <ClInclude Include="..\Public\UI_Menu.h" />
     <ClInclude Include="..\Public\UI_PlayerBar.h" />
+    <ClInclude Include="..\Public\UI_PlayerDefault.h" />
+    <ClInclude Include="..\Public\UI_PW.h" />
     <ClInclude Include="..\Public\UI_SkillSlot.h" />
     <ClInclude Include="..\Public\UI_PlunderSlot.h" />
     <ClInclude Include="..\Public\UI_SkillIcon.h" />
+    <ClInclude Include="..\Public\UI_SoulBar.h" />
+    <ClInclude Include="..\Public\UI_Stats.h" />
     <ClInclude Include="..\Public\UI_StunnedMark.h" />
     <ClInclude Include="..\Public\VillagerFState_Attack1.h" />
     <ClInclude Include="..\Public\VillagerFState_Attack2.h" />
@@ -359,12 +369,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Anim_Tool.cpp" />
+    <ClCompile Include="..\Private\Archive_Chair.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\ClientLevel.cpp" />
     <ClCompile Include="..\Private\Client_Functions.cpp" />
     <ClCompile Include="..\Private\Cutscene_Actor.cpp" />
     <ClCompile Include="..\Private\Cutscene_Manager.cpp" />
+    <ClCompile Include="..\Private\Door.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
     <ClCompile Include="..\Private\EnemyStats.cpp" />
     <ClCompile Include="..\Private\EventTrigger.cpp" />
@@ -445,12 +457,14 @@
     <ClCompile Include="..\Private\PlayerState_Execution_Default.cpp" />
     <ClCompile Include="..\Private\PlayerState_Execution_Elite.cpp" />
     <ClCompile Include="..\Private\PlayerState_Climb_Idle.cpp" />
+    <ClCompile Include="..\Private\PlayerState_FoundBeacon.cpp" />
     <ClCompile Include="..\Private\PlayerState_GetUp.cpp" />
     <ClCompile Include="..\Private\PlayerState_PW_Axe.cpp" />
     <ClCompile Include="..\Private\PlayerState_Plunder.cpp" />
     <ClCompile Include="..\Private\PlayerState_PlunderRush.cpp" />
     <ClCompile Include="..\Private\PlayerState_PW_Spear.cpp" />
     <ClCompile Include="..\Private\PlayerState_PW_TwinBlade.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Sit.cpp" />
     <ClCompile Include="..\Private\PlayerStats.cpp" />
     <ClCompile Include="..\Private\PlayerState_Attack.cpp" />
     <ClCompile Include="..\Private\PlayerState_Avoid.cpp" />
@@ -491,15 +505,21 @@
     <ClCompile Include="..\Private\TwinBladeKnightState_Stunned_Start.cpp" />
     <ClCompile Include="..\Private\TwinBladeKnightState_Walk.cpp" />
     <ClCompile Include="..\Private\UI.cpp" />
+    <ClCompile Include="..\Private\UI_BeaconFound.cpp" />
     <ClCompile Include="..\Private\UI_BossBar.cpp" />
     <ClCompile Include="..\Private\UI_DamageFont.cpp" />
     <ClCompile Include="..\Private\UI_EnemyBar.cpp" />
     <ClCompile Include="..\Private\UI_LockOn.cpp" />
     <ClCompile Include="..\Private\UI_Manager.cpp" />
+    <ClCompile Include="..\Private\UI_Menu.cpp" />
     <ClCompile Include="..\Private\UI_PlayerBar.cpp" />
+    <ClCompile Include="..\Private\UI_PlayerDefault.cpp" />
+    <ClCompile Include="..\Private\UI_PW.cpp" />
     <ClCompile Include="..\Private\UI_SkillSlot.cpp" />
     <ClCompile Include="..\Private\UI_PlunderSlot.cpp" />
     <ClCompile Include="..\Private\UI_SkillIcon.cpp" />
+    <ClCompile Include="..\Private\UI_SoulBar.cpp" />
+    <ClCompile Include="..\Private\UI_Stats.cpp" />
     <ClCompile Include="..\Private\UI_StunnedMark.cpp" />
     <ClCompile Include="..\Private\VillagerFState_Attack1.cpp" />
     <ClCompile Include="..\Private\VillagerFState_Attack2.cpp" />

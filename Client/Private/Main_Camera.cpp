@@ -108,6 +108,16 @@ void CMain_Camera::Set_Player(CGameObject* pPlayer)
 	XMStoreFloat4(&m_vPrevTargetPos, m_pPlayerTransform->Get_Position());
 }
 
+void CMain_Camera::SetState_UI()
+{
+	m_eState = UI;
+}
+
+void CMain_Camera::SetState_Default()
+{
+	m_eState = DEFAULT;
+}
+
 void CMain_Camera::SetState_LockOn()
 {
 	CGameObject* pTarget = m_pGameInstance->Find_Target(m_pPlayerTransform->Get_Position());
@@ -151,6 +161,8 @@ void CMain_Camera::SetState_LockOn_To_Default()
 	m_pPlayer->Toggle_LockOn();
 
 	m_fFollowingSpeed = 2.5f;
+
+	m_pTarget = nullptr;
 
 	m_eState = DEFAULT;
 }

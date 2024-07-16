@@ -41,9 +41,19 @@ HRESULT CUI_EnemyBar::Initialize(void* pArg)
 
 	m_pMpProgressBar = static_cast<CProgressBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_ProgressBar", &BarDesc));
 
+	UIENEMYBARDESC* pEnemyBarDesc = (UIENEMYBARDESC*)pArg;
+
+	m_pOwnerTransform = pEnemyBarDesc->pOwnerTransform;
+	Safe_AddRef(m_pOwnerTransform);
+
+	m_vOffset = pEnemyBarDesc->vOffset;
+
+	m_iMaxHp = pEnemyBarDesc->pStats->Get_MaxHp();
+
+	pEnemyBarDesc->pStats->Set_EnemyBar(this);
+
 	return S_OK;
 }
-
 
 void CUI_EnemyBar::Tick(_float fTimeDelta)
 {
@@ -60,9 +70,6 @@ void CUI_EnemyBar::Tick(_float fTimeDelta)
 
 void CUI_EnemyBar::LateTick(_float fTimeDelta)
 {
-	if (m_bReturnToPool)
-		return;
-
 	_vector vEnemyPos = m_pOwnerTransform->Get_Position() + XMLoadFloat4(&m_vOffset);
 	_vector vScreenPos = Convert_WorldToScreen(vEnemyPos);
 
@@ -72,14 +79,10 @@ void CUI_EnemyBar::LateTick(_float fTimeDelta)
 	XMStoreFloat4(&m_vRenderStartPos, vScreenPos);
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
-
 }
 
 HRESULT CUI_EnemyBar::Render()
 {
-	if (m_bNoRender)
-		return E_FAIL;
-
 	if (FAILED(Render_MainBar()))
 		return E_FAIL;
 
@@ -100,7 +103,7 @@ HRESULT CUI_EnemyBar::Render()
 
 void CUI_EnemyBar::Update_EnemyHp(_int iHp)
 {
-	m_pHpProgressBar->Set_Ratio((_float)iHp / m_iMaxHp);
+ 	m_pHpProgressBar->Set_Ratio((_float)iHp / m_iMaxHp);
 }
 
 void CUI_EnemyBar::Update_EnemyMp(_int iMp)
@@ -111,38 +114,6 @@ void CUI_EnemyBar::Update_EnemyMp(_int iMp)
 		m_bStunned = true;
 		m_fAlpha = 1.f;
 	}
-		
-}
-
-void CUI_EnemyBar::Broadcast_Death()
-{
-	Safe_Release(m_pOwnerTransform);
-	m_bReturnToPool = true;
-}
-
-void CUI_EnemyBar::Enemy_FirstHit()
-{
-	m_bNoRender = false;
-}
-
-
-HRESULT CUI_EnemyBar::OnEnter_Layer(void* pArg)
-{
-	UIENEMYBARDESC* pEnemyBarDesc = (UIENEMYBARDESC*)pArg;
-
-	m_pOwnerTransform = pEnemyBarDesc->pOwnerTransform;
-
-	Safe_AddRef(m_pOwnerTransform);
-
-	m_vOffset = pEnemyBarDesc->vOffset;
-
-	m_iMaxHp = pEnemyBarDesc->pStats->Get_MaxHp();
-
-	pEnemyBarDesc->pStats->Add_Observer(this);
-
-	m_bNoRender = true;
-
-	return S_OK;
 }
 
 HRESULT CUI_EnemyBar::Render_MainBar()

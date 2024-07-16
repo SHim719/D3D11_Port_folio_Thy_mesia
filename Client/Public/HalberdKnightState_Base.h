@@ -17,7 +17,6 @@ public:
 	void OnState_End()								override;
 
 	void OnHit(const ATTACKDESC& AttackDesc)		override;
-	void Change_To_NextComboAnim();
 
 protected:
 	CHalberdKnight* m_pHalberdKnight = { nullptr };

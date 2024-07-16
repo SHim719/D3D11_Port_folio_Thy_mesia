@@ -18,14 +18,6 @@ public:
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
-
-	virtual void Update_PlayerHp(_int iMaxHp, _int iHp);
-	virtual void Update_PlayerMp(_int iMaxMp, _int iMp);
-
-	virtual void Update_EnemyHp(_int iHp);
-	virtual void Update_EnemyMp(_int iMp);
-	virtual void Enemy_FirstHit();
-	virtual void Broadcast_Death();
 	
 	_bool Is_Using() const {
 		return m_bUsing;

@@ -16,6 +16,8 @@
 #include "Ladder_Down.h"
 #include "Ladder_Up.h"
 
+#include "FadeScreen.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)
 {
@@ -70,11 +72,19 @@ void CPlayer::PriorityTick(_float fTimeDelta)
 
 void CPlayer::Tick(_float fTimeDelta)
 {
+	if (KEY_DOWN(eKeyCode::V))
+	{
+		m_pStats->Increase_SoulCount(200);
+	}
+
 	if (m_bLockOn)
+	{
 		m_pTransform->Rotation_Quaternion(
 			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
 				, JoMath::Calc_GroundLook(m_pTargetTransform->Get_Position(), m_pTransform->Get_Position())
 				, 10.f * fTimeDelta));
+	}
+		
 
 	m_States[m_iState]->Update(fTimeDelta);
 
@@ -236,6 +246,7 @@ void CPlayer::Update_CanExecutionEnemy()
 					{
 						fMaxDist = fDist;
 						m_pExecutionTarget = *it;
+						m_pExecutionTarget->Active_StunnedMark();
 					}
 					else
 					{
@@ -320,6 +331,31 @@ void CPlayer::SetState_ClimbStart(void* pArg)
 	}
 }
 
+void CPlayer::SetState_FoundBeacon(void* pArg)
+{
+	if ((_uint)PlayerState::State_FoundBeacon == m_iState || (_uint)PlayerState::State_Sit == m_iState)
+		return;
+
+	Change_State((_uint)PlayerState::State_FoundBeacon, pArg);
+}
+
+void CPlayer::SetState_Sit(void* pArg)
+{
+	if ((_uint)PlayerState::State_FoundBeacon == m_iState || (_uint)PlayerState::State_Sit == m_iState)
+		return;
+
+	CFadeScreen::FADEDESC FadeDesc = {};
+	FadeDesc.eFadeColor = CFadeScreen::BLACK;
+	FadeDesc.fFadeOutSpeed = 1.f;
+	FadeDesc.fFadeInSpeed = 1.f;
+	FadeDesc.pCallback_FadeOutEnd = bind(&CUI_Manager::Active_Menu, CUI_Manager::Get_Instance());
+
+	UIMGR->Active_UI("FadeScreen", &FadeDesc);
+
+	Change_State((_uint)PlayerState::State_Sit, pArg);
+}
+
+
 void CPlayer::Set_Active_DefaultWeapons(_bool bActive)
 {
 	m_Weapons[SABER]->Set_Active(bActive); 
@@ -364,6 +400,7 @@ void CPlayer::ChangeToNextComboAnim()
 {
 	m_pModel->Change_Animation(m_pModel->Get_CurrentAnimIndex() + 1);
 }
+
 
 _int CPlayer::Take_Damage(const ATTACKDESC& AttackDesc)
 {
@@ -493,6 +530,8 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Climb] = CPlayerState_Climb::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Climb_End] = CPlayerState_Climb_End::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_GetUp] = CPlayerState_GetUp::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_FoundBeacon] = CPlayerState_FoundBeacon::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Sit] = CPlayerState_Sit::Create(m_pDevice, m_pContext, this);
 
 	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_Axe] = CPlayerState_PW_Axe::Create(m_pDevice, m_pContext, this);

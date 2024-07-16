@@ -16,6 +16,7 @@ HRESULT CCollision_Manager::Initialize()
 void CCollision_Manager::Update()
 {
 	Execute_Collision("Player", "Enemy", COLLISION);
+	Execute_Collision("Player", "Door", COLLISION);
 	Execute_Collision("Player", "EventTrigger", TRIGGER);
 	Execute_Collision("Player", "MapObject", TRIGGER);
 	Execute_Collision("Player", "PerceptionBounding", TRIGGER);
@@ -173,7 +174,7 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 void CCollision_Manager::Push_Object(CCollider* pDstCollider, CCollider* pSrcCollider, CTransform* pDstTransform)
 {
 	CCollider::ColliderType eDstCollType = pDstCollider->Get_ColliderType();
-	CCollider::ColliderType eSrcCollType = pDstCollider->Get_ColliderType();
+	CCollider::ColliderType eSrcCollType = pSrcCollider->Get_ColliderType();
 
 	if (CCollider::SPHERE == eDstCollType)
 	{
@@ -197,6 +198,30 @@ void CCollision_Manager::Push_Object(CCollider* pDstCollider, CCollider* pSrcCol
 
 				pDstTransform->Add_Position(vPushDir, fDist, static_cast<CNavigation*>(pDstCollider->Get_Owner()->Find_Component(L"Navigation")));
 			}
+		}
+		else if (CCollider::AABB == eSrcCollType)
+		{
+			BoundingSphere* pDstSphere = static_cast<CSphere*>(pDstCollider)->Get_Collider();
+			BoundingBox*	pSrcAABB = static_cast<CAABB*>(pSrcCollider)->Get_Collider();
+
+			_vector vSrcAABBMin = XMLoadFloat3(&pSrcAABB->Center) - XMLoadFloat3(&pSrcAABB->Extents);
+			_vector vSrcAABBMax = XMLoadFloat3(&pSrcAABB->Center) + XMLoadFloat3(&pSrcAABB->Extents);
+
+			// 구의 중심과 AABB의 가장 가까운 점 계산
+			_vector vClosetPoint = XMVectorSet(
+				max(vSrcAABBMin.m128_f32[0], min(pDstSphere->Center.x, vSrcAABBMax.m128_f32[0]))
+				, pDstSphere->Center.y
+				, max(vSrcAABBMin.m128_f32[2], min(pDstSphere->Center.z, vSrcAABBMax.m128_f32[2])), 1.f);
+
+			_vector vPushDir = XMVectorSet(pDstSphere->Center.x - vClosetPoint.m128_f32[0]
+				, 0.f
+				, pDstSphere->Center.z - vClosetPoint.m128_f32[2], 0.f);
+
+			_float fDist = XMVector3Length(vPushDir).m128_f32[0];
+
+			vPushDir = XMVector3Normalize(vPushDir);
+
+			pDstTransform->Add_Position(vPushDir, pDstSphere->Radius - fDist, static_cast<CNavigation*>(pDstCollider->Get_Owner()->Find_Component(L"Navigation")));
 		}
 	}
 }

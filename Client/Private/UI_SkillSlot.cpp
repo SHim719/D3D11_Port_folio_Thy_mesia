@@ -1,25 +1,16 @@
 #include "UI_SkillSlot.h"
 
 
-CUI_DefaultSkillSlot::CUI_DefaultSkillSlot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_SkillSlot::CUI_SkillSlot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
 }
 
-CUI_DefaultSkillSlot::CUI_DefaultSkillSlot(const CUI_DefaultSkillSlot& rhs)
+CUI_SkillSlot::CUI_SkillSlot(const CUI_SkillSlot& rhs)
 	: CUI(rhs)
 {
 }
-
-HRESULT CUI_DefaultSkillSlot::Initialize_Prototype()
-{
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
-
-	return S_OK;
-}
-
-HRESULT CUI_DefaultSkillSlot::Initialize(void* pArg)
+HRESULT CUI_SkillSlot::Initialize(void* pArg)
 {
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
@@ -39,18 +30,18 @@ HRESULT CUI_DefaultSkillSlot::Initialize(void* pArg)
 }
 
 
-void CUI_DefaultSkillSlot::Tick(_float fTimeDelta)
+void CUI_SkillSlot::Tick(_float fTimeDelta)
 {
 
 }
 
-void CUI_DefaultSkillSlot::LateTick(_float fTimeDelta)
+void CUI_SkillSlot::LateTick(_float fTimeDelta)
 {
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
 
 }
 
-HRESULT CUI_DefaultSkillSlot::Render()
+HRESULT CUI_SkillSlot::Render()
 {
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
@@ -61,13 +52,10 @@ HRESULT CUI_DefaultSkillSlot::Render()
 	if (FAILED(m_pShader->Begin(0)))
 		return E_FAIL;
 
-	if (FAILED(m_pVIBuffer->Render()))
-		return E_FAIL;
-
-	return S_OK;
+	return m_pVIBuffer->Render();
 }
 
-HRESULT CUI_DefaultSkillSlot::OnEnter_Layer(void* pArg)
+HRESULT CUI_SkillSlot::OnEnter_Layer(void* pArg)
 {
 	if (FAILED(__super::OnEnter_Layer(pArg)))
 		return E_FAIL;
@@ -75,13 +63,13 @@ HRESULT CUI_DefaultSkillSlot::OnEnter_Layer(void* pArg)
 	return S_OK;
 }
 
-CUI_DefaultSkillSlot* CUI_DefaultSkillSlot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CUI_SkillSlot* CUI_SkillSlot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
-	CUI_DefaultSkillSlot* pInstance = new CUI_DefaultSkillSlot(pDevice, pContext);
+	CUI_SkillSlot* pInstance = new CUI_SkillSlot(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype()))
+	if (FAILED(pInstance->Initialize(nullptr)))
 	{
-		MSG_BOX(TEXT("Failed To Created : CUI_DefaultSkillSlot"));
+		MSG_BOX(TEXT("Failed To Created : CUI_SkillSlot"));
 		Safe_Release(pInstance);
 	}
 
@@ -89,20 +77,20 @@ CUI_DefaultSkillSlot* CUI_DefaultSkillSlot::Create(ID3D11Device* pDevice, ID3D11
 }
 
 
-CGameObject* CUI_DefaultSkillSlot::Clone(void* pArg)
+CGameObject* CUI_SkillSlot::Clone(void* pArg)
 {
-	CUI_DefaultSkillSlot* pInstance = new CUI_DefaultSkillSlot(*this);
+	CUI_SkillSlot* pInstance = new CUI_SkillSlot(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Cloned : CUI_DefaultSkillSlot"));
+		MSG_BOX(TEXT("Failed To Cloned : CUI_SkillSlot"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CUI_DefaultSkillSlot::Free()
+void CUI_SkillSlot::Free()
 {
 	__super::Free();
 

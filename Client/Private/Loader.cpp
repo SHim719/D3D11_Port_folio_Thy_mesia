@@ -442,6 +442,73 @@ HRESULT CLoader::Ready_UIResource()
 		return E_FAIL;
 #pragma endregion
 
+
+#pragma region LandingMessage
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_BeaconFound", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/LandingMessages/TexUI_LandingMessage_BeconFound.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_LandingScreen_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/LandingMessages/TexUI_LandingScreenBackground.png"))))
+		return E_FAIL;
+
+#pragma endregion
+
+#pragma region MainMenu
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_MainMenu_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu/TexUI_EvolveLeftBackground.png"))))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_MainMenu_Highlighted", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu/TexUI_HighlightBar.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Font_Thymesia", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu/Font/Thymesia.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Font_LevelUp", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu/Font/LevelUp.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Font_PW", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu/Font/PlagueWeapon.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Font_Resume", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu/Font/Resume.png"))))
+		return E_FAIL;
+
+#pragma endregion
+
+
+#pragma region SoulBar
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_MemoryBG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SoulBar/TexUI_BlackGradientBar.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_MemoryIcon", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SoulBar/TexUI_MemoryShardsIcon.png"))))
+		return E_FAIL;
+
+#pragma endregion
+
+#pragma region Status
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Window_Status", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu_Status/Window_Status.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Arrow_Left", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu_Status/Arrow_Left.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Arrow_Right", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu_Status/Arrow_Right.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Status_Number", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu_Status/Number/%d.png", 10))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Stat_Arrows", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu_Status/Stat_Arrows.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Select_Highlighted", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu_Status/HighLight.png"))))
+		return E_FAIL;
+
+
+#pragma endregion
+
 	return S_OK;
 }
 
@@ -454,6 +521,9 @@ HRESULT CLoader::Ready_UI()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_SkillIcon", CUI_SkillIcon::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_EnemyBar", CUI_EnemyBar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
@@ -473,7 +543,11 @@ HRESULT CLoader::Ready_Etc()
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Ladder_Up", CLadder_Up::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Jail_Door", CDoor::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Archive_Chair", CArchive_Chair::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
 
 	return S_OK;
 }

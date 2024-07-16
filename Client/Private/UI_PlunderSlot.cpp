@@ -14,13 +14,6 @@ CUI_PlunderSlot::CUI_PlunderSlot(const CUI_PlunderSlot& rhs)
 {
 }
 
-HRESULT CUI_PlunderSlot::Initialize_Prototype()
-{
-	if (FAILED(__super::Initialize_Prototype()))
-		return E_FAIL;
-
-	return S_OK;
-}
 
 HRESULT CUI_PlunderSlot::Initialize(void* pArg)
 {
@@ -39,9 +32,6 @@ HRESULT CUI_PlunderSlot::Initialize(void* pArg)
 	m_pSkillIcon = static_cast<CUI_SkillIcon*>(m_pGameInstance->Clone_GameObject(L"Prototype_SkillIcon"));
 	if (nullptr == m_pSkillIcon)
 		return E_FAIL;
-
-	CPlayerStats* pStats = (CPlayerStats*)pArg;
-	pStats->Set_PlunderSlot(this);
 
 	m_pTransform->Set_Scale({ 150.f, 150.f, 1.f });
 
@@ -73,9 +63,6 @@ HRESULT CUI_PlunderSlot::Render()
 	if (FAILED(m_pShader->Begin(0)))
 		return E_FAIL;
 
-	//if (FAILED(m_pVIBuffer->Bind_Buffers()))
-	//	return E_FAIL;
-
 	if (FAILED(m_pVIBuffer->Render()))
 		return E_FAIL;
 
@@ -102,7 +89,7 @@ CUI_PlunderSlot* CUI_PlunderSlot::Create(ID3D11Device* pDevice, ID3D11DeviceCont
 {
 	CUI_PlunderSlot* pInstance = new CUI_PlunderSlot(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype()))
+	if (FAILED(pInstance->Initialize(nullptr)))
 	{
 		MSG_BOX(TEXT("Failed To Created : CUI_PlunderSlot"));
 		Safe_Release(pInstance);

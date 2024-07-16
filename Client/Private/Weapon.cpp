@@ -130,7 +130,6 @@ HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)
 			pDesc->pColliderDesc)))
 			return E_FAIL;
 	}
-	
 
 	return S_OK;
 }

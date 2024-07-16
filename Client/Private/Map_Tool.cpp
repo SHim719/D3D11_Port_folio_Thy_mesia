@@ -146,7 +146,7 @@ void CMap_Tool::Camera_Window()
 
 HRESULT CMap_Tool::Open_MeshesByFolder()
 {
-    wstring wstrFolderPath = Get_FolderPath();
+    wstring wstrFolderPath = Get_FolderPath(L"D:\\JaeookDX11Tool\\Resources\\MapObjects\\");
     if (L"" == wstrFolderPath)
         return E_FAIL;
 
@@ -569,7 +569,7 @@ void CMap_Tool::ForObject_Buttons(ImVec2 vNowCursorPos)
     if (ImGui::Checkbox("Local?", &bIsLocalMode))
         m_tGizmoDesc.CurrentGizmoMode = !bIsLocalMode ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
 
-    if (MAPOBJECT == m_eNowObjMode && m_iSelPlacableObj >= 0)
+    if (m_iSelPlacableObj >= 0)
     {
         vNowCursorPos.y += yOffset;
         ImGui::SetCursorPos(vNowCursorPos);

@@ -40,53 +40,59 @@ HRESULT CUI_Manager::Initialize(ID3D11Device* pDevice, ID3D11DeviceContext* pCon
 	return S_OK;
 }
 
-size_t CUI_Manager::Active_UI(const string& strUITag, void* pArg)
-{
-	auto it = m_UIs.find(strUITag);
-
-	if (m_UIs.end() == it)
-		return ULLONG_MAX;
-
-	pair<size_t, vector<CUI*>>& UIPool = it->second;
-
-	size_t iUIIdx = UIPool.first;
-
-	CUI* pActiveUI = UIPool.second[UIPool.first++];
-	UIPool.first = UIPool.first >= UIPool.second.size() ? 0 : UIPool.first;
-
-	pActiveUI->OnEnter_Layer(pArg);
-
-	Safe_AddRef(pActiveUI);
-
-	ADD_EVENT(bind(&CGameInstance::Insert_GameObject, m_pGameInstance, GET_CURLEVEL, L"UI", pActiveUI));
-
-	return iUIIdx;
-}
-void CUI_Manager::Inactive_UI(const string& strUITag, size_t iIdx)
+void CUI_Manager::Active_UI(const string& strUITag, void* pArg)
 {
 	auto it = m_UIs.find(strUITag);
 
 	if (m_UIs.end() == it)
 		return;
 
-	pair<size_t, vector<CUI*>>& UIPool = it->second;
+	CUI* pActiveUI = it->second;
 
-	CUI* pDestUI = UIPool.second[iIdx];
+	pActiveUI->OnEnter_Layer(pArg);
 
-	pDestUI->Set_ReturnToPool(true);
+	Safe_AddRef(pActiveUI);
+
+	ADD_EVENT(bind(&CGameInstance::Insert_GameObject, m_pGameInstance, GET_CURLEVEL, L"UI", pActiveUI));
 }
 
-void CUI_Manager::Inactive_AllUIs()
+
+void CUI_Manager::Inactive_UI(const string& strUITag)
 {
-	for (auto it = m_UIs.begin(); it != m_UIs.end(); ++it)
-	{
-		pair<size_t, vector<CUI*>>& UIPool = it->second;
+	auto it = m_UIs.find(strUITag);
 
-		for (CUI* pUI : UIPool.second)
-			pUI->Set_ReturnToPool(true);
-	}
+	if (m_UIs.end() == it)
+		return;
+
+	it->second->Set_ReturnToPool(true);
 }
 
+void CUI_Manager::Active_Menu()
+{
+	Inactive_UI("UI_PlayerDefault");
+
+	Active_UI("UI_Menu");
+
+	//ShowCursor(TRUE);
+}
+
+void CUI_Manager::Inactive_Menu()
+{
+	Active_UI("UI_PlayerDefault");
+
+	Inactive_UI("UI_Menu");
+
+	GET_PLAYER->ChangeAnim_GetUp();
+
+	CFadeScreen::FADEDESC FadeDesc = {};
+	FadeDesc.eFadeColor = CFadeScreen::BLACK;
+	FadeDesc.fFadeOutSpeed = 1.f;
+	FadeDesc.fFadeInSpeed = 1.f;
+
+	UIMGR->Active_UI("FadeScreen", &FadeDesc);
+
+	//ShowCursor(FALSE);
+}
 
 HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
@@ -94,67 +100,47 @@ HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pConte
 	if (FAILED(pUI->Initialize(nullptr)))
 		return E_FAIL;
 	
-	m_UIs.emplace("UI_LockOn", (make_pair(0, vector<CUI*>{pUI})));
+	m_UIs.emplace("UI_LockOn", pUI);
 
-	pUI = CUI_PlayerBar::Create(pDevice, pContext);
-	if (FAILED(pUI->Initialize(m_pPlayer->Get_PlayerStats())))
-		return E_FAIL;
+	pUI = CUI_PlayerDefault::Create(pDevice, pContext);
 
-	m_UIs.emplace("UI_PlayerBar", make_pair(0, vector<CUI*>{pUI}));
+	m_UIs.emplace("UI_PlayerDefault", pUI);
 
 	pUI = CFadeScreen::Create(pDevice, pContext);
 	if (FAILED(pUI->Initialize(nullptr)))
 		return E_FAIL;
 
-	m_UIs.emplace("FadeScreen", make_pair(0, vector<CUI*>{pUI}));
+	m_UIs.emplace("FadeScreen", pUI);
 
 	pUI = CUI_BossBar::Create(pDevice, pContext);
 	if (FAILED(pUI->Initialize(nullptr)))
 		return E_FAIL;
 
-	m_UIs.emplace("UI_BossBar", make_pair(0, vector<CUI*>{pUI}));
+	m_UIs.emplace("UI_BossBar", pUI);
 
-	vector<CUI*> DamageFonts;
-	DamageFonts.reserve(5);
-	for (_int i = 0; i < 10; ++i)
-	{
-		pUI = CUI_DamageFont::Create(pDevice, pContext);
-		if (FAILED(pUI->Initialize(nullptr)))
-			return E_FAIL;
-		DamageFonts.emplace_back(pUI);
-	}
-
-	m_UIs.emplace("UI_DamageFont", make_pair(0, DamageFonts));
-
-	vector<CUI*> EnemyBars;
-	EnemyBars.reserve(20);
-	for (_int i = 0; i < 20; ++i)
-	{
-		pUI = CUI_EnemyBar::Create(pDevice, pContext);
-		if (FAILED(pUI->Initialize(nullptr)))
-			return E_FAIL;
-		EnemyBars.emplace_back(pUI);
-	}
-
-	m_UIs.emplace("UI_EnemyBar", make_pair(0, EnemyBars));
-
-	vector<CUI*> StunnedMarks;
-	StunnedMarks.reserve(5);
-	for (_int i = 0; i < 5; ++i)
-	{
-		pUI = CUI_StunnedMark::Create(pDevice, pContext);
-		if (FAILED(pUI->Initialize(nullptr)))
-			return E_FAIL;
-		StunnedMarks.emplace_back(pUI);
-	}
-
-	m_UIs.emplace("UI_StunnedMark", make_pair(0, StunnedMarks));
-
-	pUI = CUI_PlunderSlot::Create(pDevice, pContext);
-	if (FAILED(pUI->Initialize(m_pPlayer->Get_PlayerStats())))
+	pUI = CUI_StunnedMark::Create(pDevice, pContext);
+	if (FAILED(pUI->Initialize(nullptr)))
 		return E_FAIL;
 
-	m_UIs.emplace("UI_PlunderSlot", make_pair(0, vector<CUI*>{pUI}));
+	m_UIs.emplace("UI_StunnedMark", pUI);
+
+	pUI = CUI_BeaconFound::Create(pDevice, pContext);
+	if (FAILED(pUI->Initialize(nullptr)))
+		return E_FAIL;
+
+	m_UIs.emplace("UI_BeaconFound", pUI);
+
+	pUI = CUI_Menu::Create(pDevice, pContext);
+	if (FAILED(pUI->Initialize(nullptr)))
+		return E_FAIL;
+
+	m_UIs.emplace("UI_Menu", pUI);
+
+	pUI = CUI_Stats::Create(pDevice, pContext);
+	m_UIs.emplace("UI_Stats", pUI);
+
+	//pUI = CUI_PW::Create(pDevice, pContext);
+	//m_UIs.emplace("UI_PW", pUI);
 
 	return S_OK;
 }
@@ -162,8 +148,7 @@ HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pConte
 void CUI_Manager::Release()
 {
 	for (auto& Pair : m_UIs)
-		for (auto& pUI : Pair.second.second)
-			Safe_Release(pUI);
+		Safe_Release(Pair.second);
 
 	m_UIs.clear();
 }

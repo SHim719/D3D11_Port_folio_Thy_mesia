@@ -23,7 +23,7 @@ private:
 	void Check_NextAttack();
 private:
 	_uint			m_iNowComboCnt = 0;
-
+	_uint			m_iMaxComboCnt = 5;
 
 public:
 	static CPlayerState_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

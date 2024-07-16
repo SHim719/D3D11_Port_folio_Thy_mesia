@@ -45,6 +45,7 @@ namespace Client
 	{
 		wstring wstrEnemyName = L"";
 		int		iMaxHp = 0;
+		_bool   bIsBoss = { false };
 	}ENEMYDESC;
 
 	typedef struct tagAttachDesc

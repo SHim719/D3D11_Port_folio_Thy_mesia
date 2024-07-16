@@ -30,12 +30,11 @@ HRESULT CLevel_Stage1::Initialize()
 	m_pGameInstance->Change_MainCamera(pMainCamera);
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Player", L"Prototype_Player"));
-	pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.313f, 0.f, -3.63f, 1.f));
+	//pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.313f, 0.f, -3.63f, 1.f));
+	pPlayer->Get_Transform()->Set_Position(XMVectorSet(-32.614f, -2.014f, 116.430f, 1.f));
 	pPlayer->Reset_NaviData(LEVEL_STAGE1);
 
 	pMainCamera->Set_Player(pPlayer);
-
-	UIMGR->Set_Player(pPlayer);
 
 	if (FAILED(UIMGR->Initialize(m_pDevice, m_pContext)))
 		return E_FAIL;
@@ -53,9 +52,7 @@ HRESULT CLevel_Stage1::Initialize()
 	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 		return E_FAIL;
 
-	UIMGR->Active_UI("UI_PlayerBar");
-	UIMGR->Active_UI("UI_PlunderSlot");
-
+	UIMGR->Active_UI("UI_PlayerDefault");
 	return S_OK;
 }
 

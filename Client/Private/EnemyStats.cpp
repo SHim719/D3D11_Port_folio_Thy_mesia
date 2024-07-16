@@ -1,6 +1,7 @@
 #include "EnemyStats.h"
 
-#include "UI.h"
+#include "UI_EnemyBar.h"
+#include "UI_BossBar.h"
 
 CEnemyStats::CEnemyStats()
 {
@@ -10,62 +11,45 @@ void CEnemyStats::Initialize(const ENEMYDESC& EnemyDesc)
 {
 	m_wstrName = EnemyDesc.wstrEnemyName;
 	m_iMaxHp = m_iHp = m_iMp = EnemyDesc.iMaxHp;
+	m_bIsBoss = EnemyDesc.bIsBoss;
+}
+
+void CEnemyStats::Set_EnemyBar(CUI_EnemyBar* pEnemyBar)
+{
+	m_pEnemyBar = pEnemyBar;
+	Safe_AddRef(m_pEnemyBar);
+}
+
+void CEnemyStats::Set_BossBar(CUI_BossBar* pBossBar)
+{
+	m_pBossBar = pBossBar;
+	Safe_AddRef(m_pBossBar);
 }
 
 void CEnemyStats::Increase_Hp(_int iHp)
 {
 	m_iHp += iHp;
 	m_iHp = clamp(m_iHp, 0, m_iMaxHp);
-	Broadcast_Update_Hp();
 
-	if (false == m_bHit)
-	{
-		m_bHit = true;
- 		Broadcast_Hit();
-	}
+	if (m_bIsBoss)
+		m_pBossBar->Update_EnemyHp(m_iHp);
+	else
+		m_pEnemyBar->Update_EnemyHp(m_iHp);
 }
 
 _int CEnemyStats::Increase_Mp(_int iMp)
 {
 	m_iMp += iMp;
 	m_iMp = clamp(m_iMp, m_iHp, m_iMaxHp);
-	Broadcast_Update_Mp();
+
+	if (m_bIsBoss)
+		m_pBossBar->Update_EnemyMp(m_iMp);
+	else
+		m_pEnemyBar->Update_EnemyMp(m_iMp);
 
 	return m_iMp;
 }
 
-void CEnemyStats::Add_Observer(CUI* pUI)
-{
-	m_ObserverUIs.push_back(pUI);
-	Safe_AddRef(pUI);
-
-	Broadcast_Update_Hp();
-	Broadcast_Update_Mp();
-}
-
-void CEnemyStats::Broadcast_Update_Hp()
-{
-	for (auto& pUI : m_ObserverUIs)
-		pUI->Update_EnemyHp(m_iHp);
-}
-
-void CEnemyStats::Broadcast_Update_Mp()
-{
-	for (auto& pUI : m_ObserverUIs)
-		pUI->Update_EnemyMp(m_iMp);
-}
-
-void CEnemyStats::Broadcast_Hit()
-{
-	for (auto& pUI : m_ObserverUIs)
-		pUI->Enemy_FirstHit();
-}
-
-void CEnemyStats::Broadcast_Death()
-{
-	for (auto& pUI : m_ObserverUIs)
-		pUI->Broadcast_Death();
-}
 
 CEnemyStats* CEnemyStats::Create(const ENEMYDESC& EnemyDesc)
 {
@@ -78,8 +62,6 @@ CEnemyStats* CEnemyStats::Create(const ENEMYDESC& EnemyDesc)
 
 void CEnemyStats::Free()
 {
-	for (auto& pUI : m_ObserverUIs)
-		Safe_Release(pUI);
-
-	m_ObserverUIs.clear();
+	Safe_Release(m_pEnemyBar);
+	Safe_Release(m_pBossBar);
 }

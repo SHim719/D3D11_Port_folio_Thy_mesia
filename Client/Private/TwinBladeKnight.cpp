@@ -22,6 +22,10 @@ HRESULT CTwinBladeKnight::Initialize_Prototype()
 	m_iTag = (_uint)TAG_ENEMY;
 	m_eExecutionTag = TWINBLADEKNIGHT;
 	m_eSkillType = SKILLTYPE::TWINBLADE;
+
+	m_iDeathStateIdx = (_uint)TwinBladeKnight_State::State_Death;
+	m_iExecutionStateIdx = (_uint)TwinBladeKnight_State::State_Executed_Start;
+	m_iStunnedStateIdx = (_uint)TwinBladeKnight_State::State_Stunned_Loop;
 	return S_OK;
 }
 
@@ -50,86 +54,15 @@ HRESULT CTwinBladeKnight::Initialize(void* pArg)
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"PerceptionBounding", L"Prototype_PerceptionBounding", this);
 
 	m_bLookTarget = false;
-	m_bStanced = true;
+
+	m_fCullingRadius = 1.5f;
+	XMStoreFloat4(&m_vCullingOffset, XMVectorSet(0.f, 1.2f, 0.f, 0.f));
 
 	Change_State((_uint)TwinBladeKnight_State::State_Idle);
 	m_pModel->Set_AnimPlay();
 
 	return S_OK;
 }
-
-void CTwinBladeKnight::Tick(_float fTimeDelta)
-{
-	if (KEY_DOWN(eKeyCode::K))
-	{
-		Change_State((_uint)TwinBladeKnight_State::State_Stunned_Start);
-	}
-
-	if (m_bLookTarget)
-	{
-		m_pTransform->Rotation_Quaternion(
-			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
-				, JoMath::Calc_GroundLook(s_pTarget->Get_Transform()->Get_Position(), m_pTransform->Get_Position())
-				, m_fRotRate * fTimeDelta));
-	}
-
-	m_States[m_iState]->Update(fTimeDelta);
-
-	if (m_bAdjustNaviY)
-		Compute_YPos();
-
-	__super::Update_Colliders();
-
-	__super::Tick_Weapons(fTimeDelta);
-
-	m_pModel->Play_Animation(fTimeDelta);
-}
-
-void CTwinBladeKnight::LateTick(_float fTimeDelta)
-{
-	m_States[m_iState]->Late_Update(fTimeDelta);
-
-	__super::LateTick_Weapons(fTimeDelta);
-
-	if (m_bNoRender)
-		return;
-
-#ifdef _DEBUG
-	m_pGameInstance->Add_RenderComponent(m_pCollider);
-	m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
-#endif
-
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
-}
-
-HRESULT CTwinBladeKnight::Render()
-{
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
-		return E_FAIL;
-
-
-	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
-
-	for (_uint i = 0; i < iNumMeshes; ++i)
-	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
-			return E_FAIL;
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
-
-		if (FAILED(m_pModel->Bind_Buffers(i)))
-			return E_FAIL;
-
-		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
-			return E_FAIL;
-	}
-
-	return S_OK;
-}
-
 
 void CTwinBladeKnight::Bind_KeyFrames()
 {
@@ -147,26 +80,16 @@ void CTwinBladeKnight::Bind_KeyFrames()
 }
 
 
-void CTwinBladeKnight::SetState_Executed(void* pArg)
-{
-	Change_State((_uint)TwinBladeKnight_State::State_Executed_Start, pArg);
-}
-
-void CTwinBladeKnight::SetState_Death()
-{
-	Change_State((_uint)TwinBladeKnight_State::State_Death);
-}
-
 void CTwinBladeKnight::Percept_Target()
 {
 	m_pModel->Change_Animation(LArmor_TwinSwords_IdleN2Fight);
 	m_bLookTarget = true;
-	
 }
 
 void CTwinBladeKnight::Change_To_NextComboAnim()
 {
-	static_cast<CTwinBladeKnightState_Base*>(m_States[m_iState])->Change_To_NextComboAnim();
+	_uint iNextAnimIdx = (m_pModel->Get_CurrentAnimIndex() + 1) % TwinBladeKnightAnim_End;
+	ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, iNextAnimIdx, 0.1f, true));
 }
 
 void CTwinBladeKnight::Active_Weapons()
@@ -290,7 +213,7 @@ HRESULT CTwinBladeKnight::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"╫жд╝аб";
-	EnemyDesc.iMaxHp = 500;
+	EnemyDesc.iMaxHp = 50;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 
@@ -304,7 +227,7 @@ HRESULT CTwinBladeKnight::Ready_UI()
 	EnemyBarDesc.vOffset.y = 2.5f;
 	EnemyBarDesc.pOwnerTransform = m_pTransform;
 
-	UIMGR->Active_UI("UI_EnemyBar", &EnemyBarDesc);
+	m_pEnemyBar = static_cast<CUI_EnemyBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_EnemyBar", &EnemyBarDesc));
 
 	return S_OK;
 }

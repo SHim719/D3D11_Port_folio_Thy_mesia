@@ -3,16 +3,16 @@
 #include "OdurState_Base.h"
 
 BEGIN(Client)
-class COdurState_Execute : public COdurState_Base
+class COdurState_Execute final : public COdurState_Base
 {
-protected:
+private:
 	COdurState_Execute(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~COdurState_Execute() = default;
 
-public:
 	HRESULT Initialize(void* pArg)		override;
 	void OnState_Start(void* pArg)		override;
 	void Update(_float fTimeDelta)		override;
+	void Late_Update(_float fTimeDelta)	override;
 	void OnState_End()					override;
 
 public:

@@ -57,7 +57,7 @@ void COdurState_ThrowCard::Late_Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
 	{
-		if (m_AnimPlaylists[m_iThrowState].size() == m_iCurAnimIdx && m_iThrowState)
+		if (m_AnimPlaylists[m_iThrowState].size() == m_iCurAnimIdx && 1 == m_iThrowState)
 			m_pOdur->Change_State((_uint)OdurState::State_ExecutionDisappear);
 		else
 			Decide_State();
@@ -105,11 +105,16 @@ void COdurState_ThrowCard::Throw_Card(_fvector vLook)
 	ParamMatrix.r[2] = vLook;
 	ParamMatrix.r[3] = vLeftHandPos;
 
+	if (1 == m_iThrowState && m_AnimPlaylists[m_iThrowState].size() == m_iCurAnimIdx) // ±Ã±Ø±âÀÎÁö ÆÇ´Ü.
+		ParamMatrix.r[1].m128_f32[0] = 1.f; // ±Ã±Ø±âÀÌ´Ù.
+	else
+		ParamMatrix.r[1].m128_f32[0] = 0.f; // ¾Æ´Ï´Ù.
+
 	_float4x4 ParamMatrix4x4;
 	XMStoreFloat4x4(&ParamMatrix4x4, ParamMatrix);
 
 	m_Cards[m_iCurCardIdx]->OnEnter_Layer(&ParamMatrix4x4);
-	m_Cards[m_iCurCardIdx]->Set_AttackDesc(m_CardAttackDescs[m_iThrowState][m_iCurAnimIdx]);
+	m_Cards[m_iCurCardIdx]->Set_AttackDesc(m_CardAttackDescs[m_iThrowState][m_iCurAnimIdx - 1]);
 
 	ADD_EVENT(bind(&CGameInstance::Insert_GameObject, m_pGameInstance, GET_CURLEVEL, L"Enemy_Weapon", m_Cards[m_iCurCardIdx]));
 	Safe_AddRef(m_Cards[m_iCurCardIdx]);

@@ -14,6 +14,8 @@ HRESULT CPlayerState_Executed::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pModel->Bind_Func("Release_From_Executed", bind(&CPlayerState_Executed::Change_StateToGetUp, this));
+
 	return S_OK;
 }
 
@@ -40,14 +42,6 @@ void CPlayerState_Executed::OnState_Start(void* pArg)
 
 void CPlayerState_Executed::Update(_float fTimeDelta)
 {
-	if (m_pModel->Is_AnimComplete())
-	{
-		m_pMain_Camera->Reset_CutsceneState();
-
-		//m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
-		return;
-	}
-
 	_matrix CutsceneOffsetMatrix = XMMatrixRotationX(To_Radian(-90.f));
 
 	m_pOwnerTransform->Attach_To_Bone(m_ExecutedDesc.AttachDesc.pAttachBone, m_ExecutedDesc.AttachDesc.pParentTransform, CutsceneOffsetMatrix);
@@ -57,6 +51,21 @@ void CPlayerState_Executed::Update(_float fTimeDelta)
 void CPlayerState_Executed::OnState_End()
 {
 	m_pPlayer->Set_Active_Colliders(true);
+
+	Safe_Release(m_ExecutedDesc.AttachDesc.pAttachBone);
+	Safe_Release(m_ExecutedDesc.AttachDesc.pParentTransform);
+}
+
+void CPlayerState_Executed::Change_StateToGetUp()
+{
+	ADD_EVENT(bind(&CCharacter::Change_State, m_pPlayer, (_uint)PlayerState::State_GetUp, nullptr));
+
+	m_pMain_Camera->Reset_CutsceneState();
+	//if (m_pModel->Is_AnimComplete())
+	//{
+	//	m_pMain_Camera->Reset_CutsceneState();
+	//	return;
+	//}
 }
 
 CPlayerState_Executed* CPlayerState_Executed::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

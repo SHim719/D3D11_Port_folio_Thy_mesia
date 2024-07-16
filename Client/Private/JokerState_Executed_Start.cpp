@@ -21,7 +21,7 @@ void CJokerState_Executed_Start::OnState_Start(void* pArg)
 	Safe_AddRef(m_AttachDesc.pAttachBone);
 	Safe_AddRef(m_AttachDesc.pParentTransform);
 
-	m_pJoker->Get_Stats()->Broadcast_Death();
+
 	m_pJoker->Set_LookTarget(false);
 	m_pJoker->Set_Active_Colliders(false);
 	m_pJoker->InActive_StunnedMark();

@@ -18,26 +18,10 @@ private:
 private:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
-	void Tick(_float fTimeDelta)		override;
-	void LateTick(_float fTimeDelta)	override;
-	HRESULT Render()					override;
 
 	void Bind_KeyFrames()				override;
+	void Percept_Target()				override;
 
-private:
-	_float	m_fRotRate = { 8.f };
-
-private:
-	void Percept_Target()	override;
-	void SetState_Death()	override;
-
-	_bool Is_Death() override {
-		return m_iState == (_uint)VillagerM_State::State_Death;
-	}
-
-	_bool Is_Stunned() override {
-		return m_iState == (_uint)VillagerM_State::State_Stunned_Loop;
-	}
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_States();

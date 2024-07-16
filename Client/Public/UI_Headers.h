@@ -12,3 +12,8 @@
 #include "UI_PlunderSlot.h"
 #include "UI_SkillSlot.h"
 #include "UI_SkillIcon.h"
+#include "UI_BeaconFound.h"
+#include "UI_Menu.h"
+#include "UI_PW.h"
+#include "UI_Stats.h"
+#include "UI_PlayerDefault.h"

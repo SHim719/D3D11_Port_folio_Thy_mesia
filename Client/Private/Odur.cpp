@@ -97,6 +97,8 @@ void COdur::Tick(_float fTimeDelta)
 
 void COdur::LateTick(_float fTimeDelta)
 {
+	m_States[m_iState]->Late_Update(fTimeDelta);
+
 	Update_Alpha(fTimeDelta);
 
 	__super::LateTick_Weapons(fTimeDelta);
@@ -181,6 +183,8 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));	
+	m_pModel->Bind_Func("Odur_Execute_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.2f));	
+	m_pModel->Bind_Func("Reset_Timer", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 1.f));
 }
 
 void COdur::Swap_Bone()

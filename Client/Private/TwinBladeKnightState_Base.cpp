@@ -43,11 +43,6 @@ void CTwinBladeKnightState_Base::OnHit(const ATTACKDESC& AttackDesc)
 		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_Hit, const_cast<ATTACKDESC*>(&AttackDesc));
 }
 
-void CTwinBladeKnightState_Base::Change_To_NextComboAnim()
-{
-	_uint iNextAnimIdx = (m_pModel->Get_CurrentAnimIndex() + 1) % TwinBladeKnightAnim_End;
-	ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, iNextAnimIdx, 0.1f, true));
-}
 
 void CTwinBladeKnightState_Base::Decide_State()
 {

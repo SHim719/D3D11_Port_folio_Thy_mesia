@@ -317,6 +317,8 @@ enum class PlayerState
 	State_Climb,
 	State_Climb_End,
 	State_GetUp,
+	State_FoundBeacon,
+	State_Sit,
 	State_Execution_Default,
 	State_Execution_Elite,
 	State_Executed,

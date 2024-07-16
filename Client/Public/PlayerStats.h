@@ -8,32 +8,21 @@ class CPlayerStats : public CBase
 private:
 	CPlayerStats();
 	virtual ~CPlayerStats() = default;
-
-	void Initialize();
-
 private: 
-	_bool			m_bAttackUpgraded = { true };
 	_bool			m_bShortClaw = { true };
 
-	_int			m_iHp = { 1000 };
-	_int			m_iMaxHp = { 1000 };
-
-	_int			m_iMp = { 150 };
-	_int			m_iMaxMp = { 150 };
+	_int			m_iLevel = { 1 };
+	_int			m_iHp = { 300 };
+	_int			m_iMaxHp = { 300 };
 
 	_int			m_iStrength = { 10 };
 	_int			m_iPlague = { 10 };
 	_int			m_iVitality = { 10 };
 
+	_int			m_iSoulCount = { 0 };
+
 	SKILLTYPE		m_ePlunderSkill = { NONE };
 public:
-	void Upgrade_Attack() { 
-		m_bAttackUpgraded = true; }
-
-	_uint Get_MaxAttackCnt() const {
-		return m_bAttackUpgraded ? 5 : 3;
-	}
-
 	SKILLTYPE Get_PlunderSkillType() const {
 		return m_ePlunderSkill;
 	}
@@ -42,31 +31,65 @@ public:
 		return m_bShortClaw;
 	}
 
+	_int Get_Strength() const {
+		return m_iStrength;
+	}
+
+	_int Get_Plague() const {
+		return m_iPlague;
+	}
+
+	_int Get_Vitality() const {
+		return m_iVitality;
+	}
+
+	_int Get_SoulCount() const {
+		return m_iSoulCount;
+	}
+
+	_int Get_PlayerLevel() const {
+		return m_iLevel;
+	}
+
+	_int Get_MaxHp() const {
+		return m_iMaxHp;
+	}
+
+	void Set_Strength(_uint iStrength) {
+		m_iStrength = iStrength;
+	}
+
+	void Set_Plague(_uint iPlague) {
+		m_iPlague = iPlague;
+	}
+
+	void Set_Vitality(_uint iVitality) {
+		m_iVitality = iVitality;
+	}
+
+	void Set_SoulCount(_int iSoulCount) {
+		m_iSoulCount = iSoulCount;
+	}
+
+public:
 	void Update_PlunderSkill(const SKILLTYPE ePlunderSkill);
 
 	_int Increase_Hp(_int iHp);
 	void Increase_MaxHp(_int iHp);
-	void Increase_Mp(_int iMp);
-	void Increase_MaxMp(_int iMp);
+
+	void SetHp_Full();
+
+	void Increase_SoulCount(_int iSoul);
 
 	ATTACKDESC Get_NormalAttackDesc() const;
 	ATTACKDESC Get_PlagueAttackDesc() const;
 
+private:
+	class CUI_PlayerDefault*	m_pPlayerUI = { nullptr };
+
 public:
-	void Add_Observer(class CUI* pUI);
-	void Set_PlunderSlot(class CUI_PlunderSlot* pPlunderSlot) {
-		m_pPlunderSlot = pPlunderSlot;
-	}
-
-private:
-	void Broadcast_Update_Hp()	const;
-	void Broadcast_Update_Mp()	const;
-	
-private:
-	list<class CUI*>		m_ObserverUIs;
-
-	class CUI_PlunderSlot*	m_pPlunderSlot = { nullptr };
-
+	void Set_PlayerDefaultUI(CUI_PlayerDefault* pUI);
+		
 public:
 	static CPlayerStats* Create();
 	void Free() override;
