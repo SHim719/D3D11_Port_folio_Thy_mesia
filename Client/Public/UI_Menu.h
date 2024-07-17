@@ -19,7 +19,6 @@ private:
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
-
 private:
 	void Select_Menu();
 
@@ -30,7 +29,6 @@ private:
 
 private:
 	Menu		m_eNowMenu = { LEVEL_UP };
-	_bool		m_bMenuSelected = { false };
 
 	_float4x4	m_BGWorldMatrix = {};
 	_float4x4	m_ThymesiaFontMatrix = {};

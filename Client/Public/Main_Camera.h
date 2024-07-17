@@ -34,6 +34,8 @@ protected:
 
 public:
 	HRESULT Initialize(void* pArg)			override;
+	void OnActive()							override;
+
 	void PriorityTick(_float fTimeDelta)	override;
 	void Tick(_float fTimeDelta)			override;
 	void LateTick(_float fTimeDelta)		override;
@@ -79,9 +81,9 @@ public:
 	void SetState_Cutscene(const ATTACHDESC& Desc);
 	void Reset_CutsceneState();
 
-
 	void Add_ShakingDesc(const SHAKINGDESC& ShakingDesc);
 	void Add_DeltaFovYDesc(const DELTAFOVYDESC& DeltaFovYDesc);
+
 private:
 	void Default_State(_float fTimeDelta);
 	void LockOn_State(_float fTimeDelta);

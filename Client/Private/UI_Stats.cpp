@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "PlayerStats.h"
 
+#include "FadeScreen.h"
+
 CUI_Stats::CUI_Stats(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CUI(pDevice, pContext)
 {
@@ -24,6 +26,7 @@ HRESULT CUI_Stats::Initialize(void* pArg)
 	Init_UIMatrices();
 	Init_FontPos();
 	Init_HighlightedPos();
+	Init_ArrowMatrices();
 
 	if (FAILED(Ready_Component()))
 		return E_FAIL;
@@ -39,29 +42,47 @@ HRESULT CUI_Stats::Initialize(void* pArg)
 
 void CUI_Stats::Tick(_float fTimeDelta)
 {
+	m_bCanLevelUp = m_iStatInfos[SOUL] >= m_iStatInfos[NEED_SOUL];
+	m_bCanLevelDown = (m_iSelectInfo < 3) && (m_iStatInfos[STRENGTH + m_iSelectInfo] > m_iOriginStatInfos[STRENGTH + m_iSelectInfo]);
+	
+
 	if (KEY_DOWN(eKeyCode::Up))
 	{
 		m_iSelectInfo = (m_iSelectInfo + 4 - 1) % 4;
+		if (m_iSelectInfo < 3)
+			m_ArrowMatrices[0].m[3][1] = m_ArrowMatrices[1].m[3][1] = m_vNumberPos[STRENGTH + m_iSelectInfo][1].y;
 	}
 
 	else if (KEY_DOWN(eKeyCode::Down))
 	{
 		m_iSelectInfo = (m_iSelectInfo + 1) % 4;
+		if (m_iSelectInfo < 3)
+			m_ArrowMatrices[0].m[3][1] = m_ArrowMatrices[1].m[3][1] = m_vNumberPos[STRENGTH + m_iSelectInfo][1].y;
 	}
 
 	else if (KEY_DOWN(eKeyCode::Right))
 	{
+		if (3 == m_iSelectInfo)
+			return;
+
+		if (m_bCanLevelUp)
+			Level_Up();
 
 	}
 	
 	else if (KEY_DOWN(eKeyCode::Left))
 	{
+		if (3 == m_iSelectInfo)
+			return;
 
+		if (m_bCanLevelDown)
+			Level_Down();
 	}
 
-	else if (KEY_DOWN(eKeyCode::Enter))
+	else if (KEY_DOWN(eKeyCode::Enter) && 3 == m_iSelectInfo)
 	{
-		
+		Setting_EditInfo();
+		Exit();
 	}
 
 }
@@ -84,6 +105,18 @@ HRESULT CUI_Stats::Render()
 
 	if (FAILED(Render_Fonts()))
 		return E_FAIL;
+	
+	if (m_bCanLevelDown)
+	{
+		if (FAILED(Render_Arrow_Left()))
+			return E_FAIL;
+	}
+	
+	if (m_bCanLevelUp)
+	{
+		if (FAILED(Render_Arrow_Right()))
+			return E_FAIL;
+	}
 
 	return S_OK;
 }
@@ -105,7 +138,7 @@ HRESULT CUI_Stats::OnEnter_Layer(void* pArg)
 
 	m_iStatInfos[NEED_SOUL] = 50 * m_iOriginStatInfos[LEVEL];
 
-	Init_StrFont();
+	Update_StrFont();
 
 	return S_OK;
 }
@@ -210,6 +243,119 @@ HRESULT CUI_Stats::Render_Number(const string& strNumber, _fvector vRenderStartP
 	return S_OK;
 }
 
+HRESULT CUI_Stats::Render_Arrow_Left()
+{
+	_matrix ArrowMatrix = XMLoadFloat4x4(&m_ArrowMatrices[0]);
+
+	_float4x4 ArrowMatrix_TP;
+	XMStoreFloat4x4(&ArrowMatrix_TP, XMMatrixTranspose(ArrowMatrix));
+
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &ArrowMatrix_TP, sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pArrowLeftTexture->Set_SRV(m_pShader, "g_DiffuseTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Begin(3)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CUI_Stats::Render_Arrow_Right()
+{
+	_matrix ArrowMatrix = XMLoadFloat4x4(&m_ArrowMatrices[1]);
+
+	_float4x4 ArrowMatrix_TP;
+	XMStoreFloat4x4(&ArrowMatrix_TP, XMMatrixTranspose(ArrowMatrix));
+
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &ArrowMatrix_TP, sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pArrowRightTexture->Set_SRV(m_pShader, "g_DiffuseTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Begin(3)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CUI_Stats::Level_Up()
+{
+	m_iStatInfos[SOUL] -= m_iStatInfos[NEED_SOUL];
+	m_iStatInfos[LEVEL] += 1;
+	m_iStatInfos[m_iSelectInfo + STRENGTH] += 1;
+	Calc_Info(StatInfo(m_iSelectInfo + DAMAGE));
+	Calc_Info(NEED_SOUL);
+
+	Update_StrFont();
+}
+
+void CUI_Stats::Level_Down()
+{
+	m_iStatInfos[LEVEL] -= 1;
+	m_iStatInfos[m_iSelectInfo + STRENGTH] -= 1;
+
+	Calc_Info(NEED_SOUL);
+
+	m_iStatInfos[SOUL] += m_iStatInfos[NEED_SOUL];
+
+	Calc_Info(StatInfo(m_iSelectInfo + DAMAGE));
+
+	Update_StrFont();
+}
+
+void CUI_Stats::Calc_Info(StatInfo eInfo)
+{
+	switch (eInfo)
+	{
+	case NEED_SOUL:
+		m_iStatInfos[NEED_SOUL] = m_iStatInfos[LEVEL] * 50;
+		break;
+	case DAMAGE:
+		m_iStatInfos[DAMAGE] = m_iStatInfos[STRENGTH];
+		break;
+	case CLAW_DAMAGE:
+		m_iStatInfos[HP] = 300 + (m_iStatInfos[LEVEL] - 1) * 4;
+		break;
+	case HP:
+		m_iStatInfos[CLAW_DAMAGE] = m_iStatInfos[PLAGUE];
+		break;
+	}
+}
+
+void CUI_Stats::Setting_EditInfo()
+{
+	enum StatInfo { LEVEL, SOUL, NEED_SOUL, STRENGTH, VITALITY, PLAGUE, DAMAGE, CLAW_DAMAGE, HP, INFO_END };
+
+	m_pPlayerStats->Set_PlayerLevel(m_iStatInfos[LEVEL]);
+	m_pPlayerStats->Set_SoulCount(m_iStatInfos[SOUL]);
+	m_pPlayerStats->Set_Strength(m_iStatInfos[STRENGTH]);
+	m_pPlayerStats->Set_Vitality(m_iStatInfos[VITALITY]);
+	m_pPlayerStats->Set_Plague(m_iStatInfos[PLAGUE]);
+	m_pPlayerStats->Set_MaxHp(m_iStatInfos[HP]);
+	m_pPlayerStats->SetHp_Full();
+}
+
+void CUI_Stats::Exit()
+{
+	CFadeScreen::FADEDESC FadeDesc{};
+	FadeDesc.eFadeColor = CFadeScreen::BLACK;
+	FadeDesc.fFadeOutSpeed = 3.f;
+	FadeDesc.fFadeInSpeed = 10.f;
+	FadeDesc.pCallback_FadeOutEnd = bind(&CUI_Manager::Active_UI, CUI_Manager::Get_Instance(), "UI_Menu", nullptr);
+	FadeDesc.pCallback_FadeInStart = bind(&CGameObject::Set_ReturnToPool, this, true);
+
+	UIMGR->Active_UI("FadeScreen", &FadeDesc);
+}
+
 HRESULT CUI_Stats::Ready_Component()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
@@ -225,6 +371,12 @@ HRESULT CUI_Stats::Ready_Component()
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Stat_Arrows"), TEXT("Arrows_Texture"), (CComponent**)&m_pStatArrowsTexture)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Arrow_Right"), TEXT("Arrows_R_Texture"), (CComponent**)&m_pArrowRightTexture)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Arrow_Left"), TEXT("Arrows_L_Texture"), (CComponent**)&m_pArrowLeftTexture)))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Select_Highlighted"), TEXT("Highlighted_Texture"), (CComponent**)&m_pHighlightedTexture)))
@@ -291,7 +443,22 @@ void CUI_Stats::Init_FontPos()
 	XMStoreFloat4(&m_vNumberPos[HP][1], Convert_ScreenToRenderPos(XMVectorSet(1184.f, 476.f, 1.f, 1.f)));
 }
 
-void CUI_Stats::Init_StrFont()
+void CUI_Stats::Init_ArrowMatrices()
+{
+	_matrix WorldMatrix = XMMatrixIdentity();
+	WorldMatrix.r[0] *= 12.f;
+	WorldMatrix.r[1] *= 24.f;
+
+	WorldMatrix.r[3] = Convert_ScreenToRenderPos(XMVectorSet(519.f, m_vNumberPos[STRENGTH][1].y, 1.f, 1.f));
+	XMStoreFloat4x4(&m_ArrowMatrices[0], WorldMatrix);
+
+	WorldMatrix.r[3] = Convert_ScreenToRenderPos(XMVectorSet(666.f, m_vNumberPos[STRENGTH][1].y, 1.f, 1.f));
+	XMStoreFloat4x4(&m_ArrowMatrices[1], WorldMatrix);
+
+	m_ArrowMatrices[0].m[3][1] = m_ArrowMatrices[1].m[3][1] = m_vNumberPos[STRENGTH + m_iSelectInfo][1].y;
+}
+
+void CUI_Stats::Update_StrFont()
 {
 	for (_uint i = 0; i < INFO_END; ++i)
 	{

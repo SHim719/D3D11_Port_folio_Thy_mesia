@@ -19,7 +19,7 @@ private:
 	_int			m_iPlague = { 10 };
 	_int			m_iVitality = { 10 };
 
-	_int			m_iSoulCount = { 0 };
+	_int			m_iSoulCount = { 500 };
 
 	SKILLTYPE		m_ePlunderSkill = { NONE };
 public:
@@ -71,6 +71,14 @@ public:
 		m_iSoulCount = iSoulCount;
 	}
 
+	void Set_PlayerLevel(_int iLevel) {
+		m_iLevel = iLevel;
+	}
+
+	void Set_MaxHp(_int iMaxHp) {
+		m_iMaxHp = iMaxHp;
+	}
+	
 public:
 	void Update_PlunderSkill(const SKILLTYPE ePlunderSkill);
 

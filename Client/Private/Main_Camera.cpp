@@ -30,9 +30,15 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 
 	XMStoreFloat4x4(&m_CutsceneOffsetMatrix, OffsetMatrix);
 
+	Set_CursorToCenter(g_hWnd, g_iWinSizeX, g_iWinSizeY);
+
 	return S_OK;
 }
 
+void CMain_Camera::OnActive()
+{
+	Set_CursorToCenter(g_hWnd, g_iWinSizeX, g_iWinSizeY);
+}
 
 void CMain_Camera::PriorityTick(_float fTimeDelta)
 {

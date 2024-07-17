@@ -13,6 +13,9 @@ CFree_Camera::CFree_Camera(const CFree_Camera& rhs, CTransform::TRANSFORMDESC* p
 
 void CFree_Camera::OnActive()
 {
+	m_tPrevMousePos = m_tCurrentMousePos;
+	GetCursorPos(&m_tCurrentMousePos);
+	ScreenToClient(g_hWnd, &m_tCurrentMousePos);
 }
 
 void CFree_Camera::Tick(_float fTimeDelta)

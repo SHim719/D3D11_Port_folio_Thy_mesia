@@ -60,8 +60,7 @@ void CUI_Menu::Tick(_float fTimeDelta)
 
 void CUI_Menu::LateTick(_float fTimeDelta)
 {
-	if (false == m_bMenuSelected)
-		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
 }
 
 HRESULT CUI_Menu::Render()
@@ -266,6 +265,7 @@ void CUI_Menu::Open_Window(const string& strUI)
 	FadeDesc.fFadeOutSpeed = 3.f;
 	FadeDesc.fFadeInSpeed = 10.f;
 	FadeDesc.pCallback_FadeOutEnd = bind(&CUI_Manager::Active_UI, CUI_Manager::Get_Instance(), strUI, nullptr);
+	FadeDesc.pCallback_FadeInStart = bind(&CGameObject::Set_ReturnToPool, this, true);
 
 	UIMGR->Active_UI("FadeScreen", &FadeDesc);
 }
