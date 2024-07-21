@@ -121,6 +121,8 @@ public:
 	void Set_RotationSpeed(_float fSpeed) { m_TransformDesc.fRotationPerSec = fSpeed; }
 
 	void Add_RollInput(_float fRadian);
+	void Add_YawInput(_float fRadian);
+	void Add_PitchInput(_float fRadian);
 	void Add_YAxisInput(_float fRadian);
 
 	void Set_MoveLook(_fvector vLook) { XMStoreFloat4(&m_vMoveLook, vLook); }

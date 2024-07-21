@@ -294,6 +294,40 @@ void CTransform::Add_RollInput(_float fRadian)
 	Set_State(STATE_LOOK, vLook);
 }
 
+void CTransform::Add_YawInput(_float fRadian)
+{
+	_vector		vRight = Get_State(STATE_RIGHT);
+	_vector		vUp = Get_State(STATE_UP);
+	_vector		vLook = Get_State(STATE_LOOK);
+
+	_matrix	RotationMatrix = XMMatrixRotationAxis(vUp, fRadian);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
+void CTransform::Add_PitchInput(_float fRadian)
+{
+	_vector		vRight = Get_State(STATE_RIGHT);
+	_vector		vUp = Get_State(STATE_UP);
+	_vector		vLook = Get_State(STATE_LOOK);
+
+	_matrix	RotationMatrix = XMMatrixRotationAxis(vLook, fRadian);
+
+	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
+	vUp = XMVector3TransformNormal(vUp, RotationMatrix);
+	vLook = XMVector3TransformNormal(vLook, RotationMatrix);
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
 void CTransform::Add_YAxisInput(_float fRadian)
 {
 	_vector		vRight = Get_State(STATE_RIGHT);

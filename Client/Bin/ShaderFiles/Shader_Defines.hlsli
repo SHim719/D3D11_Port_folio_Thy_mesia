@@ -1,23 +1,45 @@
 
-sampler DefaultSampler = sampler_state
+sampler LinearWrapSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;
     AddressU = wrap;
     AddressV = wrap;
 };
 
-sampler PointSampler = sampler_state
+sampler PointWrapSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_POINT;
     AddressU = WRAP;
     AddressV = WRAP;
 };
 
+sampler LinearClampSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = wrap;
+    AddressV = wrap;
+};
+
+sampler PointClampSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = WRAP;
+    AddressV = WRAP;
+};
+
+
 RasterizerState RS_Default
 {
 	FillMode = solid;
 	CullMode = back;
 	FrontCounterClockwise = false;
+};
+
+RasterizerState RS_CullNone
+{
+    FillMode = solid;
+    CullMode = none;
+    FrontCounterClockwise = false;
 };
 
 RasterizerState RS_Wireframe

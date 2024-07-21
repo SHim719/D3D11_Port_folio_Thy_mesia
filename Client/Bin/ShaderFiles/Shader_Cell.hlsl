@@ -59,6 +59,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 }

@@ -70,7 +70,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV);
   
     if (Out.vDiffuse.a < 0.1f)
         discard;
@@ -98,6 +98,7 @@ technique11 DefaultTechinque
         GeometryShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
+        ComputeShader = NULL;
     }
 
 

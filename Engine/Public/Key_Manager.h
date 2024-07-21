@@ -19,10 +19,10 @@ enum class eKeyCode
 	Z, X, C, V, B, N, M,
 	Left, Right, Down, Up,
 	Space, LButton, MButton, RButton,
-	LCtrl, LShift, NUMPAD0,
-	NUMPAD1, NUMPAD2, NUMPAD3,
+	LCtrl, LShift, RShift,
+	NUMPAD0, NUMPAD1, NUMPAD2, NUMPAD3,
 	One, Two, Three, Four,
-	Enter, Delete,
+	Enter, Delete, ESC,
 	End,
 };
 

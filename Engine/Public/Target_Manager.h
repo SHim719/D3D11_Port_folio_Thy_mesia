@@ -21,6 +21,7 @@ public:
 	HRESULT Add_MRT(const wstring& strMRTTag, const wstring& strRenderTargetTag);
 
 	HRESULT Begin_MRT(const wstring& strMRTTag);
+	HRESULT Begin_MRT_NoClear(const wstring& strMRTTag);
 	HRESULT End_MRT();
 
 	HRESULT Bind_RT_SRV(const wstring& strRenderTargetTag, class CShader* pShader, const _char* pConstantName);
@@ -29,6 +30,7 @@ public:
 public:
 	HRESULT Ready_Debug(const wstring& strRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
 	HRESULT Render_Debug(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT Render_SingleTargetDebug(const wstring& strMRTTag, class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
 #endif
 
 

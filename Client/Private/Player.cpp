@@ -74,7 +74,12 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::V))
 	{
-		m_pStats->Increase_SoulCount(200);
+		m_pStats->Active_Skill(SKILLTYPE::AXE);
+		m_pStats->Obtain_Key();
+
+		vector<SKILLTYPE> eTypes{ SKILLTYPE::AXE, SKILLTYPE::NONE };
+
+		UIMGR->Active_UI("UI_Popup", &eTypes);
 	}
 
 	if (m_bLockOn)
@@ -153,16 +158,14 @@ void CPlayer::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
 {
 	Change_State((_uint)PlayerState::State_Cutscene, &eCutsceneNumber);
 
-	UIMGR->Inactive_UI("UI_PlayerBar");
-	UIMGR->Inactive_UI("UI_PlunderSlot");
+	UIMGR->Inactive_UI("UI_PlayerDefault");
 }
 
 void CPlayer::OnEnd_Cutscene()
 {
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&m_PrevWorldMatrix));
 
-	UIMGR->Active_UI("UI_PlayerBar");
-	UIMGR->Active_UI("UI_PlunderSlot");
+	UIMGR->Active_UI("UI_PlayerDefault");
 
 	Change_State((_uint)PlayerState::State_Idle);
 }

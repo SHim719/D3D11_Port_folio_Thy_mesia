@@ -31,11 +31,19 @@ VS_OUT VS_MAIN(VS_IN In)
 {
     VS_OUT Out = (VS_OUT) 0;
 
-    matrix matWV, matWVP;
-    matWV = mul(g_WorldMatrix, g_ViewMatrix);
-    matWVP = mul(matWV, g_ProjMatrix);
+    Out.vPosition = float4(In.vPosition, 1.f);
+    Out.vTexcoord = In.vTexcoord;
 
-    Out.vPosition = mul(float4(In.vPosition, 1.f), matWVP);
+    return Out;
+}
+
+VS_OUT VS_MAIN_DEBUG(VS_IN In)
+{
+    VS_OUT Out = (VS_OUT) 0;
+
+    matrix MatWVP = mul(g_WorldMatrix, mul(g_ViewMatrix, g_ProjMatrix));
+    
+    Out.vPosition = mul(float4(In.vPosition, 1.f), MatWVP);
     Out.vTexcoord = In.vTexcoord;
 
     return Out;
@@ -57,7 +65,7 @@ PS_OUT PS_MAIN_DEBUG(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_Texture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor = g_Texture.Sample(LinearWrapSampler, In.vTexcoord);
 
     return Out;
 }
@@ -72,7 +80,7 @@ PS_OUT_LIGHT PS_MAIN_DIRECTIONAL(PS_IN In)
 {
     PS_OUT_LIGHT Out = (PS_OUT_LIGHT) 0;
 
-    vector vNormalDesc = g_NormalTexture.Sample(PointSampler, In.vTexcoord);
+    vector vNormalDesc = g_NormalTexture.Sample(PointWrapSampler, In.vTexcoord);
 
 	/* 0 ~ 1 -> -1 ~ 1 */
     vector vNormal = vector(vNormalDesc.xyz * 2.f - 1.f, 0.f);
@@ -88,11 +96,11 @@ PS_OUT PS_MAIN_DEFERRED(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    vector vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexcoord);
     if (0.0f == vDiffuse.a)
         discard;
 
-    vector vShade = g_ShadeTexture.Sample(DefaultSampler, In.vTexcoord);
+    vector vShade = g_ShadeTexture.Sample(LinearWrapSampler, In.vTexcoord);
 
     Out.vColor = vDiffuse * vShade;
 
@@ -107,10 +115,11 @@ technique11 DefaultTechnique
         SetDepthStencilState(DSS_Default, 0);
         SetBlendState(BS_None, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
 		
-        VertexShader = compile vs_5_0 VS_MAIN();
+        VertexShader = compile vs_5_0 VS_MAIN_DEBUG();
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DEBUG();
     }
 
@@ -124,6 +133,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
     }
 
@@ -137,6 +147,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DIRECTIONAL();
     }
 
@@ -150,6 +161,7 @@ technique11 DefaultTechnique
         GeometryShader = NULL;
         HullShader = NULL;
         DomainShader = NULL;
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_DEFERRED();
     }
 }

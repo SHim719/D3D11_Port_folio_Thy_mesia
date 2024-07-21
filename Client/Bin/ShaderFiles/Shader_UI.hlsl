@@ -87,7 +87,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexcoord);
 
     if (Out.vColor.a < 0.3f)
         discard;
@@ -99,7 +99,7 @@ PS_OUT PS_MAIN_REDTOALPHA(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexcoord);
 
     Out.vColor.a = Out.vColor.r;
     
@@ -113,7 +113,7 @@ PS_OUT PS_MAIN_FADE(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord) * g_vColor;
+    Out.vColor = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexcoord) * g_vColor;
     
     Out.vColor.a *= g_fAlpha;
 
@@ -124,7 +124,7 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexcoord);
 
     Out.vColor.a *= g_fAlpha;
 
@@ -135,7 +135,7 @@ PS_OUT PS_MAIN_STUNNEDMARK(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vColor = g_DiffuseTexture.Sample(DefaultSampler, In.vTexcoord);
+    Out.vColor = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexcoord);
 
     Out.vColor.a = Out.vColor.r;
     
@@ -159,6 +159,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = compile gs_5_0 GS_MAIN();
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN();
     }
 
@@ -172,6 +173,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = compile gs_5_0 GS_MAIN();
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_REDTOALPHA();
     }
 
@@ -185,6 +187,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = compile gs_5_0 GS_MAIN();
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_FADE();
     }
 
@@ -198,6 +201,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         GeometryShader = compile gs_5_0 GS_MAIN();
+        ComputeShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHABLEND();
     }
     

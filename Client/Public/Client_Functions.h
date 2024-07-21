@@ -21,6 +21,7 @@ namespace JoMath
 {
 	_matrix LookTo(_fvector vTargetLook);
 	_matrix LookAt(_fvector vSrc, _fvector vDst);
+	_matrix OrientToDir(_fvector vDir);
 
 	_vector ToEulerAngle(_fvector vQuat, _bool bToDegree = true);
 
@@ -38,6 +39,8 @@ namespace JoRandom
 {
 	_int Random_Int(_int _iMin, _int _iMax);
 	_float Random_Float(_float _fMin, _float _fMax);
+	_float2 Random_Float2(const _float2& vMin, const _float2& vMax);
+	_float3 Random_Float3(const _float3& vMin, const _float3& vMax);
 }
 
 namespace JoMapLoad

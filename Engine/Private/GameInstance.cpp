@@ -493,6 +493,11 @@ HRESULT CGameInstance::Begin_MRT(const wstring& strMRTTag)
 	return m_pTarget_Manager->Begin_MRT(strMRTTag);
 }
 
+HRESULT CGameInstance::Begin_MRT_NoClear(const wstring& strMRTTag)
+{
+	return m_pTarget_Manager->Begin_MRT_NoClear(strMRTTag);
+}
+
 HRESULT CGameInstance::End_MRT()
 {
 	return m_pTarget_Manager->End_MRT();
@@ -515,6 +520,11 @@ HRESULT CGameInstance::Render_RTDebug(const wstring& strMRTTag, CShader* pShader
 	return m_pTarget_Manager->Render_Debug(strMRTTag, pShader, pVIBuffer);
 }
 
+HRESULT CGameInstance::Render_SingleRTDebug(const wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	return m_pTarget_Manager->Render_SingleTargetDebug(strMRTTag, pShader, pVIBuffer);
+}
+
 #endif
 
 #pragma endregion
@@ -531,7 +541,7 @@ HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
 	return m_pLight_Manager->Add_Light(LightDesc);
 }
 
-HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer* pVIBuffer)
 {
 	return m_pLight_Manager->Render(pShader, pVIBuffer);
 }

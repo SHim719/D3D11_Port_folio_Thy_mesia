@@ -96,6 +96,34 @@ HRESULT CTarget_Manager::Begin_MRT(const wstring& strMRTTag)
 	return S_OK;
 }
 
+HRESULT CTarget_Manager::Begin_MRT_NoClear(const wstring& strMRTTag)
+{
+	list<CRenderTarget*>* pMRTList = Find_MRT(strMRTTag);
+	if (nullptr == pMRTList)
+		return E_FAIL;
+
+	/* 장치에 이미 바인되어있었던 렌더타겟 하나만 가져올게.(1개, 백버퍼) */
+	/* 깊이 버퍼도 가져와서 저장해두자. */
+	m_pContext->OMGetRenderTargets(1, &m_pOldRTV, &m_pDSV);
+
+	ID3D11RenderTargetView* pMRTs[8] = {};
+
+	_uint		iNumRenderTargets = { 0 };
+
+	for (auto& pRenderTarget : *pMRTList)
+	{
+		pMRTs[iNumRenderTargets++] = pRenderTarget->Get_RTV();
+	}
+
+	/* 장치에 렌더타겟을 바인딩한다. */
+	/* == 이 렌더타겟에 뭔가르 그리겠다. */
+	/* == 그릴때 마다 깊이 테스트가 필요하다. */
+	/* == 렌더타겟과 깊이버퍼를 함께 바인딩해줘.  */
+	m_pContext->OMSetRenderTargets(iNumRenderTargets, pMRTs, m_pDSV);
+
+	return S_OK;
+}
+
 HRESULT CTarget_Manager::End_MRT()
 {
 	m_pContext->OMSetRenderTargets(1, &m_pOldRTV, m_pDSV);
@@ -137,6 +165,20 @@ HRESULT CTarget_Manager::Render_Debug(const wstring& strMRTTag, CShader* pShader
 
 	for (auto& pRenderTarget : *pMRTList)
 		pRenderTarget->Render_Debug(pShader, pVIBuffer);
+
+	return S_OK;
+}
+
+HRESULT CTarget_Manager::Render_SingleTargetDebug(const wstring& strMRTTag, CShader* pShader, CVIBuffer_Rect* pVIBuffer)
+{
+	CRenderTarget* pRenderTarget = Find_RenderTarget(strMRTTag);
+	if (nullptr == pRenderTarget)
+		return E_FAIL;
+
+	if (FAILED(pVIBuffer->Bind_Buffers()))
+		return E_FAIL;
+
+	pRenderTarget->Render_Debug(pShader, pVIBuffer);
 
 	return S_OK;
 }

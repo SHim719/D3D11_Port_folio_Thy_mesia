@@ -39,6 +39,8 @@ private:
 	HRESULT Ready_Stage1Boss();
 
 	HRESULT Ready_Etc();
+
+	HRESULT Ready_EffectMesh();
 private:
 	HRESULT Load_Map();
 		

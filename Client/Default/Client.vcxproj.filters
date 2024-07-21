@@ -685,6 +685,30 @@
     <Filter Include="04. UI\InGameUI\09. UI_Menu\UI_PW">
       <UniqueIdentifier>{584584db-dcaf-49e6-af95-24b6f6546050}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. UI\InGameUI\10. UI_Popup">
+      <UniqueIdentifier>{5e71ac77-4386-4a6f-aa72-9504edad082f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="100. IMGUI\03. Effect_Tool">
+      <UniqueIdentifier>{4b0be350-b7a2-4dfd-9f1d-5f8a1957362a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. Effect">
+      <UniqueIdentifier>{38d4ba4f-39a0-4af1-8f4a-c9e19a7ca67e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffects">
+      <UniqueIdentifier>{a37b9bfb-5961-499d-9f36-d68c4f3cbedf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Particle">
+      <UniqueIdentifier>{66acddc8-e005-4cb0-8709-75ef056953d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Mesh">
+      <UniqueIdentifier>{80fc003a-bafe-4d38-b61c-4fa06795cfef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. Effect\Effect_Particle">
+      <UniqueIdentifier>{dc3f6ec6-2dc4-4d4d-93be-9a34765739e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. Effect\Effect_Mesh">
+      <UniqueIdentifier>{027a5d3c-9cd1-4f80-b295-7b23cdaa09a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1287,6 +1311,21 @@
     <ClInclude Include="..\Public\UI_PW.h">
       <Filter>04. UI\InGameUI\09. UI_Menu\UI_PW</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_Popup.h">
+      <Filter>04. UI\InGameUI\10. UI_Popup</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolEffect_Particle.h">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolEffect_Mesh.h">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Tool.h">
+      <Filter>100. IMGUI\03. Effect_Tool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Particle.h">
+      <Filter>02. GameObjects\05. Effect\Effect_Particle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1817,6 +1856,21 @@
     <ClCompile Include="..\Private\UI_PW.cpp">
       <Filter>04. UI\InGameUI\09. UI_Menu\UI_PW</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\UI_Popup.cpp">
+      <Filter>04. UI\InGameUI\10. UI_Popup</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolEffect_Particle.cpp">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolEffect_Mesh.cpp">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Tool.cpp">
+      <Filter>100. IMGUI\03. Effect_Tool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Particle.cpp">
+      <Filter>02. GameObjects\05. Effect\Effect_Particle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1856,6 +1910,15 @@
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshEffect.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle.hlsl">
+      <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>

@@ -18,10 +18,6 @@ public:
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
-	
-	_bool Is_Using() const {
-		return m_bUsing;
-	}
 
 protected:
 	_vector Convert_WorldToScreen(_fvector vUIWorldPos);

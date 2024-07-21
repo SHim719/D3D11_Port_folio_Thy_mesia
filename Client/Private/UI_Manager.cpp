@@ -139,8 +139,11 @@ HRESULT CUI_Manager::Ready_UI(ID3D11Device* pDevice, ID3D11DeviceContext* pConte
 	pUI = CUI_Stats::Create(pDevice, pContext);
 	m_UIs.emplace("UI_Stats", pUI);
 
-	//pUI = CUI_PW::Create(pDevice, pContext);
-	//m_UIs.emplace("UI_PW", pUI);
+	pUI = CUI_PW::Create(pDevice, pContext);
+	m_UIs.emplace("UI_PW", pUI);
+
+	pUI = CUI_Popup::Create(pDevice, pContext);
+	m_UIs.emplace("UI_Popup", pUI);
 
 	return S_OK;
 }

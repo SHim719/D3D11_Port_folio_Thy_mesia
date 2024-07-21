@@ -247,8 +247,10 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\Public\VIBuffer.h" />
     <ClInclude Include="..\Public\VIBuffer_Cell.h" />
     <ClInclude Include="..\Public\VIBuffer_Instance.h" />
+    <ClInclude Include="..\Public\VIBuffer_Particle.h" />
     <ClInclude Include="..\Public\VIBuffer_Point.h" />
     <ClInclude Include="..\Public\VIBuffer_Rect.h" />
+    <ClInclude Include="..\Public\VIBuffer_Screen.h" />
     <ClInclude Include="..\Public\VIBuffer_Sphere.h" />
     <ClInclude Include="..\Public\VTF.h" />
   </ItemGroup>
@@ -305,8 +307,10 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClCompile Include="..\Private\VIBuffer.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Cell.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Instance.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Particle.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Point.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Rect.cpp" />
+    <ClCompile Include="..\Private\VIBuffer_Screen.cpp" />
     <ClCompile Include="..\Private\VIBuffer_Sphere.cpp" />
     <ClCompile Include="..\Private\VTF.cpp" />
   </ItemGroup>

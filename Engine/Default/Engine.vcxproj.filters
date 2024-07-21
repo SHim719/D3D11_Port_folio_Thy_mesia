@@ -106,12 +106,6 @@
     <Filter Include="01.Utility\02. GameObjects\Layer">
       <UniqueIdentifier>{7bd5b2e1-f914-4816-9262-9d0a6cb7703b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Utility\04. Sound">
-      <UniqueIdentifier>{af6849f4-ee1b-4557-91aa-bcb35d8b9e89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Utility\04. Sound\FMOD">
-      <UniqueIdentifier>{30d00783-636b-4a1b-84b2-59726c1faaa7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Utility\05. RenderTarget">
       <UniqueIdentifier>{7922820a-6027-4b03-92bc-439c7dc9d344}</UniqueIdentifier>
     </Filter>
@@ -180,6 +174,18 @@
     </Filter>
     <Filter Include="01.Utility\02. GameObjects\Instancing_Object">
       <UniqueIdentifier>{b0741d9d-81c6-4d3a-8ab9-bce18890b6ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\03. VIBuffer\04. Instance\Particle">
+      <UniqueIdentifier>{ba079939-f29d-4baf-9920-c6ae0179dd0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04. Sound">
+      <UniqueIdentifier>{af6849f4-ee1b-4557-91aa-bcb35d8b9e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\04. Sound\FMOD">
+      <UniqueIdentifier>{30d00783-636b-4a1b-84b2-59726c1faaa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Utility\03. Components\03. VIBuffer\00. Rect\Screen">
+      <UniqueIdentifier>{c8c4e23f-7a44-4a89-9b39-11ae5a8843bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -375,6 +381,12 @@
     <ClInclude Include="..\Public\Engine_Debug.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Particle.h">
+      <Filter>01.Utility\03. Components\03. VIBuffer\04. Instance\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Screen.h">
+      <Filter>01.Utility\03. Components\03. VIBuffer\00. Rect\Screen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -544,6 +556,12 @@
     </ClCompile>
     <ClCompile Include="..\Private\Instancing_Object.cpp">
       <Filter>01.Utility\02. GameObjects\Instancing_Object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Particle.cpp">
+      <Filter>01.Utility\03. Components\03. VIBuffer\04. Instance\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Screen.cpp">
+      <Filter>01.Utility\03. Components\03. VIBuffer\00. Rect\Screen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

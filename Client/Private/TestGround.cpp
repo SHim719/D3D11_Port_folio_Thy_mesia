@@ -34,7 +34,7 @@ void CTestGround::Tick(_float fTimeDelta)
 
 void CTestGround::LateTick(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONLIGHT, this);
 }
 
 HRESULT CTestGround::Render()
@@ -53,6 +53,9 @@ HRESULT CTestGround::Render()
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Begin(0)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Bind_Buffers()))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))

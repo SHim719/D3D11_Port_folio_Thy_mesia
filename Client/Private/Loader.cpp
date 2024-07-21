@@ -425,6 +425,9 @@ HRESULT CLoader::Ready_UIResource()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillSlot", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillSlot/UI_SkillSlot.png"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Slot_Selected", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillSlot/TexUI_PW_ActiveSelected.dds"))))
+		return E_FAIL;
+
 #pragma endregion
 
 #pragma region SkillIcon
@@ -440,6 +443,16 @@ HRESULT CLoader::Ready_UIResource()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Spear", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_SkillIcon_Halberd.dds"))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Claw_Long", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_TalentIcon_Claw_Basic.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Claw_Short", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillIcon/TexUI_TalentIcon_Claw_Fast.dds"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Slot_Inactive", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/SkillSlot/TexUI_PW_Inactive.png"))))
+		return E_FAIL;
+
 #pragma endregion
 
 
@@ -506,6 +519,31 @@ HRESULT CLoader::Ready_UIResource()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Select_Highlighted", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu_Status/HighLight.png"))))
 		return E_FAIL;
 
+#pragma endregion
+
+#pragma region PW_Menu
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Window_PW", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Menu_PW/Window_PW.png"))))
+		return E_FAIL;
+
+#pragma endregion 
+
+#pragma region ObtainUI
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Popup_Axe", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Popup/Popup_Axe.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Popup_Hammer", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Popup/Popup_Hammer.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Popup_Spear", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Popup/Popup_Spear.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Popup_TwinBlade", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Popup/Popup_TwinBlade.png"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Popup_Key", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Popup/Popup_Key.png"))))
+		return E_FAIL;
 
 #pragma endregion
 

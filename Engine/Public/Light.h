@@ -17,7 +17,7 @@ public:
 
 public:
 	HRESULT Initialize(const LIGHT_DESC& LightDesc);
-	HRESULT Render(class CShader* pShader, class CVIBuffer_Rect* pVIBuffer);
+	HRESULT Render(class CShader* pShader, class CVIBuffer* pVIBuffer);
 
 private:
 	HRESULT Bind_Directional(CShader* pShader, OUT _uint& iPassIdx);

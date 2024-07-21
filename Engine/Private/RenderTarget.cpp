@@ -26,7 +26,7 @@ HRESULT CRenderTarget::Initialize(void* pArg)
 	TextureDesc.SampleDesc.Count = 1;
 
 	TextureDesc.Usage = D3D11_USAGE_DEFAULT;
-	TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+	TextureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;// | D3D11_BIND_UNORDERED_ACCESS;
 	TextureDesc.CPUAccessFlags = 0;
 	TextureDesc.MiscFlags = 0;
 
@@ -38,6 +38,9 @@ HRESULT CRenderTarget::Initialize(void* pArg)
 
 	if (FAILED(m_pDevice->CreateShaderResourceView(m_pTexture, nullptr, &m_pSRV)))
 		return E_FAIL;
+
+	//if (FAILED(m_pDevice->CreateUnorderedAccessView(m_pTexture, nullptr, &m_pUAV)))
+	//	return E_FAIL;
 
 	m_vClearColor = pRTDesc->vClearColor;
 

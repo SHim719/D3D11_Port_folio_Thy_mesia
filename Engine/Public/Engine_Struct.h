@@ -34,6 +34,14 @@ namespace Engine
 
 	}LIGHT_DESC;
 
+	typedef ENGINE_DLL struct tagParticleDesc
+	{
+		XMFLOAT3		vVelocity;
+		XMFLOAT3		vForce;
+		XMFLOAT3		vRotation;
+		float			fLifeTime;
+	} PARTICLE_DESC;
+
 	typedef struct tagLineIndices16
 	{
 		unsigned short		_0, _1;
@@ -119,10 +127,20 @@ namespace Engine
 		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
 	}VTXPOINT_DECLARATION;
 
+
+	typedef struct ENGINE_DLL tagVertexParticle_Declaration
+	{
+		static const unsigned int iNumElements = 5;
+		static const D3D11_INPUT_ELEMENT_DESC Elements[iNumElements];
+	}VTXPARTICLE_DECLARATION;
+
 	typedef struct tagVertexMatrix
 	{
 		XMFLOAT4		vRight, vUp, vLook, vTranslation;
 	}VTXMATRIX;
 
-	
+	typedef struct tagVertexParticle
+	{
+		XMFLOAT4		vRight, vUp, vLook, vTranslation;
+	}VTXPARTICLE;
 }

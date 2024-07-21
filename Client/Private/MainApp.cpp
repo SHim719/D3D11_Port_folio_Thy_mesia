@@ -11,6 +11,8 @@
 
 #include "MapObject.h"
 #include "Instancing_Object.h"
+//#include "Effect_Mesh.h"
+//#include "Effect_Particle.h"
 
 CMainApp::CMainApp()
 	: m_pGameInstance { CGameInstance::Get_Instance() }
@@ -71,7 +73,7 @@ HRESULT CMainApp::Render()
 	if (nullptr == m_pGameInstance)
 		return E_FAIL;
 
-	m_pGameInstance->Clear_BackBuffer_View(_float4(0.f, 0.f, 0.f, 1.f));
+	m_pGameInstance->Clear_BackBuffer_View(_float4(0.3f, 0.3f, 0.3f, 1.f));
 	m_pGameInstance->Clear_DepthStencil_View();
 
 	m_pGameInstance->Draw();
@@ -93,6 +95,10 @@ HRESULT CMainApp::Ready_Prototype_Component()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Point"),
 		CVIBuffer_Point::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Particle"),
+		CVIBuffer_Particle::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_VIBuffer_CellPoint"),
@@ -147,6 +153,14 @@ HRESULT CMainApp::Ready_Prototype_Shader()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Cell.hlsl"), VTXPOINT_DECLARATION::Elements, VTXPOINT_DECLARATION::iNumElements))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Shader_Particle"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Particle.hlsl"), VTXPARTICLE_DECLARATION::Elements, VTXPARTICLE_DECLARATION::iNumElements))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Shader_MeshEffect"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_MeshEffect.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -165,6 +179,12 @@ HRESULT CMainApp::Ready_Default()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_InstancingObj", CInstancing_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Effect_Particle", CEffect_Particle::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Effect_Mesh", CEffect_Mesh::Create(m_pDevice, m_pContext))))
+	//	return E_FAIL;
 
 	return S_OK;
 }

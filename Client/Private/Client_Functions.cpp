@@ -71,6 +71,20 @@ namespace JoMath
 			XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	}
 
+	_matrix OrientToDir(_fvector vDir)
+	{
+		_fvector		vRight = XMVector3Normalize(vDir);
+		_fvector		vLook = XMVector3Cross(XMVectorSet(0.f, 1.f, 0.f, 0.f), vRight);
+		_fvector		vUp = XMVector3Cross(vLook, vRight);
+
+		return _matrix(
+			vRight,
+			vUp,
+			vLook,
+			XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	}
+
+
 	_vector ToEulerAngle(_fvector vQuat, _bool bToDegree)
 	{
 		_float w = vQuat.m128_f32[3];
@@ -164,9 +178,22 @@ namespace JoRandom
 		std::random_device RD;
 		std::mt19937 gen(RD());
 
+		if (_fMin > _fMax)
+			swap(_fMin, _fMax);
+
 		std::uniform_real_distribution<_float> dis(_fMin, _fMax);
 
 		return dis(gen);
+	}
+
+	_float2 Random_Float2(const _float2& vMin, const _float2& vMax)
+	{
+		return _float2(Random_Float(vMin.x, vMax.x), Random_Float(vMin.y, vMax.y));
+	}
+
+	_float3 Random_Float3(const _float3& vMin, const _float3& vMax)
+	{
+		return _float3(Random_Float(vMin.x, vMax.x), Random_Float(vMin.y, vMax.y), Random_Float(vMin.z, vMax.z));
 	}
 
 

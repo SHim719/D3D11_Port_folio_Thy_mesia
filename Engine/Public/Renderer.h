@@ -11,7 +11,7 @@ class ENGINE_DLL CRenderer final : public CBase
 {
 public:
 	/* 그리는 순서대로 열거체를 정의했다. */
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_EFFECT, RENDER_UI, RENDER_END };
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -22,10 +22,12 @@ private:
 
 	class CGameInstance*	m_pGameInstance = { nullptr };
 
-	class CVIBuffer_Rect*	m_pVIBuffer = { nullptr };
+	class CVIBuffer_Rect*	m_pVIBuffer_Rect = { nullptr };
+	class CVIBuffer_Screen*	m_pVIBuffer = { nullptr };
 
 	/* 렌더타겟 디버깅용 패스 (0), 빛연산을 위한 패스 (1) */
-	class CShader*			m_pShader = { nullptr };
+	class CShader*			m_pDifferedShader = { nullptr };
+	class CShader*			m_pPostProcessShader = { nullptr };
 
 private:
 	/* m_WorldMatrix : 화면을 꽉 채우는 직교투영이 빈번히 활용되기때문에 저장해둘꺼야 .*/
@@ -45,15 +47,23 @@ private:
 
 	HRESULT Render_NonBlend();
 	HRESULT Render_NonLight();
-	HRESULT Render_Blend();
-	HRESULT Render_UI();
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
+	HRESULT Render_Effect();
+
+	HRESULT Render_Blend();
+	HRESULT Render_UI();
 	HRESULT Render_Components();
+
+	HRESULT Render_EffectBloom();
+	HRESULT Render_BrightPass();
+	HRESULT Render_Blur();
+	HRESULT Render_Bloom();
 
 #ifdef _DEBUG
 private:
 	HRESULT Render_Debug();
+	_bool m_bRenderRTV = { true };
 #endif
 
 private:
@@ -62,6 +72,12 @@ private:
 	list<class CShader*>				m_UsingShaders;
 
 	class CVIBuffer*					 m_pVIBuffer_UI = { nullptr };
+
+	D3D11_VIEWPORT						m_OriginViewPort = {};
+	D3D11_VIEWPORT						m_DownScalingViewPort = {};
+
+private:
+	HRESULT Ready_BloomTargets(_uint iWidth, _uint iHeight);
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

@@ -8,6 +8,8 @@
 #include "ToolNaviCell.h"
 #include "ToolNaviCellPoint.h"
 #include "ToolBoundingSphere.h"
+#include "ToolEffect_Particle.h"
+#include "ToolEffect_Mesh.h"
 
 #include "TestGround.h"
 #include "Free_Camera.h"
@@ -85,6 +87,18 @@ HRESULT CLevel_Tool::Initialize()
 		return E_FAIL;
 #endif
 
+#ifdef EffectTool
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/Mask/Masking/%d.png", 13));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/Noise/%d.png", 14));
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_FadeScreen", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/FadeScreen/FadeScreen.png"))))
+		return E_FAIL;
+
+#endif 
+
 	return S_OK;
 }
 
@@ -125,6 +139,8 @@ HRESULT CLevel_Tool::Ready_ToolObjects()
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolNaviCell", CToolNaviCell::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolNaviCellPoint", CToolNaviCellPoint::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolBoundingSphere", CToolBoundingSphere::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolEffect_Particle", CToolEffect_Particle::Create(m_pDevice, m_pContext));
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolEffect_Mesh", CToolEffect_Mesh::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -375,6 +391,11 @@ HRESULT CLevel_Tool::Ready_Etc()
 		return E_FAIL;
 
 
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_EffectMesh()
+{
 	return S_OK;
 }
 

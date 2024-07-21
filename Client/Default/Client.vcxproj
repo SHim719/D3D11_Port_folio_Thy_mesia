@@ -180,6 +180,10 @@
     <ClInclude Include="..\public\Cutscene_Actor.h" />
     <ClInclude Include="..\Public\Cutscene_Manager.h" />
     <ClInclude Include="..\Public\Door.h" />
+    <ClInclude Include="..\Public\Effect_Particle.h" />
+    <ClInclude Include="..\Public\ToolEffect_Mesh.h" />
+    <ClInclude Include="..\Public\ToolEffect_Particle.h" />
+    <ClInclude Include="..\Public\Effect_Tool.h" />
     <ClInclude Include="..\Public\Enemy.h" />
     <ClInclude Include="..\Public\EnemyStats.h" />
     <ClInclude Include="..\Public\EventTrigger.h" />
@@ -330,6 +334,7 @@
     <ClInclude Include="..\Public\UI_Menu.h" />
     <ClInclude Include="..\Public\UI_PlayerBar.h" />
     <ClInclude Include="..\Public\UI_PlayerDefault.h" />
+    <ClInclude Include="..\Public\UI_Popup.h" />
     <ClInclude Include="..\Public\UI_PW.h" />
     <ClInclude Include="..\Public\UI_SkillSlot.h" />
     <ClInclude Include="..\Public\UI_PlunderSlot.h" />
@@ -377,6 +382,10 @@
     <ClCompile Include="..\Private\Cutscene_Actor.cpp" />
     <ClCompile Include="..\Private\Cutscene_Manager.cpp" />
     <ClCompile Include="..\Private\Door.cpp" />
+    <ClCompile Include="..\Private\Effect_Particle.cpp" />
+    <ClCompile Include="..\Private\ToolEffect_Mesh.cpp" />
+    <ClCompile Include="..\Private\ToolEffect_Particle.cpp" />
+    <ClCompile Include="..\Private\Effect_Tool.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
     <ClCompile Include="..\Private\EnemyStats.cpp" />
     <ClCompile Include="..\Private\EventTrigger.cpp" />
@@ -514,6 +523,7 @@
     <ClCompile Include="..\Private\UI_Menu.cpp" />
     <ClCompile Include="..\Private\UI_PlayerBar.cpp" />
     <ClCompile Include="..\Private\UI_PlayerDefault.cpp" />
+    <ClCompile Include="..\Private\UI_Popup.cpp" />
     <ClCompile Include="..\Private\UI_PW.cpp" />
     <ClCompile Include="..\Private\UI_SkillSlot.cpp" />
     <ClCompile Include="..\Private\UI_PlunderSlot.cpp" />
@@ -578,6 +588,28 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshEffect.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>

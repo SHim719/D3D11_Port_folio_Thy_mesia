@@ -75,7 +75,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;	
 
-	Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV);
 	
     if (Out.vDiffuse.a < 0.1f)
         discard;
@@ -83,7 +83,7 @@ PS_OUT PS_MAIN(PS_IN In)
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	
 	
-	//vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexUV);
+	//vector vNormalDesc = g_NormalTexture.Sample(LinearWrapSampler, In.vTexUV);
 	//
 	//float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
@@ -101,7 +101,7 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV);
 
     Out.vDiffuse.a *= g_fAlpha;
 	
@@ -110,7 +110,7 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
 	
     Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
 	
-	//vector vNormalDesc = g_NormalTexture.Sample(DefaultSampler, In.vTexUV);
+	//vector vNormalDesc = g_NormalTexture.Sample(LinearWrapSampler, In.vTexUV);
 	//
 	//float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
 
@@ -134,7 +134,7 @@ PS_OUT PS_MAIN_PLAGUEWEAPON(PS_IN In)
     float4 vColor = float4(134.f, 217.f, 196.f, 1.f) / 255.f;
     vColor.a = 1.f;
 	
-    Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV) * vColor;
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV) * vColor;
    
     if (Out.vDiffuse.a < 0.1f)
         discard;
@@ -197,6 +197,7 @@ technique11 DefaultTechinque
         GeometryShader = NULL;
         DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
+		ComputeShader = NULL;
 	}	
 
 	pass Picking // 1
@@ -210,6 +211,7 @@ technique11 DefaultTechinque
         GeometryShader = NULL;
         DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN_PICKING();
+		ComputeShader = NULL;
 	}
 
 
@@ -224,6 +226,7 @@ technique11 DefaultTechinque
         GeometryShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHABLEND();
+		ComputeShader = NULL;
     }
 
     pass PlagueWeapon // 3
@@ -235,6 +238,7 @@ technique11 DefaultTechinque
         VertexShader = compile vs_5_0 VS_MAIN();
         GeometryShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_PLAGUEWEAPON();
+		ComputeShader = NULL;
     }
 	
 }

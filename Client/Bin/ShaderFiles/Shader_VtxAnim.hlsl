@@ -34,10 +34,10 @@ struct VS_OUT
 //
 //    matrix mat =
 //    {
-//        tex2D.SampleLevel(DefaultSampler, uvCol, 0),
-//		tex2D.SampleLevel(DefaultSampler, uvCol + float2(1.0f / 64.0f, 0.f), 0),
-//		tex2D.SampleLevel(DefaultSampler, uvCol + float2(2.0f / 64.0f, 0.f), 0),
-//		tex2D.SampleLevel(DefaultSampler, uvCol + float2(3.0f / 64.0f, 0.f), 0)
+//        tex2D.SampleLevel(LinearWrapSampler, uvCol, 0),
+//		tex2D.SampleLevel(LinearWrapSampler, uvCol + float2(1.0f / 64.0f, 0.f), 0),
+//		tex2D.SampleLevel(LinearWrapSampler, uvCol + float2(2.0f / 64.0f, 0.f), 0),
+//		tex2D.SampleLevel(LinearWrapSampler, uvCol + float2(3.0f / 64.0f, 0.f), 0)
 //    };
 //
 //    return mat;
@@ -93,7 +93,7 @@ PS_OUT PS_MAIN(PS_IN In)
 {
 	PS_OUT		Out = (PS_OUT)0;	
 
-	Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+	Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV);
 	
     if (Out.vDiffuse.a < 0.1f)
         discard;
@@ -111,7 +111,7 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
 
-    Out.vDiffuse = g_DiffuseTexture.Sample(DefaultSampler, In.vTexUV);
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV);
 	
     if (Out.vDiffuse.a < 0.1f)
         discard;
@@ -140,6 +140,7 @@ technique11 DefaultTechinque
 		GeometryShader = NULL;
         DomainShader = NULL;
 		PixelShader = compile ps_5_0 PS_MAIN();
+		ComputeShader = NULL;
 	}
 
     pass AlphaBlend // 1
@@ -153,6 +154,7 @@ technique11 DefaultTechinque
         GeometryShader = NULL;
         DomainShader = NULL;
         PixelShader = compile ps_5_0 PS_MAIN_ALPHABLEND();
+		ComputeShader = NULL;
     }
 	
 }

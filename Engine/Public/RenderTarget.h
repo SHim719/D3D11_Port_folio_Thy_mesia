@@ -35,12 +35,13 @@ public:
 #endif
 
 private:
-	ID3D11Device*				m_pDevice = nullptr;
-	ID3D11DeviceContext*		m_pContext = nullptr;
+	ID3D11Device*				m_pDevice = { nullptr };
+	ID3D11DeviceContext*		m_pContext = { nullptr };
 
-	ID3D11Texture2D*			m_pTexture = nullptr;
-	ID3D11ShaderResourceView*	m_pSRV = nullptr;
-	ID3D11RenderTargetView*		m_pRTV = nullptr;
+	ID3D11Texture2D*			m_pTexture = { nullptr };
+	ID3D11ShaderResourceView*	m_pSRV = { nullptr };
+	ID3D11RenderTargetView*		m_pRTV = { nullptr };
+	ID3D11UnorderedAccessView*	m_pUAV = { nullptr };
 
 	_float4						m_vClearColor = {};
 
