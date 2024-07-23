@@ -111,7 +111,10 @@ HRESULT CShader::Set_ShaderResourceView(const char* pContantName, ID3D11ShaderRe
 	if (nullptr == pShaderResource)
 		return E_FAIL;
 
-	return pShaderResource->SetResource(pSRV);
+	if (FAILED(pShaderResource->SetResource(pSRV)))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CShader::Begin(_uint iPassIndex)

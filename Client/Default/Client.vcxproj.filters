@@ -709,6 +709,15 @@
     <Filter Include="02. GameObjects\05. Effect\Effect_Mesh">
       <UniqueIdentifier>{027a5d3c-9cd1-4f80-b295-7b23cdaa09a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="96. ShaderFiles\PostProcessing">
+      <UniqueIdentifier>{54bb39f8-ba8b-4590-b923-911646eaec0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. ShaderFiles\Defines">
+      <UniqueIdentifier>{bfe84cc2-0f66-49b5-932c-bd103a189772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. ShaderFiles\Effect">
+      <UniqueIdentifier>{adb7f318-e372-4dc2-96ec-bf39355e3690}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1886,11 +1895,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli">
-      <Filter>96. ShaderFiles</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxTex.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
@@ -1912,14 +1916,31 @@
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Deferred.hlsl">
       <Filter>96. ShaderFiles</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshEffect.hlsl">
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Bloom.hlsl">
+      <Filter>96. ShaderFiles\PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl">
+      <Filter>96. ShaderFiles\PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_VtxNorTex.hlsl">
       <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_MeshEffect.hlsl">
+      <Filter>96. ShaderFiles\Effect</Filter>
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle.hlsl">
-      <Filter>96. ShaderFiles</Filter>
+      <Filter>96. ShaderFiles\Effect</Filter>
     </FxCompile>
-    <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcessing.hlsl">
-      <Filter>96. ShaderFiles</Filter>
-    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Bin\ShaderFiles\Shader_Defines.hlsli">
+      <Filter>96. ShaderFiles\Defines</Filter>
+    </None>
+    <None Include="..\Bin\ShaderFiles\Shader_PostProcess_Defines.hlsli">
+      <Filter>96. ShaderFiles\Defines</Filter>
+    </None>
+    <None Include="..\Bin\ShaderFiles\Shader_Effect_Defines.hlsli">
+      <Filter>96. ShaderFiles\Defines</Filter>
+    </None>
   </ItemGroup>
 </Project>

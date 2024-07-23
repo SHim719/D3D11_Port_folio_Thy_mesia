@@ -196,15 +196,11 @@ namespace JoRandom
 		return _float3(Random_Float(vMin.x, vMax.x), Random_Float(vMin.y, vMax.y), Random_Float(vMin.z, vMax.z));
 	}
 
-
-}
-
-namespace JoMapLoad
-{
-	HRESULT JoMapLoad::Load_Maps(_uint iLevelID, const wstring& wstrFolderPath)
+	_float4 Random_Float4(const _float4& vMin, const _float4& vMax)
 	{
-		return E_NOTIMPL;
+		return _float4(Random_Float(vMin.x, vMax.x), Random_Float(vMin.y, vMax.y), Random_Float(vMin.z, vMax.z), Random_Float(vMin.w, vMax.w));
 	}
 }
+
 
 

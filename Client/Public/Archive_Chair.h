@@ -21,7 +21,7 @@ public:
 	void Active_Chair();
 
 private:
-	_bool m_bFound = { true };
+	_bool m_bFound = { false };
 
 private:
 	void OnCollisionStay(CGameObject* pOther)	override;

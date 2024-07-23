@@ -37,6 +37,7 @@ private:
 	_float3						m_fTargetPos = { 0.f, 0.f, 0.f };
 
 	_float4						m_vColor = { 1.f, 1.f, 1.f, 1.f };
+	_float4						m_vClipColor = { 0.f, 0.f, 0.f, 0.f };
 
 	_float2						m_vScaleSpeed = { 0.f, 0.f };
 
@@ -44,14 +45,13 @@ private:
 
 	_float3						m_vRotationSpeed = { 0.f, 0.f, 0.f };
 
-	_bool						m_bOrientToVelocity = { false };
 	_bool						m_bLoop = { false };
 
 	_float						m_fLifeTime = { 1.f };
 private:
 	CVIBuffer_Particle* m_pVIBuffer_Particle = { nullptr };
-	CTexture* m_pMaskTexture = { nullptr };
-	CShader* m_pShader = { nullptr };
+	CTexture*			m_pMaskTexture = { nullptr };
+	CShader*			m_pShader = { nullptr };
 
 private:
 	HRESULT Ready_Components();

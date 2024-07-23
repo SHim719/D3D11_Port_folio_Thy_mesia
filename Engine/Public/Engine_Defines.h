@@ -24,7 +24,6 @@
 #include <DirectXTK/SpriteFont.h>
 #include <DirectXTK/DirectXCollision.h>
 
-
 #include <DirectXMath.h>
 using namespace DirectX;
 
@@ -58,5 +57,6 @@ using namespace DirectX;
 
 using namespace Engine;
 using namespace std;
+
 namespace fs = std::filesystem;
 

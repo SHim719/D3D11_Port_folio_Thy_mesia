@@ -13,6 +13,7 @@
 #include "VIBuffer_Sphere.h"
 #include "VIBuffer_Particle.h"
 #include "VIBuffer_Screen.h"
+#include "VIBuffer_Rect_NorTex.h"
 
 #include "Model.h"
 #include "Model_Instance.h"

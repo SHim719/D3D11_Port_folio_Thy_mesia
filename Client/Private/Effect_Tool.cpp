@@ -103,45 +103,68 @@ void CEffect_Tool::Particle_Desc_Window()
 {
     if (m_iSelectIdx < 0 || m_CreatedParticles.empty())
         return;
-
+  
     CToolEffect_Particle* pParticle = m_CreatedParticles[m_iSelectIdx].second;
 
     ImGui::Checkbox("NoRender", &pParticle->m_bNoRender);
+    ImGui::Checkbox("Loop?", &pParticle->m_bLoop);
     ImGui::Checkbox("BillBoard?", &pParticle->m_bBillBoard);
-    ImGui::Checkbox("OrientToVelocity?", &pParticle->m_bOrientToVelocity);
 
     if (ImGui::InputInt("NumInstances", &pParticle->m_iNumParticles))
         pParticle->Resize_Particles((_uint)pParticle->m_iNumParticles);
 
-    ImGui::InputInt("MaskTexIdx", &pParticle->m_iMaskTexureIdx);
+    ImGui::InputInt("BaseTexIdx", &pParticle->m_iBaseTextureIdx);
+    ImGui::InputInt("MaskTexIdx", &pParticle->m_iMaskTextureIdx);
+    ImGui::InputInt("NoiseTexIdx", &pParticle->m_iNoiseTextureIdx);
+    ImGui::InputInt("EmissiveTexIdx", &pParticle->m_iEmissiveTextureIdx);
     ImGui::InputInt("PassIdx", &pParticle->m_iPassIdx);
 
-    ImGui::DragFloat4("Color", (_float*)&pParticle->m_vColor, 0.1f, 0.f, 1.f);
+    ImGui::InputFloat4("Clip Color", (_float*)&pParticle->m_vClipColor);
+    ImGui::InputFloat4("Color_Offset", (_float*)&pParticle->m_vColorOffset);
+    ImGui::DragFloat4("Color_Mul", (_float*)&pParticle->m_vColorMul, 0.1f, 0.f, 1.f);
 
-    ImGui::DragFloat3("StartPosMin", (_float*)&pParticle->m_vStartPosMin, 0.1f, -99.f, 99.f);
-    ImGui::DragFloat3("StartPosMax", (_float*)&pParticle->m_vStartPosMax, 0.1f, -99.f, 99.f);
+    ImGui::DragFloat3("StartPosMin", (_float*)&pParticle->m_vStartPosMin, 0.01f, -99.f, 99.f);
+    ImGui::DragFloat3("StartPosMax", (_float*)&pParticle->m_vStartPosMax, 0.01f, -99.f, 99.f);
 
-    ImGui::DragFloat3("DirMin", (_float*)&pParticle->m_vDirMin, 0.05f, -1.f, 1.f);
-    ImGui::DragFloat3("DirMax", (_float*)&pParticle->m_vDirMax, 0.05f, -1.f, 1.f);
+    ImGui::DragFloat2("StartSizeMin", (_float*)&pParticle->m_vStartSizeMin, 0.01f, -99.f, 99.f);
+    ImGui::DragFloat2("StartSizeMax", (_float*)&pParticle->m_vStartSizeMax, 0.01f, -99.f, 99.f);
 
-    ImGui::DragFloat("VelocityScaleMin", &pParticle->m_fVelocityScaleMin, 0.1f, -999.f, 999.f);
-    ImGui::DragFloat("VelocityScaleMax", &pParticle->m_fVelocityScaleMax, 0.1f, -999.f, 999.f);
+    ImGui::Checkbox("Lerp Size?", &pParticle->m_bSizeLerp);
+    if (pParticle->m_bSizeLerp)
+        ImGui::DragFloat2("End Size", (_float*)&pParticle->m_vSizeEnd, 0.01f, 0.f, 99.f);
 
-    ImGui::InputFloat("LifeTime", &pParticle->m_fLifeTime);
+    ImGui::DragFloat3("SpeedDirMin", (_float*)&pParticle->m_vSpeedDirMin, 0.01f, -99.f, 99.f);
+    ImGui::DragFloat3("SpeedDirMax", (_float*)&pParticle->m_vSpeedDirMax, 0.01f, -99.f, 99.f);
 
-    ImGui::DragFloat3("ForceDirMin", (_float*)&pParticle->m_vForceDirMin, 0.05f, -1.f, 1.f);
-    ImGui::DragFloat3("ForceDirMax", (_float*)&pParticle->m_vForceDirMax, 0.05f, -1.f, 1.f);
+    ImGui::DragFloat("StartSpeedMin", (_float*)&pParticle->m_fStartSpeedMin, 0.01f, -99.f, 99.f);
+    ImGui::DragFloat("StartSpeedMax", (_float*)&pParticle->m_fStartSpeedMax, 0.01f, -99.f, 99.f);
+    
+    ImGui::Checkbox("Lerp Speed?", &pParticle->m_bSpeedLerp);
+    if (pParticle->m_bSpeedLerp)
+        ImGui::DragFloat("End Speed", (_float*)&pParticle->m_fSpeedEnd, 0.01f, -99.f, 99.f);
 
-    ImGui::DragFloat("ForceScaleMin", &pParticle->m_fForceScaleMin, 1.f, -999.f, 999.f);
-    ImGui::DragFloat("ForceScaleMax", &pParticle->m_fForceScaleMax, 1.f, -999.f, 999.f);
+    ImGui::DragFloat("GravityScale", (_float*)&pParticle->m_fGravityScale, 0.01f, 0.f, 99.f);
 
-    ImGui::DragFloat2("ScaleMin", (_float*)&pParticle->m_vScaleMin, 0.05f,  0.001f, 0.001f);
-    ImGui::DragFloat2("ScaleMax", (_float*)&pParticle->m_vScaleMax, 0.05f, 100.f, 100.f);
-    ImGui::DragFloat2("ScaleSpeed", (_float*)&pParticle->m_vScaleSpeed, 0.05f, 0.001f, 0.001f);
+    ImGui::DragFloat4("StartColorMin", (_float*)&pParticle->m_vStartColorMin, 0.1f,  0.f, 999.f);
+    ImGui::DragFloat4("StartColorMax", (_float*)&pParticle->m_vStartColorMax, 0.1f,  0.f, 999.f);
 
-    ImGui::SliderFloat3("vRotationMin", (_float*)&pParticle->m_vRotationMin, -XM_PI, XM_PI);
-    ImGui::SliderFloat3("vRotationMax", (_float*)&pParticle->m_vRotationMax, -XM_PI, XM_PI);
-    ImGui::SliderFloat3("vRotationSpeed", (_float*)&pParticle->m_vRotationSpeed, -XM_PI, XM_PI);
+    ImGui::Checkbox("Lerp Color?", &pParticle->m_bColorLerp);
+    if (pParticle->m_bSpeedLerp)
+        ImGui::DragFloat4("End Color", (_float*)&pParticle->m_vColorEnd, 0.01f, -99.f, 99.f);
+
+    ImGui::DragFloat("LifeTimeMin", (_float*)&pParticle->m_fLifeTimeMin, 0.01f, 0.f, 99.f);
+    ImGui::DragFloat("LifeTimeMax", (_float*)&pParticle->m_fLifeTimeMax, 0.01f, 0.f, 99.f);
+
+    ImGui::Checkbox("Sprite?", &pParticle->m_bSprite);
+
+    if (pParticle->m_bSprite)
+    {
+        ImGui::Text(to_string(pParticle->m_iNowSpriteIdx).c_str());
+        ImGui::DragInt("Col", &pParticle->m_iCol, 1, 0, 99);
+        ImGui::SameLine();
+        ImGui::DragInt("Row", &pParticle->m_iRow, 1, 0, 99);
+    }
+    
 }
 
 void CEffect_Tool::Particle_Created_Window()
@@ -205,18 +228,6 @@ void CEffect_Tool::Save_ParticleData()
             return;
 
         CToolEffect_Particle* pParticle = m_CreatedParticles[m_iSelectIdx].second;
-       
-        fout.write((_char*)&pParticle->m_iNumParticles, sizeof(_int));
-        fout.write((_char*)&pParticle->m_bBillBoard, sizeof(_bool));
-        fout.write((_char*)&pParticle->m_iMaskTexureIdx, sizeof(_int));
-        fout.write((_char*)&pParticle->m_iPassIdx, sizeof(_int));
-        fout.write((_char*)&pParticle->m_bOrientToVelocity, sizeof(_bool));
-        fout.write((_char*)&pParticle->m_bTargeting, sizeof(_bool));
-        fout.write((_char*)&pParticle->m_fTargetPos, sizeof(_float3));
-        fout.write((_char*)&pParticle->m_vColor, sizeof(_float4));
-        fout.write((_char*)&pParticle->m_vScaleSpeed, sizeof(_float2));
-        fout.write((_char*)&pParticle->m_vMaxScale, sizeof(_float2));
-        fout.write((_char*)&pParticle->m_vRotationSpeed, sizeof(_float3));
 
         for (size_t i = 0; i < pParticle->m_InitParticleDatas.size(); ++i)
         {
@@ -247,18 +258,18 @@ void CEffect_Tool::Load_ParticleData()
             return;
 
         CToolEffect_Particle* pParticle = static_cast<CToolEffect_Particle*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Effect", L"Prototype_ToolEffect_Particle"));
-
-        fin.read((_char*)&pParticle->m_iNumParticles, sizeof(_int));
-        fin.read((_char*)&pParticle->m_bBillBoard, sizeof(_bool));
-        fin.read((_char*)&pParticle->m_iMaskTexureIdx, sizeof(_int));
-        fin.read((_char*)&pParticle->m_iPassIdx, sizeof(_int));
-        fin.read((_char*)&pParticle->m_bOrientToVelocity, sizeof(_bool));
-        fin.read((_char*)&pParticle->m_bTargeting, sizeof(_bool));
-        fin.read((_char*)&pParticle->m_fTargetPos, sizeof(_float3));
-        fin.read((_char*)&pParticle->m_vColor, sizeof(_float4));
-        fin.read((_char*)&pParticle->m_vScaleSpeed, sizeof(_float2));
-        fin.read((_char*)&pParticle->m_vMaxScale, sizeof(_float2));
-        fin.read((_char*)&pParticle->m_vRotationSpeed, sizeof(_float3));
+       //
+       // fin.read((_char*)&pParticle->m_iNumParticles, sizeof(_int));
+       // fin.read((_char*)&pParticle->m_bBillBoard, sizeof(_bool));
+       // fin.read((_char*)&pParticle->m_iMaskTexureIdx, sizeof(_int));
+       // fin.read((_char*)&pParticle->m_iPassIdx, sizeof(_int));
+       // fin.read((_char*)&pParticle->m_bOrientToVelocity, sizeof(_bool));
+       // fin.read((_char*)&pParticle->m_bTargeting, sizeof(_bool));
+       // fin.read((_char*)&pParticle->m_fTargetPos, sizeof(_float3));
+       // fin.read((_char*)&pParticle->m_vColor, sizeof(_float4));
+       // fin.read((_char*)&pParticle->m_vScaleSpeed, sizeof(_float2));
+       // fin.read((_char*)&pParticle->m_vMaxScale, sizeof(_float2));
+       // fin.read((_char*)&pParticle->m_vRotationSpeed, sizeof(_float3));
 
         pParticle->Resize_Particles(pParticle->m_iNumParticles);
 

@@ -81,4 +81,9 @@ namespace Client
 		_uint		iPlayerAnimIdx;
 	}LADDERDESC;
 
+	typedef struct tagParticleDesc
+	{
+		_float3		vDir;
+		_float		fSpeed;
+	}PARTICLE_DESC;
 }

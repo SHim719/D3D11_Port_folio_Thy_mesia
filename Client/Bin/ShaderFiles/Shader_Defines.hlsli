@@ -1,9 +1,26 @@
+#ifndef SHADER_DEFINE
+#define SHADER_DEFINE
 
 sampler LinearWrapSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_LINEAR;
     AddressU = wrap;
     AddressV = wrap;
+};
+
+sampler LinearClampSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = clamp;
+    AddressV = clamp;
+};
+
+sampler LinearBorderSampler = sampler_state
+{
+    Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = BORDER;
+    AddressV = BORDER;
+    AddressW = BORDER;
 };
 
 sampler PointWrapSampler = sampler_state
@@ -13,18 +30,13 @@ sampler PointWrapSampler = sampler_state
     AddressV = WRAP;
 };
 
-sampler LinearClampSampler = sampler_state
-{
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = wrap;
-    AddressV = wrap;
-};
+
 
 sampler PointClampSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_POINT;
-    AddressU = WRAP;
-    AddressV = WRAP;
+    AddressU = clamp;
+    AddressV = clamp;
 };
 
 
@@ -62,6 +74,12 @@ DepthStencilState DSS_NoZTest_And_Write
     DepthWriteMask = zero;
 };
 
+DepthStencilState DSS_Effect
+{
+    DepthEnable = true;
+    DepthWriteMask = zero;
+};
+
 BlendState BS_None
 {
     BlendEnable[0] = false;
@@ -74,3 +92,19 @@ BlendState BS_AlphaBlend
     DestBlend[0] = INV_SRC_ALPHA;
     BlendOp[0] = Add;
 };
+
+BlendState BS_AlphaBlendEffect
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
+
+    SrcBlend = SRC_ALPHA;
+    DestBlend = INV_SRC_ALPHA;
+    BlendOp = Add;
+
+    SrcBlendAlpha = Src_Alpha;
+    DestBlendAlpha = Dest_Alpha;
+    BlendOpAlpha = MAX;
+};
+
+#endif

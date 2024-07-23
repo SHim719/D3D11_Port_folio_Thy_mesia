@@ -41,10 +41,8 @@ namespace JoRandom
 	_float Random_Float(_float _fMin, _float _fMax);
 	_float2 Random_Float2(const _float2& vMin, const _float2& vMax);
 	_float3 Random_Float3(const _float3& vMin, const _float3& vMax);
+	_float4 Random_Float4(const _float4& vMin, const _float4& vMax);
 }
 
-namespace JoMapLoad
-{
-	HRESULT Load_Maps(_uint iLevelID, const wstring& wstrFolderPath);
-}
+
 

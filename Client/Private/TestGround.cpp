@@ -21,7 +21,7 @@ HRESULT CTestGround::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	m_pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), To_Radian(90.f));
+	//m_pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), To_Radian(90.f));
 	m_pTransform->Set_Scale({ 10.f, 10.f, 1.f });
 	m_pTransform->Set_Position(XMVectorSet(0.f, 0.f, 5.f, 1.f));
 
@@ -34,7 +34,7 @@ void CTestGround::Tick(_float fTimeDelta)
 
 void CTestGround::LateTick(_float fTimeDelta)
 {
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONLIGHT, this);
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 }
 
 HRESULT CTestGround::Render()
@@ -76,10 +76,10 @@ HRESULT CTestGround::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, &TransformDesc)))
 
 		return E_FAIL;
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxTex"), TEXT("Shader"), (CComponent**)&m_pShader)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxNorTex"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Rect"), TEXT("VIBuffer"), (CComponent**)&m_pVIBuffer)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Rect_NorTex"), TEXT("VIBuffer"), (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_TOOL, TEXT("Prototype_BG_Texture"), TEXT("Texture"), (CComponent**)&m_pTexture)))

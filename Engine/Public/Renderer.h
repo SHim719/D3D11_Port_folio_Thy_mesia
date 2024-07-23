@@ -26,7 +26,8 @@ private:
 	class CVIBuffer_Screen*	m_pVIBuffer = { nullptr };
 
 	/* ·»´õÅ¸°Ù µð¹ö±ë¿ë ÆÐ½º (0), ºû¿¬»êÀ» À§ÇÑ ÆÐ½º (1) */
-	class CShader*			m_pDifferedShader = { nullptr };
+	class CShader*			m_pDeferredShader = { nullptr };
+	class CShader*			m_pBloomShader = { nullptr };
 	class CShader*			m_pPostProcessShader = { nullptr };
 
 private:
@@ -51,17 +52,30 @@ private:
 	HRESULT Render_Deferred();
 	HRESULT Render_Effect();
 
+	HRESULT Render_SampleForBloom();
+	HRESULT Render_DownSample();
+	HRESULT Render_UpSample();
+
+	HRESULT Render_PostProcess();
+	HRESULT PostProcess_Bloom();
+
+	HRESULT Render_Final();
+
 	HRESULT Render_Blend();
 	HRESULT Render_UI();
 	HRESULT Render_Components();
 
-	HRESULT Render_EffectBloom();
-	HRESULT Render_BrightPass();
-	HRESULT Render_Blur();
-	HRESULT Render_Bloom();
+private:
+	HRESULT Ready_DefaultTargets(_uint iWidth, _uint iHeight);
+	HRESULT Ready_LightTargets(_uint iWidth, _uint iHeight);
+	HRESULT Ready_DeferredTarget(_uint iWidth, _uint iHeight);
+	HRESULT Ready_EffectTargets(_uint iWidth, _uint iHeight);
+	HRESULT Ready_BloomTargets(_uint iWidth, _uint iHeight);
 
+	
 #ifdef _DEBUG
 private:
+	HRESULT Ready_Debug();
 	HRESULT Render_Debug();
 	_bool m_bRenderRTV = { true };
 #endif
@@ -71,13 +85,17 @@ private:
 	list<class CComponent*>				m_RenderComponents;
 	list<class CShader*>				m_UsingShaders;
 
-	class CVIBuffer*					 m_pVIBuffer_UI = { nullptr };
+	class CVIBuffer*					m_pVIBuffer_UI = { nullptr };
 
 	D3D11_VIEWPORT						m_OriginViewPort = {};
-	D3D11_VIEWPORT						m_DownScalingViewPort = {};
 
 private:
-	HRESULT Ready_BloomTargets(_uint iWidth, _uint iHeight);
+	_uint m_iBloomLevel = { 3 };
+
+private:
+	HRESULT Ready_Buffers();
+	HRESULT Ready_Shaders();
+	HRESULT Bind_Matrices();
 
 public:
 	static CRenderer* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

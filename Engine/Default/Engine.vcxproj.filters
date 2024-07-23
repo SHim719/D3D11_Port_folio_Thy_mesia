@@ -187,6 +187,9 @@
     <Filter Include="01.Utility\03. Components\03. VIBuffer\00. Rect\Screen">
       <UniqueIdentifier>{c8c4e23f-7a44-4a89-9b39-11ae5a8843bd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03. Components\03. VIBuffer\00. Rect\VIBuffer_Rect_NorTex">
+      <UniqueIdentifier>{b0b55605-9d69-45f1-819a-50c69e332529}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -387,6 +390,9 @@
     <ClInclude Include="..\Public\VIBuffer_Screen.h">
       <Filter>01.Utility\03. Components\03. VIBuffer\00. Rect\Screen</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Rect_NorTex.h">
+      <Filter>01.Utility\03. Components\03. VIBuffer\00. Rect\VIBuffer_Rect_NorTex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -562,6 +568,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Screen.cpp">
       <Filter>01.Utility\03. Components\03. VIBuffer\00. Rect\Screen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Rect_NorTex.cpp">
+      <Filter>01.Utility\03. Components\03. VIBuffer\00. Rect\VIBuffer_Rect_NorTex</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

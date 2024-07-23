@@ -26,58 +26,58 @@ HRESULT CEffect_Particle::Initialize(void* pArg)
 
 void CEffect_Particle::Tick(_float fTimeDelta)
 {
-	for (size_t i = 0; i < m_NowParticleDatas.size(); ++i)
-	{
-		_vector vVelocity = XMLoadFloat3(&m_NowParticleDescs[i].vVelocity);
-		_vector vForce = XMLoadFloat3(&m_NowParticleDescs[i].vForce);
-
-		_float4x4 TransformMatrix4x4;
-		memcpy(&TransformMatrix4x4, &m_NowParticleDatas[i], sizeof(_float4x4));
-
-		_vector vPosition = XMLoadFloat4(&m_NowParticleDatas[i].vTranslation) + vVelocity * fTimeDelta;
-
-		_float fScaleX = XMVector3Length(XMLoadFloat4((_float4*)&TransformMatrix4x4.m[0])).m128_f32[0];
-		_float fScaleY = XMVector3Length(XMLoadFloat4((_float4*)&TransformMatrix4x4.m[1])).m128_f32[1];
-
-		fScaleX = clamp(fScaleX + m_vScaleSpeed.x * fTimeDelta, 0.f, m_vMaxScale.x);
-		fScaleY = clamp(fScaleY + m_vScaleSpeed.y * fTimeDelta, 0.f, m_vMaxScale.y);
-
-		if (m_bOrientToVelocity)
-		{
-			_matrix OrientMatrix = JoMath::OrientToDir(vVelocity);
-
-			OrientMatrix.r[0] = XMVector3Normalize(OrientMatrix.r[0]) * fScaleX;
-			OrientMatrix.r[1] = XMVector3Normalize(OrientMatrix.r[1]) * fScaleY;
-
-			memcpy(&m_NowParticleDatas[i], &OrientMatrix, sizeof(_float4x4));
-		}
-		else
-		{
-			m_NowParticleDescs[i].vRotation.x += m_vRotationSpeed.x * fTimeDelta;
-			m_NowParticleDescs[i].vRotation.y += m_vRotationSpeed.y * fTimeDelta;
-			m_NowParticleDescs[i].vRotation.z += m_vRotationSpeed.z * fTimeDelta;
-
-			_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(m_NowParticleDescs[i].vRotation.x
-				, m_NowParticleDescs[i].vRotation.y, m_NowParticleDescs[i].vRotation.z);
-
-			RotationMatrix.r[0] = XMVector3Normalize(RotationMatrix.r[0]) * fScaleX;
-			RotationMatrix.r[1] = XMVector3Normalize(RotationMatrix.r[1]) * fScaleY;
-
-			memcpy(&m_NowParticleDatas[i], &RotationMatrix, sizeof(_float4x4));
-		}
-
-		XMStoreFloat4(&m_NowParticleDatas[i].vTranslation, vPosition);
-
-		vVelocity += vForce * fTimeDelta;
-		XMStoreFloat3(&m_NowParticleDescs[i].vVelocity, vVelocity);
-
-		m_NowParticleDescs[i].fLifeTime -= fTimeDelta;
-		if (m_NowParticleDescs[i].fLifeTime <= 0.f && m_bLoop)
-			memcpy(&m_NowParticleDescs[i], &m_InitParticleDescs[i], sizeof(PARTICLE_DESC));
-	}
-
-	if (m_pVIBuffer_Particle)
-		m_pVIBuffer_Particle->Update_Particle(m_NowParticleDatas);
+	//for (size_t i = 0; i < m_NowParticleDatas.size(); ++i)
+	//{
+	//	_vector vVelocity = XMLoadFloat3(&m_NowParticleDescs[i].vVelocity);
+	//	_vector vForce = XMLoadFloat3(&m_NowParticleDescs[i].vForce);
+	//
+	//	_float4x4 TransformMatrix4x4;
+	//	memcpy(&TransformMatrix4x4, &m_NowParticleDatas[i], sizeof(_float4x4));
+	//
+	//	_vector vPosition = XMLoadFloat4(&m_NowParticleDatas[i].vTranslation) + vVelocity * fTimeDelta;
+	//
+	//	_float fScaleX = XMVector3Length(XMLoadFloat4((_float4*)&TransformMatrix4x4.m[0])).m128_f32[0];
+	//	_float fScaleY = XMVector3Length(XMLoadFloat4((_float4*)&TransformMatrix4x4.m[1])).m128_f32[1];
+	//
+	//	fScaleX = clamp(fScaleX + m_vScaleSpeed.x * fTimeDelta, 0.f, m_vMaxScale.x);
+	//	fScaleY = clamp(fScaleY + m_vScaleSpeed.y * fTimeDelta, 0.f, m_vMaxScale.y);
+	//
+	//	if (m_bOrientToVelocity)
+	//	{
+	//		_matrix OrientMatrix = JoMath::OrientToDir(vVelocity);
+	//
+	//		OrientMatrix.r[0] = XMVector3Normalize(OrientMatrix.r[0]) * fScaleX;
+	//		OrientMatrix.r[1] = XMVector3Normalize(OrientMatrix.r[1]) * fScaleY;
+	//
+	//		memcpy(&m_NowParticleDatas[i], &OrientMatrix, sizeof(_float4x4));
+	//	}
+	//	else
+	//	{
+	//		m_NowParticleDescs[i].vRotation.x += m_vRotationSpeed.x * fTimeDelta;
+	//		m_NowParticleDescs[i].vRotation.y += m_vRotationSpeed.y * fTimeDelta;
+	//		m_NowParticleDescs[i].vRotation.z += m_vRotationSpeed.z * fTimeDelta;
+	//
+	//		_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(m_NowParticleDescs[i].vRotation.x
+	//			, m_NowParticleDescs[i].vRotation.y, m_NowParticleDescs[i].vRotation.z);
+	//
+	//		RotationMatrix.r[0] = XMVector3Normalize(RotationMatrix.r[0]) * fScaleX;
+	//		RotationMatrix.r[1] = XMVector3Normalize(RotationMatrix.r[1]) * fScaleY;
+	//
+	//		memcpy(&m_NowParticleDatas[i], &RotationMatrix, sizeof(_float4x4));
+	//	}
+	//
+	//	XMStoreFloat4(&m_NowParticleDatas[i].vTranslation, vPosition);
+	//
+	//	vVelocity += vForce * fTimeDelta;
+	//	XMStoreFloat3(&m_NowParticleDescs[i].vVelocity, vVelocity);
+	//
+	//	m_NowParticleDescs[i].fLifeTime -= fTimeDelta;
+	//	if (m_NowParticleDescs[i].fLifeTime <= 0.f && m_bLoop)
+	//		memcpy(&m_NowParticleDescs[i], &m_InitParticleDescs[i], sizeof(PARTICLE_DESC));
+	//}
+	//
+	//if (m_pVIBuffer_Particle)
+		//m_pVIBuffer_Particle->Update_Particle(m_NowParticleDatas);
 }
 
 void CEffect_Particle::LateTick(_float fTimeDelta)
@@ -118,6 +118,9 @@ HRESULT CEffect_Particle::Ready_Components()
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Particle"), TEXT("VIBuffer"), (CComponent**)&m_pVIBuffer_Particle)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Diffuse"), TEXT("MaskTexture"), (CComponent**)&m_pMaskTexture)))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Masking"), TEXT("MaskTexture"), (CComponent**)&m_pMaskTexture)))
