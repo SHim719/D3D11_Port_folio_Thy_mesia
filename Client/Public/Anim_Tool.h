@@ -1,12 +1,17 @@
 #pragma once
 
 #include "ToolState.h"
+#include "GameEffect.h"
 
 
 BEGIN(Client)
 
 class CAnim_Tool : public CToolState
 {
+private:
+	void ComboBox_ToolSelect();
+	_int m_iToolState = { 0 };
+
 protected:
 	CAnim_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CAnim_Tool() = default;
@@ -79,6 +84,80 @@ private:
 public:
 	static CAnim_Tool* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg = nullptr);
 	virtual void Free() override;
+
+#pragma region Tool_Effect
+private:
+	void Main_Window_EffectTool();
+	void Key_Input_EffectTool();
+	void Bone_ListBox_EffectTool();
+
+	void Effect_Tool();
+	void Particle_Tool();
+	void EffectMesh_Tool();
+
+	void Check_Destroyed();
+
+	void Effect_Created_Window();
+	void Sync_Animation();
+
+	CGameEffect::EFFECTSPAWNDESC Bake_EffectSpawnDesc();
+
+private:
+	void Key_Input_ParticleTool();
+	void Particle_Desc_Window();
+	
+	HRESULT Save_EffectData();
+	HRESULT Load_EffectData();
+private:
+	CGameEffect::EFFECTTYPE						m_eEffectMode;
+
+	vector<pair<string, CModel*>>				m_LoadedMeshes;
+	vector<pair<string, class CGameEffect*>>	m_CreatedEffects;
+	_int										m_iSelectIdx = { -1 };
+	_char										m_szEffectName[MAX_PATH] = "";
+
+	_bool										m_bSyncAnimation = { false };
+	_int										m_iSyncFrames[100] = {};
+	_bool										m_bSyncd[100] = {};
+
+	_bool										m_bGrouping[100] = {};
+
+private:
+	void Key_Input_EffectMeshTool();
+	void EffectMesh_Desc_Window();
+	void Models_Listbox();
+	void Open_EffectMeshesByFolder();
+	
+	CModel* Get_Model(const string& strTag);
+private:
+#pragma region Transform_View
+	_float3 m_vPosition = {};
+	_float3 m_vRotation = {};
+	_float3 m_vScale = {};
+
+	class CGameObject* m_pGizmoObject = { nullptr };
+	void Reset_Transform(_fmatrix WorldMatrix);
+	void Transform_Window();
+#pragma endregion
+
+#pragma region Gizmo
+private:
+	typedef struct tagGizmoDesc
+	{
+		ImGuizmo::MODE CurrentGizmoMode = ImGuizmo::LOCAL;
+		ImGuizmo::OPERATION CurrentGizmoOperation = ImGuizmo::TRANSLATE;
+		bool bUseSnap = false;
+		float snap[3] = { 0.5f, 0.5f, 0.5f };
+		float bounds[6] = { -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f };
+		float boundsSnap[3] = { 0.1f, 0.1f, 0.1f };
+		bool boundSizing = false;
+		bool boundSizingSnap = false;
+	}GIZMODESC;
+
+	GIZMODESC m_tGizmoDesc;
+
+	void Transform_Gizmo();
+#pragma endregion
 };
 
 END

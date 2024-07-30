@@ -101,7 +101,8 @@ public:
 	void Go_Root(_fvector vDeltaRoot, _fvector vLook, CNavigation* pNavigation = nullptr);
 	void Move_Root(_fvector vDeltaRoot, CNavigation* pNavigation = nullptr);
 
-	void Add_Position(_fvector vDir, _float fDist, CNavigation* pNavigation);
+	void Add_Position(_fvector vDir, _float fDist, CNavigation* pNavigation = nullptr);
+	void Add_Position(_fvector vXYZ, _bool bLocal, CNavigation* pNavigation = nullptr);
 
 	void Set_Scale(_float3 vScale);
 	_float3 Get_Scale() const;
@@ -109,6 +110,8 @@ public:
 	void Turn(_fvector vAxis, _float fTimeDelta);
 	void Rotation(_fvector vAxis, _float fRadian);
 	void Rotation_Quaternion(_fvector vQuat);
+	void Rotation_RollPitchYaw(_float fRoll, _float fPitch, _float fYaw);
+	void Rotation_RollPitchYawFromVector(_fvector vRollYawPitch);
 	void Turn_Quaternion(_fvector vQuat, _fmatrix OffsetMatrix = XMMatrixIdentity());
 	void LookAt(_fvector vAt);
 	void LookAt2D(_fvector vAt);

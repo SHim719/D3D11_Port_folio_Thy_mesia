@@ -67,9 +67,6 @@
     <Filter Include="97. Managers\01. Cutscene_Manager">
       <UniqueIdentifier>{c12a6fb0-7888-4a1e-8807-877159cb28db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="97. Managers\02. Fade_Manager">
-      <UniqueIdentifier>{f20ef841-c559-459b-b396-f85be562a341}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04. UI\InGameUI">
       <UniqueIdentifier>{b1d2376f-80b3-49c2-9e38-de3e25bc92e8}</UniqueIdentifier>
     </Filter>
@@ -99,6 +96,63 @@
     </Filter>
     <Filter Include="01. Levels\02. Stage1">
       <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\99. Tool">
+      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\03. Stage_Odur">
+      <UniqueIdentifier>{fa72e65b-2a3d-4ef5-a873-3a2e88a51f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\04. Stage_Urd">
+      <UniqueIdentifier>{0d4346eb-41ee-4875-b8d3-17030437ad7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\07. UI_SkillIcon">
+      <UniqueIdentifier>{2c865bca-0373-45d3-8d9e-a266dc2d7e1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\08. UI_Message">
+      <UniqueIdentifier>{3087a920-f491-46d8-a733-9164df7a3dfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\08. UI_Message\UI_BeaconFound">
+      <UniqueIdentifier>{16520d6b-aeb4-4d81-89bd-c25a4ab71a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\09. UI_Menu">
+      <UniqueIdentifier>{fb730312-27b7-46d8-bdd3-d8d3a89a116f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault">
+      <UniqueIdentifier>{e1d3b3cb-e44a-41dc-b11d-686c2cac5be8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_PlayerBar">
+      <UniqueIdentifier>{ed961139-4a30-42e1-bbef-6f013e7d2d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_SkillSlot">
+      <UniqueIdentifier>{ca12db51-d09e-4090-8ffa-7f2713abebd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_PlunderSlot">
+      <UniqueIdentifier>{1f562c16-299c-4fe8-94d1-f0db7d8191c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_SoulBar">
+      <UniqueIdentifier>{ce3b883c-f78f-443b-ba45-7506f86ba278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\09. UI_Menu\UI_Stats">
+      <UniqueIdentifier>{abc98ee4-d042-47cc-a293-fa6a5d5d538b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\09. UI_Menu\UI_PW">
+      <UniqueIdentifier>{584584db-dcaf-49e6-af95-24b6f6546050}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\10. UI_Popup">
+      <UniqueIdentifier>{5e71ac77-4386-4a6f-aa72-9504edad082f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. ShaderFiles\PostProcessing">
+      <UniqueIdentifier>{54bb39f8-ba8b-4590-b923-911646eaec0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. ShaderFiles\Defines">
+      <UniqueIdentifier>{bfe84cc2-0f66-49b5-932c-bd103a189772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="96. ShaderFiles\Effect">
+      <UniqueIdentifier>{adb7f318-e372-4dc2-96ec-bf39355e3690}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="97. Managers\02. Effect_Manager">
+      <UniqueIdentifier>{8366716c-ae3f-41f1-ac69-9e2f12f05495}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects">
       <UniqueIdentifier>{e561c34e-d6f4-478c-9e8b-6bb897b1098c}</UniqueIdentifier>
@@ -138,6 +192,15 @@
     </Filter>
     <Filter Include="02. GameObjects\99. ToolObject\5. ToolBoundingSphere">
       <UniqueIdentifier>{9193230b-7863-480a-a2d2-4d6e00da7621}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffect">
+      <UniqueIdentifier>{13187e97-70d1-459a-9413-3c26731c66cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffect\Particle">
+      <UniqueIdentifier>{d436f41c-fcdf-4ddc-9b1f-5ea35df2e76e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffect\Mesh">
+      <UniqueIdentifier>{18ed9bc6-8091-440e-9c98-478a8f7f8aae}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character">
       <UniqueIdentifier>{2f408878-5258-48e7-a250-cedd772a55bb}</UniqueIdentifier>
@@ -220,6 +283,9 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Default">
       <UniqueIdentifier>{5d77c294-0fc1-411f-98ba-e9da35ce1bd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Elite">
+      <UniqueIdentifier>{55e195ca-285e-427e-8ae7-eda04d7351f3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\12. PlayerState_Plunder">
       <UniqueIdentifier>{c91b6dfc-e49b-4f54-8f7c-18a62b5dcf52}</UniqueIdentifier>
     </Filter>
@@ -235,6 +301,12 @@
     <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe">
       <UniqueIdentifier>{771e8313-e393-410e-a3a1-96a105126cec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear">
+      <UniqueIdentifier>{d8387c83-9f11-4b8c-a1ba-ab2bcfe8a609}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\TwinBlade">
+      <UniqueIdentifier>{936557c9-da93-48b5-b9c1-e564e9031535}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder">
       <UniqueIdentifier>{21e2b80d-eefc-4ec8-8e03-3d718c1fd755}</UniqueIdentifier>
     </Filter>
@@ -249,6 +321,18 @@
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb">
       <UniqueIdentifier>{fe4ec0b9-06a4-4b49-b649-a9b9368515d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp">
+      <UniqueIdentifier>{f82ab60d-c45f-40e4-b4ad-a11e7fced790}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\17. PlayerState_FoundBeacon">
+      <UniqueIdentifier>{24a43da0-03e2-4f28-b934-9939b53d7d0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\18. PlayerState_Sit">
+      <UniqueIdentifier>{42ec202f-f954-4660-94ed-f89478ebb920}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\19. PlayerState_Healing">
+      <UniqueIdentifier>{9a1d3a47-d0c0-4bcc-98b8-44d973c5a45e}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\01. Player\PlayerStat">
       <UniqueIdentifier>{8a947f30-fa62-4bb2-b561-10cdea3669cf}</UniqueIdentifier>
@@ -433,8 +517,41 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned">
       <UniqueIdentifier>{2323586c-0ba1-4a94-a26f-50298a1b8ece}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Start">
+      <UniqueIdentifier>{6e73f79e-6787-49dd-92cf-8abdac23c6bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Loop">
+      <UniqueIdentifier>{3c281f44-297d-4771-8381-72dd518e1d8d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\05. TwinBladeKnightState_Hit">
       <UniqueIdentifier>{eedd5868-a5ec-4541-968d-8c455647334b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\06. TwinBladeKnightState_Dodge">
+      <UniqueIdentifier>{9a2b58c4-3ff1-48cf-82a1-487fef65a5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed">
+      <UniqueIdentifier>{fe47e937-b370-4a10-b190-05ed9127796c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\Start">
+      <UniqueIdentifier>{8c5df70a-c51c-4ff0-9513-df02cec15ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\End">
+      <UniqueIdentifier>{639bcf2c-33c2-4ddb-964e-fe8265b9155f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack">
+      <UniqueIdentifier>{b4a935b2-53ba-4061-bdf2-56b5556075af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboA">
+      <UniqueIdentifier>{f5e524de-1854-4e4f-a7c1-7fb4517b061c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboB">
+      <UniqueIdentifier>{abf5f651-d5d9-414f-bd9b-2c097de1b865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboC">
+      <UniqueIdentifier>{99c79cda-2f7d-4e02-8e6a-2e92527def44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ParryAttack">
+      <UniqueIdentifier>{1c1eb424-a32c-43d0-807f-9b6a25710cb2}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Normal">
       <UniqueIdentifier>{c5dbf081-bd20-4e28-9660-c69f5205a1bb}</UniqueIdentifier>
@@ -586,122 +703,14 @@
     <Filter Include="02. GameObjects\04. MapObject\02. Ladder\Ladder_Up">
       <UniqueIdentifier>{1d8c134e-f9f5-4d71-983b-99331eac70dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Start">
-      <UniqueIdentifier>{6e73f79e-6787-49dd-92cf-8abdac23c6bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\06. TwinBladeKnightState_Dodge">
-      <UniqueIdentifier>{9a2b58c4-3ff1-48cf-82a1-487fef65a5cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\03. TwinBladeKnightState_Stunned\Stunned_Loop">
-      <UniqueIdentifier>{3c281f44-297d-4771-8381-72dd518e1d8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed">
-      <UniqueIdentifier>{fe47e937-b370-4a10-b190-05ed9127796c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\Start">
-      <UniqueIdentifier>{8c5df70a-c51c-4ff0-9513-df02cec15ecd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\04. TwinBladeKnightState_Executed\End">
-      <UniqueIdentifier>{639bcf2c-33c2-4ddb-964e-fe8265b9155f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\99. Tool">
-      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\03. Stage_Odur">
-      <UniqueIdentifier>{fa72e65b-2a3d-4ef5-a873-3a2e88a51f98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\04. Stage_Urd">
-      <UniqueIdentifier>{0d4346eb-41ee-4875-b8d3-17030437ad7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack">
-      <UniqueIdentifier>{b4a935b2-53ba-4061-bdf2-56b5556075af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboA">
-      <UniqueIdentifier>{f5e524de-1854-4e4f-a7c1-7fb4517b061c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboB">
-      <UniqueIdentifier>{abf5f651-d5d9-414f-bd9b-2c097de1b865}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ComboC">
-      <UniqueIdentifier>{99c79cda-2f7d-4e02-8e6a-2e92527def44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\TwinBladeKnight\State\07. TwinBladeKnightState_Attack\TwinBladeKnightState_ParryAttack">
-      <UniqueIdentifier>{1c1eb424-a32c-43d0-807f-9b6a25710cb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\13. PlayerState_Execution\Elite">
-      <UniqueIdentifier>{55e195ca-285e-427e-8ae7-eda04d7351f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear">
-      <UniqueIdentifier>{d8387c83-9f11-4b8c-a1ba-ab2bcfe8a609}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\TwinBlade">
-      <UniqueIdentifier>{936557c9-da93-48b5-b9c1-e564e9031535}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp">
-      <UniqueIdentifier>{f82ab60d-c45f-40e4-b4ad-a11e7fced790}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\04. MapObject\03. Door">
       <UniqueIdentifier>{3b89a15d-d554-4794-9b82-c8284687db11}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\04. MapObject\04. Archive_Chair">
       <UniqueIdentifier>{c835e8a1-715f-4b1a-b251-8d86a7acb24d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\17. PlayerState_FoundBeacon">
-      <UniqueIdentifier>{24a43da0-03e2-4f28-b934-9939b53d7d0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\01. Player\State\18. PlayerState_Sit">
-      <UniqueIdentifier>{42ec202f-f954-4660-94ed-f89478ebb920}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\07. UI_SkillIcon">
-      <UniqueIdentifier>{2c865bca-0373-45d3-8d9e-a266dc2d7e1b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\08. UI_Message">
-      <UniqueIdentifier>{3087a920-f491-46d8-a733-9164df7a3dfb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\08. UI_Message\UI_BeaconFound">
-      <UniqueIdentifier>{16520d6b-aeb4-4d81-89bd-c25a4ab71a43}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\09. UI_Menu">
-      <UniqueIdentifier>{fb730312-27b7-46d8-bdd3-d8d3a89a116f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault">
-      <UniqueIdentifier>{e1d3b3cb-e44a-41dc-b11d-686c2cac5be8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_PlayerBar">
-      <UniqueIdentifier>{ed961139-4a30-42e1-bbef-6f013e7d2d3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_SkillSlot">
-      <UniqueIdentifier>{ca12db51-d09e-4090-8ffa-7f2713abebd8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_PlunderSlot">
-      <UniqueIdentifier>{1f562c16-299c-4fe8-94d1-f0db7d8191c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_SoulBar">
-      <UniqueIdentifier>{ce3b883c-f78f-443b-ba45-7506f86ba278}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\09. UI_Menu\UI_Stats">
-      <UniqueIdentifier>{abc98ee4-d042-47cc-a293-fa6a5d5d538b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\09. UI_Menu\UI_PW">
-      <UniqueIdentifier>{584584db-dcaf-49e6-af95-24b6f6546050}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04. UI\InGameUI\10. UI_Popup">
-      <UniqueIdentifier>{5e71ac77-4386-4a6f-aa72-9504edad082f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="100. IMGUI\03. Effect_Tool">
-      <UniqueIdentifier>{4b0be350-b7a2-4dfd-9f1d-5f8a1957362a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\05. Effect">
       <UniqueIdentifier>{38d4ba4f-39a0-4af1-8f4a-c9e19a7ca67e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffects">
-      <UniqueIdentifier>{a37b9bfb-5961-499d-9f36-d68c4f3cbedf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Particle">
-      <UniqueIdentifier>{66acddc8-e005-4cb0-8709-75ef056953d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Mesh">
-      <UniqueIdentifier>{80fc003a-bafe-4d38-b61c-4fa06795cfef}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\05. Effect\Effect_Particle">
       <UniqueIdentifier>{dc3f6ec6-2dc4-4d4d-93be-9a34765739e5}</UniqueIdentifier>
@@ -709,14 +718,8 @@
     <Filter Include="02. GameObjects\05. Effect\Effect_Mesh">
       <UniqueIdentifier>{027a5d3c-9cd1-4f80-b295-7b23cdaa09a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="96. ShaderFiles\PostProcessing">
-      <UniqueIdentifier>{54bb39f8-ba8b-4590-b923-911646eaec0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. ShaderFiles\Defines">
-      <UniqueIdentifier>{bfe84cc2-0f66-49b5-932c-bd103a189772}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="96. ShaderFiles\Effect">
-      <UniqueIdentifier>{adb7f318-e372-4dc2-96ec-bf39355e3690}</UniqueIdentifier>
+    <Filter Include="02. GameObjects\05. Effect\Effect_Group">
+      <UniqueIdentifier>{a2844b73-58ed-41a6-a78a-3d16919349d5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -740,9 +743,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Client_Components.h">
       <Filter>99. Defines</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Level_Loading.h">
-      <Filter>01. Levels\00. Loading</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Loader.h">
       <Filter>01. Levels\00. Loading\Loader</Filter>
@@ -944,9 +944,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\Cutscene_Manager.h">
       <Filter>97. Managers\01. Cutscene_Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Fade_Manager.h">
-      <Filter>97. Managers\02. Fade_Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\FadeScreen.h">
       <Filter>04. UI\InGameUI\00. FadeScreen</Filter>
@@ -1323,17 +1320,32 @@
     <ClInclude Include="..\Public\UI_Popup.h">
       <Filter>04. UI\InGameUI\10. UI_Popup</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\ToolEffect_Particle.h">
-      <Filter>02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\ToolEffect_Mesh.h">
-      <Filter>02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Public\Effect_Tool.h">
-      <Filter>100. IMGUI\03. Effect_Tool</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Effect_Particle.h">
       <Filter>02. GameObjects\05. Effect\Effect_Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Group.h">
+      <Filter>02. GameObjects\05. Effect\Effect_Group</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Manager.h">
+      <Filter>97. Managers\02. Effect_Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\GameEffect.h">
+      <Filter>02. GameObjects\05. Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Loading.h">
+      <Filter>01. Levels\01. Title</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Mesh.h">
+      <Filter>02. GameObjects\05. Effect\Effect_Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_Healing.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\19. PlayerState_Healing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolEffect_Particle.h">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffect\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolEffect_Mesh.h">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffect\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1522,9 +1534,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\Cutscene_Manager.cpp">
       <Filter>97. Managers\01. Cutscene_Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Fade_Manager.cpp">
-      <Filter>97. Managers\02. Fade_Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\FadeScreen.cpp">
       <Filter>04. UI\InGameUI\00. FadeScreen</Filter>
@@ -1868,17 +1877,29 @@
     <ClCompile Include="..\Private\UI_Popup.cpp">
       <Filter>04. UI\InGameUI\10. UI_Popup</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\ToolEffect_Particle.cpp">
-      <Filter>02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\ToolEffect_Mesh.cpp">
-      <Filter>02. GameObjects\99. ToolObject\6. ToolEffects\Effect_Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Effect_Tool.cpp">
-      <Filter>100. IMGUI\03. Effect_Tool</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\Effect_Particle.cpp">
       <Filter>02. GameObjects\05. Effect\Effect_Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Group.cpp">
+      <Filter>02. GameObjects\05. Effect\Effect_Group</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Manager.cpp">
+      <Filter>97. Managers\02. Effect_Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\GameEffect.cpp">
+      <Filter>02. GameObjects\05. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Mesh.cpp">
+      <Filter>02. GameObjects\05. Effect\Effect_Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_Healing.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\19. PlayerState_Healing</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolEffect_Particle.cpp">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffect\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolEffect_Mesh.cpp">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffect\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1930,6 +1951,9 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Particle.hlsl">
       <Filter>96. ShaderFiles\Effect</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Glow.hlsl">
+      <Filter>96. ShaderFiles\PostProcessing</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

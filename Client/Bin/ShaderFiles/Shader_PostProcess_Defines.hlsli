@@ -1,9 +1,9 @@
 #ifndef SHADER_FUNCTION
 #define SHADER_FUNCTION
 
-float g_fBloomStrength = 0.05f;
+float g_fBloomStrength = 0.5f;
 float g_fGamma = 2.2f;
-float g_fExposure = 1.f;
+float g_fExposure = 2.f;
 
 float3 LinearToneMapping(float3 color)
 {

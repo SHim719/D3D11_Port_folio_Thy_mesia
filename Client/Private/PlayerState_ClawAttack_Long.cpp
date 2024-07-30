@@ -20,18 +20,17 @@ void CPlayerState_ClawAttack_Long::OnState_Start(void* pArg)
 {
 	Reset_AttackIdx();
 	m_pPlayer->Set_CanNextState(false);
-	m_pPlayer->Set_CanRotation(true);
+	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Set_Active_DefaultWeapons(false);
 	m_pPlayer->Set_Active_Claws(true);
 
 	m_pPlayer->Update_AttackDesc();
 
-	m_pModel->Change_AnimationWithStartFrame(Corvus_Raven_ClawLong_L01, 27, 0.05f);
+	m_pModel->Change_AnimationWithStartFrame(Corvus_Raven_ClawLong_L01, 27, 0.1f);
 }
 
 void CPlayerState_ClawAttack_Long::Update(_float fTimeDelta)
 {
-
 	if (m_pPlayer->Can_Rotation() && false == m_pPlayer->Is_LockOn())
 	{
 		_vector vNewLook = Calc_MoveLook(true);

@@ -27,6 +27,12 @@
 
 #include "Object_Headers.h"
 
+#include "Effect_Manager.h"
+
+#include "Effect_Group.h"
+#include "Effect_Particle.h"
+#include "Effect_Mesh.h"
+
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
@@ -102,6 +108,9 @@ HRESULT CLoader::Loading_Default()
 		return E_FAIL;
 
 	if (FAILED(Ready_UI()))
+		return E_FAIL;
+	
+	if (FAILED(Ready_Effects()))
 		return E_FAIL;
 
 	if (FAILED(Ready_Etc()))
@@ -564,6 +573,81 @@ HRESULT CLoader::Ready_UI()
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_EnemyBar", CUI_EnemyBar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Effects()
+{
+	if (FAILED(Ready_EffectResources()))
+		return E_FAIL;
+
+	if (FAILED(Ready_EffectGroup()))
+		return E_FAIL;
+
+	if (FAILED(EFFECTMGR->Initialize()))
+		return E_FAIL;
+
+	return S_OK;
+
+}
+
+HRESULT CLoader::Ready_EffectResources()
+{
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_BaseColor", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/Diffuse/%d.png", 2));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/Mask/Masking/%d.png", 23));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/Noise/%d.png", 16));
+
+
+	fs::path EffectMeshesPath(L"../../Resources/Effect/EffectMesh/");
+
+	for (const fs::directory_entry& entry : fs::directory_iterator(EffectMeshesPath))
+	{
+		if (entry.is_directory())
+			continue;
+
+		fs::path fileName = entry.path().filename();
+		fs::path fileTitle = fileName.stem();
+
+		if (fileName.extension().generic_string() == ".ini")
+			continue;
+
+		wstring wstrPrototypeTag = L"Prototype_Model_";
+		wstrPrototypeTag += fileTitle.c_str();
+
+		if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, wstrPrototypeTag, CModel::Create(m_pDevice, m_pContext, entry.path().parent_path().generic_string() + "/"
+			, entry.path().filename().generic_string()))))
+			return E_FAIL;
+	}
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_EffectGroup()
+{
+	fs::path EffectDataPath(L"../../Resources/Effect/EffectData/");
+
+	for (const fs::directory_entry& entry : fs::directory_iterator(EffectDataPath))
+	{
+		if (entry.is_directory())
+			continue;
+
+		fs::path fileName = entry.path().filename();
+		fs::path fileTitle = fileName.stem();
+
+		if (fileName.extension().generic_string() == ".ini")
+			continue;
+
+		ifstream fin(entry.path());
+
+		wstring wstrEffectGroupTag = L"Prototype_Effect_" + fileTitle.generic_wstring();
+		if (FAILED(m_pGameInstance->Add_Prototype(wstrEffectGroupTag, CEffect_Group::Create(m_pDevice, m_pContext, fin))))
+			assert(false);
+	}
+	
 	return S_OK;
 }
 

@@ -1,18 +1,20 @@
 #include "ToolEffect_Particle.h"
 
 CToolEffect_Particle::CToolEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
-	: CGameObject(pDevice, pContext)
+	: CGameEffect(pDevice, pContext)
 {
 }
 
 CToolEffect_Particle::CToolEffect_Particle(const CToolEffect_Particle& rhs)
-	: CGameObject(rhs)
+	: CGameEffect(rhs)
+	, m_tParticleInfo(rhs.m_tParticleInfo)
 {
 
 }
 
 HRESULT CToolEffect_Particle::Initialize_Prototype()
 {
+	m_eEffectType = EFFECTTYPE::PARTICLE;
 	return S_OK;
 }
 
@@ -21,40 +23,84 @@ HRESULT CToolEffect_Particle::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
+#ifdef AnimTool
 	Resize_Particles(1);
+	m_eEffectType = EFFECTTYPE::PARTICLE;
+#else
+	Resize_Particles(m_tParticleInfo.iNumParticles);
+#endif 
 
 	return S_OK;
 }
 
 void CToolEffect_Particle::Tick(_float fTimeDelta)
 {
-	Update_TextureFlag();
-
 	for (size_t i = 0; i < m_NowParticleDatas.size(); ++i)
 	{
+		if (false == Update_SpawnTime(i, fTimeDelta))
+			continue;
+
+		if (m_NowParticleDatas[i].fLifeTime <= 0.f)
+			continue;
+
 		Update_Positions(i, fTimeDelta);
 		Update_Scale(i);
-		Update_Velocity(i);
+		Update_Rotation(i, fTimeDelta);
+		Update_Velocity(i, fTimeDelta);
 		Update_Color(i);
-
-		m_NowParticleDatas[i].fLifeTime -= fTimeDelta;
-		if (m_NowParticleDatas[i].fLifeTime <= 0.f)
-		{
-			m_NowParticleDatas[i].fLifeTime = 0.f; 
-			if (m_bLoop)
-				Restart_Particle();
-		}	
+		Update_Lifetime(i, fTimeDelta);
 	}
+
+	Update_World();
 
 	if (m_pVIBuffer_Particle)
 		m_pVIBuffer_Particle->Update_Particle(m_NowParticleDatas);
+
+	m_fTimeAcc += fTimeDelta;
+	if (m_fTimeAcc >= m_fPlayTime)
+	{
+		m_fTimeAcc = 0.f;
+		if (!m_bLoop)
+			m_bComplete = true;
+		else
+			Restart_Effect();
+	}
 }
 
-void CToolEffect_Particle::Update_TextureFlag()
+_bool CToolEffect_Particle::Update_SpawnTime(size_t iIdx, _float fTimeDelta)
 {
-	m_vTextureFlag.x = _float(m_iNoiseTextureIdx != -1);
-	m_vTextureFlag.y = _float(m_iMaskTextureIdx != -1);
-	m_vTextureFlag.z = _float(m_iEmissiveTextureIdx != -1);
+	if (m_NowParticleDescs[iIdx].fSpawnTime >= 0.f)
+	{
+		m_NowParticleDatas[iIdx].fLifeTime = 0.f;
+		m_NowParticleDescs[iIdx].fSpawnTime -= fTimeDelta;
+		if (m_NowParticleDescs[iIdx].fSpawnTime < 0.f)
+		{
+			memcpy(&m_NowParticleDatas[iIdx], &m_InitParticleDatas[iIdx], sizeof(VTXPARTICLE));
+			if (m_pParentBone && m_tParticleInfo.iParticleMode & (1 << SPAWN_AT_BONE))
+			{
+				memcpy(&m_NowParticleDatas[iIdx], &m_InitParticleDatas[iIdx], sizeof(VTXPARTICLE));
+
+				_matrix ParticleMatrix = XMLoadFloat4x4((_float4x4*)&m_InitParticleDatas[iIdx]);
+				CALC_TF->Set_WorldMatrix(ParticleMatrix);
+				_float3 vStartScale = CALC_TF->Get_Scale();
+
+				CALC_TF->Set_WorldMatrix(XMLoadFloat4x4(&m_BoneMatrix));
+				CALC_TF->Set_Scale(vStartScale);
+
+				memcpy(&m_NowParticleDatas[iIdx], &CALC_TF->Get_WorldFloat4x4(), sizeof(_float4x4));
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+	else
+	{
+		return true;
+	}
 }
 
 void CToolEffect_Particle::Update_Positions(size_t iIdx, _float fTimeDelta)
@@ -63,7 +109,6 @@ void CToolEffect_Particle::Update_Positions(size_t iIdx, _float fTimeDelta)
 	memcpy(&TransformMatrix4x4, &m_NowParticleDatas[iIdx], sizeof(_float4x4));
 
 	_vector vVelocity = XMLoadFloat3(&m_NowParticleDatas[iIdx].vVelocity);
-
 	_vector vPosition = XMLoadFloat4(&m_NowParticleDatas[iIdx].vTranslation) + vVelocity * fTimeDelta;
 
 	XMStoreFloat4(&m_NowParticleDatas[iIdx].vTranslation, vPosition);
@@ -71,7 +116,7 @@ void CToolEffect_Particle::Update_Positions(size_t iIdx, _float fTimeDelta)
 
 void CToolEffect_Particle::Update_Scale(size_t iIdx)
 {
-	if (false == m_bSizeLerp || 0.f == m_InitParticleDatas[iIdx].fLifeTime)
+	if (false == m_tParticleInfo.bSizeLerp || 0.f == m_InitParticleDatas[iIdx].fLifeTime)
 		return;
 
 	_float4x4 TransformMatrix4x4;
@@ -79,12 +124,12 @@ void CToolEffect_Particle::Update_Scale(size_t iIdx)
 
 	_vector vRight = XMLoadFloat4((_float4*)&TransformMatrix4x4.m[0]);
 	_vector vUp = XMLoadFloat4((_float4*)&TransformMatrix4x4.m[1]);
-	_float fSizeX = XMVector3Length(vRight).m128_f32[0];
-	_float fSizeY = XMVector3Length(vUp).m128_f32[0];
+	_float fSizeX = XMVector3Length(XMLoadFloat4(&m_InitParticleDatas[iIdx].vRight)).m128_f32[0];
+	_float fSizeY = XMVector3Length(XMLoadFloat4(&m_InitParticleDatas[iIdx].vUp)).m128_f32[1];
 
 	_float fLerpRatio = (1.f - m_NowParticleDatas[iIdx].fLifeTime / m_InitParticleDatas[iIdx].fLifeTime);
-	fSizeX = JoMath::Lerp(fSizeX, m_vSizeEnd.x, fLerpRatio);
-	fSizeY = JoMath::Lerp(fSizeY, m_vSizeEnd.y, fLerpRatio);
+	fSizeX = JoMath::Lerp(fSizeX, m_tParticleInfo.vSizeEnd.x, fLerpRatio);
+	fSizeY = JoMath::Lerp(fSizeY, m_tParticleInfo.vSizeEnd.y, fLerpRatio);
 
 	vRight = XMVector3Normalize(vRight) * fSizeX;
 	vUp = XMVector3Normalize(vUp) * fSizeY;
@@ -93,22 +138,39 @@ void CToolEffect_Particle::Update_Scale(size_t iIdx)
 	XMStoreFloat4(&m_NowParticleDatas[iIdx].vUp, vUp);
 }
 
-void CToolEffect_Particle::Update_Velocity(size_t iIdx)
+void CToolEffect_Particle::Update_Rotation(size_t iIdx, _float fTimeDelta)
+{
+	if (0.f == m_NowParticleDescs[iIdx].vRotationSpeed.x && 0.f == m_NowParticleDescs[iIdx].vRotationSpeed.y && 0.f == m_NowParticleDescs[iIdx].vRotationSpeed.z)
+		return;
+
+	_float4x4 ParticleMatrix;
+	memcpy(&ParticleMatrix, &m_NowParticleDatas[iIdx], sizeof(_float4x4));
+
+	CALC_TF->Set_WorldMatrix(XMLoadFloat4x4(&ParticleMatrix));
+
+	CALC_TF->Add_RollInput(m_NowParticleDescs[iIdx].vRotationSpeed.x * fTimeDelta);
+	CALC_TF->Add_YawInput(m_NowParticleDescs[iIdx].vRotationSpeed.y * fTimeDelta);
+	CALC_TF->Add_PitchInput(m_NowParticleDescs[iIdx].vRotationSpeed.z * fTimeDelta);
+
+	memcpy(&m_NowParticleDatas[iIdx], &CALC_TF->Get_WorldMatrix(), sizeof(_float4x4));
+}
+
+void CToolEffect_Particle::Update_Velocity(size_t iIdx, _float fTimeDelta)
 {
 	_vector vVelocity = XMLoadFloat3(&m_NowParticleDatas[iIdx].vVelocity);
 
-	if (m_bSpeedLerp)
+	if (m_tParticleInfo.bSpeedLerp)
 	{
 		_float fLerpRatio = (1.f - m_NowParticleDatas[iIdx].fLifeTime / m_InitParticleDatas[iIdx].fLifeTime);
 
 		_vector vDir = XMVector3Normalize(vVelocity);
-		_float fLerpedSpeed = JoMath::Lerp(m_InitParticleDescs[iIdx].fSpeed, m_NowParticleDescs[iIdx].fSpeed, fLerpRatio);
+		_float fLerpedSpeed = JoMath::Lerp(m_InitParticleDescs[iIdx].fSpeed, m_tParticleInfo.fSpeedEnd, fLerpRatio);
 
-		vVelocity = XMLoadFloat3(&m_NowParticleDescs[iIdx].vDir) * fLerpedSpeed;
+		vVelocity = XMLoadFloat3(&m_NowParticleDescs[iIdx].vSpeedDir) * fLerpedSpeed;
 	}
 	else
 	{
-		vVelocity += XMVectorSet(0.f, -1.f, 0.f, 0.f) * m_fGravityScale;
+		vVelocity += XMLoadFloat3(&m_NowParticleDescs[iIdx].vForceDir) * m_NowParticleDescs[iIdx].fForceScale * fTimeDelta;
 	}
 
 	XMStoreFloat3(&m_NowParticleDatas[iIdx].vVelocity, vVelocity);
@@ -116,22 +178,49 @@ void CToolEffect_Particle::Update_Velocity(size_t iIdx)
 
 void CToolEffect_Particle::Update_Color(size_t iIdx)
 {
-	if (m_bColorLerp)
+	if (m_tParticleInfo.bColorLerp)
 	{
-		_vector vInitColor = XMLoadFloat4(&m_vInitColor);
-
 		_float fLerpRatio = (1.f - m_NowParticleDatas[iIdx].fLifeTime / m_InitParticleDatas[iIdx].fLifeTime);
 
-		_vector vNowColor = XMVectorLerp(vInitColor, XMLoadFloat4(&m_vColorEnd), fLerpRatio);
+		_vector vNowColor = XMVectorLerp(XMLoadFloat4(&m_InitParticleDatas[iIdx].vColor), XMLoadFloat4(&m_tParticleInfo.vColorEnd), fLerpRatio);
 
-		XMStoreFloat4(&m_vNowColor, vNowColor);
+		XMStoreFloat4(&m_NowParticleDatas[iIdx].vColor, vNowColor);
 	}
+}
+
+void CToolEffect_Particle::Update_Lifetime(size_t iIdx, _float fTimeDelta)
+{
+	m_NowParticleDatas[iIdx].fLifeTime -= fTimeDelta;
+	if (m_NowParticleDatas[iIdx].fLifeTime <= 0.f)
+	{
+		m_NowParticleDatas[iIdx].fLifeTime = 0.f;
+		if (m_tParticleInfo.bParticleLoop) 
+			Restart_Particle(iIdx);
+	}
+}
+
+
+void CToolEffect_Particle::Update_BoneMatrix()
+{
+	if (nullptr == m_pParentBone || !(m_tParticleInfo.iParticleMode & (1 << SPAWN_AT_BONE)))
+		return;
+
+	CALC_TF->Attach_To_Bone(m_pParentBone, m_pParentTransform);
+
+	XMStoreFloat4x4(&m_BoneMatrix, CALC_TF->Get_WorldMatrix());
 }
 
 void CToolEffect_Particle::LateTick(_float fTimeDelta)
 {
+	Update_BoneMatrix();
+	
 	if (!m_bNoRender)
-		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT, this);
+	{
+		m_pGameInstance->Add_RenderObject((CRenderer::RENDERGROUP)m_iRenderGroup, this);
+		if (m_bGlow)
+			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT_GLOW, this);
+	}
+
 }
 
 HRESULT CToolEffect_Particle::Render()
@@ -151,12 +240,42 @@ HRESULT CToolEffect_Particle::Render()
 	return m_pVIBuffer_Particle->Render();
 }
 
-void CToolEffect_Particle::Restart_Particle()
+HRESULT CToolEffect_Particle::Save_EffectData(ofstream& fout)
 {
-	memcpy(m_NowParticleDatas.data(), m_InitParticleDatas.data(), sizeof(VTXPARTICLE) * m_InitParticleDatas.size());
+	__super::Save_EffectData(fout);
+
+	fout.write((_char*)&m_tParticleInfo, sizeof(PARTICLE_INFO));
+
+	return S_OK;
+}
+
+HRESULT CToolEffect_Particle::Load_EffectData(ifstream& fin)
+{
+	__super::Load_EffectData(fin);
+
+	fin.read((_char*)&m_tParticleInfo, sizeof(PARTICLE_INFO));
+
+	Resize_Particles(m_tParticleInfo.iNumParticles);
+
+	return S_OK;
+}
+
+void CToolEffect_Particle::Restart_Effect(EFFECTSPAWNDESC* pDesc)
+{
+	__super::Restart_Effect(pDesc);
+
+	Spawn_Effect();
+	//memcpy(m_NowParticleDatas.data(), m_InitParticleDatas.data(), sizeof(VTXPARTICLE) * m_InitParticleDatas.size());
 	memcpy(m_NowParticleDescs.data(), m_InitParticleDescs.data(), sizeof(PARTICLE_DESC) * m_InitParticleDescs.size());
 
-	m_vNowColor = m_vInitColor;
+	Update_BoneMatrix();
+
+	m_bComplete = false;
+}
+
+void CToolEffect_Particle::Restart_Particle(size_t iIdx)
+{
+	memcpy(&m_NowParticleDescs[iIdx], &m_InitParticleDescs[iIdx], sizeof(PARTICLE_DESC));
 
 }
 
@@ -166,43 +285,52 @@ void CToolEffect_Particle::Remake_Particle()
 	{
 		VTXPARTICLE VtxParticle;
 
-		_float2 vRandScale = JoRandom::Random_Float2(m_vStartSizeMin, m_vStartSizeMax);
+		_float2 vRandScale = JoRandom::Random_Float2(m_tParticleInfo.vStartSizeMin, m_tParticleInfo.vStartSizeMax);
+		_float3 vRandRotation = JoRandom::Random_Float3(m_tParticleInfo.vStartRotationMin, m_tParticleInfo.vStartRotationMax);
+		_vector vQuat = XMQuaternionRotationRollPitchYawFromVector(XMLoadFloat3(&vRandRotation));
 
-		_matrix TransformMatrix = XMMatrixIdentity();
+		_matrix TransformMatrix = XMMatrixRotationQuaternion(vQuat);
 
 		TransformMatrix.r[0] = XMVector3Normalize(TransformMatrix.r[0]) * vRandScale.x;
 		TransformMatrix.r[1] = XMVector3Normalize(TransformMatrix.r[1]) * vRandScale.y;
 
-		TransformMatrix.r[3] = XMVectorSetW(XMLoadFloat3(&JoRandom::Random_Float3(m_vStartPosMin, m_vStartPosMax)), 1.f);
+		TransformMatrix.r[3] = XMVectorSetW(XMLoadFloat3(&JoRandom::Random_Float3(m_tParticleInfo.vStartPosMin, m_tParticleInfo.vStartPosMax)), 1.f);
 
 		memcpy(&VtxParticle, &TransformMatrix, sizeof(_float4x4));
 
-		VtxParticle.fLifeTime = JoRandom::Random_Float(m_fLifeTimeMin, m_fLifeTimeMax);
+		VtxParticle.fLifeTime = JoRandom::Random_Float(m_tParticleInfo.fLifeTimeMin, m_tParticleInfo.fLifeTimeMax);
+		VtxParticle.vColor = JoRandom::Random_Float4(m_tParticleInfo.vStartColorMin, m_tParticleInfo.vStartColorMax);
 
 		memcpy(&m_NowParticleDatas[i], &VtxParticle, sizeof(VTXPARTICLE));
 		memcpy(&m_InitParticleDatas[i], &VtxParticle, sizeof(VTXPARTICLE));
-
+		m_NowParticleDatas[i].fLifeTime = 0.f;
 	}
 
 	for (size_t i = 0; i < m_NowParticleDatas.size(); ++i)
 	{
-		_vector vDir = XMVector3Normalize(XMLoadFloat3(&JoRandom::Random_Float3(m_vSpeedDirMin, m_vSpeedDirMax)));
-		_float fStartSpeed = JoRandom::Random_Float(m_fStartSpeedMin, m_fStartSpeedMax);
+		_vector vDir = XMVector3Normalize(XMLoadFloat3(&JoRandom::Random_Float3(m_tParticleInfo.vSpeedDirMin, m_tParticleInfo.vSpeedDirMax)));
+		_float fStartSpeed = JoRandom::Random_Float(m_tParticleInfo.fStartSpeedMin, m_tParticleInfo.fStartSpeedMax);
 
 		_vector vVelocity = vDir * fStartSpeed;
 
-		XMStoreFloat3(&m_InitParticleDescs[i].vDir, vDir);
+		XMStoreFloat3(&m_InitParticleDescs[i].vSpeedDir, vDir);
 		m_InitParticleDescs[i].fSpeed = fStartSpeed;
 
-		XMStoreFloat3(&m_InitParticleDatas[i].vVelocity, vVelocity);
-	
-		memcpy(&m_NowParticleDescs[i], &m_InitParticleDescs[i], sizeof(PARTICLE_DESC));
-	}
+		m_InitParticleDescs[i].fSpawnTime = JoRandom::Random_Float(m_tParticleInfo.fSpawnTimeMin, m_tParticleInfo.fSpawnTimeMax);
 
-	m_vInitColor = m_vNowColor = JoRandom::Random_Float4(m_vStartColorMin, m_vStartColorMax);
-	
-	_vector vGravity = XMVectorSet(0.f, -1.f, 0.f, 0.f) * m_fGravityScale;
-	XMStoreFloat3(&m_vGravity, vGravity);
+		XMStoreFloat3(&m_InitParticleDatas[i].vVelocity, vVelocity);
+
+		_vector vForceDir = XMVector3Normalize(XMLoadFloat3(&JoRandom::Random_Float3(m_tParticleInfo.vForceDirMin, m_tParticleInfo.vForceDirMax)));
+		XMStoreFloat3(&m_InitParticleDescs[i].vForceDir, vForceDir);
+
+		_float fForceScale = JoRandom::Random_Float(m_tParticleInfo.fForceScaleMin, m_tParticleInfo.fForceScaleMax);
+		m_InitParticleDescs[i].fForceScale = fForceScale;
+
+		XMStoreFloat3(&m_InitParticleDescs[i].vForceDir, vForceDir);
+		memcpy(&m_NowParticleDescs[i], &m_InitParticleDescs[i], sizeof(PARTICLE_DESC));
+
+		m_InitParticleDescs[i].vRotationSpeed = JoRandom::Random_Float3(m_tParticleInfo.vRotationSpeedMin, m_tParticleInfo.vRotationSpeedMax);
+	}
 }
 
 
@@ -213,7 +341,7 @@ void CToolEffect_Particle::Resize_Particles(_uint iNumParticles)
 
 	m_pVIBuffer_Particle->Init_InstanceBuffer(iNumParticles);
 
-	m_iNumParticles = iNumParticles;
+	m_tParticleInfo.iNumParticles = iNumParticles;
 
 	m_NowParticleDatas.clear();
 	m_NowParticleDescs.clear();
@@ -225,11 +353,7 @@ void CToolEffect_Particle::Resize_Particles(_uint iNumParticles)
 	m_InitParticleDescs.resize(iNumParticles);
 	m_NowParticleDescs.resize(iNumParticles);
 
-	_float4x4 IdentityMatrix;
-	XMStoreFloat4x4(&IdentityMatrix, XMMatrixIdentity());
-
 	Remake_Particle();
-	Restart_Particle();
 }
 
 HRESULT CToolEffect_Particle::Ready_Components()
@@ -263,29 +387,37 @@ HRESULT CToolEffect_Particle::Bind_GlobalVariables()
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (FAILED(m_pShader->Set_RawValue("g_vColor_Mul", &m_vColorMul, sizeof(_float4))))
-		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_vColor_Offset", &m_vColorOffset, sizeof(_float4))))
-		return E_FAIL;
-
 	if (FAILED(m_pShader->Set_RawValue("g_vColor_Clip", &m_vClipColor, sizeof(_float4))))
 		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_bBillBoard", &m_bBillBoard, sizeof(_bool))))
-		return E_FAIL;
-
-	if (m_bBillBoard)
-	{
-		if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
-			return E_FAIL;
-	}
 
 	if (FAILED(m_pShader->Set_RawValue("g_vTextureFlag", &m_vTextureFlag, sizeof(_float4))))
 		return E_FAIL;
 
+	if (FAILED(m_pShader->Set_RawValue("g_bGlow", &m_bGlow, sizeof(_bool))))
+		return E_FAIL;
+
+	if (m_bGlow)
+	{
+		if (FAILED(m_pShader->Set_RawValue("g_vGlowColor", &m_vGlowColor, sizeof(_float4))))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Set_RawValue("g_fGlowIntensity", &m_fGlowIntensity, sizeof(_float))))
+			return E_FAIL;
+	}
+
+	if (FAILED(m_pShader->Set_RawValue("g_bBloom", &m_bBloom, sizeof(_bool))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_iParticleMode", &m_tParticleInfo.iParticleMode, sizeof(_int))))
+		return E_FAIL;
+
+	if (m_tParticleInfo.iParticleMode & (1 << BILLBOARD))
+		if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+			return E_FAIL;
+
 	return S_OK;
 }
+
 
 HRESULT CToolEffect_Particle::Bind_ShaderResources()
 {
@@ -345,6 +477,6 @@ void CToolEffect_Particle::Free()
 {
 	__super::Free();
 
-
+	Safe_Release(m_pVIBuffer_Particle);
 }
 

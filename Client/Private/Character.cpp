@@ -17,6 +17,10 @@ void CCharacter::Bind_KeyFrames()
 {
 }
 
+void CCharacter::Bind_KeyFrameEffects()
+{
+}
+
 void CCharacter::Change_State(_uint eState, void* pArg)
 {
 	m_iPrevState = m_iState;
@@ -95,6 +99,16 @@ void CCharacter::Update_Colliders()
 		m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
 }
 
+CGameEffect::EFFECTSPAWNDESC CCharacter::Bake_EffectSpawnDesc()
+{
+	CGameEffect::EFFECTSPAWNDESC SpawnDesc;
+	SpawnDesc.pParentModel = m_pModel;
+	SpawnDesc.pParentTransform = m_pTransform;
+
+	return SpawnDesc;
+}
+
+
 void CCharacter::Free()
 {
 	__super::Free();
@@ -111,4 +125,5 @@ void CCharacter::Free()
 	Safe_Release(m_pCollider);
 	Safe_Release(m_pHitBoxCollider);
 	Safe_Release(m_pNavigation);
+
 }

@@ -38,6 +38,8 @@ HRESULT CVIBuffer_Particle::Initialize_Prototype()
 	if (FAILED(__super::Create_VertexBuffer()))
 		return E_FAIL;
 
+	Safe_Delete(pVertices);
+
 	return S_OK;
 }
 
@@ -153,5 +155,4 @@ CComponent * CVIBuffer_Particle::Clone(void * pArg)
 void CVIBuffer_Particle::Free()
 {
 	__super::Free();
-
 }

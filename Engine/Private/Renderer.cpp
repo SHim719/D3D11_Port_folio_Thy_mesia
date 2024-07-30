@@ -35,10 +35,12 @@ HRESULT CRenderer::Initialize()
 
 	if (FAILED(Ready_EffectTargets((_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height)))
 		return E_FAIL;
-						
+
+	if (FAILED(Ready_GlowTargets((_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height)))
+		return E_FAIL;
+	
 	if (FAILED(Ready_BloomTargets((_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height)))
 		return E_FAIL;
-
 
 	if (FAILED(Ready_Buffers()))
 		return E_FAIL;
@@ -107,17 +109,18 @@ HRESULT CRenderer::Draw()
 	if (FAILED(Render_Effect()))
 		return E_FAIL;
 
-	if (FAILED(Render_SampleForBloom()))
+	if (FAILED(Render_Glow()))
+		return E_FAIL;
+
+	if (FAILED(Render_NonLight()))
+		return E_FAIL;
+
+	if (FAILED(Render_Blend()))
 		return E_FAIL;
 
 	if (FAILED(Render_PostProcess()))
 		return E_FAIL;
 
-	Render_NonLight();
-	Render_Blend();
-
-	
-	
 #ifdef _DEBUG
 	if (FAILED(Render_Components()))
 		return E_FAIL;
@@ -170,6 +173,30 @@ void CRenderer::Bind_ViewProj()
 		pShader->Set_RawValue("g_ViewMatrix", &ViewMatrix, sizeof(_float4x4));
 		pShader->Set_RawValue("g_ProjMatrix", &ProjMatrix, sizeof(_float4x4));
 	}
+}
+
+HRESULT CRenderer::Copy_RenderTarget(const wstring& wstrTargetTag)
+{
+	//if (FAILED(m_pVIBuffer->Bind_Buffers()))
+	//	return E_FAIL;
+
+#pragma region XBlur
+	if (FAILED(m_pGameInstance->Begin_MRT(L"MRT_Copy")))
+		return E_FAIL;
+	
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(wstrTargetTag, m_pPostProcessShader, "g_ForCopyTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Begin(0)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CRenderer::Render_NonBlend()
@@ -263,16 +290,99 @@ HRESULT CRenderer::Render_Deferred()
 
 HRESULT CRenderer::Render_Effect()
 {
-	if (0 == m_RenderObjects[RENDER_EFFECT].size())
-		return S_OK;
-
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_Effect"))))
+	if (FAILED(m_pGameInstance->Begin_MRT_NoClear(L"MRT_Effect")))
 		return E_FAIL;
 
-	Draw_Objects(RENDER_EFFECT);
+	if (FAILED(m_pGameInstance->Clear_Target(L"Target_Effect_Glow")))
+		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Clear_Target(L"Target_Effect_Bloom")))
+	//	return E_FAIL;
+
+	Draw_Objects(RENDER_EFFECT_NONBLEND);
+
+	m_RenderObjects[RENDERGROUP::RENDER_EFFECT_BLEND].sort([](CGameObject* pSrc, CGameObject* pDst)
+		{
+			return pSrc->Get_CamDistance() > pDst->Get_CamDistance();
+		});
+
+	Draw_Objects(RENDER_EFFECT_BLEND);
+
 
 	if (FAILED(m_pGameInstance->End_MRT()))
 		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Glow()
+{
+	if (m_RenderObjects[RENDERGROUP::RENDER_EFFECT_GLOW].empty())
+		return S_OK;
+
+	if (FAILED(m_pVIBuffer->Bind_Buffers()))
+		return E_FAIL;
+
+#pragma region XBlur
+	if (FAILED(m_pGameInstance->Begin_MRT(L"MRT_BlurXGlow")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Effect_Glow"), m_pGlowShader, "g_PrevBlurXTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pGlowShader->Begin(0)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+#pragma endregion
+
+#pragma region YBlur
+	if (FAILED(m_pGameInstance->Begin_MRT(L"MRT_BlurYGlow")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_BlurXGlow"), m_pGlowShader, "g_PrevBlurYTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pGlowShader->Begin(1)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+#pragma endregion 
+
+	if (FAILED(Copy_RenderTarget(L"Target_Deferred")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NoClear(L"MRT_Deferred")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Copy"), m_pPostProcessShader, "g_OriginTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_BlurYGlow"), m_pPostProcessShader, "g_GlowTextureAfterBlur")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Begin(1)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	for (auto& pRenderObject : m_RenderObjects[RENDER_EFFECT_GLOW])
+		Safe_Release(pRenderObject);
+
+	m_RenderObjects[RENDER_EFFECT_GLOW].clear();
+
 
 	return S_OK;
 }
@@ -282,8 +392,8 @@ HRESULT CRenderer::Render_PostProcess()
 	if (FAILED(m_pVIBuffer->Bind_Buffers()))
 		return E_FAIL;
 
-	if (FAILED(PostProcess_Bloom()))
-		return E_FAIL;
+	//if (FAILED(PostProcess_Bloom()))
+	//	return E_FAIL;
 
 	if (FAILED(Render_Final()))
 		return E_FAIL;
@@ -293,22 +403,19 @@ HRESULT CRenderer::Render_PostProcess()
 
 HRESULT CRenderer::PostProcess_Bloom()
 {
-	if (FAILED(m_pGameInstance->Begin_MRT(TEXT("MRT_PostBloom"))))
+	if (FAILED(m_pGameInstance->Begin_MRT_NoClear(TEXT("MRT_PostBloom"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Deferred"), m_pPostProcessShader, "g_DeferredTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_EffectForBloom"), m_pPostProcessShader, "g_PrevBloomTexture")))
-		return E_FAIL;
-
-	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_EffectAlphaBlend"), m_pPostProcessShader, "g_EffectAlphaBlendTexture")))
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Effect_Bloom"), m_pPostProcessShader, "g_PrevBloomTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Bind_RT_SRV(L"Target_BloomUpSample" + to_wstring(m_iBloomLevel - 1), m_pPostProcessShader, "g_BloomTexture")))
 		return E_FAIL;
 
-	if (FAILED(m_pPostProcessShader->Begin(0)))
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(L"Target_Deferred", m_pPostProcessShader, "g_OriginTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Begin(2)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -322,10 +429,13 @@ HRESULT CRenderer::PostProcess_Bloom()
 
 HRESULT CRenderer::Render_Final()
 {
-	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_PostBloom"), m_pPostProcessShader, "g_FinalTexture")))
+	//if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_PostBloom"), m_pPostProcessShader, "g_FinalTexture")))
+	//	return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Deferred"), m_pPostProcessShader, "g_FinalTexture")))
 		return E_FAIL;
 
-	if (FAILED(m_pPostProcessShader->Begin(1)))
+	if (FAILED(m_pPostProcessShader->Begin(3)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -359,12 +469,35 @@ HRESULT CRenderer::Render_SampleForBloom()
 	if (FAILED(m_pVIBuffer->Bind_Buffers()))
 		return E_FAIL;
 
+	if (FAILED(Render_BrightPass()))
+		return E_FAIL;
+
 	if (FAILED(Render_DownSample()))
 		return E_FAIL;
 
 	if (FAILED(Render_UpSample()))
 		return E_FAIL;
 
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_BrightPass()
+{
+	if (FAILED(m_pGameInstance->Begin_MRT(L"MRT_BrightPass")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(L"Target_Deferred", m_pBloomShader, "g_PrevBrightPassTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pBloomShader->Begin(0)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+	
 	return S_OK;
 }
 
@@ -386,7 +519,7 @@ HRESULT CRenderer::Render_DownSample()
 		wstring MRTTag = L"MRT_BloomDownSample" + to_wstring(i);
 		wstring BindRTTag = L"";
 		if (0 == i)
-			BindRTTag = L"Target_EffectForBloom";
+			BindRTTag = L"Target_Effect_Bloom";
 		else
 			BindRTTag = L"Target_BloomDownSample" + to_wstring(i - 1);
 
@@ -399,7 +532,7 @@ HRESULT CRenderer::Render_DownSample()
 		if (FAILED(m_pBloomShader->Set_RawValue("g_iDiv", &iDiv, sizeof(_int))))
 			return E_FAIL;
 
-		if (FAILED(m_pBloomShader->Begin(0)))
+		if (FAILED(m_pBloomShader->Begin(1)))
 			return E_FAIL;
 
 		if (FAILED(m_pVIBuffer->Render()))
@@ -443,7 +576,7 @@ HRESULT CRenderer::Render_UpSample()
 		if (FAILED(m_pBloomShader->Set_RawValue("g_iDiv", &iDiv, sizeof(_int))))
 			return E_FAIL;
 
-		if (FAILED(m_pBloomShader->Begin(1)))
+		if (FAILED(m_pBloomShader->Begin(2)))
 			return E_FAIL;
 
 		if (FAILED(m_pVIBuffer->Render()))
@@ -467,30 +600,42 @@ HRESULT CRenderer::Ready_Debug()
 	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_Shade"), 400.f, 50.0f, 50.f, 50.f)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_EffectAlphaBlend"), 300.f, 100.f, 50.f, 50.f)))
+	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_Deferred"), 300.f, 100.f, 50.f, 50.f)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_EffectForBloom"), 350.f, 100.f, 50.f, 50.f)))
+	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BrightPassed"), 350.f, 100.f, 50.f, 50.f)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomDownSample0"), 400.f, 100.f, 50.f, 50.f)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomDownSample1"), 450.f, 100.f, 50.f, 50.f)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomDownSample2"), 500.f, 100.f, 50.f, 50.f)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomUpSample0"), 550.f, 100.f, 50.f, 50.f)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomUpSample1"), 600.f, 100.f, 50.f, 50.f)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomUpSample2"), 650.f, 100.f, 50.f, 50.f)))
+	//	return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_Effect_Glow"), 350.f, 100.f, 50.f, 50.f)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomDownSample0"), 400.f, 100.f, 50.f, 50.f)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomDownSample1"), 450.f, 100.f, 50.f, 50.f)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomDownSample2"), 500.f, 100.f, 50.f, 50.f)))
+	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BlurXGlow"), 400.f, 100.f, 50.f, 50.f)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomUpSample0"), 550.f, 100.f, 50.f, 50.f)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomUpSample1"), 600.f, 100.f, 50.f, 50.f)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomUpSample2"), 650.f, 100.f, 50.f, 50.f)))
+	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BlurYGlow"), 450.f, 100.f, 50.f, 50.f)))
 		return E_FAIL;
 
+	
+	//
+	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomDownSample2"), 500.f, 100.f, 50.f, 50.f)))
 
 
 	return S_OK;
@@ -502,27 +647,40 @@ HRESULT CRenderer::Render_Debug()
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Render_RTDebug(TEXT("MRT_LightAcc"), m_pDeferredShader, m_pVIBuffer_Rect)))
 		return E_FAIL;
-	if (FAILED(m_pGameInstance->Render_RTDebug(TEXT("MRT_Effect"), m_pDeferredShader, m_pVIBuffer_Rect)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomDownSample0"), m_pDeferredShader, m_pVIBuffer_Rect)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomDownSample1"), m_pDeferredShader, m_pVIBuffer_Rect)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomDownSample2"), m_pDeferredShader, m_pVIBuffer_Rect)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomUpSample0"), m_pDeferredShader, m_pVIBuffer_Rect)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomUpSample1"), m_pDeferredShader, m_pVIBuffer_Rect)))
-		return E_FAIL;
-	
-	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomUpSample2"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	if (FAILED(m_pGameInstance->Render_RTDebug(TEXT("MRT_Deferred"), m_pDeferredShader, m_pVIBuffer_Rect)))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_Effect_Glow"), m_pDeferredShader, m_pVIBuffer_Rect)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Render_RTDebug(TEXT("MRT_BlurXGlow"), m_pDeferredShader, m_pVIBuffer_Rect)))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Render_RTDebug(TEXT("MRT_BlurYGlow"), m_pDeferredShader, m_pVIBuffer_Rect)))
+		return E_FAIL;
+
+	
+	//if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BrightPassed"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomDownSample0"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomDownSample1"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomDownSample2"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomUpSample0"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomUpSample1"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_BloomUpSample2"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	//	return E_FAIL;
+	//
 
 	return S_OK;
 }
@@ -531,11 +689,9 @@ HRESULT CRenderer::Render_Debug()
 
 HRESULT CRenderer::Ready_DefaultTargets(_uint iWidth, _uint iHeight)
 {
-	/* For.Target_Diffuse */
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Diffuse"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	/* For.Target_Normal */
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
@@ -544,6 +700,12 @@ HRESULT CRenderer::Ready_DefaultTargets(_uint iWidth, _uint iHeight)
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal"))))
 		return E_FAIL;
 
+
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Copy"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Copy"), TEXT("Target_Copy"))))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -573,23 +735,59 @@ HRESULT CRenderer::Ready_DeferredTarget(_uint iWidth, _uint iHeight)
 
 HRESULT CRenderer::Ready_EffectTargets(_uint iWidth, _uint iHeight)
 {
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_EffectAlphaBlend"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Glow"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_EffectForBloom"), iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+	//if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Bloom"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+	//	return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Deferred"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_EffectAlphaBlend"))))
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Glow"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_EffectForBloom"))))
+	//if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Bloom"))))
+	//	return E_FAIL;
+	
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Ready_GlowTargets(_uint iWidth, _uint iHeight)
+{
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BlurXGlow"), iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_BlurYGlow"), iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_AfterGlow"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+	//	return E_FAIL;
+
+	
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BlurXGlow"), TEXT("Target_BlurXGlow"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_BlurYGlow"), TEXT("Target_BlurYGlow"))))
+		return E_FAIL;
+
+	//if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_AfterGlow"), TEXT("Target_AfterGlow"))))
+	//	return E_FAIL;
+
 
 	return S_OK;
 }
 
 HRESULT CRenderer::Ready_BloomTargets(_uint iWidth, _uint iHeight)
 {
+	if (FAILED(m_pGameInstance->Add_RenderTarget(L"Target_BrightPassed", iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(L"MRT_BrightPass", L"Target_BrightPassed")))
+		return E_FAIL;
+
+
 	for (_uint i = 0; i < m_iBloomLevel; ++i)
 	{
 		_uint iDiv = (_uint)pow(2, i + 1);
@@ -625,6 +823,7 @@ HRESULT CRenderer::Ready_BloomTargets(_uint iWidth, _uint iHeight)
 			return E_FAIL;
 	}
 
+
 	if (FAILED(m_pGameInstance->Add_RenderTarget(L"Target_PostBloom", iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
@@ -646,7 +845,6 @@ HRESULT CRenderer::Ready_Buffers()
 	if (nullptr == m_pVIBuffer_Rect)
 		return E_FAIL;
 
-	
 
 	return S_OK;
 }
@@ -659,6 +857,10 @@ HRESULT CRenderer::Ready_Shaders()
 
 	m_pBloomShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Bloom.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements, false);
 	if (nullptr == m_pBloomShader)
+		return E_FAIL;
+
+	m_pGlowShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_Glow.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements, false);
+	if (nullptr == m_pGlowShader)
 		return E_FAIL;
 
 	m_pPostProcessShader = CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_PostProcess.hlsl"), VTXTEX_DECLARATION::Elements, VTXTEX_DECLARATION::iNumElements, false);

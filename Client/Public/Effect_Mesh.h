@@ -4,21 +4,20 @@
 #include "GameEffect.h"
 
 BEGIN(Client)
-class CToolEffect_Mesh final : public CGameEffect
+class CEffect_Mesh final : public CGameEffect
 {
 private:
-	CToolEffect_Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	CToolEffect_Mesh(const CToolEffect_Mesh& rhs);
-	virtual ~CToolEffect_Mesh() = default;
+	CEffect_Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	CEffect_Mesh(const CEffect_Mesh& rhs);
+	virtual ~CEffect_Mesh() = default;
 
 private:
-	HRESULT Initialize_Prototype(const wstring& wstrFilePath);
+	HRESULT Initialize_Prototype(ifstream& fin);
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-	HRESULT Save_EffectData(ofstream& fout)	override;
 	HRESULT Load_EffectData(ifstream& fin)	override;
 
 private:
@@ -26,7 +25,6 @@ private:
 	void OnEnd_Effect()	override;
 
 	_bool Update_SpawnTime(_float fTimeDelta);
-	void Update_Position();
 	void Update_Rotation(_float fTimeDelta);
 	void Update_Scale();
 	void Update_Color();
@@ -41,7 +39,8 @@ private:
 	_float2				m_vNoiseUVOffset = { 0.f, 0.f };
 
 	_float4x4			m_FinalMatrix = {};
-	_float				m_fSpawnTimeAcc = 0.f;
+
+	_float				m_fSpawnTimeAcc = { 0.f };
 private:
 	CTransform*			m_pLocalTransform = { nullptr };
 	CModel*				m_pModel = { nullptr };
@@ -52,8 +51,7 @@ private:
 	HRESULT Bind_ShaderResources()	override;
 
 public:
-	static CToolEffect_Mesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	static CToolEffect_Mesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& wstrFilePath);
+	static CEffect_Mesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& fin);
 	CGameObject* Clone(void* pArg)	override;
 	void Free() override;
 

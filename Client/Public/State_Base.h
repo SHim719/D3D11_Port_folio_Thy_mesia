@@ -5,6 +5,8 @@
 
 #include "GameInstance.h"
 
+#include "Effect_Manager.h"
+
 BEGIN(Client)
 
 class CState_Base abstract : public CBase

@@ -319,6 +319,7 @@ enum class PlayerState
 	State_GetUp,
 	State_FoundBeacon,
 	State_Sit,
+	State_Healing,
 	State_Execution_Default,
 	State_Execution_Elite,
 	State_Executed,

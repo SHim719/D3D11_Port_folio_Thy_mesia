@@ -1,24 +1,19 @@
-#include "ToolEffect_Mesh.h"
+#include "Effect_Mesh.h"
 
-CToolEffect_Mesh::CToolEffect_Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEffect_Mesh::CEffect_Mesh(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameEffect(pDevice, pContext)
 {
 
 }
 
-CToolEffect_Mesh::CToolEffect_Mesh(const CToolEffect_Mesh& rhs)
+CEffect_Mesh::CEffect_Mesh(const CEffect_Mesh& rhs)
 	: CGameEffect(rhs)
 	, m_tMeshEffectInfo(rhs.m_tMeshEffectInfo)
 {
 }
-HRESULT CToolEffect_Mesh::Initialize_Prototype(const wstring& wstrFilePath)
+HRESULT CEffect_Mesh::Initialize_Prototype(ifstream& fin)
 {
 	m_eEffectType = MESH;
-
-	if (wstrFilePath.empty())
-		return S_OK;
-
-	ifstream fin(wstrFilePath);
 
 	if (FAILED(Load_EffectData(fin)))
 		return E_FAIL;
@@ -26,7 +21,7 @@ HRESULT CToolEffect_Mesh::Initialize_Prototype(const wstring& wstrFilePath)
 	return S_OK;
 }
 
-HRESULT CToolEffect_Mesh::Initialize(void* pArg)
+HRESULT CEffect_Mesh::Initialize(void* pArg)
 {
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
@@ -34,7 +29,7 @@ HRESULT CToolEffect_Mesh::Initialize(void* pArg)
 	return S_OK;
 }
 
-void CToolEffect_Mesh::Tick(_float fTimeDelta)
+void CEffect_Mesh::Tick(_float fTimeDelta)
 {
 	if (m_bComplete)
 		return;
@@ -42,7 +37,6 @@ void CToolEffect_Mesh::Tick(_float fTimeDelta)
 	if (false == Update_SpawnTime(fTimeDelta))
 		return;
 
-	Update_Position();
 	Update_Rotation(fTimeDelta);
 	Update_Scale();
 	Update_Color();
@@ -52,7 +46,7 @@ void CToolEffect_Mesh::Tick(_float fTimeDelta)
 	Update_FinalMatrix();
 }
 
-void CToolEffect_Mesh::LateTick(_float fTimeDelta)
+void CEffect_Mesh::LateTick(_float fTimeDelta)
 {
 	if (m_bComplete || m_bNoRender)
 		return;
@@ -63,7 +57,7 @@ void CToolEffect_Mesh::LateTick(_float fTimeDelta)
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT_GLOW, this);
 }
 
-HRESULT CToolEffect_Mesh::Render()
+HRESULT CEffect_Mesh::Render()
 {
 	if (nullptr == m_pModel)
 		return S_OK;
@@ -83,33 +77,22 @@ HRESULT CToolEffect_Mesh::Render()
 	return S_OK;
 }
 
-HRESULT CToolEffect_Mesh::Save_EffectData(ofstream& fout)
-{
-	__super::Save_EffectData(fout);
 
-	fout.write((_char*)&m_tMeshEffectInfo, sizeof(MESHEFFECT_INFO));
-
-	return S_OK;
-}
-
-HRESULT CToolEffect_Mesh::Load_EffectData(ifstream& fin)
+HRESULT CEffect_Mesh::Load_EffectData(ifstream& fin)
 {
 	__super::Load_EffectData(fin);
 
 	fin.read((_char*)&m_tMeshEffectInfo, sizeof(MESHEFFECT_INFO));
 
-
-
 	return S_OK;
 }
 
 
-void CToolEffect_Mesh::Restart_Effect(EFFECTSPAWNDESC* pDesc)
+void CEffect_Mesh::Restart_Effect(EFFECTSPAWNDESC* pDesc)
 {
 	__super::Restart_Effect(pDesc);
 
 	m_bComplete = false;
-	m_fTimeAcc = 0.f;
 	m_fSpawnTimeAcc = m_tMeshEffectInfo.fSpawnTime;
 	m_bNoRender = true;
 
@@ -122,47 +105,30 @@ void CToolEffect_Mesh::Restart_Effect(EFFECTSPAWNDESC* pDesc)
 	m_pLocalTransform->Set_Scale(m_tMeshEffectInfo.vStartScale);
 }
 
-void CToolEffect_Mesh::OnEnd_Effect()
+void CEffect_Mesh::OnEnd_Effect()
 {
 	__super::OnEnd_Effect();
 }
 
-
-_bool CToolEffect_Mesh::Update_SpawnTime(_float fTimeDelta)
+_bool CEffect_Mesh::Update_SpawnTime(_float fTimeDelta)
 {
 	if (m_fSpawnTimeAcc >= 0.f)
 	{
 		m_fSpawnTimeAcc -= fTimeDelta;
 		if (m_fSpawnTimeAcc < 0.f)
 		{
-			Spawn_Effect();
 			m_bNoRender = false;
+			Spawn_Effect();
 			return true;
 		}
+			
 		return false;
 	}
 	else
 		return true;
 }
 
-void CToolEffect_Mesh::Update_Position()
-{
-	switch (m_eTransformType)
-	{
-	case FOLLOW_PARENT:
-		break;
-
-	}
-
-	//if (m_tMeshEffectInfo.bFollowPivot && m_pPivotTransform)
-	//{
-	//	_vector vPivotPosition = m_pPivotTransform->Get_Position();
-	//	m_pTransform->Set_Position(vPivotPosition + XMLoadFloat3(&m_tMeshEffectInfo.vStartPosition));
-	//}
-
-}
-
-void CToolEffect_Mesh::Update_Rotation(_float fTimeDelta)
+void CEffect_Mesh::Update_Rotation(_float fTimeDelta)
 {
 	if (m_tMeshEffectInfo.bRotationLerp)
 	{
@@ -190,7 +156,7 @@ void CToolEffect_Mesh::Update_Rotation(_float fTimeDelta)
 
 }
 
-void CToolEffect_Mesh::Update_Scale()
+void CEffect_Mesh::Update_Scale()
 {
 	if (m_tMeshEffectInfo.bScaleLerp)
 	{
@@ -207,7 +173,7 @@ void CToolEffect_Mesh::Update_Scale()
 	}
 }
 
-void CToolEffect_Mesh::Update_Color()
+void CEffect_Mesh::Update_Color()
 {
 	if (m_tMeshEffectInfo.bColorLerp)
 	{
@@ -220,7 +186,7 @@ void CToolEffect_Mesh::Update_Color()
 
 }
 
-void CToolEffect_Mesh::Update_UV(_float fTimeDelta)
+void CEffect_Mesh::Update_UV(_float fTimeDelta)
 {
 	m_vMaskUVOffset.x += m_tMeshEffectInfo.vMaskUVSpeed.x * fTimeDelta;
 	m_vMaskUVOffset.y += m_tMeshEffectInfo.vMaskUVSpeed.y * fTimeDelta;
@@ -240,7 +206,7 @@ void CToolEffect_Mesh::Update_UV(_float fTimeDelta)
 
 }
 
-void CToolEffect_Mesh::Update_LifeTime(_float fTimeDelta)
+void CEffect_Mesh::Update_LifeTime(_float fTimeDelta)
 {
 	m_fTimeAcc += fTimeDelta;
 	if (m_fTimeAcc >= m_fPlayTime)
@@ -254,7 +220,7 @@ void CToolEffect_Mesh::Update_LifeTime(_float fTimeDelta)
 
 }
 
-void CToolEffect_Mesh::Update_FinalMatrix()
+void CEffect_Mesh::Update_FinalMatrix()
 {
 	Update_World();
 
@@ -269,7 +235,7 @@ void CToolEffect_Mesh::Update_FinalMatrix()
 	XMStoreFloat4x4(&m_FinalMatrix, XMMatrixTranspose(FinalMatrix));
 }
 
-HRESULT CToolEffect_Mesh::Ready_Components()
+HRESULT CEffect_Mesh::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
 		return E_FAIL;
@@ -303,7 +269,7 @@ HRESULT CToolEffect_Mesh::Ready_Components()
 	return S_OK;
 }
 
-HRESULT CToolEffect_Mesh::Bind_GlobalVariables()
+HRESULT CEffect_Mesh::Bind_GlobalVariables()
 {
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_FinalMatrix, sizeof(_float4x4))))
 		return E_FAIL;
@@ -339,7 +305,7 @@ HRESULT CToolEffect_Mesh::Bind_GlobalVariables()
 	return S_OK;
 }
 
-HRESULT CToolEffect_Mesh::Bind_ShaderResources()
+HRESULT CEffect_Mesh::Bind_ShaderResources()
 {
 	if (FAILED(m_pBaseTexture->Set_SRV(m_pShader, "g_BaseTexture", m_iBaseTextureIdx)))
 		return E_FAIL;
@@ -366,46 +332,33 @@ HRESULT CToolEffect_Mesh::Bind_ShaderResources()
 
 }
 
-CToolEffect_Mesh* CToolEffect_Mesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
+CEffect_Mesh* CEffect_Mesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& fin)
 {
-	CToolEffect_Mesh* pInstance = new CToolEffect_Mesh(pDevice, pContext);
+	CEffect_Mesh* pInstance = new CEffect_Mesh(pDevice, pContext);
 
-	if (FAILED(pInstance->Initialize_Prototype(L"")))
+	if (FAILED(pInstance->Initialize_Prototype(fin)))
 	{
-		MSG_BOX(TEXT("Failed To Created : CToolEffect_Mesh"));
+		MSG_BOX(TEXT("Failed To Created : CEffect_Mesh"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-CToolEffect_Mesh* CToolEffect_Mesh::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, const wstring& wstrFilePath)
+CGameObject* CEffect_Mesh::Clone(void* pArg)
 {
-	CToolEffect_Mesh* pInstance = new CToolEffect_Mesh(pDevice, pContext);
-
-	if (FAILED(pInstance->Initialize_Prototype(wstrFilePath)))
-	{
-		MSG_BOX(TEXT("Failed To Created : CToolEffect_Mesh"));
-		Safe_Release(pInstance);
-	}
-
-	return pInstance;
-}
-
-CGameObject* CToolEffect_Mesh::Clone(void* pArg)
-{
-	CToolEffect_Mesh* pInstance = new CToolEffect_Mesh(*this);
+	CEffect_Mesh* pInstance = new CEffect_Mesh(*this);
 
 	if (FAILED(pInstance->Initialize(pArg)))
 	{
-		MSG_BOX(TEXT("Failed To Cloned : CToolEffect_Mesh"));
+		MSG_BOX(TEXT("Failed To Cloned : CEffect_Mesh"));
 		Safe_Release(pInstance);
 	}
 
 	return pInstance;
 }
 
-void CToolEffect_Mesh::Free()
+void CEffect_Mesh::Free()
 {
 	__super::Free();
 

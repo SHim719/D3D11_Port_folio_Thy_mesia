@@ -10,8 +10,8 @@ BEGIN(Engine)
 class ENGINE_DLL CRenderer final : public CBase
 {
 public:
-	/* 그리는 순서대로 열거체를 정의했다. */
-	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND, RENDER_EFFECT, RENDER_UI, RENDER_END };
+	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND
+		, RENDER_EFFECT_NONBLEND, RENDER_EFFECT_BLEND, RENDER_EFFECT_GLOW, RENDER_UI, RENDER_END };
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -27,6 +27,7 @@ private:
 
 	/* 렌더타겟 디버깅용 패스 (0), 빛연산을 위한 패스 (1) */
 	class CShader*			m_pDeferredShader = { nullptr };
+	class CShader*			m_pGlowShader = { nullptr };
 	class CShader*			m_pBloomShader = { nullptr };
 	class CShader*			m_pPostProcessShader = { nullptr };
 
@@ -46,13 +47,19 @@ private:
 	void Draw_Objects(_uint iGroup);
 	void Bind_ViewProj();
 
+	HRESULT Copy_RenderTarget(const wstring& wstrTargetTag);
+
 	HRESULT Render_NonBlend();
 	HRESULT Render_NonLight();
 	HRESULT Render_LightAcc();
 	HRESULT Render_Deferred();
+
 	HRESULT Render_Effect();
 
+	HRESULT Render_Glow();
+
 	HRESULT Render_SampleForBloom();
+	HRESULT Render_BrightPass();
 	HRESULT Render_DownSample();
 	HRESULT Render_UpSample();
 
@@ -70,15 +77,16 @@ private:
 	HRESULT Ready_LightTargets(_uint iWidth, _uint iHeight);
 	HRESULT Ready_DeferredTarget(_uint iWidth, _uint iHeight);
 	HRESULT Ready_EffectTargets(_uint iWidth, _uint iHeight);
+	HRESULT Ready_GlowTargets(_uint iWidth, _uint iHeight);
 	HRESULT Ready_BloomTargets(_uint iWidth, _uint iHeight);
 
-	
 #ifdef _DEBUG
 private:
 	HRESULT Ready_Debug();
 	HRESULT Render_Debug();
 	_bool m_bRenderRTV = { true };
 #endif
+
 
 private:
 	list<class CGameObject*>			m_RenderObjects[RENDER_END];

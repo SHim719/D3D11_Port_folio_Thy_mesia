@@ -29,6 +29,7 @@ private:
 	void OnEnd_Cutscene()									override;
 
 	void Bind_KeyFrames()									override;
+	void Bind_KeyFrameEffects()								override;
 
 public:
 	HRESULT Reset_NaviData(LEVEL eLevel);
@@ -162,9 +163,9 @@ public:
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 	void ChangeToNextComboAnim();
+	void Healing();
 
-
-	inline void Calc_HitGap(_float fTimeDelta) {
+	void Calc_HitGap(_float fTimeDelta) {
 		if (m_fHitGapAcc < 0.f) return;
 		m_fHitGapAcc -= fTimeDelta;
 	}

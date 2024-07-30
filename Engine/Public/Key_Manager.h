@@ -21,7 +21,7 @@ enum class eKeyCode
 	Space, LButton, MButton, RButton,
 	LCtrl, LShift, RShift,
 	NUMPAD0, NUMPAD1, NUMPAD2, NUMPAD3,
-	One, Two, Three, Four,
+	Zero, One, Two, Three, Four,
 	Enter, Delete, ESC,
 	End,
 };

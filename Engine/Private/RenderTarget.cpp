@@ -57,6 +57,7 @@ HRESULT CRenderTarget::Bind_ShaderResourceView(CShader* pShader, const _char* pC
 	return pShader->Set_ShaderResourceView(pConstantName, m_pSRV);
 }
 
+
 #ifdef _DEBUG
 
 HRESULT CRenderTarget::Ready_Debug(_float fX, _float fY, _float fSizeX, _float fSizeY)

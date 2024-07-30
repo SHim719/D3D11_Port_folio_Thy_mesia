@@ -18,6 +18,9 @@
 
 #include "FadeScreen.h"
 
+#include "Effect_Manager.h"
+#include "GameEffect.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)
 {
@@ -49,6 +52,10 @@ HRESULT CPlayer::Initialize(void* pArg)
 		return E_FAIL;
 
 	Bind_KeyFrames();
+	Bind_KeyFrameEffects();
+
+	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
+	m_tEffectSpawnDesc.pParentModel = m_pModel;
 
 	CEnemy::Set_Target(this);
 
@@ -74,13 +81,24 @@ void CPlayer::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::V))
 	{
-		m_pStats->Active_Skill(SKILLTYPE::AXE);
-		m_pStats->Obtain_Key();
+		//m_pStats->Active_Skill(SKILLTYPE::AXE);
+		//m_pStats->Obtain_Key();
+		//
+		//vector<SKILLTYPE> eTypes{ SKILLTYPE::AXE, SKILLTYPE::NONE };
+		//
+		//UIMGR->Active_UI("UI_Popup", &eTypes);
 
-		vector<SKILLTYPE> eTypes{ SKILLTYPE::AXE, SKILLTYPE::NONE };
-
-		UIMGR->Active_UI("UI_Popup", &eTypes);
+		//m_pStats->Update_PlunderSkill(SKILLTYPE::AXE);
+		//m_pStats->Update_PlunderSkill(SKILLTYPE::SPEAR);
+		m_pStats->Update_PlunderSkill(SKILLTYPE::TWINBLADE);
 	}
+
+	if (KEY_DOWN(eKeyCode::M))
+		Change_State((_uint)PlayerState::State_Healing);
+
+	if (KEY_DOWN(eKeyCode::N))
+		Change_State((_uint)PlayerState::State_ParrySuccess);
+	
 
 	if (m_bLockOn)
 	{
@@ -194,6 +212,36 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Inactive_PW_Twin_L_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_L, false));
 	m_pModel->Bind_Func("Active_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, true));
 	m_pModel->Bind_Func("Inactive_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, false));
+	m_pModel->Bind_Func("Healing", bind(&CPlayer::Healing, this));
+
+}
+
+void CPlayer::Bind_KeyFrameEffects()
+{
+	
+	m_pModel->Bind_Func("Effect_LAttack1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack1", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_LAttack2", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack2", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_LAttack3", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack3", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_LAttack4", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack4", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Claw_Long1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Claw_Long1", &m_tEffectSpawnDesc));
+	//m_pModel->Bind_Func("Effect_Claw_Long1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Claw_Long1", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Axe_StartParticle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_StartParticle", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Axe_Slash", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_Slash", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Axe_Impact", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_Impact", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Spear_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Spear_Start", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Spear_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Spear_Particle", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Spear_Slash", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Spear_Slash", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Hammer_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Hammer_Start", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Hammer_Slash", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Hammer_Start", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Hammer_Impact", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Hammer_Impact", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_TwinBlade_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Start", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash0", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash0", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash1", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash2", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash2", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash3", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash3", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash4", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash4", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_TwinBlade_Final", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash_End", &m_tEffectSpawnDesc));
+
 }
 
 void CPlayer::Update_CanExecutionEnemy()
@@ -404,6 +452,13 @@ void CPlayer::ChangeToNextComboAnim()
 	m_pModel->Change_Animation(m_pModel->Get_CurrentAnimIndex() + 1);
 }
 
+void CPlayer::Healing()
+{
+	m_pStats->Increase_Hp(200);
+
+	EFFECTMGR->Active_Effect("Effect_Corvus_Healing", &Bake_EffectSpawnDesc());
+}
+
 
 _int CPlayer::Take_Damage(const ATTACKDESC& AttackDesc)
 {
@@ -535,6 +590,7 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_GetUp] = CPlayerState_GetUp::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_FoundBeacon] = CPlayerState_FoundBeacon::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Sit] = CPlayerState_Sit::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_Healing] = CPlayerState_Healing::Create(m_pDevice, m_pContext, this);
 
 	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_Axe] = CPlayerState_PW_Axe::Create(m_pDevice, m_pContext, this);

@@ -129,6 +129,7 @@ public:
 	HRESULT Begin_MRT_NoClear(const wstring& strMRTTag);
 	HRESULT End_MRT();
 	HRESULT Bind_RT_SRV(const wstring& strRenderTargetTag, class CShader* pShader, const _char* pConstantName);
+	HRESULT Clear_Target(const wstring& strTargetTag);
 
 #ifdef _DEBUG
 	HRESULT Ready_RTDebug(const wstring& strRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY);
@@ -154,6 +155,14 @@ public:
 	}
 #pragma endregion
 
+#pragma region TRANSFORM
+	// 행렬 계산을 위한 Transform
+	CTransform* m_pCalculateTransform = { nullptr };
+
+	CTransform* Get_CalculateTF() {
+		return m_pCalculateTransform;
+	}
+#pragma endregion 
 
 private:
 	CGraphic_Device*		m_pGraphic_Device = { nullptr };

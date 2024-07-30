@@ -180,15 +180,15 @@
     <ClInclude Include="..\public\Cutscene_Actor.h" />
     <ClInclude Include="..\Public\Cutscene_Manager.h" />
     <ClInclude Include="..\Public\Door.h" />
+    <ClInclude Include="..\Public\Effect_Group.h" />
+    <ClInclude Include="..\Public\Effect_Manager.h" />
     <ClInclude Include="..\Public\Effect_Particle.h" />
-    <ClInclude Include="..\Public\ToolEffect_Mesh.h" />
-    <ClInclude Include="..\Public\ToolEffect_Particle.h" />
-    <ClInclude Include="..\Public\Effect_Tool.h" />
+    <ClInclude Include="..\Public\GameEffect.h" />
+    <ClInclude Include="..\Public\Effect_Mesh.h" />
     <ClInclude Include="..\Public\Enemy.h" />
     <ClInclude Include="..\Public\EnemyStats.h" />
     <ClInclude Include="..\Public\EventTrigger.h" />
     <ClInclude Include="..\Public\FadeScreen.h" />
-    <ClInclude Include="..\Public\Fade_Manager.h" />
     <ClInclude Include="..\Public\Free_Camera.h" />
     <ClInclude Include="..\Public\HalberdKnight.h" />
     <ClInclude Include="..\Public\HalberdKnightState_Attack1.h" />
@@ -274,6 +274,7 @@
     <ClInclude Include="..\Public\PlayerState_Climb_Idle.h" />
     <ClInclude Include="..\Public\PlayerState_FoundBeacon.h" />
     <ClInclude Include="..\Public\PlayerState_GetUp.h" />
+    <ClInclude Include="..\Public\PlayerState_Healing.h" />
     <ClInclude Include="..\Public\PlayerState_PW_Axe.h" />
     <ClInclude Include="..\Public\PlayerState_Plunder.h" />
     <ClInclude Include="..\Public\PlayerState_PlunderRush.h" />
@@ -302,6 +303,8 @@
     <ClInclude Include="..\Public\ToolAnimObj.h" />
     <ClInclude Include="..\Public\ToolBoundingSphere.h" />
     <ClInclude Include="..\Public\ToolColliderObj.h" />
+    <ClInclude Include="..\Public\ToolEffect_Mesh.h" />
+    <ClInclude Include="..\Public\ToolEffect_Particle.h" />
     <ClInclude Include="..\Public\ToolMapObj.h" />
     <ClInclude Include="..\Public\ToolMapObjInstance.h" />
     <ClInclude Include="..\Public\ToolNaviCell.h" />
@@ -382,15 +385,15 @@
     <ClCompile Include="..\Private\Cutscene_Actor.cpp" />
     <ClCompile Include="..\Private\Cutscene_Manager.cpp" />
     <ClCompile Include="..\Private\Door.cpp" />
+    <ClCompile Include="..\Private\Effect_Group.cpp" />
+    <ClCompile Include="..\Private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\Effect_Particle.cpp" />
-    <ClCompile Include="..\Private\ToolEffect_Mesh.cpp" />
-    <ClCompile Include="..\Private\ToolEffect_Particle.cpp" />
-    <ClCompile Include="..\Private\Effect_Tool.cpp" />
+    <ClCompile Include="..\Private\GameEffect.cpp" />
+    <ClCompile Include="..\Private\Effect_Mesh.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
     <ClCompile Include="..\Private\EnemyStats.cpp" />
     <ClCompile Include="..\Private\EventTrigger.cpp" />
     <ClCompile Include="..\Private\FadeScreen.cpp" />
-    <ClCompile Include="..\Private\Fade_Manager.cpp" />
     <ClCompile Include="..\Private\Free_Camera.cpp" />
     <ClCompile Include="..\Private\HalberdKnight.cpp" />
     <ClCompile Include="..\Private\HalberdKnightState_Attack1.cpp" />
@@ -468,6 +471,7 @@
     <ClCompile Include="..\Private\PlayerState_Climb_Idle.cpp" />
     <ClCompile Include="..\Private\PlayerState_FoundBeacon.cpp" />
     <ClCompile Include="..\Private\PlayerState_GetUp.cpp" />
+    <ClCompile Include="..\Private\PlayerState_Healing.cpp" />
     <ClCompile Include="..\Private\PlayerState_PW_Axe.cpp" />
     <ClCompile Include="..\Private\PlayerState_Plunder.cpp" />
     <ClCompile Include="..\Private\PlayerState_PlunderRush.cpp" />
@@ -494,6 +498,8 @@
     <ClCompile Include="..\Private\ToolAnimObj.cpp" />
     <ClCompile Include="..\Private\ToolBoundingSphere.cpp" />
     <ClCompile Include="..\Private\ToolColliderObj.cpp" />
+    <ClCompile Include="..\Private\ToolEffect_Mesh.cpp" />
+    <ClCompile Include="..\Private\ToolEffect_Particle.cpp" />
     <ClCompile Include="..\Private\ToolMapObj.cpp" />
     <ClCompile Include="..\Private\ToolMapObjInstance.cpp" />
     <ClCompile Include="..\Private\ToolNaviCell.cpp" />
@@ -573,6 +579,14 @@
     <None Include="..\Bin\ShaderFiles\Shader_PostProcess_Defines.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Glow.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_PostProcess.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

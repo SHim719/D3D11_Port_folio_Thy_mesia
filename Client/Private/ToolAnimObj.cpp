@@ -78,7 +78,11 @@ HRESULT CToolAnimObj::Initialize(void* pArg)
 
 void CToolAnimObj::Tick(_float fTimeDelta)
 {
+	if (KEY_DOWN(eKeyCode::M))
+		m_pTransform->Add_YawInput(XM_PIDIV2);
 
+	if (KEY_PUSHING(eKeyCode::N))
+		m_pTransform->Go_Straight(fTimeDelta);
 }
 
 void CToolAnimObj::LateTick(_float fTimeDelta)
@@ -148,21 +152,27 @@ HRESULT CToolAnimObj::Ready_Corvus()
 	//if (nullptr == pSaber)
 	//	return E_FAIL;
 
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Axe";
+
 	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Spear";
 
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
+	//m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_TwinSword";
-
+	//
 	CGameObject* pPW = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
 	if (nullptr == pPW)
 		return E_FAIL;
-
+	//
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
-
+	//
 	pPW = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
-	if (nullptr == pPW)
-		return E_FAIL;
+
 
 	return S_OK;
 }

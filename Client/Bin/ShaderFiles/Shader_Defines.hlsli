@@ -31,7 +31,6 @@ sampler PointWrapSampler = sampler_state
 };
 
 
-
 sampler PointClampSampler = sampler_state
 {
     Filter = MIN_MAG_MIP_POINT;
@@ -106,5 +105,26 @@ BlendState BS_AlphaBlendEffect
     DestBlendAlpha = Dest_Alpha;
     BlendOpAlpha = MAX;
 };
+
+BlendState BS_EffectBlend
+{
+    BlendEnable[0] = true;
+	// BlendEnable[1] = true;
+
+    SrcBlend = Src_Alpha;
+    DestBlend = one;
+    BlendOp = Add;
+};
+
+BlendState BS_OneBlend
+{
+    BlendEnable[0] = true;
+    BlendEnable[1] = true;
+
+    SrcBlend = one;
+    DestBlend = one;
+    BlendOp = Add;
+};
+
 
 #endif

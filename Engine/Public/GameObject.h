@@ -107,6 +107,10 @@ public:
 		m_bInstancing = bInstancing;
 	}
 
+	_float Get_CamDistance() const {
+		return XMVector3Length(XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) - m_pTransform->Get_Position()).m128_f32[0];
+	}
+
 public:
 	virtual CGameObject* Clone(void* pArg) = 0;
 	void Free() override;

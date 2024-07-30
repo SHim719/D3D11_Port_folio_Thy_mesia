@@ -134,6 +134,17 @@ HRESULT CTarget_Manager::End_MRT()
 	return S_OK;
 }
 
+HRESULT CTarget_Manager::Clear(const wstring& strTargetTag)
+{
+	auto it = m_RenderTargets.find(strTargetTag);
+	if (m_RenderTargets.end() == it)
+		return E_FAIL;
+
+	it->second->Clear();
+
+	return S_OK;
+}
+
 HRESULT CTarget_Manager::Bind_RT_SRV(const wstring& strRenderTargetTag, CShader* pShader, const _char* pConstantName)
 {
 	CRenderTarget* pRenderTarget = Find_RenderTarget(strRenderTargetTag);

@@ -2,6 +2,7 @@
 
 #include "Client_Defines.h"
 #include "GameObject.h"
+#include "GameEffect.h"
 
 BEGIN(Client)
 
@@ -13,6 +14,7 @@ protected:
 	virtual ~CCharacter() = default;
 
 	virtual void Bind_KeyFrames();
+	virtual void Bind_KeyFrameEffects();
 
 protected:
 	vector<class CState_Base*>	m_States;
@@ -28,14 +30,17 @@ public:
 	void Set_NaviIdx(_uint iNaviIdx) {
 		m_pNavigation->Set_CurrentIdx(iNaviIdx);
 	}
+	CGameEffect::EFFECTSPAWNDESC Bake_EffectSpawnDesc();
 public:
 	void Hit(const ATTACKDESC& AttackDesc);
 	virtual _int Take_Damage(const ATTACKDESC& AttackDesc);
 
 protected:
-	_bool						m_bStanced = { false };
-	_bool						m_bAdjustNaviY = { true };
-	
+	_bool							m_bStanced = { false };
+	_bool							m_bAdjustNaviY = { true };
+
+	CGameEffect::EFFECTSPAWNDESC	m_tEffectSpawnDesc = {};
+
 public:
 	_bool Is_Stanced() const {
 		return m_bStanced;
@@ -65,7 +70,6 @@ public:
 	void Set_Adjust_NaviY(_bool b) {
 		m_bAdjustNaviY = b;
 	}
-
 
 protected:
 	void Compute_YPos();

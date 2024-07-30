@@ -7,7 +7,7 @@ CTransform::CTransform(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CComponent(pDevice, pContext)
 	, m_TransformDesc{}
 {
-
+	XMStoreFloat4x4(&m_WorldMatrix, XMMatrixIdentity());
 }
 
 CTransform::CTransform(const CTransform& rhs)
@@ -148,12 +148,27 @@ void CTransform::Move_Root(_fvector vDeltaRoot, CNavigation* pNavigation)
 
 void CTransform::Add_Position(_fvector vDir, _float fDist, CNavigation* pNavigation)
 {
-	if (nullptr == pNavigation)
-		return;
-
 	_vector vPos = Get_Position() + vDir * fDist;
 
-	if (true == pNavigation->isMove(vPos, nullptr))
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos, nullptr))
+		Set_Position(vPos);
+}
+
+void CTransform::Add_Position(_fvector vXYZ, _bool bLocal, CNavigation* pNavigation)
+{
+	_vector vRight = Get_Right();
+	_vector vUp = Get_Up();
+	_vector vLook = Get_Look();
+	if (!bLocal)
+	{
+		vRight = XMVectorSet(1.f, 0.f, 0.f, 0.f);
+		vUp = XMVectorSet(0.f, 1.f, 0.f, 0.f);
+		vLook = XMVectorSet(0.f, 0.f, 1.f, 0.f);
+	}
+	
+	_vector vPos = Get_Position() + vRight * vXYZ.m128_f32[0] + vUp * vXYZ.m128_f32[1] + vLook * vXYZ.m128_f32[2];
+		
+	if (nullptr == pNavigation || true == pNavigation->isMove(vPos, nullptr))
 		Set_Position(vPos);
 }
 
@@ -177,6 +192,9 @@ _float3 CTransform::Get_Scale() const
 
 void CTransform::Turn(_fvector vAxis, _float fTimeDelta)
 {
+	if (0.f == XMVector3Length(vAxis).m128_f32[0])
+		return;
+
 	_vector		vRight = Get_State(STATE_RIGHT);
 	_vector		vUp = Get_State(STATE_UP);
 	_vector		vLook = Get_State(STATE_LOOK);
@@ -214,6 +232,37 @@ void CTransform::Rotation(_fvector vAxis, _float fRadian)
 void CTransform::Rotation_Quaternion(_fvector vQuat)
 {
 	_matrix	RotationMatrix = XMMatrixRotationQuaternion(vQuat);
+	
+	_float3		vScale = Get_Scale();
+
+	_vector vRight = RotationMatrix.r[0] * vScale.x;
+	_vector vUp = RotationMatrix.r[1] * vScale.y;
+	_vector vLook = RotationMatrix.r[2] * vScale.z;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+}
+
+void CTransform::Rotation_RollPitchYaw(_float fRoll, _float fPitch, _float fYaw)
+{
+	_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(fRoll, fPitch, fYaw);
+
+	_float3		vScale = Get_Scale();
+
+	_vector vRight = RotationMatrix.r[0] * vScale.x;
+	_vector vUp = RotationMatrix.r[1] * vScale.y;
+	_vector vLook = RotationMatrix.r[2] * vScale.z;
+
+	Set_State(STATE_RIGHT, vRight);
+	Set_State(STATE_UP, vUp);
+	Set_State(STATE_LOOK, vLook);
+
+}
+
+void CTransform::Rotation_RollPitchYawFromVector(_fvector vRollYawPitch)
+{
+	_matrix RotationMatrix = XMMatrixRotationRollPitchYawFromVector(vRollYawPitch);
 
 	_float3		vScale = Get_Scale();
 
@@ -362,7 +411,7 @@ void CTransform::Attach_To_Bone(CBone* pBone, CTransform* pParentTransform, _fma
 
 	if (bOnlyPosition)
 	{
-		XMStoreFloat4x4(&m_WorldMatrix, SocketMatrix);
+		XMStoreFloat4x4(&m_WorldMatrix, WorldMatrix);
 		return;
 	}
 	

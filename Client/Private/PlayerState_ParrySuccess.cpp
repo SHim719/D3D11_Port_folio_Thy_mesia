@@ -1,5 +1,6 @@
 #include "PlayerState_ParrySuccess.h"
 
+
 CPlayerState_ParrySuccess::CPlayerState_ParrySuccess(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayerState_Base(pDevice, pContext)
 {
@@ -27,12 +28,12 @@ void CPlayerState_ParrySuccess::OnState_Start(void* pArg)
 	_int* iParryDir = (_int*)pArg;
 	_int iRandNum = JoRandom::Random_Int(0, 1);
 
-	if (0 == *iParryDir)
-		m_pModel->Change_Animation(Corvus_SD_ParryDeflect_L + iRandNum, 0.f);
-	else
+	//if (0 == *iParryDir)
+	//	m_pModel->Change_Animation(Corvus_SD_ParryDeflect_L + iRandNum, 0.f);
+	//else
 		m_pModel->Change_Animation(Corvus_SD_ParryDeflect_R + iRandNum, 0.f);
 
-	
+	EFFECTMGR->Active_Effect("Effect_Corvus_Parry_Success", &m_pPlayer->Bake_EffectSpawnDesc());
 }
 
 void CPlayerState_ParrySuccess::Update(_float fTimeDelta)

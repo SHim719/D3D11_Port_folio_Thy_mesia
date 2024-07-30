@@ -73,6 +73,10 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 	if (nullptr == m_pTimer_Manager)
 		return E_FAIL;
 
+	m_pCalculateTransform = CTransform::Create(*ppDevice, *ppContext);
+	if (nullptr == m_pCalculateTransform)
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -508,6 +512,11 @@ HRESULT CGameInstance::Bind_RT_SRV(const wstring& strRenderTargetTag, CShader* p
 	return m_pTarget_Manager->Bind_RT_SRV(strRenderTargetTag, pShader, pConstantName);
 }
 
+HRESULT CGameInstance::Clear_Target(const wstring& strTargetTag)
+{
+	return m_pTarget_Manager->Clear(strTargetTag);
+}
+
 #ifdef _DEBUG
 
 HRESULT CGameInstance::Ready_RTDebug(const wstring& strRenderTargetTag, _float fX, _float fY, _float fSizeX, _float fSizeY)
@@ -579,6 +588,7 @@ void CGameInstance::Release_Engine()
 void CGameInstance::Free()
 {	
 	Safe_Release(m_pMain_Camera);
+	Safe_Release(m_pCalculateTransform);
 	Safe_Release(m_pTarget_Manager);
 	Safe_Release(m_pRenderer);
 	Safe_Release(m_pLight_Manager);

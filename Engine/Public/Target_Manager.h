@@ -24,6 +24,8 @@ public:
 	HRESULT Begin_MRT_NoClear(const wstring& strMRTTag);
 	HRESULT End_MRT();
 
+	HRESULT Clear(const wstring& strTargetTag);
+
 	HRESULT Bind_RT_SRV(const wstring& strRenderTargetTag, class CShader* pShader, const _char* pConstantName);
 
 #ifdef _DEBUG

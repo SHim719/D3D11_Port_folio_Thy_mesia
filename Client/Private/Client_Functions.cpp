@@ -131,12 +131,7 @@ namespace JoMath
 	_vector Get_BoneWorldPos(Engine::CBone* pBone, _fmatrix ParentMatrix)
 	{
 		_matrix SocketMatrix = pBone->Get_CombinedTransformation();
-		SocketMatrix.r[0] = XMVector3Normalize(SocketMatrix.r[0]);
-		SocketMatrix.r[1] = XMVector3Normalize(SocketMatrix.r[1]);
-		SocketMatrix.r[2] = XMVector3Normalize(SocketMatrix.r[2]);
-
 		SocketMatrix *= ParentMatrix;
-
 		return SocketMatrix.r[3];
 	}
 

@@ -47,6 +47,10 @@ private:
 	HRESULT Ready_UIResource();
 	HRESULT Ready_UI();
 
+	HRESULT Ready_Effects();
+	HRESULT Ready_EffectResources();
+	HRESULT Ready_EffectGroup();
+
 	HRESULT Ready_Etc();
 
 private:

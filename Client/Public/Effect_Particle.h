@@ -1,25 +1,45 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "GameEffect.h"
 
 BEGIN(Client)
-class CEffect_Particle final : public CGameObject
+class CEffect_Particle final : public CGameEffect
 {
+public:
+	enum PARTICLE_TYPE { BILLBOARD, ALIGNVELOCITY, SPAWN_AT_BONE, PARTICLE_END };
+
 private:
 	CEffect_Particle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CEffect_Particle(const CEffect_Particle& rhs);
 	virtual ~CEffect_Particle() = default;
 
 private:
-	HRESULT Initialize_Prototype()		override;
-	HRESULT Initialize(void* pArg)		override;
+	HRESULT Initialize_Prototype(ifstream& fin);
+	HRESULT Initialize(void* pArg)						override;
 
-	void Tick(_float fTimeDelta)		override;
-	void LateTick(_float fTimeDelta)	override;
+	void Tick(_float fTimeDelta)						override;
+	void LateTick(_float fTimeDelta)					override;
+	HRESULT Render()									override;
 
-	HRESULT Render()					override;
+private:
+	HRESULT Load_EffectData(ifstream& fin)			override;
 
+private:
+	_bool Update_SpawnTime(size_t iIdx, _float fTimeDelta);
+	void Update_Positions(size_t iIdx, _float fTimeDelta);
+	void Update_Scale(size_t iIdx);
+	void Update_Rotation(size_t iIdx, _float fTimeDelta);
+	void Update_Velocity(size_t iIdx, _float fTimeDelta);
+	void Update_Color(size_t iIdx);
+	void Update_Lifetime(size_t iIdx, _float fTimeDelta);
+
+	void Update_BoneMatrix();
+public:
+	void Restart_Effect(EFFECTSPAWNDESC* pDesc = nullptr)	override;
+	void Restart_Particle(size_t iIdx);
+	void Remake_Particle();
+	void Resize_Particles(_uint iNumParticles);
 
 private:
 	vector<VTXPARTICLE>			m_InitParticleDatas;
@@ -28,41 +48,21 @@ private:
 	vector<PARTICLE_DESC>		m_InitParticleDescs;
 	vector<PARTICLE_DESC>		m_NowParticleDescs;
 
-	_bool						m_bBillBoard = { false };
-	_int						m_iNumParticles = { 0 };
-	_int						m_iMaskTexureIdx = { 0 };
-	_int						m_iPassIdx = { 0 };
+	PARTICLE_INFO				m_tParticleInfo = {};
 
-	_bool						m_bTargeting = { false };
-	_float3						m_fTargetPos = { 0.f, 0.f, 0.f };
-
-	_float4						m_vColor = { 1.f, 1.f, 1.f, 1.f };
-	_float4						m_vClipColor = { 0.f, 0.f, 0.f, 0.f };
-
-	_float2						m_vScaleSpeed = { 0.f, 0.f };
-
-	_float2						m_vMaxScale = { 999.f, 999.f };
-
-	_float3						m_vRotationSpeed = { 0.f, 0.f, 0.f };
-
-	_bool						m_bLoop = { false };
-
-	_float						m_fLifeTime = { 1.f };
+	_float4x4					m_BoneMatrix = {};
 private:
-	CVIBuffer_Particle* m_pVIBuffer_Particle = { nullptr };
-	CTexture*			m_pMaskTexture = { nullptr };
-	CShader*			m_pShader = { nullptr };
+	CVIBuffer_Particle*			m_pVIBuffer_Particle = { nullptr };
 
 private:
 	HRESULT Ready_Components();
+	HRESULT Bind_GlobalVariables();
+	HRESULT Bind_ShaderResources();
 
 public:
-	static CEffect_Particle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
+	static CEffect_Particle* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& fin);
 	CGameObject* Clone(void* pArg)	override;
 	void Free() override;
-
-
-	friend class CEffect_Tool;
 };
 
 END

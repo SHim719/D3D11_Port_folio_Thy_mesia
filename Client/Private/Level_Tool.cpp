@@ -85,22 +85,17 @@ HRESULT CLevel_Tool::Initialize()
 
 	if (FAILED(Ready_TwinBladeKnight()))
 		return E_FAIL;
-#endif
 
-#ifdef EffectTool
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_BaseColor", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Diffuse/%d.png", 148));
+		L"../../Resources/Effect/Diffuse/%d.png", 2));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Mask/Masking/%d.png", 13));
+		L"../../Resources/Effect/Mask/Masking/%d.png", 23));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Noise/%d.png", 14));
+		L"../../Resources/Effect/Noise/%d.png", 16));
+#endif
 
-	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_FadeScreen", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/FadeScreen/FadeScreen.png"))))
-		return E_FAIL;
-
-#endif 
 
 	return S_OK;
 }
@@ -144,7 +139,7 @@ HRESULT CLevel_Tool::Ready_ToolObjects()
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolBoundingSphere", CToolBoundingSphere::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolEffect_Particle", CToolEffect_Particle::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolEffect_Mesh", CToolEffect_Mesh::Create(m_pDevice, m_pContext));
-
+	
 	return S_OK;
 }
 
@@ -397,10 +392,6 @@ HRESULT CLevel_Tool::Ready_Etc()
 	return S_OK;
 }
 
-HRESULT CLevel_Tool::Ready_EffectMesh()
-{
-	return S_OK;
-}
 
 HRESULT CLevel_Tool::Load_Map()
 {

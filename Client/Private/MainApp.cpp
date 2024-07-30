@@ -11,6 +11,8 @@
 
 #include "MapObject.h"
 #include "Instancing_Object.h"
+#include "Effect_Manager.h"
+
 //#include "Effect_Mesh.h"
 //#include "Effect_Particle.h"
 
@@ -217,6 +219,7 @@ void CMainApp::Free()
 
 	CUI_Manager::Destroy_Instance();
 	CCutscene_Manager::Destroy_Instance();
+	CEffect_Manager::Destroy_Instance();
 
 	Safe_Release(m_pImGui_Main);
 	

@@ -910,8 +910,6 @@ void CMap_Tool::Picking_Point()
     }
 }
 
-
-
 HRESULT CMap_Tool::Save_NaviData()
 {
     _tchar szFullPath[200000] = {};

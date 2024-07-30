@@ -57,9 +57,6 @@ void CEnemy::LateTick(_float fTimeDelta)
 
 	__super::LateTick_Weapons(fTimeDelta);
 
-	if (m_pEnemyBar && m_pStats->Is_Hit())
-		m_pEnemyBar->LateTick(fTimeDelta);
-
 	if (m_bNoRender)
 		return;
 
@@ -71,7 +68,7 @@ void CEnemy::LateTick(_float fTimeDelta)
 #endif
 		
 		if (m_pEnemyBar && m_pStats->Is_Hit())
-			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, m_pEnemyBar);
+			m_pEnemyBar->LateTick(fTimeDelta);
 
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
 	}
