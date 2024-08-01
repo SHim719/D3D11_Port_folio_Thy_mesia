@@ -19,6 +19,8 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_pContext{rhs.m_pContext }
 	, m_pGameInstance{ rhs.m_pGameInstance }
 	, m_bDestroyed { false }
+	, m_fDissolveAmount { rhs.m_fDissolveAmount }
+	, m_fDissolveSpeed { rhs.m_fDissolveSpeed }
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);
@@ -68,6 +70,18 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+void CGameObject::Update_Dissolve(_float fTimeDelta)
+{
+	if (false == m_bDissolve)
+		return;
+
+	m_fDissolveAmount = clamp(m_fDissolveAmount + m_fDissolveSpeed * fTimeDelta, 0.f, 1.f);
+
+	if (0.f == m_fDissolveAmount || 1.f == m_fDissolveAmount)
+		m_bDissolve = false;
+
+}
+
 HRESULT CGameObject::Add_Component(_uint iPrototoypeLevelIndex, const wstring& strPrototypeTag, const wstring& strComponentTag, CComponent** ppOut, void* pArg)
 {
 	if (nullptr != Find_Component(strComponentTag))
@@ -115,6 +129,7 @@ void CGameObject::Free()
 	m_Components.clear();
 
 	Safe_Release(m_pTransform);
+	Safe_Release(m_pDissolveTexture);
 
 	Safe_Release(m_pGameInstance);
 	Safe_Release(m_pDevice);

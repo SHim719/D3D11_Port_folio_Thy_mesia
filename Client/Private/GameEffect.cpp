@@ -205,6 +205,5 @@ void CGameEffect::Free()
 	Safe_Release(m_pBaseTexture);
 	Safe_Release(m_pMaskTexture);
 	Safe_Release(m_pNoiseTexture);
-	Safe_Release(m_pEmissiveTexture);
 	Safe_Release(m_pShader);
 }

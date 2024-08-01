@@ -166,6 +166,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Public\Aisemy.h" />
     <ClInclude Include="..\Public\Anim_Tool.h" />
     <ClInclude Include="..\Public\Archive_Chair.h" />
     <ClInclude Include="..\Public\Background.h" />
@@ -231,6 +232,7 @@
     <ClInclude Include="..\Public\Level_Loading.h" />
     <ClInclude Include="..\Public\Level_Tool.h" />
     <ClInclude Include="..\Public\Loader.h" />
+    <ClInclude Include="..\Public\LockOnCurve.h" />
     <ClInclude Include="..\Public\MainApp.h" />
     <ClInclude Include="..\Public\Main_Camera.h" />
     <ClInclude Include="..\Public\MapObject.h" />
@@ -278,6 +280,7 @@
     <ClInclude Include="..\Public\PlayerState_PW_Axe.h" />
     <ClInclude Include="..\Public\PlayerState_Plunder.h" />
     <ClInclude Include="..\Public\PlayerState_PlunderRush.h" />
+    <ClInclude Include="..\Public\PlayerState_PW_Hammer.h" />
     <ClInclude Include="..\Public\PlayerState_PW_Spear.h" />
     <ClInclude Include="..\Public\PlayerState_PW_TwinBlade.h" />
     <ClInclude Include="..\Public\PlayerState_Sit.h" />
@@ -376,6 +379,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Private\Aisemy.cpp" />
     <ClCompile Include="..\Private\Anim_Tool.cpp" />
     <ClCompile Include="..\Private\Archive_Chair.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
@@ -431,6 +435,7 @@
     <ClCompile Include="..\Private\Level_Loading.cpp" />
     <ClCompile Include="..\Private\Level_Tool.cpp" />
     <ClCompile Include="..\Private\Loader.cpp" />
+    <ClCompile Include="..\Private\LockOnCurve.cpp" />
     <ClCompile Include="..\Private\MainApp.cpp" />
     <ClCompile Include="..\Private\Main_Camera.cpp" />
     <ClCompile Include="..\Private\MapObject.cpp" />
@@ -475,6 +480,7 @@
     <ClCompile Include="..\Private\PlayerState_PW_Axe.cpp" />
     <ClCompile Include="..\Private\PlayerState_Plunder.cpp" />
     <ClCompile Include="..\Private\PlayerState_PlunderRush.cpp" />
+    <ClCompile Include="..\Private\PlayerState_PW_Hammer.cpp" />
     <ClCompile Include="..\Private\PlayerState_PW_Spear.cpp" />
     <ClCompile Include="..\Private\PlayerState_PW_TwinBlade.cpp" />
     <ClCompile Include="..\Private\PlayerState_Sit.cpp" />
@@ -580,6 +586,14 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Glow.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_LockOnCurve.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>

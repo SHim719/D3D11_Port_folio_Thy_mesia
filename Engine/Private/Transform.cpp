@@ -246,7 +246,8 @@ void CTransform::Rotation_Quaternion(_fvector vQuat)
 
 void CTransform::Rotation_RollPitchYaw(_float fRoll, _float fPitch, _float fYaw)
 {
-	_matrix RotationMatrix = XMMatrixRotationRollPitchYaw(fRoll, fPitch, fYaw);
+	_vector vQuat = XMQuaternionRotationRollPitchYaw(fRoll, fPitch, fYaw);
+	_matrix RotationMatrix = XMMatrixRotationQuaternion(vQuat);
 
 	_float3		vScale = Get_Scale();
 

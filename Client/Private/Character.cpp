@@ -39,7 +39,7 @@ void CCharacter::Change_Navigation(CNavigation* pNavigation)
 		if (nullptr != pState)
 			pState->Set_Navigation(pNavigation);
 	}
-		
+	
 }
 
 
@@ -51,6 +51,12 @@ void CCharacter::Hit(const ATTACKDESC& AttackDesc)
 _int CCharacter::Take_Damage(const ATTACKDESC& AttackDesc)
 {
 	return 0;
+}
+
+void CCharacter::Active_Dissolve()
+{
+	m_bDissolve = true;
+	m_fDissolveAmount = 0.f;
 }
 
 void CCharacter::Tick_Weapons(_float fTimeDelta)
@@ -99,15 +105,6 @@ void CCharacter::Update_Colliders()
 		m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
 }
 
-CGameEffect::EFFECTSPAWNDESC CCharacter::Bake_EffectSpawnDesc()
-{
-	CGameEffect::EFFECTSPAWNDESC SpawnDesc;
-	SpawnDesc.pParentModel = m_pModel;
-	SpawnDesc.pParentTransform = m_pTransform;
-
-	return SpawnDesc;
-}
-
 
 void CCharacter::Free()
 {
@@ -126,4 +123,5 @@ void CCharacter::Free()
 	Safe_Release(m_pHitBoxCollider);
 	Safe_Release(m_pNavigation);
 
+	Safe_Release(m_pDissolveTexture);
 }

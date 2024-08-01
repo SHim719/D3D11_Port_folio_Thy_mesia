@@ -19,7 +19,6 @@ private:
 	void LateTick(_float fTimeDelta)				override;
 
 	void Check_Destroy();
-
 public:
 	HRESULT OnEnter_Layer(void* pArg)			override;
 	void Start_Effect(void* pArg);

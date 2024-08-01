@@ -45,14 +45,29 @@ void CEffect_Manager::Active_Effect(const string& strTag, void* pArg)
 	}
 }
 
+void CEffect_Manager::Inactive_Effect(const string& strTag, size_t iIdx)
+{
+	auto it = m_EffectGroups.find(strTag);
+	if (m_EffectGroups.end() == it)
+		return;
+
+	vector<CEffect_Group*>& EffectGroups = it->second;
+
+	EffectGroups[iIdx]->End_Effect();
+}
+
 HRESULT CEffect_Manager::Init_Effects()
 {
-	if (FAILED(Add_EffectGroups("Effect_Corvus_Parry_Success", 3, L"Prototype_Effect_Parry_Particle")))
+
+#pragma region Corvus_Default
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Parry_Success", 3, L"Prototype_Effect_Corvus_Parry_Particle")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_Healing", 1, L"Prototype_Effect_HealingCurve")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Healing", 1, L"Prototype_Effect_Corvus_HealingCurve")))
 		assert(false);
+#pragma endregion
 
+#pragma region Corvus_Attack
 	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack1", 1, L"Prototype_Effect_Corvus_LAttack1")))
 		assert(false);
 
@@ -67,6 +82,27 @@ HRESULT CEffect_Manager::Init_Effects()
 
 	if (FAILED(Add_EffectGroups("Effect_Corvus_Claw_Long1", 1, L"Prototype_Effect_Claw_Long1")))
 		assert(false);
+#pragma endregion
+
+#pragma region Plunder
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Plunder_Rush_Trail", 1, L"Prototype_Effect_Corvus_Plunder_Rush_Trail")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Plunder_Start", 1, L"Prototype_Effect_Corvus_Plunder_Start")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Plunder_Effect", 1, L"Prototype_Effect_Corvus_Plunder_Effect")))
+		assert(false);
+
+#pragma endregion
+
+#pragma region PW_Axe
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Axe", 1, L"Prototype_Effect_Corvus_PW_Axe")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Axe_StartParticle", 1, L"Prototype_Effect_Corvus_PW_Axe_StartParticle")))
+		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Axe_Impact", 1, L"Prototype_Effect_Corvus_PW_Axe_Impact")))
 		assert(false);
@@ -74,7 +110,12 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Axe_Slash", 1, L"Prototype_Effect_Corvus_PW_Axe_Slash")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Axe_StartParticle", 1, L"Prototype_Effect_Corvus_PW_Axe_StartParticle")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Axe_Disappear", 1, L"Prototype_Effect_Corvus_PW_Axe_Disappear")))
+		assert(false);
+#pragma endregion
+
+#pragma region PW_Spear
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Spear", 1, L"Prototype_Effect_Corvus_PW_Spear")))
 		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Spear_Start", 1, L"Prototype_Effect_Corvus_PW_Spear_Start")))
@@ -86,8 +127,13 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Spear_Particle", 1, L"Prototype_Effect_Corvus_PW_Spear_Particle")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Spear_Particle", 1, L"Prototype_Effect_Corvus_PW_Spear_Particle")))
-		assert(false); 
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Spear_Disappear", 1, L"Prototype_Effect_Corvus_PW_Spear_Disappear")))
+		assert(false);
+#pragma endregion
+
+#pragma region PW_TwinBlade
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_TwinBlade", 1, L"Prototype_Effect_Corvus_PW_TwinBlade")))
+		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_TwinBlade_Start", 1, L"Prototype_Effect_Corvus_PW_TwinBlade_Start")))
 		assert(false);
@@ -109,6 +155,33 @@ HRESULT CEffect_Manager::Init_Effects()
 
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_TwinBlade_Slash_End", 1, L"Prototype_Effect_Corvus_PW_TwinBlade_Slash_End")))
 		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_TwinBlade_Disappear", 1, L"Prototype_Effect_Corvus_PW_TwinBlade_Disappear")))
+		assert(false);
+
+#pragma endregion
+
+#pragma region PW_Hammer
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer", 1, L"Prototype_Effect_Corvus_PW_Hammer")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer_Start", 1, L"Prototype_Effect_Corvus_PW_Hammer_Start")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer_Slash", 1, L"Prototype_Corvus_PW_Hammer_Slash")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer_Impact", 1, L"Prototype_Effect_Corvus_PW_Hammer_Impact")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer_Disappear", 1, L"Prototype_Effect_Corvus_PW_Hammer_Disappear")))
+		assert(false);
+
+#pragma endregion
+
+
+
 	return S_OK;
 };
 

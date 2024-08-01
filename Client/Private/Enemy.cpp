@@ -57,6 +57,9 @@ void CEnemy::LateTick(_float fTimeDelta)
 
 	__super::LateTick_Weapons(fTimeDelta);
 
+	if (KEY_DOWN(eKeyCode::I))
+		Active_Dissolve();
+		
 	if (m_bNoRender)
 		return;
 
@@ -71,11 +74,26 @@ void CEnemy::LateTick(_float fTimeDelta)
 			m_pEnemyBar->LateTick(fTimeDelta);
 
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+		if (m_bDissolve)
+			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
+
 	}
 }
 
 HRESULT CEnemy::Render()
 {
+	_uint iPassIdx = 0;
+	if (m_bDissolve)
+	{
+		iPassIdx = 2;
+		
+		if (FAILED(m_pDissolveTexture->Set_SRV(m_pShader, "g_DissolveTexture")))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Set_RawValue("g_fDissolveAmount", &m_fDissolveAmount, sizeof(_float))))
+			return E_FAIL;
+	}
+
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
@@ -95,7 +113,7 @@ HRESULT CEnemy::Render()
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
+		if (FAILED(m_pModel->Render(m_pShader, i, iPassIdx)))
 			return E_FAIL;
 	}
 

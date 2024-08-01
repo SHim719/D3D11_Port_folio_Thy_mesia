@@ -1,4 +1,3 @@
-
 #include "Shader_Defines.hlsli"
 
 matrix			g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
@@ -8,6 +7,19 @@ float			g_fAlpha;
 
 texture2D		g_DiffuseTexture;
 texture2D		g_NormalTexture;
+
+texture2D		g_DissolveTexture;
+float			g_fDissolveAmount;
+
+float4			g_vGlowColor;
+float			g_fGlowRange;
+float			g_fGlowFalloff;
+
+float4          g_vCamPosition;
+float4          g_vRimColor;
+float           g_fRimPower;
+float           g_fRimStrength;
+
 
 struct VS_IN
 {
@@ -28,20 +40,7 @@ struct VS_OUT
 	float4		vProjPos : TEXCOORD2;
 };
 
-//matrix GetBoneMatrix(int idx, texture2D tex2D)
-//{
-//    float2 uvCol = float2(((float)(idx % 16 * 4) + 0.5f) / 64.0f, ((float)(idx / 16) + 0.5f) / 64.0f);
-//
-//    matrix mat =
-//    {
-//        tex2D.SampleLevel(LinearWrapSampler, uvCol, 0),
-//		tex2D.SampleLevel(LinearWrapSampler, uvCol + float2(1.0f / 64.0f, 0.f), 0),
-//		tex2D.SampleLevel(LinearWrapSampler, uvCol + float2(2.0f / 64.0f, 0.f), 0),
-//		tex2D.SampleLevel(LinearWrapSampler, uvCol + float2(3.0f / 64.0f, 0.f), 0)
-//    };
-//
-//    return mat;
-//}
+
 
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -60,14 +59,14 @@ VS_OUT VS_MAIN(VS_IN In)
 		+ g_BoneMatrices[In.vBlendIndex.z] * In.vBlendWeight.z
 		+ g_BoneMatrices[In.vBlendIndex.w] * fWeightW;
 
-	vector		vPosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
+	vector		vBonePosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
 	vector		vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
-	vPosition = mul(vPosition, matWVP);
+    vector      vPosition = mul(vBonePosition, matWVP);
 
 	Out.vPosition = vPosition;
     Out.vNormal = normalize(mul(vNormal, g_WorldMatrix).xyz);
 	Out.vTexUV = In.vTexUV;
-	Out.vWorldPos = mul(vector(In.vPosition, 1.f), g_WorldMatrix);
+    Out.vWorldPos = mul(vBonePosition, g_WorldMatrix);
 	Out.vProjPos = vPosition;
 
 	return Out;
@@ -86,7 +85,7 @@ struct PS_OUT
 {
 	float4		vDiffuse : SV_TARGET0;
 	float4		vNormal : SV_TARGET1;
-	//float4		vDepth : SV_TARGET2;
+	float4		vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -99,10 +98,7 @@ PS_OUT PS_MAIN(PS_IN In)
         discard;
 	
 	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	
-	//
 	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-
 
 	return Out;
 }
@@ -122,6 +118,70 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
 	
     Out.vDiffuse.a *= g_fAlpha;
 
+    return Out;
+}
+
+struct PS_OUT_GLOW
+{
+    float4 vDiffuse : SV_TARGET0;
+    float4 vNormal : SV_TARGET1;
+    float4 vDepth : SV_TARGET2;
+    float4 vGlow : SV_TARGET3;
+};
+
+
+PS_OUT_GLOW PS_MAIN_DISSOLVE(PS_IN In)
+{
+    PS_OUT_GLOW Out = (PS_OUT_GLOW) 0;
+
+    float fDissolve = g_DissolveTexture.Sample(LinearWrapSampler, In.vTexUV).r;
+    float fClip = fDissolve - g_fDissolveAmount;
+
+    float4 vEdgeColor = float4(1.0f, 1.0f, 1.f, 1.0f);
+    float fEdgeWidth = 0.05f;
+	
+    if (fClip < 0.001f)
+        discard;
+	
+    else if (fClip < fEdgeWidth)
+    {
+        float fEdgeFactor = smoothstep(0.f, fEdgeWidth, fClip);
+        Out.vDiffuse = lerp(vEdgeColor, g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV), fEdgeFactor);
+        Out.vGlow = Out.vDiffuse;
+        Out.vGlow.rgb *= float4(0.7f, 0.45f, 0.f, 1.f);
+    }
+    else
+    {
+        Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV);
+    }
+	
+	
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+
+    return Out;
+}
+
+PS_OUT_GLOW PS_MAIN_RIMLIGHT(PS_IN In)
+{
+    PS_OUT_GLOW Out = (PS_OUT_GLOW) 0;
+
+    Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV);
+	
+    if (Out.vDiffuse.a < 0.1f)
+        discard;
+    
+    float3 vToCamera = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz);
+	
+    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+    
+    float fRim = abs(1.f - dot(In.vNormal, vToCamera));
+    fRim = smoothstep(0.f, 1.f, fRim);
+    fRim = pow(fRim, g_fRimPower);
+    
+    Out.vGlow = fRim * g_vRimColor * g_fRimStrength;
+    
     return Out;
 }
 
@@ -156,6 +216,35 @@ technique11 DefaultTechinque
         PixelShader = compile ps_5_0 PS_MAIN_ALPHABLEND();
 		ComputeShader = NULL;
     }
+
+    pass Dissolve // 2
+    {
+        SetBlendState(BS_None, vector(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        GeometryShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISSOLVE();
+        ComputeShader = NULL;
+    }
+
+    pass RimLight // 3
+    {
+        SetBlendState(BS_None, vector(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        GeometryShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_RIMLIGHT();
+        ComputeShader = NULL;
+    }
+	
 	
 }
 

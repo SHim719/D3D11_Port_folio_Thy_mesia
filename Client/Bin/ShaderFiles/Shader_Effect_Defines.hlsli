@@ -5,7 +5,6 @@
 texture2D g_BaseTexture;
 texture2D g_MaskTexture;
 texture2D g_NoiseTexture;
-texture2D g_EmissiveTexture;
 texture2D g_DissolveTexture;
 
 float4  g_vTextureFlag;
@@ -14,6 +13,8 @@ float4  g_vColor_Clip;
 
 float2  g_vMaskUVOffset;
 float2  g_vNoiseUVOffset;
+
+float   g_fDissolveAmount;
 
 bool    g_bGlow;
 float4  g_vGlowColor;

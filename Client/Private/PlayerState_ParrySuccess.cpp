@@ -15,7 +15,6 @@ HRESULT CPlayerState_ParrySuccess::Initialize(void* pArg)
 		, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart,
 		PlayerState::State_Avoid, PlayerState::State_Parry };
 
-
     return S_OK;
 }
 
@@ -33,7 +32,7 @@ void CPlayerState_ParrySuccess::OnState_Start(void* pArg)
 	//else
 		m_pModel->Change_Animation(Corvus_SD_ParryDeflect_R + iRandNum, 0.f);
 
-	EFFECTMGR->Active_Effect("Effect_Corvus_Parry_Success", &m_pPlayer->Bake_EffectSpawnDesc());
+	EFFECTMGR->Active_Effect("Effect_Corvus_Parry_Success", &m_pPlayer->Get_EffectSpawnDesc());
 }
 
 void CPlayerState_ParrySuccess::Update(_float fTimeDelta)

@@ -143,7 +143,6 @@ HRESULT CMainApp::Ready_Prototype_Shader()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNorTex.hlsl"), VTXNORTEX_DECLARATION::Elements, VTXNORTEX_DECLARATION::iNumElements))))
 		return E_FAIL;
 
-
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"),
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_VtxNonAnim.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
 		return E_FAIL;
@@ -172,6 +171,10 @@ HRESULT CMainApp::Ready_Prototype_Shader()
 		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_MeshEffect.hlsl"), VTXMODEL_DECLARATION::Elements, VTXMODEL_DECLARATION::iNumElements))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, TEXT("Prototype_Shader_LockOnCurve"),
+		CShader::Create(m_pDevice, m_pContext, TEXT("../Bin/ShaderFiles/Shader_LockOnCurve.hlsl"), VTXPOINT_DECLARATION::Elements, VTXPOINT_DECLARATION::iNumElements))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -190,6 +193,7 @@ HRESULT CMainApp::Ready_Default()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_InstancingObj", CInstancing_Object::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
 
 	//if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Effect_Particle", CEffect_Particle::Create(m_pDevice, m_pContext))))
 	//	return E_FAIL;

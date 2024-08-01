@@ -721,6 +721,12 @@
     <Filter Include="02. GameObjects\05. Effect\Effect_Group">
       <UniqueIdentifier>{a2844b73-58ed-41a6-a78a-3d16919349d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\04. MapObject\05. Aisemy">
+      <UniqueIdentifier>{0d8d7218-6669-4027-9d96-6454bdc2a6b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. LockOnCurve">
+      <UniqueIdentifier>{73b1ae38-c60b-40c5-928c-6dd4e924ce9c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1347,6 +1353,15 @@
     <ClInclude Include="..\Public\ToolEffect_Mesh.h">
       <Filter>02. GameObjects\99. ToolObject\6. ToolEffect\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Aisemy.h">
+      <Filter>02. GameObjects\04. MapObject\05. Aisemy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_PW_Hammer.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Hammer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LockOnCurve.h">
+      <Filter>02. GameObjects\06. LockOnCurve</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1901,6 +1916,15 @@
     <ClCompile Include="..\Private\ToolEffect_Mesh.cpp">
       <Filter>02. GameObjects\99. ToolObject\6. ToolEffect\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Aisemy.cpp">
+      <Filter>02. GameObjects\04. MapObject\05. Aisemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_PW_Hammer.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Hammer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LockOnCurve.cpp">
+      <Filter>02. GameObjects\06. LockOnCurve</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1954,6 +1978,9 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Glow.hlsl">
       <Filter>96. ShaderFiles\PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_LockOnCurve.hlsl">
+      <Filter>96. ShaderFiles</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

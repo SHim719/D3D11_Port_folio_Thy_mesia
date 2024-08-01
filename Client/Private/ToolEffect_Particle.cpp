@@ -23,12 +23,7 @@ HRESULT CToolEffect_Particle::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-#ifdef AnimTool
 	Resize_Particles(1);
-	m_eEffectType = EFFECTTYPE::PARTICLE;
-#else
-	Resize_Particles(m_tParticleInfo.iNumParticles);
-#endif 
 
 	return S_OK;
 }
@@ -81,11 +76,12 @@ _bool CToolEffect_Particle::Update_SpawnTime(size_t iIdx, _float fTimeDelta)
 				memcpy(&m_NowParticleDatas[iIdx], &m_InitParticleDatas[iIdx], sizeof(VTXPARTICLE));
 
 				_matrix ParticleMatrix = XMLoadFloat4x4((_float4x4*)&m_InitParticleDatas[iIdx]);
-				CALC_TF->Set_WorldMatrix(ParticleMatrix);
-				_float3 vStartScale = CALC_TF->Get_Scale();
+				_matrix BoneMatrix = XMLoadFloat4x4(&m_BoneMatrix);
+				CALC_TF->Set_WorldMatrix(ParticleMatrix * BoneMatrix);
+				//_float3 vStartScale = CALC_TF->Get_Scale();
 
-				CALC_TF->Set_WorldMatrix(XMLoadFloat4x4(&m_BoneMatrix));
-				CALC_TF->Set_Scale(vStartScale);
+				//CALC_TF->Set_WorldMatrix(XMLoadFloat4x4(&m_BoneMatrix));
+				//CALC_TF->Set_Scale(vStartScale);
 
 				memcpy(&m_NowParticleDatas[iIdx], &CALC_TF->Get_WorldFloat4x4(), sizeof(_float4x4));
 			}
@@ -218,7 +214,7 @@ void CToolEffect_Particle::LateTick(_float fTimeDelta)
 	{
 		m_pGameInstance->Add_RenderObject((CRenderer::RENDERGROUP)m_iRenderGroup, this);
 		if (m_bGlow)
-			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT_GLOW, this);
+			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 	}
 
 }
@@ -371,9 +367,6 @@ HRESULT CToolEffect_Particle::Ready_Components()
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Noise"), TEXT("NoiseTexture"), (CComponent**)&m_pNoiseTexture)))
-		return E_FAIL;
-
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Noise"), TEXT("EmissiveTexture"), (CComponent**)&m_pEmissiveTexture)))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_Particle"), TEXT("Shader"), (CComponent**)&m_pShader)))

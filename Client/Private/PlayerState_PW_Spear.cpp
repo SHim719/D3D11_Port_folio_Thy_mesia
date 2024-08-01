@@ -25,6 +25,7 @@ void CPlayerState_PW_Spear::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Claws(false);
 
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_SPEAR, true);
+	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Spear", &m_pPlayer->Get_EffectSpawnDesc());
 
 	m_pPlayer->Update_AttackDesc();
 
@@ -54,6 +55,9 @@ void CPlayerState_PW_Spear::OnState_End()
 
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_SPEAR, false);
 	m_pPlayer->Set_Active_WeaponCollider(CPlayer::PW_SPEAR, false);
+
+	EFFECTMGR->Inactive_Effect("Effect_Corvus_PW_Spear");
+	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Spear_Disappear", &m_pPlayer->Get_EffectSpawnDesc());
 }
 
 void CPlayerState_PW_Spear::Init_AttackDesc()

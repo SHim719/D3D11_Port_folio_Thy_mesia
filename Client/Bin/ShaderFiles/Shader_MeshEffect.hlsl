@@ -54,10 +54,18 @@ PS_OUT PS_MAIN(PS_IN In)
     
     float fMask = 1.f;
     float fNoise = 1.f;
+    float fDissolve = 0.f;
     float fDistortion = 0.f;
     
     float4 vColor = g_BaseTexture.Sample(LinearWrapSampler, In.vTexcoord);
     
+    if (0.f != g_vTextureFlag.z)
+    {
+        fDissolve = g_DissolveTexture.Sample(LinearWrapSampler, In.vTexcoord);
+        float fClip = fDissolve - g_fDissolveAmount;
+        clip(fClip <= 0.01f);
+    }
+   
     if (0.f != g_vTextureFlag.x)    // Noise
     {
         float2 vNoiseUV = In.vTexcoord + g_vNoiseUVOffset;
@@ -144,6 +152,7 @@ PS_OUT PS_MAIN_CLAMP(PS_IN In)
     return Out;
 }
 
+
 technique11 DefaultTechinque
 {
     pass DefaultWrap // 0
@@ -173,6 +182,5 @@ technique11 DefaultTechinque
         PixelShader = compile ps_5_0 PS_MAIN_CLAMP();
         ComputeShader = NULL;
     }
-    
 }
 

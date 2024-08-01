@@ -9,6 +9,8 @@
 
 #include "Enemy.h"
 
+#include "LockOnCurve.h"
+
 CMain_Camera::CMain_Camera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
 {
@@ -32,6 +34,8 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 
 	Set_CursorToCenter(g_hWnd, g_iWinSizeX, g_iWinSizeY);
 
+	m_pLockOnCurve = static_cast<CLockOnCurve*>(m_pGameInstance->Clone_GameObject(L"Prototype_LockOnCurve"));
+
 	return S_OK;
 }
 
@@ -44,7 +48,6 @@ void CMain_Camera::PriorityTick(_float fTimeDelta)
 {
 	
 }
-
 
 void CMain_Camera::Tick(_float fTimeDelta)
 {
@@ -150,6 +153,9 @@ void CMain_Camera::SetState_LockOn()
 	m_fFollowingSpeed = 4.5f;
 
 	UIMGR->Active_UI("UI_LockOn", &Desc);
+	m_pLockOnCurve->OnEnter_Layer(nullptr);
+	Safe_AddRef(m_pLockOnCurve);
+	ADD_EVENT(bind(&CGameInstance::Insert_GameObject, m_pGameInstance, GET_CURLEVEL, L"LockOnCurve", m_pLockOnCurve));
 
 	m_eState = LOCKON;
 }
@@ -169,6 +175,8 @@ void CMain_Camera::SetState_LockOn_To_Default()
 	m_fFollowingSpeed = 2.5f;
 
 	m_pTarget = nullptr;
+
+	m_pLockOnCurve->Set_ReturnToPool(true);
 
 	m_eState = DEFAULT;
 }
@@ -227,6 +235,22 @@ CBone* CMain_Camera::Find_TargetBone(CModel* pModel)
 	return pTargetBone;
 }
 
+void CMain_Camera::Update_LockOnCurveDesc()
+{
+	CLockOnCurve::CURVE_DESCS CurveDescs;
+
+	CALC_TF->Set_WorldMatrix(m_pPlayerTransform->Get_WorldMatrix());
+	CALC_TF->Add_Position(XMVectorSet(-0.2f, 1.2f, 0.f, 0.f), true);
+
+	CurveDescs.PlayerWorldMatrix = CALC_TF->Get_WorldFloat4x4_TP();
+	
+	CALC_TF->Attach_To_Bone(m_pTargetBone, m_pTargetTransform);
+
+	XMStoreFloat4(&CurveDescs.vTargetPos, CALC_TF->Get_Position());
+
+	m_pLockOnCurve->Set_CurveDescs(CurveDescs);
+}
+
 void CMain_Camera::Default_State(_float fTimeDelta)
 {
 	Rotate_By_Mouse(fTimeDelta);
@@ -255,6 +279,7 @@ void CMain_Camera::LockOn_State(_float fTimeDelta)
 	m_pTransform->Rotation_Quaternion(vLerpedQuat);
 
 	Follow_Target(fTimeDelta);
+	Update_LockOnCurveDesc();
 
 	Set_CursorToCenter(g_hWnd, g_iWinSizeX, g_iWinSizeY);
 }
@@ -262,8 +287,6 @@ void CMain_Camera::LockOn_State(_float fTimeDelta)
 void CMain_Camera::Cutscene_State(_float fTimeDelta)
 {
 	m_pTransform->Attach_To_Bone(m_pCutsceneBone, m_pCutsceneTargetTransform, XMLoadFloat4x4(&m_CutsceneOffsetMatrix));
-
-
 }
 
 void CMain_Camera::Shaking(_float fTimeDelta)
@@ -405,4 +428,6 @@ void CMain_Camera::Free()
 
 	Safe_Release(m_pCutsceneTargetTransform);
 	Safe_Release(m_pCutsceneBone);
+
+	Safe_Release(m_pLockOnCurve);
 }

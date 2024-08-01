@@ -1089,8 +1089,6 @@ CGameEffect::EFFECTSPAWNDESC CAnim_Tool::Bake_EffectSpawnDesc()
     return Desc;
 }
 
-
-
 void CAnim_Tool::Key_Input_EffectMeshTool()
 {
 

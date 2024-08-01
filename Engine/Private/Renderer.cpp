@@ -115,10 +115,10 @@ HRESULT CRenderer::Draw()
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
 
-	if (FAILED(Render_Blend()))
+	if (FAILED(Render_PostProcess()))
 		return E_FAIL;
 
-	if (FAILED(Render_PostProcess()))
+	if (FAILED(Render_Blend()))
 		return E_FAIL;
 
 #ifdef _DEBUG
@@ -293,8 +293,8 @@ HRESULT CRenderer::Render_Effect()
 	if (FAILED(m_pGameInstance->Begin_MRT_NoClear(L"MRT_Effect")))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Clear_Target(L"Target_Effect_Glow")))
-		return E_FAIL;
+	//if (FAILED(m_pGameInstance->Clear_Target(L"Target_Glow")))
+	//	return E_FAIL;
 	//if (FAILED(m_pGameInstance->Clear_Target(L"Target_Effect_Bloom")))
 	//	return E_FAIL;
 
@@ -316,7 +316,7 @@ HRESULT CRenderer::Render_Effect()
 
 HRESULT CRenderer::Render_Glow()
 {
-	if (m_RenderObjects[RENDERGROUP::RENDER_EFFECT_GLOW].empty())
+	if (m_RenderObjects[RENDERGROUP::RENDER_GLOW].empty())
 		return S_OK;
 
 	if (FAILED(m_pVIBuffer->Bind_Buffers()))
@@ -326,7 +326,7 @@ HRESULT CRenderer::Render_Glow()
 	if (FAILED(m_pGameInstance->Begin_MRT(L"MRT_BlurXGlow")))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Effect_Glow"), m_pGlowShader, "g_PrevBlurXTexture")))
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Glow"), m_pGlowShader, "g_PrevBlurXTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pGlowShader->Begin(0)))
@@ -378,10 +378,10 @@ HRESULT CRenderer::Render_Glow()
 	if (FAILED(m_pGameInstance->End_MRT()))
 		return E_FAIL;
 
-	for (auto& pRenderObject : m_RenderObjects[RENDER_EFFECT_GLOW])
+	for (auto& pRenderObject : m_RenderObjects[RENDER_GLOW])
 		Safe_Release(pRenderObject);
 
-	m_RenderObjects[RENDER_EFFECT_GLOW].clear();
+	m_RenderObjects[RENDER_GLOW].clear();
 
 
 	return S_OK;
@@ -624,7 +624,7 @@ HRESULT CRenderer::Ready_Debug()
 	//if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BloomUpSample2"), 650.f, 100.f, 50.f, 50.f)))
 	//	return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_Effect_Glow"), 350.f, 100.f, 50.f, 50.f)))
+	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_Glow"), 350.f, 100.f, 50.f, 50.f)))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Ready_RTDebug(TEXT("Target_BlurXGlow"), 400.f, 100.f, 50.f, 50.f)))
@@ -650,7 +650,7 @@ HRESULT CRenderer::Render_Debug()
 	if (FAILED(m_pGameInstance->Render_RTDebug(TEXT("MRT_Deferred"), m_pDeferredShader, m_pVIBuffer_Rect)))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_Effect_Glow"), m_pDeferredShader, m_pVIBuffer_Rect)))
+	if (FAILED(m_pGameInstance->Render_SingleRTDebug(TEXT("Target_Glow"), m_pDeferredShader, m_pVIBuffer_Rect)))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Render_RTDebug(TEXT("MRT_BlurXGlow"), m_pDeferredShader, m_pVIBuffer_Rect)))
@@ -695,9 +695,14 @@ HRESULT CRenderer::Ready_DefaultTargets(_uint iWidth, _uint iHeight)
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Normal"), iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Depth"), iWidth, iHeight, DXGI_FORMAT_R32G32B32A32_FLOAT, _float4(1.f, 1.f, 1.f, 1.f))))
+		return E_FAIL;
+
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Diffuse"))))
 		return E_FAIL;
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Normal"))))
+		return E_FAIL;
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Depth"))))
 		return E_FAIL;
 
 
@@ -735,7 +740,7 @@ HRESULT CRenderer::Ready_DeferredTarget(_uint iWidth, _uint iHeight)
 
 HRESULT CRenderer::Ready_EffectTargets(_uint iWidth, _uint iHeight)
 {
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Glow"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Glow"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Bloom"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
@@ -744,11 +749,14 @@ HRESULT CRenderer::Ready_EffectTargets(_uint iWidth, _uint iHeight)
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Deferred"))))
 		return E_FAIL;
 
-	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Glow"))))
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Glow"))))
 		return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Bloom"))))
 	//	return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_GameObjects"), TEXT("Target_Glow"))))
+		return E_FAIL;
 	
 
 	return S_OK;

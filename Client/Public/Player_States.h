@@ -33,7 +33,7 @@
 #include "PlayerState_Healing.h"
 
 #include "PlayerState_PW_Axe.h"
-//#include "PlayerState_PW_Hammer.h"
+#include "PlayerState_PW_Hammer.h"
 #include "PlayerState_PW_Spear.h"
 #include "PlayerState_PW_TwinBlade.h"
 

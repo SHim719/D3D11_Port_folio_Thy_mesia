@@ -212,7 +212,7 @@ void CEffect_Particle::LateTick(_float fTimeDelta)
 	{
 		m_pGameInstance->Add_RenderObject((CRenderer::RENDERGROUP)m_iRenderGroup, this);
 		if (m_bGlow)
-			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT_GLOW, this);
+			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 	}
 }
 
@@ -357,9 +357,6 @@ HRESULT CEffect_Particle::Ready_Components()
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Noise"), TEXT("NoiseTexture"), (CComponent**)&m_pNoiseTexture)))
-		return E_FAIL;
-
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Noise"), TEXT("EmissiveTexture"), (CComponent**)&m_pEmissiveTexture)))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_Particle"), TEXT("Shader"), (CComponent**)&m_pShader)))

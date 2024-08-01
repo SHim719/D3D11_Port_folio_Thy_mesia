@@ -26,6 +26,9 @@ HRESULT CTwinBladeKnight::Initialize_Prototype()
 	m_iDeathStateIdx = (_uint)TwinBladeKnight_State::State_Death;
 	m_iExecutionStateIdx = (_uint)TwinBladeKnight_State::State_Executed_Start;
 	m_iStunnedStateIdx = (_uint)TwinBladeKnight_State::State_Stunned_Loop;
+
+	m_fDissolveSpeed = 0.2f;
+	m_fDissolveAmount = 0.f;
 	return S_OK;
 }
 
@@ -148,6 +151,9 @@ HRESULT CTwinBladeKnight::Ready_Components(void* pArg)
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
 
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Dissolve"), TEXT("Dissolve_Texture"), (CComponent**)&m_pDissolveTexture)))
+		return E_FAIL;
+	 
 	return S_OK;
 }
 

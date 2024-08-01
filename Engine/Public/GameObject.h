@@ -41,6 +41,16 @@ protected:
 
 	map<const wstring, class CComponent*>	m_Components;
 
+protected:
+	CTexture*						m_pDissolveTexture = { nullptr };
+	_bool							m_bDissolve = { false };
+	_float							m_fDissolveAmount = { 0.f };
+	_float							m_fDissolveSpeed = { 0.2f };
+
+public:
+	void Update_Dissolve(_float fTimeDelta);
+
+
 public:
 	CTransform* Get_Transform() { return m_pTransform; }
 
@@ -68,6 +78,8 @@ protected:
 
 	_float	m_fCullingRadius = { 1.f };
 	_float4 m_vCullingOffset = {};
+
+	_uint			m_iPassIdx = { 0 };
 public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
 	_bool Is_Destroyed() { 

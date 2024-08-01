@@ -54,7 +54,7 @@ void CEffect_Mesh::LateTick(_float fTimeDelta)
 	m_pGameInstance->Add_RenderObject((CRenderer::RENDERGROUP)m_iRenderGroup, this);
 
 	if (m_bGlow)
-		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT_GLOW, this);
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 }
 
 HRESULT CEffect_Mesh::Render()
@@ -319,12 +319,6 @@ HRESULT CEffect_Mesh::Bind_ShaderResources()
 	if (-1 != m_iNoiseTextureIdx)
 	{
 		if (FAILED(m_pNoiseTexture->Set_SRV(m_pShader, "g_NoiseTexture", m_iNoiseTextureIdx)))
-			return E_FAIL;
-	}
-
-	if (-1 != m_iEmissiveTextureIdx)
-	{
-		if (FAILED(m_pNoiseTexture->Set_SRV(m_pShader, "g_EmissiveTexture", m_iEmissiveTextureIdx)))
 			return E_FAIL;
 	}
 

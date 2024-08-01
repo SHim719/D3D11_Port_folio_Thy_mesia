@@ -90,13 +90,14 @@ HRESULT CLevel_Tool::Initialize()
 		L"../../Resources/Effect/Diffuse/%d.png", 2));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Mask/Masking/%d.png", 23));
+		L"../../Resources/Effect/Mask/Masking/%d.png", 25));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
 		L"../../Resources/Effect/Noise/%d.png", 16));
+
+	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Dissolve", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/DissolvePattern.png"));
 #endif
-
-
 	return S_OK;
 }
 

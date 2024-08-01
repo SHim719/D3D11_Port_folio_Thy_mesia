@@ -162,16 +162,16 @@ HRESULT CToolAnimObj::Ready_Corvus()
 	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
 	//m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
 
-	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
-	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_TwinSword";
-	//
-	CGameObject* pPW = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
-	if (nullptr == pPW)
-		return E_FAIL;
-	//
-	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
-	//
-	pPW = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_TwinSword";
+	////
+	//CGameObject* pPW = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	//if (nullptr == pPW)
+	//	return E_FAIL;
+	////
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	////
+	//pPW = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
 
 
 	return S_OK;

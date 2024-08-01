@@ -30,7 +30,10 @@ public:
 	void Set_NaviIdx(_uint iNaviIdx) {
 		m_pNavigation->Set_CurrentIdx(iNaviIdx);
 	}
-	CGameEffect::EFFECTSPAWNDESC Bake_EffectSpawnDesc();
+
+	CGameEffect::EFFECTSPAWNDESC Get_EffectSpawnDesc() const {
+		return m_tEffectSpawnDesc;
+	}
 public:
 	void Hit(const ATTACKDESC& AttackDesc);
 	virtual _int Take_Damage(const ATTACKDESC& AttackDesc);
@@ -40,7 +43,6 @@ protected:
 	_bool							m_bAdjustNaviY = { true };
 
 	CGameEffect::EFFECTSPAWNDESC	m_tEffectSpawnDesc = {};
-
 public:
 	_bool Is_Stanced() const {
 		return m_bStanced;
@@ -49,6 +51,7 @@ public:
 		m_bStanced = bStanced;
 	}
 
+	void Active_Dissolve();
 protected:
 	vector<class CWeapon*>		m_Weapons;
 
@@ -74,6 +77,10 @@ public:
 protected:
 	void Compute_YPos();
 	void Update_Colliders();
+
+protected:
+	_bool			m_bRimLight = { false };
+	RIMLIGHTDESC	m_tRimLightDesc = {};
 
 protected:
 	CShader*		m_pShader = { nullptr };

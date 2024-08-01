@@ -26,6 +26,7 @@ void CPlayerState_PW_Axe::OnState_Start(void* pArg)
 
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_AXE, true);
 	m_pPlayer->Set_Adjust_NaviY(false);
+	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Axe", &m_pPlayer->Get_EffectSpawnDesc());
 
 	m_pPlayer->Update_AttackDesc();
 
@@ -56,6 +57,9 @@ void CPlayerState_PW_Axe::OnState_End()
 
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_AXE, false);
 	m_pPlayer->Set_Active_WeaponCollider(CPlayer::PW_AXE, false);
+
+	EFFECTMGR->Inactive_Effect("Effect_Corvus_PW_Axe");
+	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Axe_Disappear", &m_pPlayer->Get_EffectSpawnDesc());
 }
 
 void CPlayerState_PW_Axe::Init_AttackDesc()

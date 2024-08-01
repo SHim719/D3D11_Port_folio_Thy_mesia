@@ -75,14 +75,12 @@ protected:
 	_float3			m_vWorldOffset = { 0.f, 0.f, 0.f };
 	_bool			m_bFollowOnlyPosition = { false };
 
-	_bool			m_bSyncKeyFrame = { false };
-	_int			m_iSyncKeyFrame = { 0 };
-
+	_float			m_fDissolveAmount = { };
 protected:
 	CTexture*		m_pBaseTexture = { nullptr };
 	CTexture*		m_pMaskTexture = { nullptr };
 	CTexture*		m_pNoiseTexture = { nullptr };
-	CTexture*		m_pEmissiveTexture = { nullptr };
+	CTexture*		m_pDissolveTexture = { nullptr };
 
 	CShader*		m_pShader = { nullptr };
 
@@ -93,6 +91,12 @@ protected:
 public:
 	virtual CGameObject* Clone(void* pArg)	= 0;
 	void Free() override;
+
+#pragma region AnimTool
+protected:
+	_bool			m_bSyncKeyFrame = { false };
+	_int			m_iSyncKeyFrame = { 0 };
+#pragma endregion
 
 	friend class CAnim_Tool;
 };

@@ -208,4 +208,11 @@ namespace Client
 
 	}MESHEFFECT_INFO;
 
+
+	typedef struct tagRimLightDesc
+	{
+		_float4         vRimColor;
+		float           fRimPower;
+		float           fRimStrength;
+	} RIMLIGHTDESC;
 }

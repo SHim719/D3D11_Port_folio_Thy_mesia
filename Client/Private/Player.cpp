@@ -88,9 +88,9 @@ void CPlayer::Tick(_float fTimeDelta)
 		//
 		//UIMGR->Active_UI("UI_Popup", &eTypes);
 
-		//m_pStats->Update_PlunderSkill(SKILLTYPE::AXE);
+		m_pStats->Update_PlunderSkill(SKILLTYPE::HAMMER);
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::SPEAR);
-		m_pStats->Update_PlunderSkill(SKILLTYPE::TWINBLADE);
+		//m_pStats->Update_PlunderSkill(SKILLTYPE::TWINBLADE);
 	}
 
 	if (KEY_DOWN(eKeyCode::M))
@@ -137,11 +137,15 @@ void CPlayer::LateTick(_float fTimeDelta)
 #endif
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 }
 
 HRESULT CPlayer::Render()
 {
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
 		return E_FAIL;
 
 	m_pModel->SetUp_BoneMatrices(m_pShader);
@@ -159,7 +163,7 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
+		if (FAILED(m_pModel->Render(m_pShader, i, m_iPassIdx)))
 			return E_FAIL;
 	}
 
@@ -218,13 +222,12 @@ void CPlayer::Bind_KeyFrames()
 
 void CPlayer::Bind_KeyFrameEffects()
 {
-	
 	m_pModel->Bind_Func("Effect_LAttack1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack1", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_LAttack2", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack2", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_LAttack3", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack3", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_LAttack4", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack4", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Claw_Long1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Claw_Long1", &m_tEffectSpawnDesc));
-	//m_pModel->Bind_Func("Effect_Claw_Long1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Claw_Long1", &m_tEffectSpawnDesc));
+	//m_pModel->Bind_Func("Effect_Claw_Long2", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Claw_Long2", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Axe_StartParticle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_StartParticle", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Axe_Slash", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_Slash", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Axe_Impact", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_Impact", &m_tEffectSpawnDesc));
@@ -241,7 +244,9 @@ void CPlayer::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash3", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash3", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash4", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash4", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Final", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash_End", &m_tEffectSpawnDesc));
-
+	m_pModel->Bind_Func("Effect_Plunder_Rush_Trail", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Rush_Trail", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Plunder_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Start", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Plunder", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Effect", &m_tEffectSpawnDesc));
 }
 
 void CPlayer::Update_CanExecutionEnemy()
@@ -444,6 +449,18 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 
 		m_States[m_iState]->OnHit(pEnemyWeapon->Get_AttackDesc());
 	}
+	else if (TAG_ENEMY == pOther->Get_Tag())
+	{
+		m_bCollEnemy = true;
+	}
+}
+
+void CPlayer::OnCollisionExit(CGameObject* pOther)
+{
+	if (TAG_ENEMY == pOther->Get_Tag())
+	{
+		m_bCollEnemy = false;
+	}
 }
 
 
@@ -456,7 +473,7 @@ void CPlayer::Healing()
 {
 	m_pStats->Increase_Hp(200);
 
-	EFFECTMGR->Active_Effect("Effect_Corvus_Healing", &Bake_EffectSpawnDesc());
+	EFFECTMGR->Active_Effect("Effect_Corvus_Healing", &Get_EffectSpawnDesc());
 }
 
 
@@ -594,7 +611,7 @@ HRESULT CPlayer::Ready_States()
 
 	m_States[(_uint)PlayerState::State_Cutscene] = CPlayerState_Cutscene::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_Axe] = CPlayerState_PW_Axe::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)PlayerState::State_PW_Hammer] = CPlayerState_PW_Hammer::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_PW_Hammer] = CPlayerState_PW_Hammer::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_Spear] = CPlayerState_PW_Spear::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_TwinBlade] = CPlayerState_PW_TwinBlade::Create(m_pDevice, m_pContext, this);
 	return S_OK;
@@ -670,11 +687,11 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
 	ColliderDesc.bActive = false;
 
-	CWeapon::WEAPONDESC WeaponDesc;
+	CWeapon::WEAPONDESC WeaponDesc{};
 	WeaponDesc.iTag = (_uint)TAG_PLAYER_WEAPON;
 	WeaponDesc.pParentTransform = m_pTransform;
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
-	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Axe";
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Axe";
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 	
@@ -687,7 +704,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	ColliderDesc.vCenter = { 1.f, 0.f, 0.f };
 	ColliderDesc.vSize = { 1.f, 0.1f, 0.1f };
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
-	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
 
 	m_Weapons[PW_HAMMER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_HAMMER])
@@ -699,7 +716,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	ColliderDesc.vCenter = { 0.5f, 0.f, 0.f };
 	ColliderDesc.vSize = { 3.f, 0.5f, 0.5f };
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
-	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Spear";
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Spear";
 
 	m_Weapons[PW_SPEAR] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_SPEAR])
@@ -711,7 +728,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	ColliderDesc.vCenter = { 0.5f, 0.f, 0.f };
 	ColliderDesc.vSize = { 1.f, 0.f, 0.f };
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
-	WeaponDesc.wstrModelTag = L"Prototype_Model_PW_TwinBlade";
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_TwinBlade";
 
 	m_Weapons[PW_TWINBLADE_L] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_TWINBLADE_L])

@@ -17,6 +17,7 @@ public:
 	HRESULT Bind_Buffers()			override;
 	HRESULT Render()				override;
 
+
 public:
 	static CVIBuffer_Point* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CComponent* Clone(void* pArg)	override;

@@ -54,9 +54,6 @@ public:
 	static CEffect_Mesh* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, ifstream& fin);
 	CGameObject* Clone(void* pArg)	override;
 	void Free() override;
-
-
-	friend class CAnim_Tool;
 };
 
 END

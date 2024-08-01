@@ -70,6 +70,10 @@ private:
 	_bool				m_bDeltaFovY = { false };
 	_bool				m_bIncreaseFovY = { true };
 	_float				m_fOriginFov = { };
+
+	class CLockOnCurve* m_pLockOnCurve = { nullptr };
+
+
 public:
 	void Set_Player(CGameObject* pPlayer);
 	
@@ -91,12 +95,14 @@ private:
 
 	void Shaking(_float fTimeDelta);
 	void Delta_FovY(_float fTimeDelta);
+
 private:
 	_vector Get_LerpedTargetPos(_fvector vTargetPos, _float fTimeDelta);
 
 	void Rotate_By_Mouse(_float fTimeDelta);
 	void Follow_Target(_float fTimeDelta);
 	CBone* Find_TargetBone(CModel* pModel);
+	void Update_LockOnCurveDesc();
 	
 public:
 	static CMain_Camera* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

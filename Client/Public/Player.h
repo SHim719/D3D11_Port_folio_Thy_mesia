@@ -66,6 +66,7 @@ private:
 	CTransform*				m_pTargetTransform = { nullptr };
 	_bool					m_bLockOn = { false };
 
+	_bool					m_bCollEnemy = { false };
 	_bool					m_bCanNextState = { false };
 	_bool					m_bCanNextAttack = { false };
 	_bool					m_bCanRotation = { true };
@@ -162,6 +163,7 @@ public:
 
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
+	void OnCollisionExit(CGameObject* pOther)	override;
 	void ChangeToNextComboAnim();
 	void Healing();
 

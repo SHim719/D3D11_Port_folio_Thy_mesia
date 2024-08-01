@@ -12,20 +12,20 @@ CPlagueWeapon::CPlagueWeapon(const CPlagueWeapon& rhs)
 
 HRESULT CPlagueWeapon::Render()
 {
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pModel->SetUp_OnShader(m_pShader, 0, TextureType_DIFFUSE, "g_DiffuseTexture")))
-		return E_FAIL;
-
-	/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-		return E_FAIL;*/
-
-	if (FAILED(m_pModel->Bind_Buffers(0)))
-		return E_FAIL;
-
-	if (FAILED(m_pModel->Render(m_pShader, 0, 3)))
-		return E_FAIL;
+	//if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pModel->SetUp_OnShader(m_pShader, 0, TextureType_DIFFUSE, "g_DiffuseTexture")))
+	//	return E_FAIL;
+	//
+	///*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
+	//	return E_FAIL;*/
+	//
+	//if (FAILED(m_pModel->Bind_Buffers(0)))
+	//	return E_FAIL;
+	//
+	//if (FAILED(m_pModel->Render(m_pShader, 0, 3)))
+	//	return E_FAIL;
 
 	return S_OK;
 }

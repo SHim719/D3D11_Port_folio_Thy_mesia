@@ -77,6 +77,12 @@ HRESULT CArchive_Chair::Render()
 void CArchive_Chair::Active_Chair()
 {
 	UIMGR->Active_UI("UI_BeaconFound");
+	CGameObject* pAisemy = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Effect", L"Prototype_Aisemy");
+
+	CTransform* pAisemyTransform = pAisemy->Get_Transform();
+	pAisemyTransform->Set_WorldMatrix(m_pTransform->Get_WorldMatrix());
+	pAisemyTransform->Add_Position(XMVectorSet(1.f, 0.f, -1.f, 0.f), true);
+	pAisemyTransform->LookTo(m_pTransform->Get_GroundRight());
 }
 
 void CArchive_Chair::OnCollisionStay(CGameObject* pOther)

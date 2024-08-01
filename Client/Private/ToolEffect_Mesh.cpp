@@ -60,7 +60,7 @@ void CToolEffect_Mesh::LateTick(_float fTimeDelta)
 	m_pGameInstance->Add_RenderObject((CRenderer::RENDERGROUP)m_iRenderGroup, this);
 
 	if (m_bGlow)
-		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT_GLOW, this);
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 }
 
 HRESULT CToolEffect_Mesh::Render()
@@ -410,5 +410,4 @@ void CToolEffect_Mesh::Free()
 	__super::Free();
 
 	Safe_Release(m_pLocalTransform);
-	Safe_Release(m_pModel);
 }

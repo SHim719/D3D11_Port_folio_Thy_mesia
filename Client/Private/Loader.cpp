@@ -33,6 +33,8 @@
 #include "Effect_Particle.h"
 #include "Effect_Mesh.h"
 
+#include "LockOnCurve.h"
+
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)
@@ -233,17 +235,17 @@ HRESULT CLoader::Ready_Player()
 
 HRESULT CLoader::Ready_PlagueWeapon()
 {
-	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Axe", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Axe.dat"));
-
-	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Hammer", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Hammer.dat"));
-
-	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Spear", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Spear.dat"));
-
-	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_TwinBlade", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_TwinSword.dat"));
+	//m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Axe", CModel::Create(m_pDevice, m_pContext,
+	//	"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Axe.dat"));
+	//
+	//m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Hammer", CModel::Create(m_pDevice, m_pContext,
+	//	"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Hammer.dat"));
+	//
+	//m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Spear", CModel::Create(m_pDevice, m_pContext,
+	//	"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Spear.dat"));
+	//
+	//m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_TwinBlade", CModel::Create(m_pDevice, m_pContext,
+	//	"../../Resources/Models/Corvus/PlagueWeapon/", "PW_TwinSword.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_PlagueWeapon", CPlagueWeapon::Create(m_pDevice, m_pContext));
 
@@ -593,14 +595,21 @@ HRESULT CLoader::Ready_Effects()
 
 HRESULT CLoader::Ready_EffectResources()
 {
-	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_BaseColor", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Diffuse/%d.png", 2));
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_BaseColor", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/Diffuse/%d.png", 2))))
+		return E_FAIL;
 
-	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Mask/Masking/%d.png", 23));
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/Mask/Masking/%d.png", 25))))
+		return E_FAIL;
 
-	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Noise/%d.png", 16));
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/Noise/%d.png", 16))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Dissolve", CTexture::Create(m_pDevice, m_pContext,
+		L"../../Resources/Effect/DissolvePattern.png", 1))))
+		return E_FAIL;
 
 
 	fs::path EffectMeshesPath(L"../../Resources/Effect/EffectMesh/");
@@ -669,6 +678,12 @@ HRESULT CLoader::Ready_Etc()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Archive_Chair", CArchive_Chair::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Aisemy", CAisemy::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_LockOnCurve", CLockOnCurve::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
