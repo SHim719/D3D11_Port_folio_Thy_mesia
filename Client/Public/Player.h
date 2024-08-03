@@ -31,10 +31,12 @@ private:
 	void Bind_KeyFrames()									override;
 	void Bind_KeyFrameEffects()								override;
 
+	HRESULT Bind_ShaderResources()							override;
+
 public:
 	HRESULT Reset_NaviData(LEVEL eLevel);
 	void Enroll_AllColliders();
-
+	
 private:
 	class CPlayerStats*	m_pStats = { nullptr };
 
@@ -161,6 +163,9 @@ public:
 
 	_int Take_Damage(const ATTACKDESC& AttackDesc)	override;
 
+	_vector Get_Center() const override {
+		return m_pTransform->Get_Position() + m_pTransform->Get_Up() * 1.5f;
+	}
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 	void OnCollisionExit(CGameObject* pOther)	override;

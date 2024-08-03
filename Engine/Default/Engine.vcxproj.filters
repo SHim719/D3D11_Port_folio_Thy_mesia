@@ -393,6 +393,9 @@
     <ClInclude Include="..\Public\VIBuffer_Rect_NorTex.h">
       <Filter>01.Utility\03. Components\03. VIBuffer\00. Rect\VIBuffer_Rect_NorTex</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\Engine_Render_Descs.h">
+      <Filter>99.Defines</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">

@@ -29,6 +29,9 @@ void CTwinBladeKnightState_Stunned_Loop::Update(_float fTimeDelta)
 
 void CTwinBladeKnightState_Stunned_Loop::Late_Update(_float fTimeDelta)
 {
+
+	if (KEY_DOWN(eKeyCode::I))
+		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_Stunned_Start);
 }
 
 void CTwinBladeKnightState_Stunned_Loop::OnState_End()

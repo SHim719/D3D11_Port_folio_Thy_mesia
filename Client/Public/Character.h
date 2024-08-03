@@ -16,6 +16,7 @@ protected:
 	virtual void Bind_KeyFrames();
 	virtual void Bind_KeyFrameEffects();
 
+	virtual void Decide_PassIdx();
 protected:
 	vector<class CState_Base*>	m_States;
 	_uint						m_iState = { 0 };
@@ -34,6 +35,8 @@ public:
 	CGameEffect::EFFECTSPAWNDESC Get_EffectSpawnDesc() const {
 		return m_tEffectSpawnDesc;
 	}
+
+	virtual	_vector Get_Center() const;
 public:
 	void Hit(const ATTACKDESC& AttackDesc);
 	virtual _int Take_Damage(const ATTACKDESC& AttackDesc);
@@ -51,7 +54,6 @@ public:
 		m_bStanced = bStanced;
 	}
 
-	void Active_Dissolve();
 protected:
 	vector<class CWeapon*>		m_Weapons;
 
@@ -69,7 +71,6 @@ public:
 		m_pHitBoxCollider->Set_Active(bActive);
 	}
 
-public:
 	void Set_Adjust_NaviY(_bool b) {
 		m_bAdjustNaviY = b;
 	}
@@ -80,7 +81,22 @@ protected:
 
 protected:
 	_bool			m_bRimLight = { false };
+	_float			m_fRimTimeAcc = { 0.f };
+	_float4			m_vNowRimColor = {};
 	RIMLIGHTDESC	m_tRimLightDesc = {};
+
+protected:
+	void Update_RimLight(_float fTimeDelta);
+	void Lerp_RimColor();
+
+	HRESULT Bind_RimLightDescs();
+public:
+	void Active_RimLight(const RIMLIGHTDESC& RimDesc);
+
+	void Inactive_RimLight() {
+		m_bRimLight = false;
+		Decide_PassIdx();
+	}
 
 protected:
 	CShader*		m_pShader = { nullptr };

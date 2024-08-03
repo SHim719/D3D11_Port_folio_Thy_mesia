@@ -3,13 +3,14 @@
 
 float4x4 g_WorldMatrix, g_ViewMatrix, g_ProjMatrix;
 
-texture2D g_ForCopyTexture;
+texture2D g_OriginTexture;
 
-texture2D g_PrevBloomTexture;
+// BLOOM ///////////////////
 texture2D g_BloomTexture;
 
-texture2D g_OriginTexture;
+// GLOW / ////////////
 texture2D g_GlowTextureAfterBlur;
+//////////////////////////
 
 texture2D g_FinalTexture;
 
@@ -50,7 +51,7 @@ PS_OUT PS_MAIN_Copy(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    float4 vCopy = g_ForCopyTexture.Sample(LinearClampSampler, In.vTexcoord);
+    float4 vCopy = g_OriginTexture.Sample(LinearClampSampler, In.vTexcoord);
     
     Out.vColor = vCopy;
     
@@ -74,7 +75,7 @@ PS_OUT PS_MAIN_Bloom(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
-    float4 vPrevBloom = g_PrevBloomTexture.Sample(LinearClampSampler, In.vTexcoord);
+    float4 vPrevBloom = g_OriginTexture.Sample(LinearClampSampler, In.vTexcoord);
     float4 vBloom = g_BloomTexture.Sample(LinearClampSampler, In.vTexcoord);
     
     float4 vCombined = vPrevBloom + g_fBloomStrength * vBloom;
@@ -86,6 +87,26 @@ PS_OUT PS_MAIN_Bloom(PS_IN In)
     
     return Out;
 }
+
+
+PS_OUT PS_MAIN_RADIALBLUR(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+   
+    float4 vColor = float4(0.f, 0.f, 0.f, 0.f);
+    float2 vDist = In.vTexcoord - g_vBlurCenter;
+    for (int i = 0; i < g_iSampleCount; ++i)
+    {
+        float fScale = 1.f - g_fBlurStrength * (i / (float)g_iSampleCount) * saturate(length(vDist) / g_fBlurRadius);
+        vColor += g_OriginTexture.Sample(LinearClampSampler, vDist * fScale + g_vBlurCenter);
+    }
+    vColor /= (float) g_iSampleCount;
+    
+    Out.vColor = vColor;
+    
+    return Out;
+}
+
 
 PS_OUT PS_MAIN_Final(PS_IN In)
 {
@@ -140,8 +161,22 @@ technique11 DefaultTechnique
         PixelShader = compile ps_5_0 PS_MAIN_Bloom();
     }
 
+    pass RadialBlur // 3
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_NoZTest_And_Write, 0);
+        SetBlendState(BS_None, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        ComputeShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_RADIALBLUR();
+    }
 
-    pass Final // 3
+
+    pass Final // 4
     {
         SetRasterizerState(RS_Default);
         SetDepthStencilState(DSS_NoZTest_And_Write, 0);

@@ -23,6 +23,9 @@ protected:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
+	HRESULT Bind_ShaderResources()		override;
+	void Decide_PassIdx()				override;
+
 protected:
 	static CGameObject* s_pTarget;
 

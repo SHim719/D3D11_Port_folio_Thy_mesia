@@ -9,7 +9,7 @@
 #include "Client_Macro.h"
 #include "Client_Functions.h"
 
-#define InGame
+//#define InGame
 //#define AnimTool
 
 /* 클라이언트에서 제작하는 모든 클래스들이 공통적으로 자주 사용하는 정의들을 모아둔다. */

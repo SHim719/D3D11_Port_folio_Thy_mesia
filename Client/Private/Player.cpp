@@ -54,6 +54,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Bind_KeyFrames();
 	Bind_KeyFrameEffects();
 
+
 	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
 	m_tEffectSpawnDesc.pParentModel = m_pModel;
 
@@ -88,16 +89,14 @@ void CPlayer::Tick(_float fTimeDelta)
 		//
 		//UIMGR->Active_UI("UI_Popup", &eTypes);
 
-		m_pStats->Update_PlunderSkill(SKILLTYPE::HAMMER);
+		//m_pStats->Update_PlunderSkill(SKILLTYPE::HAMMER);
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::SPEAR);
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::TWINBLADE);
+		m_pStats->Update_PlunderSkill(SKILLTYPE::AXE);
 	}
 
 	if (KEY_DOWN(eKeyCode::M))
 		Change_State((_uint)PlayerState::State_Healing);
-
-	if (KEY_DOWN(eKeyCode::N))
-		Change_State((_uint)PlayerState::State_ParrySuccess);
 	
 
 	if (m_bLockOn)
@@ -118,6 +117,12 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	__super::Tick_Weapons(fTimeDelta);
 
+	if (m_bRimLight)
+		Update_RimLight(fTimeDelta);
+
+	if (m_pGameInstance->Is_Active_RadialBlur())
+		m_pGameInstance->Update_BlurCenterWorld(Get_Center());
+
 	m_pModel->Play_Animation(fTimeDelta);
 }
 
@@ -137,18 +142,18 @@ void CPlayer::LateTick(_float fTimeDelta)
 #endif
 
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
+
+	if (m_bRimLight)
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 }
 
 HRESULT CPlayer::Render()
 {
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
-
-	if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+	
+	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
 		return E_FAIL;
-
-	m_pModel->SetUp_BoneMatrices(m_pShader);
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
 
@@ -217,6 +222,7 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Active_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, true));
 	m_pModel->Bind_Func("Inactive_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, false));
 	m_pModel->Bind_Func("Healing", bind(&CPlayer::Healing, this));
+	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, 1.5f));
 
 }
 
@@ -247,6 +253,19 @@ void CPlayer::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_Plunder_Rush_Trail", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Rush_Trail", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Plunder_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Start", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Plunder", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Effect", &m_tEffectSpawnDesc));
+}
+
+HRESULT CPlayer::Bind_ShaderResources()
+{
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (m_bRimLight)
+	{
+		if (FAILED(Bind_RimLightDescs()))
+			return E_FAIL;
+	}
+	return S_OK;
 }
 
 void CPlayer::Update_CanExecutionEnemy()
@@ -472,6 +491,14 @@ void CPlayer::ChangeToNextComboAnim()
 void CPlayer::Healing()
 {
 	m_pStats->Increase_Hp(200);
+
+	RIMLIGHTDESC RimDesc;
+	RimDesc.fDuration = 1.f;
+	RimDesc.fRimPower = 3.f;
+	RimDesc.vRimColor = { 0.f, 1.f, 0.4f, 1.f };
+	RimDesc.bColorLerp = true;
+
+	Active_RimLight(RimDesc);
 
 	EFFECTMGR->Active_Effect("Effect_Corvus_Healing", &Get_EffectSpawnDesc());
 }

@@ -197,6 +197,7 @@ xcopy ..\Bin\Engine.dll ..\..\Client\Bin /y
     <ClInclude Include="..\Public\DebugDraw.h" />
     <ClInclude Include="..\Public\Engine_Debug.h" />
     <ClInclude Include="..\Public\Engine_Enums.h" />
+    <ClInclude Include="..\Public\Engine_Render_Descs.h" />
     <ClInclude Include="..\Public\Event_Manager.h" />
     <ClInclude Include="..\Public\Font_Manager.h" />
     <ClInclude Include="..\Public\Frustum.h" />

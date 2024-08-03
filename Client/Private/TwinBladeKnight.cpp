@@ -29,6 +29,8 @@ HRESULT CTwinBladeKnight::Initialize_Prototype()
 
 	m_fDissolveSpeed = 0.2f;
 	m_fDissolveAmount = 0.f;
+
+	Decide_PassIdx();
 	return S_OK;
 }
 
@@ -57,6 +59,9 @@ HRESULT CTwinBladeKnight::Initialize(void* pArg)
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"PerceptionBounding", L"Prototype_PerceptionBounding", this);
 
 	m_bLookTarget = false;
+
+	m_tEffectSpawnDesc.pParentModel = m_pModel;
+	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
 
 	m_fCullingRadius = 1.5f;
 	XMStoreFloat4(&m_vCullingOffset, XMVectorSet(0.f, 1.2f, 0.f, 0.f));

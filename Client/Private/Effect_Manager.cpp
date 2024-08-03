@@ -180,7 +180,14 @@ HRESULT CEffect_Manager::Init_Effects()
 
 #pragma endregion
 
+#pragma region Blood
+	if (FAILED(Add_EffectGroups("Effect_Blood_L_TwinBladeKnight", 1, L"Prototype_Effect_Blood_L_TwinBladeKnight")))
+		assert(false);
 
+	if (FAILED(Add_EffectGroups("Effect_Blood_R_TwinBladeKnight", 1, L"Prototype_Effect_Blood_R_TwinBladeKnight")))
+		assert(false);
+
+#pragma endregion
 
 	return S_OK;
 };

@@ -19,11 +19,23 @@ void CTwinBladeKnightState_Stunned_Start::OnState_Start(void* pArg)
 {
 	m_pTwinBladeKnight->Set_LookTarget(false);
 
+	RIMLIGHTDESC RimDesc{};
+	RimDesc.bColorLerp = true;
+	RimDesc.fDuration = 2.f;
+	RimDesc.fRimPower = 1.f;
+	RimDesc.fRimStrength = 3.f;
+	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };
+
+	m_pTwinBladeKnight->Active_RimLight(RimDesc);
+
+	m_pGameInstance->Set_TimeScaleWithRealTime(0.2f, 2.f);
+
 	m_pModel->Change_Animation(LArmor_TwinSwords_HurtStunStart);
 }
 
 void CTwinBladeKnightState_Stunned_Start::Update(_float fTimeDelta)
 {
+
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 

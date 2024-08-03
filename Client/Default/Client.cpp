@@ -29,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
 #ifdef _DEBUG
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(1905251);
+    //_CrtSetBreakAlloc(852);
 #endif
 
 #ifdef _DEBUG
@@ -78,10 +78,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
 	_float		fTimeAcc = { 0.0f };
-    _float      fFrameAcc = { 0.f };
-    _float      fTimeDelta = { 0.f };
-
-    _int        iFrameCnt = { 0 };
 
     // 기본 메시지 루프입니다.
 	while (true)
@@ -99,17 +95,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 
 		pGameInstance->Compute_TimeDelta(TEXT("Timer_Default"));
-        fTimeDelta = pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
-        fTimeAcc += fTimeDelta;
 
-        ++iFrameCnt;
-        fFrameAcc += fTimeDelta;
-        if (fFrameAcc > 1.f)
-        {
-            SetWindowTextA(g_hWnd, to_string(iFrameCnt).c_str());
-            fFrameAcc = 0.f;
-            iFrameCnt = 0;
-        }
+        fTimeAcc += pGameInstance->Get_TimeDelta(TEXT("Timer_Default"));
 
 		if (fTimeAcc > 1.f / 60.0f)
         {

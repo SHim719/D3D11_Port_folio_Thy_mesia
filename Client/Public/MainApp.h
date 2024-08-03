@@ -29,6 +29,10 @@ private:
 	CGameInstance*			m_pGameInstance = nullptr;
 
 	class CImGui_Main*		m_pImGui_Main = nullptr;
+
+	 _float		m_fTimeAcc = { 0.0f };
+	 _float     m_fFrameAcc = { 0.f };
+	 _int       m_iFrameCnt = { 0 };
 private:
 	HRESULT	Ready_Prototype_Component();
 	HRESULT Ready_Prototype_Shader();

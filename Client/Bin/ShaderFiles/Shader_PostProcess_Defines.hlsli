@@ -5,6 +5,14 @@ float g_fBloomStrength = 0.5f;
 float g_fGamma = 2.2f;
 float g_fExposure = 2.f;
 
+// RADIAL_BLUR/////////////////////
+int     g_iSampleCount = 16;
+float    g_fBlurStrength;
+float2  g_vBlurCenter;
+float   g_fBlurRadius;
+///////////////////////////////////
+
+
 float3 LinearToneMapping(float3 color)
 {
     float3 invGamma = float3(1, 1, 1) / g_fGamma;

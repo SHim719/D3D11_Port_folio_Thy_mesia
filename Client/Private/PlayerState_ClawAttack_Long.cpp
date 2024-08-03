@@ -27,6 +27,13 @@ void CPlayerState_ClawAttack_Long::OnState_Start(void* pArg)
 	m_pPlayer->Update_AttackDesc();
 
 	m_pModel->Change_AnimationWithStartFrame(Corvus_Raven_ClawLong_L01, 27, 0.1f);
+
+	RADIALBLUR_DESCS RadialDescs{};
+	RadialDescs.fBlurRadius = 15.f;
+	RadialDescs.fBlurStrength = 2.f;
+
+	m_pGameInstance->Active_RadialBlur(RadialDescs);
+	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
 }
 
 void CPlayerState_ClawAttack_Long::Update(_float fTimeDelta)
@@ -50,6 +57,8 @@ void CPlayerState_ClawAttack_Long::Late_Update(_float fTimeDelta)
 		m_pPlayer->Change_State((_uint)PlayerState::State_Idle);
 		return;
 	}
+
+	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
 		
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
@@ -61,6 +70,8 @@ void CPlayerState_ClawAttack_Long::OnState_End()
 {
 	m_pPlayer->Set_Active_DefaultWeapons(true);
 	m_pPlayer->Set_Active_Claws(false);
+
+	m_pGameInstance->Inactive_RadialBlur(0.5f);
 }
 
 void CPlayerState_ClawAttack_Long::Init_AttackDesc()

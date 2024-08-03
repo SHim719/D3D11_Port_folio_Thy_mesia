@@ -180,7 +180,7 @@ PS_OUT_GLOW PS_MAIN_RIMLIGHT(PS_IN In)
     fRim = smoothstep(0.f, 1.f, fRim);
     fRim = pow(fRim, g_fRimPower);
     
-    Out.vGlow = fRim * g_vRimColor * g_fRimStrength;
+    Out.vGlow = fRim * g_vRimColor; //* g_fRimStrength;
     
     return Out;
 }

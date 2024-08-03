@@ -2,9 +2,6 @@
 
 #include "Base.h"
 
-/* 화면에 그려져야할 객체들을 그리는 순서대로 모아서 저장한다. */
-/* 저장하고 있는 객체들의 Render함수를 호출한다. */
-
 BEGIN(Engine)
 
 class ENGINE_DLL CRenderer final : public CBase
@@ -40,6 +37,7 @@ public:
 	HRESULT Add_RenderObject(RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);	
 	HRESULT Add_RenderComponent(class CComponent* pRenderComponent);
 	void	Add_UsingShader(class CShader* pShader);
+	void	Tick(_float fTimeDelta);
 	HRESULT Draw();
 	void	Clear();
 
@@ -62,9 +60,10 @@ private:
 	HRESULT Render_BrightPass();
 	HRESULT Render_DownSample();
 	HRESULT Render_UpSample();
-
+	
 	HRESULT Render_PostProcess();
 	HRESULT PostProcess_Bloom();
+	HRESULT Render_RadialBlur();
 
 	HRESULT Render_Final();
 
@@ -87,7 +86,6 @@ private:
 	_bool m_bRenderRTV = { true };
 #endif
 
-
 private:
 	list<class CGameObject*>			m_RenderObjects[RENDER_END];
 	list<class CComponent*>				m_RenderComponents;
@@ -98,7 +96,42 @@ private:
 	D3D11_VIEWPORT						m_OriginViewPort = {};
 
 private:
-	_uint m_iBloomLevel = { 3 };
+	_uint				m_iBloomLevel = { 3 };
+	
+private:
+	_bool				m_bRadialBlur = { false };
+	RADIALBLUR_DESCS	m_tRadialBlurDescs = {};
+
+	_float				m_fRadialBlurLerpTime = { 0.f };
+	_float				m_fRadialBlurLerpTimeAcc = { 0.f };
+	_float				m_fNowBlurStrength = { 0.f };
+	_float3				m_vBlurCenterWorld = {};
+
+private:
+	void Update_RadialBlur(_float fTimeDelta);
+	_float2 Calc_BlurCenterUV();
+
+public:
+	void Active_RadialBlur(const RADIALBLUR_DESCS& Descs) {
+		m_bRadialBlur = true;
+		m_tRadialBlurDescs = Descs;
+		m_fNowBlurStrength = Descs.fBlurStrength;
+		m_fRadialBlurLerpTimeAcc = 0.f;
+	}
+
+	void Inactive_RadialBlur(_float fLerpTime) {
+		if (m_fRadialBlurLerpTimeAcc > 0.f)
+			return;
+		m_fRadialBlurLerpTime = m_fRadialBlurLerpTimeAcc = fLerpTime;
+	}
+
+	void Update_BlurCenterWorld(_vector vBlurCenterWorld) {
+		XMStoreFloat3(&m_vBlurCenterWorld, vBlurCenterWorld);
+	}
+
+	_bool Is_Active_RadialBlur() const {
+		return m_bRadialBlur;
+	}
 
 private:
 	HRESULT Ready_Buffers();

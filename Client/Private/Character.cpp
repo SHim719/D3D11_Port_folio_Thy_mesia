@@ -21,6 +21,16 @@ void CCharacter::Bind_KeyFrameEffects()
 {
 }
 
+void CCharacter::Decide_PassIdx()
+{
+	if (m_bRimLight)
+		m_iPassIdx = 3;
+	else if (m_bDissolve)
+		m_iPassIdx = 2;
+	else
+		m_iPassIdx = 0;
+}
+
 void CCharacter::Change_State(_uint eState, void* pArg)
 {
 	m_iPrevState = m_iState;
@@ -53,10 +63,9 @@ _int CCharacter::Take_Damage(const ATTACKDESC& AttackDesc)
 	return 0;
 }
 
-void CCharacter::Active_Dissolve()
+_vector CCharacter::Get_Center() const
 {
-	m_bDissolve = true;
-	m_fDissolveAmount = 0.f;
+	return _vector();
 }
 
 void CCharacter::Tick_Weapons(_float fTimeDelta)
@@ -105,6 +114,59 @@ void CCharacter::Update_Colliders()
 		m_pHitBoxCollider->Update(m_pTransform->Get_WorldMatrix());
 }
 
+
+void CCharacter::Update_RimLight(_float fTimeDelta)
+{
+	if (m_tRimLightDesc.fDuration < 0.f)
+		return;
+
+	m_fRimTimeAcc -= fTimeDelta;
+	if (m_fRimTimeAcc < 0.f)
+	{
+		m_fRimTimeAcc = 0.f;
+		Inactive_RimLight();
+	}
+	else
+	{
+		if (m_tRimLightDesc.bColorLerp)
+			Lerp_RimColor();
+	}
+}
+
+void CCharacter::Lerp_RimColor()
+{
+	_vector vLerpEndRimColor = XMLoadFloat4(&m_tRimLightDesc.vRimColor);
+	_vector vLerpStartRimColor = XMVectorZero();
+
+	_vector vLerpedRimColor = XMVectorLerp(vLerpStartRimColor, vLerpEndRimColor, m_fRimTimeAcc / m_tRimLightDesc.fDuration);
+
+	XMStoreFloat4(&m_vNowRimColor, vLerpedRimColor);
+
+}
+
+HRESULT CCharacter::Bind_RimLightDescs()
+{
+	if (FAILED(m_pShader->Set_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_vRimColor", &m_vNowRimColor, sizeof(_float4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_fRimPower", &m_tRimLightDesc.fRimPower, sizeof(_float))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+void CCharacter::Active_RimLight(const RIMLIGHTDESC& RimDesc)
+{
+	m_bRimLight = true;
+	m_tRimLightDesc = RimDesc;
+	m_vNowRimColor = m_tRimLightDesc.vRimColor;
+	m_fRimTimeAcc = RimDesc.fDuration;
+
+	Decide_PassIdx();
+}
 
 void CCharacter::Free()
 {

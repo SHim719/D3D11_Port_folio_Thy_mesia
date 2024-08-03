@@ -82,6 +82,8 @@ HRESULT CGameInstance::Initialize_Engine(_uint iNumLevels, const GRAPHIC_DESC& G
 
 void CGameInstance::Tick_Engine(_float fTimeDelta)
 {
+	Update_TimeScaleTimer(fTimeDelta);
+
 	m_pObject_Manager->Manage_LifeCycle();
 
 	m_pKey_Manager->Update();
@@ -104,6 +106,7 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->LateTick(fTimeDelta * m_fTimeScale);
 
+	m_pRenderer->Tick(fTimeDelta);
 	m_pLevel_Manager->Tick(fTimeDelta);
 }
 
@@ -207,6 +210,24 @@ void CGameInstance::Compute_TimeDelta(const wstring & strTimerTag)
 void CGameInstance::Set_TimeScale(_float fTimeScale)
 {
 	m_fTimeScale = fTimeScale;
+}
+void CGameInstance::Set_TimeScaleWithRealTime(_float fTimeScale, _float fRealTime)
+{
+	m_fTimeScale = fTimeScale;
+	m_fTimerForTimeScale = fRealTime;
+}
+
+void CGameInstance::Update_TimeScaleTimer(_float fTimeDelta)
+{
+	if (m_fTimerForTimeScale > 0.f)
+	{
+		m_fTimerForTimeScale -= fTimeDelta;
+		if (m_fTimerForTimeScale <= 0.f)
+		{
+			m_fTimerForTimeScale = 0.f;
+			m_fTimeScale = 1.f;
+		}
+	}
 }
 #pragma endregion
 
@@ -335,6 +356,20 @@ void CGameInstance::Add_UsingShader(CShader* pShader)
 {
 	m_pRenderer->Add_UsingShader(pShader);
 }
+void CGameInstance::Active_RadialBlur(const RADIALBLUR_DESCS& Descs)
+{
+	m_pRenderer->Active_RadialBlur(Descs);
+}
+void CGameInstance::Inactive_RadialBlur(_float fLerpTime)
+{
+	m_pRenderer->Inactive_RadialBlur(fLerpTime);
+}
+void CGameInstance::Update_BlurCenterWorld(_vector vBlurCenterWorld)
+{
+	m_pRenderer->Update_BlurCenterWorld(vBlurCenterWorld);
+}
+
+
 #pragma endregion
 
 #pragma region COLLISION_MANAGER

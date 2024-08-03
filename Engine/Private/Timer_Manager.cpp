@@ -15,11 +15,6 @@ _float CTimer_Manager::Get_TimeDelta(const wstring & strTimerTag)
 	return pTimer->Get_TimeDelta();	
 }
 
-void CTimer_Manager::Set_TimeDivide(_float fTimeDivide)
-{
-	for (auto& Pair : m_Timers)
-		Pair.second->Set_TimeDivide(fTimeDivide);
-}
 
 HRESULT CTimer_Manager::Add_Timer(const wstring & strTimerTag)
 {

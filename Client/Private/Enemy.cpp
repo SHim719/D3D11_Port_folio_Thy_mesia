@@ -48,6 +48,19 @@ void CEnemy::Tick(_float fTimeDelta)
 	if (m_pEnemyBar && m_pStats->Is_Hit())
 		m_pEnemyBar->Tick(fTimeDelta);
 
+	if (m_bDissolve)
+	{
+		Update_Dissolve(fTimeDelta);
+		if (false == m_bDissolve)
+			Set_Active(false);
+	}
+
+	if (m_bRimLight)
+	{
+		Update_RimLight(fTimeDelta);
+	}
+		
+
 	m_pModel->Play_Animation(fTimeDelta);
 
 }
@@ -57,8 +70,6 @@ void CEnemy::LateTick(_float fTimeDelta)
 
 	__super::LateTick_Weapons(fTimeDelta);
 
-	if (KEY_DOWN(eKeyCode::I))
-		Active_Dissolve();
 		
 	if (m_bNoRender)
 		return;
@@ -74,7 +85,7 @@ void CEnemy::LateTick(_float fTimeDelta)
 			m_pEnemyBar->LateTick(fTimeDelta);
 
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
-		if (m_bDissolve)
+		if (m_bDissolve || m_bRimLight)
 			m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 
 	}
@@ -82,22 +93,7 @@ void CEnemy::LateTick(_float fTimeDelta)
 
 HRESULT CEnemy::Render()
 {
-	_uint iPassIdx = 0;
-	if (m_bDissolve)
-	{
-		iPassIdx = 2;
-		
-		if (FAILED(m_pDissolveTexture->Set_SRV(m_pShader, "g_DissolveTexture")))
-			return E_FAIL;
-
-		if (FAILED(m_pShader->Set_RawValue("g_fDissolveAmount", &m_fDissolveAmount, sizeof(_float))))
-			return E_FAIL;
-	}
-
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
-
-	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
+	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
@@ -113,11 +109,48 @@ HRESULT CEnemy::Render()
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModel->Render(m_pShader, i, iPassIdx)))
+		if (FAILED(m_pModel->Render(m_pShader, i, m_iPassIdx)))
 			return E_FAIL;
 	}
 
 	return S_OK;
+}
+
+HRESULT CEnemy::Bind_ShaderResources()
+{
+	if (m_bDissolve)
+	{
+		if (FAILED(m_pDissolveTexture->Set_SRV(m_pShader, "g_DissolveTexture")))
+			return E_FAIL;
+
+		if (FAILED(m_pShader->Set_RawValue("g_fDissolveAmount", &m_fDissolveAmount, sizeof(_float))))
+			return E_FAIL;
+	}
+
+	if (m_bRimLight)
+	{
+		if (FAILED(Bind_RimLightDescs()))
+			return E_FAIL;
+	}
+
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+void CEnemy::Decide_PassIdx()
+{
+	if (m_bRimLight)
+		m_iPassIdx = 3;
+	else if (m_bDissolve)
+		m_iPassIdx = 2;
+	else
+		m_iPassIdx = 0;
+
 }
 void CEnemy::Percept_Target()
 {

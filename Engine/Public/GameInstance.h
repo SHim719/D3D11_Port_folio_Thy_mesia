@@ -42,8 +42,12 @@ public:
 	void Compute_TimeDelta(const wstring& strTimerTag);
 	void Set_TimeScale(_float fTimeScale);
 	_float Get_TimeScale() { return m_fTimeScale; }
+
+	void Set_TimeScaleWithRealTime(_float fTimeScale, _float fRealTime);
+	void Update_TimeScaleTimer(_float fTimeDelta);
 private:
-	_float m_fTimeScale = 1.f;
+	_float		m_fTimeScale = 1.f;
+	_float		m_fTimerForTimeScale = { 0.f };
 #pragma endregion
 
 #pragma region OBJECT_MANAGER
@@ -76,6 +80,13 @@ public:
 	HRESULT Add_RenderObject(CRenderer::RENDERGROUP eRenderGroup, class CGameObject* pRenderObject);
 	HRESULT Add_RenderComponent(CComponent* pRenderComponent);
 	void Add_UsingShader(class CShader* pShader);
+
+	void Active_RadialBlur(const RADIALBLUR_DESCS& Descs);
+	void Inactive_RadialBlur(_float fLerpTime);
+	void Update_BlurCenterWorld(_vector vBlurCenterWorld);
+	_bool Is_Active_RadialBlur() const {
+		return m_pRenderer->Is_Active_RadialBlur();
+	}
 #pragma endregion
 
 #pragma region KEY_MANAGER
@@ -163,6 +174,7 @@ public:
 		return m_pCalculateTransform;
 	}
 #pragma endregion 
+
 
 private:
 	CGraphic_Device*		m_pGraphic_Device = { nullptr };

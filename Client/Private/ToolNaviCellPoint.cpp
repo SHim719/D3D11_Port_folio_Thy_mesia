@@ -39,7 +39,7 @@ void CToolNaviCellPoint::LateTick(_float fTimeDelta)
 	if (m_bUpdated)
 		m_bUpdated = false;
 
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONLIGHT, this);
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
 }
 
 HRESULT CToolNaviCellPoint::Render()

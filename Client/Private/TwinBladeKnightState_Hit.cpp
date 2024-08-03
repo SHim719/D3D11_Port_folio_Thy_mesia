@@ -23,7 +23,11 @@ void CTwinBladeKnightState_Hit::OnState_Start(void* pArg)
 	{
 	case ATTACK_NORMAL:
 	case PLUNDER:
+	{
 		m_pModel->Change_Animation(LArmor_TwinSwords_HurtM_FL + m_iHitCount % 2);
+		string strBloodEffect = m_iHitCount % 2 == 0 ? "Effect_Blood_R_TwinBladeKnight" : "Effect_Blood_L_TwinBladeKnight";
+		EFFECTMGR->Active_Effect(strBloodEffect, &m_pTwinBladeKnight->Get_EffectSpawnDesc());
+	}
 		break;
 	case IGNORE_STANCE:
 		m_pModel->Change_Animation(LArmor_TwinSwords_HurtCounter);

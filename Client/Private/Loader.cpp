@@ -596,7 +596,7 @@ HRESULT CLoader::Ready_Effects()
 HRESULT CLoader::Ready_EffectResources()
 {
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_BaseColor", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Diffuse/%d.png", 2))))
+		L"../../Resources/Effect/Diffuse/%d.png", 4))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,

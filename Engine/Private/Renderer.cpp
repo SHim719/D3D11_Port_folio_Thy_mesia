@@ -92,6 +92,12 @@ void CRenderer::Add_UsingShader(CShader* pShader)
 	m_UsingShaders.emplace_back(pShader);
 }
 
+void CRenderer::Tick(_float fTimeDelta)
+{
+	if (m_bRadialBlur)
+		Update_RadialBlur(fTimeDelta);
+}
+
 HRESULT CRenderer::Draw()
 {
 	m_pGameInstance->Update_ViewProj();
@@ -115,10 +121,10 @@ HRESULT CRenderer::Draw()
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
 
-	if (FAILED(Render_PostProcess()))
+	if (FAILED(Render_Blend()))
 		return E_FAIL;
 
-	if (FAILED(Render_Blend()))
+	if (FAILED(Render_PostProcess()))
 		return E_FAIL;
 
 #ifdef _DEBUG
@@ -180,11 +186,11 @@ HRESULT CRenderer::Copy_RenderTarget(const wstring& wstrTargetTag)
 	//if (FAILED(m_pVIBuffer->Bind_Buffers()))
 	//	return E_FAIL;
 
-#pragma region XBlur
+
 	if (FAILED(m_pGameInstance->Begin_MRT(L"MRT_Copy")))
 		return E_FAIL;
 	
-	if (FAILED(m_pGameInstance->Bind_RT_SRV(wstrTargetTag, m_pPostProcessShader, "g_ForCopyTexture")))
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(wstrTargetTag, m_pPostProcessShader, "g_OriginTexture")))
 		return E_FAIL;
 
 	if (FAILED(m_pPostProcessShader->Begin(0)))
@@ -395,6 +401,12 @@ HRESULT CRenderer::Render_PostProcess()
 	//if (FAILED(PostProcess_Bloom()))
 	//	return E_FAIL;
 
+	if (m_bRadialBlur)
+	{
+		if (FAILED(Render_RadialBlur()))
+			return E_FAIL;
+	}
+	
 	if (FAILED(Render_Final()))
 		return E_FAIL;
 
@@ -427,6 +439,38 @@ HRESULT CRenderer::PostProcess_Bloom()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_RadialBlur()
+{
+	if (FAILED(Copy_RenderTarget(L"Target_Deferred")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Begin_MRT(L"MRT_Deferred")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Copy"), m_pPostProcessShader, "g_OriginTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Set_RawValue("g_fBlurStrength", &m_fNowBlurStrength, sizeof(_float))))
+		return E_FAIL;
+	
+	if (FAILED(m_pPostProcessShader->Set_RawValue("g_fBlurRadius", &m_tRadialBlurDescs.fBlurRadius, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Set_RawValue("g_vBlurCenter", &Calc_BlurCenterUV(), sizeof(_float2))))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Begin(3)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_Final()
 {
 	//if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_PostBloom"), m_pPostProcessShader, "g_FinalTexture")))
@@ -435,7 +479,7 @@ HRESULT CRenderer::Render_Final()
 	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Deferred"), m_pPostProcessShader, "g_FinalTexture")))
 		return E_FAIL;
 
-	if (FAILED(m_pPostProcessShader->Begin(3)))
+	if (FAILED(m_pPostProcessShader->Begin(4)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -895,6 +939,41 @@ HRESULT CRenderer::Bind_Matrices()
 		
 }
 
+void CRenderer::Update_RadialBlur(_float fTimeDelta)
+{
+	if (m_fRadialBlurLerpTimeAcc > 0.f)
+	{
+		m_fRadialBlurLerpTimeAcc -= fTimeDelta;
+
+		_float fRatio = m_fRadialBlurLerpTimeAcc / m_fRadialBlurLerpTime;
+
+		if (m_fRadialBlurLerpTimeAcc < 0.f)
+		{
+			m_bRadialBlur = false;
+			m_fRadialBlurLerpTimeAcc = 0.f;
+			return;
+		}
+		m_fNowBlurStrength = XMVectorLerp(XMVectorZero(), XMVectorSet(m_tRadialBlurDescs.fBlurStrength, 0.f, 0.f, 0.f), fRatio).m128_f32[0];
+	}
+}
+
+_float2 CRenderer::Calc_BlurCenterUV()
+{
+	_matrix ViewMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
+	_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+
+	_vector vBlurCenter = XMLoadFloat3(&m_vBlurCenterWorld);
+	vBlurCenter = XMVector3TransformCoord(vBlurCenter, ViewMatrix);
+	vBlurCenter = XMVector3TransformCoord(vBlurCenter, ProjMatrix);
+
+	vBlurCenter = vBlurCenter * 0.5f + XMVectorSet(0.5f, 0.5f, 0.f, 0.f);
+
+	_float2 vCenterUV;
+	XMStoreFloat2(&vCenterUV, vBlurCenter);
+
+	return vCenterUV;
+}
+
 CRenderer * CRenderer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 {
 	CRenderer*	pInstance = new CRenderer(pDevice, pContext);
@@ -913,6 +992,8 @@ void CRenderer::Free()
 
 	Safe_Release(m_pDeferredShader);
 	Safe_Release(m_pBloomShader);
+	Safe_Release(m_pGlowShader);
+	Safe_Release(m_pPostProcessShader);
 	Safe_Release(m_pVIBuffer);
 	Safe_Release(m_pVIBuffer_Rect);
 

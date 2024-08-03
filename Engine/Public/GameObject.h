@@ -31,6 +31,10 @@ public:
 	virtual HRESULT Render();
 
 protected:
+	virtual HRESULT Bind_ShaderResources();
+	virtual void Decide_PassIdx();
+
+protected:
 	ID3D11Device*			m_pDevice = nullptr;
 	ID3D11DeviceContext*	m_pContext = nullptr;
 
@@ -45,9 +49,10 @@ protected:
 	CTexture*						m_pDissolveTexture = { nullptr };
 	_bool							m_bDissolve = { false };
 	_float							m_fDissolveAmount = { 0.f };
-	_float							m_fDissolveSpeed = { 0.2f };
+	_float							m_fDissolveSpeed = { 0.4f };
 
 public:
+	void Active_Dissolve();
 	void Update_Dissolve(_float fTimeDelta);
 
 

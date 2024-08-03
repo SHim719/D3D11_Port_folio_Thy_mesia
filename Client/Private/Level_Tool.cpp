@@ -87,7 +87,7 @@ HRESULT CLevel_Tool::Initialize()
 		return E_FAIL;
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_BaseColor", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Diffuse/%d.png", 2));
+		L"../../Resources/Effect/Diffuse/%d.png", 4));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
 		L"../../Resources/Effect/Mask/Masking/%d.png", 25));

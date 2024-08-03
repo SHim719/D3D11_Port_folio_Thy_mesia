@@ -214,5 +214,7 @@ namespace Client
 		_float4         vRimColor;
 		float           fRimPower;
 		float           fRimStrength;
+		float			fDuration;
+		_bool			bColorLerp;
 	} RIMLIGHTDESC;
 }

@@ -68,6 +68,9 @@ void CMainApp::Tick(_float fTimeDelta)
 	m_pImGui_Main->Tick(fTimeDelta);
 	m_pImGui_Main->LateTick(fTimeDelta);
 #endif
+
+	++m_iFrameCnt;
+	m_fFrameAcc += fTimeDelta;
 }
 
 HRESULT CMainApp::Render()
@@ -85,6 +88,15 @@ HRESULT CMainApp::Render()
 #endif
 
 	m_pGameInstance->Present();
+
+	
+	if (m_fFrameAcc > 1.f)
+	{
+		SetWindowTextA(g_hWnd, to_string(m_iFrameCnt).c_str());
+		m_fFrameAcc = 0.f;
+		m_iFrameCnt = 0;
+	}
+
 	return S_OK;
 }
 
