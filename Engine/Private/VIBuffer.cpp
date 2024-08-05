@@ -63,6 +63,8 @@ HRESULT CVIBuffer::Render()
 	return S_OK;
 }
 
+
+
 _bool CVIBuffer::Picking(_fmatrix InvWorldMat, _fvector vRayStartPos, _fvector vRayDir, OUT _float4& vPickedPos, OUT _float& fDist)
 {
 

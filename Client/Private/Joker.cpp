@@ -57,6 +57,9 @@ HRESULT CJoker::Initialize(void* pArg)
 	m_bLookTarget = false;
 	m_bStanced = true;
 
+	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
+	m_tEffectSpawnDesc.pParentModel = m_pModel;
+
 	m_fRotRate = 6.f;
 
 	XMStoreFloat4(&m_vCullingOffset, XMVectorSet(0.f, 1.5f, 0.f, 0.f));
@@ -84,10 +87,7 @@ void CJoker::Percept_Target()
 {
 	_int iRandNum = JoRandom::Random_Int(0, 1);
 
-	//if (iRandNum)
-	//	Change_State((_uint)Joker_State::State_Walk);
-	//else
-	//	Change_State((_uint)Joker_State::State_Attack3);
+	//Change_State((_uint)Joker_State::State_Walk);
 }
 
 void CJoker::Change_To_NextComboAnim()
@@ -202,7 +202,7 @@ HRESULT CJoker::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"Á¶Ä¿";
-	EnemyDesc.iMaxHp = 10;
+	EnemyDesc.iMaxHp = 500;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 

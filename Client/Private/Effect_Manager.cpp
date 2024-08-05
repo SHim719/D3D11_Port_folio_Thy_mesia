@@ -1,7 +1,6 @@
 #include "Effect_Manager.h"
 #include "Effect_Group.h"
-//#include "Effect_Mesh.h"
-#include "Effect_Particle.h"
+#include "Effect_Hit.h"
 
 IMPLEMENT_SINGLETON(CEffect_Manager)
 
@@ -43,6 +42,7 @@ void CEffect_Manager::Active_Effect(const string& strTag, void* pArg)
 			return;
 		}
 	}
+
 }
 
 void CEffect_Manager::Inactive_Effect(const string& strTag, size_t iIdx)
@@ -56,9 +56,34 @@ void CEffect_Manager::Inactive_Effect(const string& strTag, size_t iIdx)
 	EffectGroups[iIdx]->End_Effect();
 }
 
+void CEffect_Manager::Create_Effect_Hit(const string& strTag, void* pArg)
+{
+	if (nullptr == pArg)
+		return;
+
+	auto it = m_EffectGroups.find(strTag);
+	if (m_EffectGroups.end() == it)
+		return;
+
+	vector<CEffect_Group*>& EffectGroups = it->second;
+
+	for (auto& pEffect_Group : EffectGroups)
+	{
+		if (false == pEffect_Group->Is_Using())
+		{
+			CEffect_Hit::EFFECT_HITDESC* pEffectHitDesc = (CEffect_Hit::EFFECT_HITDESC*)pArg;
+
+			pEffectHitDesc->pEffect_Group = pEffect_Group;
+
+			m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Effect", L"Prototype_Effect_Hit");
+			return;
+		}
+	}
+}
+
+
 HRESULT CEffect_Manager::Init_Effects()
 {
-
 #pragma region Corvus_Default
 	if (FAILED(Add_EffectGroups("Effect_Corvus_Parry_Success", 3, L"Prototype_Effect_Corvus_Parry_Particle")))
 		assert(false);
@@ -81,6 +106,9 @@ HRESULT CEffect_Manager::Init_Effects()
 		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Corvus_Claw_Long1", 1, L"Prototype_Effect_Claw_Long1")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Claw_Long2", 1, L"Prototype_Effect_Claw_Long2")))
 		assert(false);
 #pragma endregion
 
@@ -180,11 +208,28 @@ HRESULT CEffect_Manager::Init_Effects()
 
 #pragma endregion
 
+#pragma region HitParticle
+	if (FAILED(Add_EffectGroups("Effect_Enemy_Hit_Particle", 5, L"Prototype_Effect_Enemy_Hit_Particle")))
+		assert(false);
+#pragma endregion
+
 #pragma region Blood
-	if (FAILED(Add_EffectGroups("Effect_Blood_L_TwinBladeKnight", 1, L"Prototype_Effect_Blood_L_TwinBladeKnight")))
+	if (FAILED(Add_EffectGroups("Effect_Blood_L_TwinBladeKnight", 3, L"Prototype_Effect_Blood_L_TwinBladeKnight")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Blood_R_TwinBladeKnight", 1, L"Prototype_Effect_Blood_R_TwinBladeKnight")))
+	if (FAILED(Add_EffectGroups("Effect_Blood_R_TwinBladeKnight", 3, L"Prototype_Effect_Blood_R_TwinBladeKnight")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_L_Vill_F", 3, L"Prototype_Effect_Blood_L_Vill_F")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_R_Vill_F", 3, L"Prototype_Effect_Blood_R_Vill_F")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_L_Vill_M", 3, L"Prototype_Effect_Blood_L_Vill_M")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_R_Vill_M", 3, L"Prototype_Effect_Blood_R_Vill_M")))
 		assert(false);
 
 #pragma endregion

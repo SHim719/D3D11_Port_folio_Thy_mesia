@@ -80,6 +80,9 @@ protected:
 	void Update_Colliders();
 
 protected:
+	_bool			m_bAlphaBlend = { false };
+
+protected:
 	_bool			m_bRimLight = { false };
 	_float			m_fRimTimeAcc = { 0.f };
 	_float4			m_vNowRimColor = {};

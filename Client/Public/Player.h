@@ -143,6 +143,10 @@ public:
 		m_pModel->Change_Animation(Corvus_ArchiveGetup);
 	}
 
+	_bool Is_CollEnemy() const {
+		return m_bCollEnemy;
+	}
+
 	void Toggle_LockOn(CTransform* pTargetTransform = nullptr);
 
 	void SetState_Parried();

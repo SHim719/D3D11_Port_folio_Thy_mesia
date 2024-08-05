@@ -10,6 +10,7 @@
 #include "ToolBoundingSphere.h"
 #include "ToolEffect_Particle.h"
 #include "ToolEffect_Mesh.h"
+#include "ToolEffect_Trail.h"
 
 #include "TestGround.h"
 #include "Free_Camera.h"
@@ -17,7 +18,6 @@
 
 #include "Player.h"
 #include "Weapon.h"
-#include "PlagueWeapon.h"
 
 #include "Odur.h"
 #include "Odur_Card.h"
@@ -64,9 +64,6 @@ HRESULT CLevel_Tool::Initialize()
 #ifdef AnimTool
 	if (FAILED(Ready_Player()))
 		return E_FAIL;
-	
-	if (FAILED(Ready_PlagueWeapon()))
-		return E_FAIL;
 
 	if (FAILED(Ready_Odur()))
 		return E_FAIL;
@@ -90,7 +87,7 @@ HRESULT CLevel_Tool::Initialize()
 		L"../../Resources/Effect/Diffuse/%d.png", 4));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Mask/Masking/%d.png", 25));
+		L"../../Resources/Effect/Mask/Masking/%d.png", 27));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
 		L"../../Resources/Effect/Noise/%d.png", 16));
@@ -140,7 +137,8 @@ HRESULT CLevel_Tool::Ready_ToolObjects()
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolBoundingSphere", CToolBoundingSphere::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolEffect_Particle", CToolEffect_Particle::Create(m_pDevice, m_pContext));
 	m_pGameInstance->Add_Prototype(L"Prototype_ToolEffect_Mesh", CToolEffect_Mesh::Create(m_pDevice, m_pContext));
-	
+	m_pGameInstance->Add_Prototype(L"Prototype_ToolEffect_Trail", CToolEffect_Trail::Create(m_pDevice, m_pContext));
+
 	return S_OK;
 }
 
@@ -164,25 +162,6 @@ HRESULT CLevel_Tool::Ready_Player()
 		"../../Resources/Models/Corvus/", "Corvus_Saber.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Player", CPlayer::Create(m_pDevice, m_pContext));
-
-	return S_OK;
-}
-
-HRESULT CLevel_Tool::Ready_PlagueWeapon()
-{
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_Axe", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Axe.dat"));
-
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_Hammer", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Hammer.dat"));
-
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_Spear", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Spear.dat"));
-
-	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_PW_TwinSword", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/PlagueWeapon/", "PW_TwinSword.dat"));
-
-	m_pGameInstance->Add_Prototype(L"Prototype_PlagueWeapon", CPlagueWeapon::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

@@ -7,7 +7,7 @@
 
 #include "ToolEffect_Mesh.h"
 #include "ToolEffect_Particle.h"
-//#include "Effect_Trail.h"
+#include "ToolEffect_Trail.h"
 
 CAnim_Tool::CAnim_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CToolState(pDevice, pContext)
@@ -658,6 +658,13 @@ void CAnim_Tool::Main_Window_EffectTool()
             ImGui::EndTabItem();
         }
 
+        if (ImGui::BeginTabItem("Effect Trail"))
+        {
+            m_eEffectMode = CGameEffect::TRAIL;
+            EffectTrail_Tool();
+            ImGui::EndTabItem();
+        }
+
         ImGui::EndTabBar();
     }
     
@@ -724,6 +731,13 @@ void CAnim_Tool::EffectMesh_Tool()
     Key_Input_EffectMeshTool();
     EffectMesh_Desc_Window();
     Models_Listbox();
+}
+
+void CAnim_Tool::EffectTrail_Tool()
+{
+    Key_Input_EffectTrail();
+    EffectTrail_Desc_Window();
+    SyncEffectTrail();
 }
 
 void CAnim_Tool::Check_Destroyed()
@@ -940,7 +954,9 @@ HRESULT CAnim_Tool::Load_EffectData()
             case CGameEffect::MESH:
                 pEffect = static_cast<CGameEffect*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Effect", L"Prototype_ToolEffect_Mesh"));
                 break;
-
+            case CGameEffect::TRAIL:
+                pEffect = static_cast<CGameEffect*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Effect", L"Prototype_ToolEffect_Trail"));
+                break;
             }
 
             if (FAILED(pEffect->Load_EffectData(fin)))
@@ -996,6 +1012,11 @@ void CAnim_Tool::Effect_Created_Window()
 
         case CGameEffect::MESH:
             pEffect = static_cast<CGameEffect*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Effect", L"Prototype_ToolEffect_Mesh"));
+            break;
+
+        case CGameEffect::TRAIL:
+            pEffect = static_cast<CGameEffect*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Effect", L"Prototype_ToolEffect_Trail"));
+            pEffect->Set_Active(false);
             break;
         }
         m_CreatedEffects.emplace_back(make_pair(string(m_szEffectName), pEffect));
@@ -1173,7 +1194,6 @@ void CAnim_Tool::EffectMesh_Desc_Window()
     }
 
     ImGui::Checkbox("Bloom?", &pEffect->m_bBloom);
-
 }
 
 void CAnim_Tool::Models_Listbox()
@@ -1196,13 +1216,10 @@ void CAnim_Tool::Models_Listbox()
             pEffect->m_pModel = m_LoadedMeshes[iModelIdx].second;
             wcscpy_s(pEffect->m_tMeshEffectInfo.szModelTag, Convert_StrToWStr(szModels[iModelIdx]).c_str());
         }
-
     }
 
     Safe_Delete_Array(szModels);
 }
-
-
 
 void CAnim_Tool::Open_EffectMeshesByFolder()
 {
@@ -1241,6 +1258,100 @@ CModel* CAnim_Tool::Get_Model(const string& strTag)
 
     return nullptr;
 }
+
+void CAnim_Tool::Key_Input_EffectTrail()
+{
+    if (KEY_DOWN(eKeyCode::RShift))
+    {
+
+    }
+        
+}
+
+void CAnim_Tool::EffectTrail_Desc_Window()
+{
+    if (m_iSelectIdx < 0 || m_CreatedEffects[m_iSelectIdx].second->m_eEffectType != CGameEffect::TRAIL)
+        return;
+
+    CToolEffect_Trail* pEffect = static_cast<CToolEffect_Trail*>(m_CreatedEffects[m_iSelectIdx].second);
+
+    ImGui::InputInt("Start Frame", &m_iTrailStartFrame);
+    ImGui::InputInt("End Frame", &m_iTrailEndFrame);
+
+    ImGui::Text("Attach Bone: "); ImGui::SameLine();
+    ImGui::Text(pEffect->m_szBoneName);
+    if (ImGui::Button("Clear"))
+        memset(pEffect->m_szBoneName, 0, MAX_PATH);
+
+
+    ImGui::InputInt("BaseTexIdx", &pEffect->m_iBaseTextureIdx);
+    if (ImGui::InputInt("MaskTexIdx", &pEffect->m_iMaskTextureIdx))
+        pEffect->Update_TextureFlag();
+    if (ImGui::InputInt("NoiseTexIdx", &pEffect->m_iNoiseTextureIdx))
+        pEffect->Update_TextureFlag();
+
+    ImGui::InputInt("PassIdx", &pEffect->m_iPassIdx);
+
+    ImGui::InputFloat4("Clip Color", (_float*)&pEffect->m_vClipColor);
+    ImGui::InputFloat4("Color", (_float*)&pEffect->m_vColor);
+
+    ImGui::Checkbox("Glow?", &pEffect->m_bGlow);
+    if (pEffect->m_bGlow)
+    {
+        ImGui::DragFloat4("Glow Color", (_float*)&pEffect->m_vGlowColor, 0.1f, 0.f, 1.f);
+        ImGui::DragFloat("Glow Intensity", (_float*)&pEffect->m_fGlowIntensity, 0.1f, 0.f, 99.f);
+    }
+
+    if (ImGui::InputFloat("Trail Update Time", (_float*)&pEffect->m_fTrailUpdateTime))
+        pEffect->m_fTrailUpdateAcc = 0.f;
+
+    if (ImGui::InputFloat3("Start Pos", (_float*)&pEffect->m_vStartPos))
+        pEffect->Update_Buffer();
+
+    if (ImGui::InputFloat3("End Pos", (_float*)&pEffect->m_vEndPos))
+        pEffect->Update_Buffer();
+
+    if (ImGui::InputInt("Max Vertex Count", (_int*)&pEffect->m_iMaxVertexCount))
+        pEffect->Update_Buffer();
+
+    if (ImGui::InputInt("CatMullRom Count", (_int*)&pEffect->m_iCatmullRomCount))
+        pEffect->Update_Buffer();
+
+    if (ImGui::InputInt("Remove Count", (_int*)&pEffect->m_iRemoveCount))
+        pEffect->Update_Buffer();
+}
+
+void CAnim_Tool::SyncEffectTrail()
+{
+    if (false == m_bSyncAnimation || m_iSelectIdx < 0 || nullptr == m_pAnimObj || !m_pAnimObj->Get_Model()->Is_Playing())
+        return;
+
+    _uint iCurAnimIdx = m_pAnimObj->Get_Model()->Get_CurrentAnimIndex();
+
+    auto anims = m_pAnimObj->Get_Model()->Get_Animations();
+
+    for (size_t i = 0; i < m_CreatedEffects.size(); ++i)
+    {
+        if (m_CreatedEffects[i].second->m_eEffectType != CGameEffect::TRAIL)
+            continue;
+
+        CToolEffect_Trail* pTrailEffect = static_cast<CToolEffect_Trail*>(m_CreatedEffects[i].second);
+        
+        _int iNowKeyFrame = (_int)anims[iCurAnimIdx]->Get_NowKeyFrame();
+   
+       // pTrailEffect->Set_Active(true);
+        if (m_iTrailStartFrame >= iNowKeyFrame && false == m_CreatedEffects[i].second->Is_Active())
+        {
+            pTrailEffect->Set_Active(true);
+            pTrailEffect->Reset_Points();
+        }
+           
+        else if (m_iTrailEndFrame < iNowKeyFrame && true == m_CreatedEffects[i].second->Is_Active())
+            pTrailEffect->Set_Active(false);
+    }
+
+}
+
 
 void CAnim_Tool::Reset_Transform(_fmatrix WorldMatrix)
 {
@@ -1289,7 +1400,7 @@ void CAnim_Tool::Transform_Gizmo()
 {
     m_pGizmoObject = nullptr;
 
-    if (m_iSelectIdx == -1)
+    if (m_iSelectIdx == -1 || m_CreatedEffects[m_iSelectIdx].second->m_eEffectType == CGameEffect::TRAIL)
         return;
 
     ImGuiIO& io = ImGui::GetIO(); (void)io;

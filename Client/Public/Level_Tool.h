@@ -23,7 +23,6 @@ private:
 	HRESULT Ready_ToolObjects();
 	HRESULT Ready_Camera();
 	HRESULT Ready_Player();
-	HRESULT Ready_PlagueWeapon();
 	HRESULT Ready_Odur();
 	HRESULT Ready_Villager_F();
 	HRESULT Ready_Villager_M();

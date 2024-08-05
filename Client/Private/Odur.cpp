@@ -49,6 +49,9 @@ HRESULT COdur::Initialize(void* pArg)
 	Change_State((_uint)OdurState::State_Idle);
 	m_pModel->Set_AnimPlay();
 
+	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
+	m_tEffectSpawnDesc.pParentModel = m_pModel;
+
 	CUTSCENEMGR->Add_Actor(this);
 
 	m_bNoRender = true;
@@ -72,8 +75,6 @@ void COdur::Tick(_float fTimeDelta)
 		Change_State((_uint)OdurState::State_ThrowCard);
 		//Change_State((_uint)OdurState::State_ExecutionDisappear);
 	}
-		
-	
 		
 	if (m_bLookTarget)
 	{
@@ -122,7 +123,7 @@ HRESULT COdur::Render()
 
 	_uint iPassIdx = 0;
 
-	if (m_fAlpha <= 0.9f)
+	if (m_fAlpha <= 0.2f)
 	{
 		if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 			return E_FAIL;
@@ -185,6 +186,8 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));	
 	m_pModel->Bind_Func("Odur_Execute_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.2f));	
 	m_pModel->Bind_Func("Reset_Timer", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 1.f));
+	m_pModel->Bind_Func("Enable_WeaponTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[CANE], true));
+	m_pModel->Bind_Func("Disable_WeaponTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[CANE], false));
 }
 
 void COdur::Swap_Bone()
@@ -312,7 +315,9 @@ HRESULT COdur::Ready_Weapons()
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Cane";
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
-	WeaponDesc.bAlphaBlend = true;
+	WeaponDesc.bAlphaBlend = false;
+	WeaponDesc.bTrail = true;
+	WeaponDesc.wstrTrailTag = L"Prototype_Trail_Odur_Cane_Trail";
 
 	m_Weapons[CANE] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[CANE])

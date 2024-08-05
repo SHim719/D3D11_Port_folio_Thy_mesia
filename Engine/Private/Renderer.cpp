@@ -306,10 +306,10 @@ HRESULT CRenderer::Render_Effect()
 
 	Draw_Objects(RENDER_EFFECT_NONBLEND);
 
-	m_RenderObjects[RENDERGROUP::RENDER_EFFECT_BLEND].sort([](CGameObject* pSrc, CGameObject* pDst)
-		{
-			return pSrc->Get_CamDistance() > pDst->Get_CamDistance();
-		});
+	//m_RenderObjects[RENDERGROUP::RENDER_EFFECT_BLEND].sort([](CGameObject* pSrc, CGameObject* pDst)
+	//	{
+	//		return pSrc->Get_CamDistance() > pDst->Get_CamDistance();
+	//	});
 
 	Draw_Objects(RENDER_EFFECT_BLEND);
 

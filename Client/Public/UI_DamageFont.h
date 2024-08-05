@@ -25,8 +25,6 @@ private:
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
-	HRESULT OnEnter_Layer(void* pArg)	override;
-
 private:
 	string		m_strDamage = "";
 

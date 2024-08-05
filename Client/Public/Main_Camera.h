@@ -34,6 +34,8 @@ protected:
 
 public:
 	HRESULT Initialize(void* pArg)			override;
+	void Init_CameraShakingDescs();
+
 	void OnActive()							override;
 
 	void PriorityTick(_float fTimeDelta)	override;
@@ -61,18 +63,20 @@ private:
 	_float				m_fFollowingSpeed = 4.5f;
 	_float				m_fLockonFollowingSpeed = 4.f;
 
-	SHAKINGDESC			m_tShakingDesc = {};
-	_float4				m_vOriginPos = {};
-	_float4				m_vShakingOffset = {};
-	_bool				m_bShaking = { false };
+private:
+	unordered_map<string, SHAKINGDESC>	m_ShakingDescs;
+	SHAKINGDESC							m_tShakingDesc = {};
+	_float4								m_vShakingOffset = {};
+	_bool								m_bShaking = { false };
 
+private:
 	DELTAFOVYDESC		m_tDeltaFovYDesc = {};
-	_bool				m_bDeltaFovY = { false };
-	_bool				m_bIncreaseFovY = { true };
-	_float				m_fOriginFov = { };
+	_bool		 		m_bDeltaFovY = { false };
+	_bool		 		m_bIncreaseFovY = { true };
+	_float		 		m_fOriginFov = { };
 
+private:
 	class CLockOnCurve* m_pLockOnCurve = { nullptr };
-
 
 public:
 	void Set_Player(CGameObject* pPlayer);
@@ -85,7 +89,7 @@ public:
 	void SetState_Cutscene(const ATTACHDESC& Desc);
 	void Reset_CutsceneState();
 
-	void Add_ShakingDesc(const SHAKINGDESC& ShakingDesc);
+	void Play_CameraShake(const string& strTag);
 	void Add_DeltaFovYDesc(const DELTAFOVYDESC& DeltaFovYDesc);
 
 private:
@@ -101,6 +105,7 @@ private:
 
 	void Rotate_By_Mouse(_float fTimeDelta);
 	void Follow_Target(_float fTimeDelta);
+	CGameObject* Find_LockOnTarget();
 	CBone* Find_TargetBone(CModel* pModel);
 	void Update_LockOnCurveDesc();
 	

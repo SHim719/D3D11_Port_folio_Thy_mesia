@@ -54,6 +54,9 @@ HRESULT CVillager_M::Initialize(void* pArg)
 
 	m_bLookTarget = false;
 
+	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
+	m_tEffectSpawnDesc.pParentModel = m_pModel;
+
 	m_fCullingRadius = 1.5f;
 	XMStoreFloat4(&m_vCullingOffset, XMVectorSet(0.f, 1.2f, 0.f, 0.f));
 

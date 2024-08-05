@@ -33,7 +33,6 @@ private:
 	HRESULT Ready_Camera();
 	HRESULT Ready_Weapon();
 	HRESULT Ready_Player();
-	HRESULT Ready_PlagueWeapon();
 
 	HRESULT Ready_Odur();
 	HRESULT Ready_Villager_F();
@@ -50,6 +49,7 @@ private:
 	HRESULT Ready_Effects();
 	HRESULT Ready_EffectResources();
 	HRESULT Ready_EffectGroup();
+	HRESULT Ready_EffectTrail();
 
 	HRESULT Ready_Etc();
 

@@ -94,6 +94,7 @@ private:
 	void Effect_Tool();
 	void Particle_Tool();
 	void EffectMesh_Tool();
+	void EffectTrail_Tool();
 
 	void Check_Destroyed();
 
@@ -129,6 +130,16 @@ private:
 	void Open_EffectMeshesByFolder();
 	
 	CModel* Get_Model(const string& strTag);
+
+private:
+	void Key_Input_EffectTrail();
+	void EffectTrail_Desc_Window();
+	void SyncEffectTrail();
+
+private:
+	_int	 m_iTrailStartFrame = { 0 };
+	_int	 m_iTrailEndFrame = { 0 };
+
 private:
 #pragma region Transform_View
 	_float3 m_vPosition = {};

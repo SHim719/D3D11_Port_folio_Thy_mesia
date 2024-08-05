@@ -3,7 +3,7 @@
 #include "Player_States.h"
 #include "PlayerStats.h"
 
-#include "PlagueWeapon.h"
+#include "Weapon.h"
 
 #include "Enemy.h"
 
@@ -53,7 +53,6 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Bind_KeyFrames();
 	Bind_KeyFrameEffects();
-
 
 	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
 	m_tEffectSpawnDesc.pParentModel = m_pModel;
@@ -223,7 +222,6 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Inactive_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, false));
 	m_pModel->Bind_Func("Healing", bind(&CPlayer::Healing, this));
 	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, 1.5f));
-
 }
 
 void CPlayer::Bind_KeyFrameEffects()
@@ -233,7 +231,7 @@ void CPlayer::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_LAttack3", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack3", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_LAttack4", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_LAttack4", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Claw_Long1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Claw_Long1", &m_tEffectSpawnDesc));
-	//m_pModel->Bind_Func("Effect_Claw_Long2", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Claw_Long2", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Claw_Long2", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Claw_Long2", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Axe_StartParticle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_StartParticle", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Axe_Slash", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_Slash", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Axe_Impact", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Axe_Impact", &m_tEffectSpawnDesc));
@@ -510,7 +508,7 @@ _int CPlayer::Take_Damage(const ATTACKDESC& AttackDesc)
 	DamageFontDesc.strDamage = to_string(AttackDesc.iDamage);
 	XMStoreFloat4(&DamageFontDesc.vWorldPosition, JoMath::Get_BoneWorldPos(m_pModel->Get_Bone("Bip001-Head"), m_pTransform->Get_WorldMatrix()));
 
-	UIMGR->Active_UI("UI_DamageFont", &DamageFontDesc);
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"UI", L"Prototype_DamageFont", &DamageFontDesc);
 
 	return m_pStats->Increase_Hp(-AttackDesc.iDamage);
 }
@@ -641,6 +639,7 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_PW_Hammer] = CPlayerState_PW_Hammer::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_Spear] = CPlayerState_PW_Spear::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_PW_TwinBlade] = CPlayerState_PW_TwinBlade::Create(m_pDevice, m_pContext, this);
+
 	return S_OK;
 }
 
@@ -673,12 +672,12 @@ HRESULT CPlayer::Ready_Weapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
 	WeaponDesc.pColliderDesc = &ColliderDesc;
+
 	m_Weapons[SABER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[SABER])
 		return E_FAIL;
 
 	// Claw »ý¼º
-
 	ColliderDesc.eType = CCollider::SPHERE;
 	ColliderDesc.vCenter = { 0.2f, 0.f, 0.f };
 	ColliderDesc.vSize = { 1.f, 0.f, 0.1f };
@@ -722,7 +721,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
 	
-	m_Weapons[PW_AXE] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_AXE] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_AXE])
 		return E_FAIL;
 
@@ -733,7 +732,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Hammer";
 
-	m_Weapons[PW_HAMMER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_HAMMER] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_HAMMER])
 		return E_FAIL;
 	
@@ -745,7 +744,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Spear";
 
-	m_Weapons[PW_SPEAR] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_SPEAR] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_SPEAR])
 		return E_FAIL;
 
@@ -757,7 +756,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
 	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_TwinBlade";
 
-	m_Weapons[PW_TWINBLADE_L] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_TWINBLADE_L] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_TWINBLADE_L])
 		return E_FAIL;
 
@@ -765,7 +764,7 @@ HRESULT CPlayer::Ready_PlagueWeapons()
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
 
-	m_Weapons[PW_TWINBLADE_R] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_PlagueWeapon", &WeaponDesc));
+	m_Weapons[PW_TWINBLADE_R] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[PW_TWINBLADE_R])
 		return E_FAIL;
 

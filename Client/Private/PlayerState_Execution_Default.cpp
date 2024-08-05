@@ -25,6 +25,13 @@ void CPlayerState_Execution_Default::OnState_Start(void* pArg)
 	m_pExecutionEnemy = (CEnemy*)pArg;
 	m_pExecutionEnemy->Set_Active_Colliders(false);
 
+	RADIALBLUR_DESCS RadialDescs{};
+	RadialDescs.fBlurRadius = 10.f;
+	RadialDescs.fBlurStrength = 1.f;
+
+	m_pGameInstance->Active_RadialBlur(RadialDescs);
+	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
+
 	m_pModel->Change_Animation(Corvus_VS_LightExecute01L + m_iExecutionCount % 2);
 }
 
@@ -59,6 +66,8 @@ void CPlayerState_Execution_Default::Late_Update(_float fTimeDelta)
 
 void CPlayerState_Execution_Default::OnState_End()
 {
+	m_pGameInstance->Inactive_RadialBlur(0.5f);
+
 	m_iExecutionCount = 0;
 }
 

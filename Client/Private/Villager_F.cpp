@@ -49,6 +49,9 @@ HRESULT CVillager_F::Initialize(void* pArg)
 
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"PerceptionBounding", L"Prototype_PerceptionBounding", this);
 
+	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
+	m_tEffectSpawnDesc.pParentModel = m_pModel;
+
 	m_bLookTarget = false;
 
 	m_fCullingRadius = 1.5f;

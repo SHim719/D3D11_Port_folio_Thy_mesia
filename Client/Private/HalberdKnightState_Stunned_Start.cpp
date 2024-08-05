@@ -17,6 +17,7 @@ HRESULT CHalberdKnightState_Stunned_Start::Initialize(void* pArg)
 
 void CHalberdKnightState_Stunned_Start::OnState_Start(void* pArg)
 {
+	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pHalberdKnight->Set_LookTarget(false);
 
 	m_pModel->Change_Animation(HArmorLV1_Halberds_HurtStunStart);

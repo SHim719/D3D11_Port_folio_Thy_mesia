@@ -299,20 +299,6 @@ void CGameInstance::Insert_GameObject(_uint iLevelIndex, const wstring& strLayer
 }
 
 
-CGameObject* CGameInstance::Find_Target(_fvector vPlayerPos)
-{
-	CLayer* pEnemyLayer = m_pObject_Manager->Find_Layer(Get_CurrentLevelID(), L"Enemy");
-
-	if (nullptr == pEnemyLayer)
-		return nullptr;
-
-	_matrix CameraWorldMatrix = m_pPipeLine->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
-	CameraWorldMatrix = XMMatrixInverse(nullptr, CameraWorldMatrix);
-
-	return pEnemyLayer->Find_Target(vPlayerPos, CameraWorldMatrix);
-}
-#pragma endregion
-
 #pragma region COMPONENT_MANAGER
 HRESULT CGameInstance::Add_Prototype(_uint iLevelIndex, const wstring & strPrototypeTag, CComponent * pPrototype)
 {

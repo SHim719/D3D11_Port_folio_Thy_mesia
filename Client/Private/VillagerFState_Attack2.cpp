@@ -26,7 +26,8 @@ void CVillagerFState_Attack2::OnState_Start(void* pArg)
 
 void CVillagerFState_Attack2::Update(_float fTimeDelta)
 {
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	if (!m_pVillager_F->Is_CollPlayer())
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 void CVillagerFState_Attack2::Late_Update(_float fTimeDelta)

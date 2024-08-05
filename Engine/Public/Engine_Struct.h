@@ -20,6 +20,7 @@ namespace Engine
 		bool			isWindowed;
 	}GRAPHIC_DESC;
 
+
 	typedef struct
 	{
 		enum TYPE { TYPE_DIRECTIONAL, TYPE_POINT, TYPE_SPOT, TYPE_END };
@@ -39,6 +40,15 @@ namespace Engine
 		XMFLOAT3		vVelocity;
 		float			fLifeTime;
 	} PARTICLE_DESC;
+
+	typedef ENGINE_DLL struct tagTrailDesc
+	{
+		_float3		vStartPos;
+		_float3		vEndPos;
+		_uint		iMaxVertexCount;
+		_uint		iCatmullRomCount;
+		_uint		iRemoveCount;
+	} TRAIL_DESC;
 
 	typedef struct tagLineIndices16
 	{

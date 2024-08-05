@@ -62,8 +62,6 @@ public:
 	void Clear_Layer(_uint iLevelIndex, const wstring& strLayerTag);
 
 	void Insert_GameObject(_uint iLevelIndex, const wstring& strLayerTag, CGameObject* pObj);
-
-	CGameObject* Find_Target(_fvector vPlayerPos);
 #pragma endregion
 
 #pragma region COMPONENT_MANAGER

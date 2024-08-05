@@ -169,6 +169,7 @@
     <ClInclude Include="..\Public\Aisemy.h" />
     <ClInclude Include="..\Public\Anim_Tool.h" />
     <ClInclude Include="..\Public\Archive_Chair.h" />
+    <ClInclude Include="..\Public\Attackable.h" />
     <ClInclude Include="..\Public\Background.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\ClientLevel.h" />
@@ -182,8 +183,10 @@
     <ClInclude Include="..\Public\Cutscene_Manager.h" />
     <ClInclude Include="..\Public\Door.h" />
     <ClInclude Include="..\Public\Effect_Group.h" />
+    <ClInclude Include="..\Public\Effect_Hit.h" />
     <ClInclude Include="..\Public\Effect_Manager.h" />
     <ClInclude Include="..\Public\Effect_Particle.h" />
+    <ClInclude Include="..\Public\Effect_Trail.h" />
     <ClInclude Include="..\Public\GameEffect.h" />
     <ClInclude Include="..\Public\Effect_Mesh.h" />
     <ClInclude Include="..\Public\Enemy.h" />
@@ -260,7 +263,6 @@
     <ClInclude Include="..\Public\Odur_Enums.h" />
     <ClInclude Include="..\Public\Odur_States.h" />
     <ClInclude Include="..\Public\PerceptionBounding.h" />
-    <ClInclude Include="..\Public\PlagueWeapon.h" />
     <ClInclude Include="..\Public\Player.h" />
     <ClInclude Include="..\Public\PlayerState_ChargeComplete.h" />
     <ClInclude Include="..\Public\PlayerState_ChargeLoop.h" />
@@ -308,6 +310,7 @@
     <ClInclude Include="..\Public\ToolColliderObj.h" />
     <ClInclude Include="..\Public\ToolEffect_Mesh.h" />
     <ClInclude Include="..\Public\ToolEffect_Particle.h" />
+    <ClInclude Include="..\Public\ToolEffect_Trail.h" />
     <ClInclude Include="..\Public\ToolMapObj.h" />
     <ClInclude Include="..\Public\ToolMapObjInstance.h" />
     <ClInclude Include="..\Public\ToolNaviCell.h" />
@@ -382,6 +385,7 @@
     <ClCompile Include="..\Private\Aisemy.cpp" />
     <ClCompile Include="..\Private\Anim_Tool.cpp" />
     <ClCompile Include="..\Private\Archive_Chair.cpp" />
+    <ClCompile Include="..\Private\Attackable.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\ClientLevel.cpp" />
@@ -390,8 +394,10 @@
     <ClCompile Include="..\Private\Cutscene_Manager.cpp" />
     <ClCompile Include="..\Private\Door.cpp" />
     <ClCompile Include="..\Private\Effect_Group.cpp" />
+    <ClCompile Include="..\Private\Effect_Hit.cpp" />
     <ClCompile Include="..\Private\Effect_Manager.cpp" />
     <ClCompile Include="..\Private\Effect_Particle.cpp" />
+    <ClCompile Include="..\Private\Effect_Trail.cpp" />
     <ClCompile Include="..\Private\GameEffect.cpp" />
     <ClCompile Include="..\Private\Effect_Mesh.cpp" />
     <ClCompile Include="..\Private\Enemy.cpp" />
@@ -460,7 +466,6 @@
     <ClCompile Include="..\Private\Odur_Card.cpp" />
     <ClCompile Include="..\Private\Odur_Card_Cutscene.cpp" />
     <ClCompile Include="..\Private\PerceptionBounding.cpp" />
-    <ClCompile Include="..\Private\PlagueWeapon.cpp" />
     <ClCompile Include="..\Private\Player.cpp" />
     <ClCompile Include="..\Private\PlayerState_ChargeComplete.cpp" />
     <ClCompile Include="..\Private\PlayerState_ChargeLoop.cpp" />
@@ -506,6 +511,7 @@
     <ClCompile Include="..\Private\ToolColliderObj.cpp" />
     <ClCompile Include="..\Private\ToolEffect_Mesh.cpp" />
     <ClCompile Include="..\Private\ToolEffect_Particle.cpp" />
+    <ClCompile Include="..\Private\ToolEffect_Trail.cpp" />
     <ClCompile Include="..\Private\ToolMapObj.cpp" />
     <ClCompile Include="..\Private\ToolMapObjInstance.cpp" />
     <ClCompile Include="..\Private\ToolNaviCell.cpp" />
@@ -585,6 +591,14 @@
     <None Include="..\Bin\ShaderFiles\Shader_PostProcess_Defines.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_EffectTrail.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_Glow.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

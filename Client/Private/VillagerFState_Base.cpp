@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 
+#include "Main_Camera.h"
+
 CVillagerFState_Base::CVillagerFState_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CState_Base(pDevice, pContext)
 {
@@ -41,6 +43,13 @@ void CVillagerFState_Base::OnHit(const ATTACKDESC& AttackDesc)
 		m_pVillager_F->Change_State((_uint)VillagerF_State::State_Stunned_Start);
 	else if (!m_pVillager_F->Is_Stanced())
 		m_pVillager_F->Change_State((_uint)VillagerF_State::State_Hit);
+
+	_int iRandNum = JoRandom::Random_Int(0, 1);
+	string strBloodEffect = iRandNum == 0 ? "Effect_Blood_R_Vill_F" : "Effect_Blood_L_Vill_F";
+ 	EFFECTMGR->Active_Effect(strBloodEffect, &m_pVillager_F->Get_EffectSpawnDesc());
+	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pVillager_F->Get_EffectSpawnDesc());
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
 }
 
 void CVillagerFState_Base::Decide_State()

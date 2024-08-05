@@ -18,6 +18,7 @@ namespace Client
 		SEMIKNOCKBACK,
 		KNOCKBACK,
 		KNOCKDOWN,
+		AIR,
 		BIG_HIT,
 		VERY_BIG_HIT,
 		ENEMYATTACKTYPE_END,
@@ -36,10 +37,10 @@ namespace Client
 		class CCharacter*	pAttacker = nullptr;
 		ENEMYATTACKTYPE		eEnemyAttackType;
 		PLAYERATTACKTYPE	ePlayerAttackType = ATTACK_NORMAL;
-		_int				iDamage = 0;
+		wstring				wstrShakingTag = L"";
 		_int				iPlagueDamage = 0;
+		_int				iDamage = 0;
 	}ATTACKDESC;
-
 
 	typedef struct tagEnemyDesc
 	{
@@ -217,4 +218,5 @@ namespace Client
 		float			fDuration;
 		_bool			bColorLerp;
 	} RIMLIGHTDESC;
+
 }

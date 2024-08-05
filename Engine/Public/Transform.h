@@ -117,7 +117,6 @@ public:
 	void LookAt2D(_fvector vAt);
 	void LookTo(_fvector vTo);
 
-
 	void Set_Speed(_float fSpeed) { m_TransformDesc.fSpeedPerSec = fSpeed; }
 	_float Get_Speed() const { return m_TransformDesc.fSpeedPerSec; }
 

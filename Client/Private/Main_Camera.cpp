@@ -11,6 +11,8 @@
 
 #include "LockOnCurve.h"
 
+#include "Layer.h"
+
 CMain_Camera::CMain_Camera(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCamera(pDevice, pContext)
 {
@@ -27,6 +29,8 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg))) 
 		return E_FAIL;
 
+	Init_CameraShakingDescs();
+
 	_matrix OffsetMatrix = XMMatrixRotationX(-XM_PIDIV2);
 	OffsetMatrix *= XMMatrixRotationAxis(OffsetMatrix.r[1], XM_PIDIV2);
 
@@ -37,6 +41,25 @@ HRESULT CMain_Camera::Initialize(void* pArg)
 	m_pLockOnCurve = static_cast<CLockOnCurve*>(m_pGameInstance->Clone_GameObject(L"Prototype_LockOnCurve"));
 
 	return S_OK;
+}
+
+void CMain_Camera::Init_CameraShakingDescs()
+{
+	CMain_Camera::SHAKINGDESC ShakingDesc;
+	ShakingDesc.fShakeTime = 0.1f;
+	ShakingDesc.fShakingForce = 0.1f;
+
+	m_ShakingDescs.emplace("Shaking_Hit", ShakingDesc);
+
+	ShakingDesc.fShakeTime = 0.1f;
+	ShakingDesc.fShakingForce = 0.4f;
+	m_ShakingDescs.emplace("Shaking_Execution", ShakingDesc);
+
+
+	ShakingDesc.fShakeTime = 0.15f;
+	ShakingDesc.fShakingForce = 0.2f;
+	m_ShakingDescs.emplace("Shaking_Claw_Long", ShakingDesc);
+
 }
 
 void CMain_Camera::OnActive()
@@ -129,7 +152,7 @@ void CMain_Camera::SetState_Default()
 
 void CMain_Camera::SetState_LockOn()
 {
-	CGameObject* pTarget = m_pGameInstance->Find_Target(m_pPlayerTransform->Get_Position());
+	CGameObject* pTarget = Find_LockOnTarget();
 	if (nullptr == pTarget)
 		return;
 
@@ -204,11 +227,13 @@ void CMain_Camera::Reset_CutsceneState()
 	m_eState = DEFAULT;
 }
 
-void CMain_Camera::Add_ShakingDesc(const SHAKINGDESC& ShakingDesc)
+void CMain_Camera::Play_CameraShake(const string& strTag)
 {
-	XMStoreFloat4(&m_vOriginPos, m_pTransform->Get_Position());
+	auto it = m_ShakingDescs.find(strTag);
+	if (m_ShakingDescs.end() == it)
+		return;
 
-	m_tShakingDesc = ShakingDesc;
+	m_tShakingDesc = it->second;
 	m_bShaking = true;
 }
 
@@ -240,7 +265,7 @@ void CMain_Camera::Update_LockOnCurveDesc()
 	CLockOnCurve::CURVE_DESCS CurveDescs;
 
 	CALC_TF->Set_WorldMatrix(m_pPlayerTransform->Get_WorldMatrix());
-	CALC_TF->Add_Position(XMVectorSet(-0.2f, 1.2f, 0.f, 0.f), true);
+	CALC_TF->Add_Position(XMVectorSet(-0.1f, 1.2f, 0.f, 0.f), true);
 
 	CurveDescs.PlayerWorldMatrix = CALC_TF->Get_WorldFloat4x4_TP();
 	
@@ -298,7 +323,6 @@ void CMain_Camera::Shaking(_float fTimeDelta)
 
 	if (m_tShakingDesc.fShakeTime > 0.f)
 	{
-		_vector vCamPos = XMLoadFloat4(&m_vOriginPos);
 		_vector vShakeOffset = 
 			XMVectorSet(JoRandom::Random_Float(0.f, 1.f), JoRandom::Random_Float(0.f, 1.f), JoRandom::Random_Float(0.f, 1.f), 0.f)
 			* m_tShakingDesc.fShakingForce;
@@ -387,6 +411,47 @@ void CMain_Camera::Follow_Target(_float fTimeDelta)
 	_vector vCameraPos = vLerpedTargetPos + vCameraOffset + XMLoadFloat4(&m_vShakingOffset);
 
 	m_pTransform->Set_Position(XMVectorSetW(vCameraPos, 1.f));
+}
+
+CGameObject* CMain_Camera::Find_LockOnTarget()
+{
+	CLayer* pEnemyLayer = m_pGameInstance->Find_Layer(GET_CURLEVEL, L"Enemy");
+
+	if (nullptr == pEnemyLayer)
+		return nullptr;
+		
+	_float fMinDist = 999999.f;
+	CGameObject* pTarget = nullptr;
+
+	_vector vCameraLook = m_pTransform->Get_GroundLook();
+	_vector vCameraPos = m_pTransform->Get_Position();
+	_vector vPlayerPos = m_pPlayerTransform->Get_Position();
+
+	auto& GameObjects = pEnemyLayer->Get_GameObjects();
+	
+	for (auto& pGameObject : GameObjects)
+	{
+		_vector vTargetPos = pGameObject->Get_Transform()->Get_Position();
+
+		_float fDist = XMVector3Length(vTargetPos - vPlayerPos).m128_f32[0];
+
+		if (fDist > 10.f)
+			continue;
+
+		if (fDist < fMinDist)
+		{
+			// 각도 체크(카메라와 타겟이 이루는 각이 둔각일 경우 락온하지않는다.)
+			_vector vCameraToTarget = XMVector3Normalize((XMVectorSetY(vTargetPos - vCameraPos, 0.f)));
+
+			if (XMVector3Dot(vCameraLook, vCameraToTarget).m128_f32[0] <= 0.f)
+				continue;
+
+			fMinDist = fDist;
+			pTarget = pGameObject;
+		}
+	}
+
+	return pTarget;
 }
 
 CMain_Camera* CMain_Camera::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

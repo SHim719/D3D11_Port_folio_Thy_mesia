@@ -25,6 +25,8 @@ public:
 		_bool						bAlphaBlend = false;
 		CGameObject*				pOwner = nullptr;
 		CCollider::COLLIDERDESC*	pColliderDesc = nullptr;
+		_bool						bTrail = false;
+		wstring						wstrTrailTag = L"";
 	} WEAPONDESC;
 
 protected:
@@ -40,9 +42,9 @@ public:
 	HRESULT Render()					override;
 
 protected:
-	CGameObject*	m_pOwner = { nullptr };
-	CBone*			m_pSocketBone = { nullptr };
-	CTransform*		m_pParentTransform = { nullptr };
+	CGameObject* m_pOwner = { nullptr };
+	CBone* m_pSocketBone = { nullptr };
+	CTransform* m_pParentTransform = { nullptr };
 
 public:
 	void Swap_SocketBone(CBone*& pBone) {
@@ -54,31 +56,36 @@ public:
 	}
 
 protected:
-	ATTACKDESC		m_AttackDesc;
+	CAttackable*	m_pAttackable = { nullptr };
 
 public:
-	void Set_AttackDesc(const ATTACKDESC& Desc) {
-		m_AttackDesc = Desc;
+	void Set_AttackDesc(const ATTACKDESC& AtkDesc) {
+		m_pAttackable->Set_AttackDesc(AtkDesc);
 	}
 
 	const ATTACKDESC& Get_AttackDesc() const {
-		return m_AttackDesc;
+		return m_pAttackable->Get_AttackDesc();
 	}
 
 protected:
 	_bool			m_bAlphaBlend = { false };
 	_float			m_fAlpha = { 1.f };
 
-	
 public:
 	void Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
 
+protected:
+	_bool					m_bTrailActivated = { false };
+	class CEffect_Trail*	m_pEffect_Trail = { nullptr };
+
+public:
+	void Set_Active_Trail(_bool bActive);
+	
 
 protected:
-	CShader*	m_pShader = nullptr;
-	CModel*		m_pModel = nullptr;
-	CCollider*	m_pCollider = nullptr;
-
+	CShader*			m_pShader = { nullptr };
+	CModel*				m_pModel = { nullptr };
+	CCollider*			m_pCollider = { nullptr };
 
 public:
 	void Set_Active_Collider(_bool bActive) {
@@ -95,8 +102,8 @@ protected:
 
 public:
 	static CWeapon* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
-	virtual CGameObject* Clone(void* pArg);
-	virtual void Free() override;
+	CGameObject* Clone(void* pArg)	override;
+	void Free() override;
 };
 
 END

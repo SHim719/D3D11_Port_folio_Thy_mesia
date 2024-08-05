@@ -17,6 +17,7 @@ HRESULT CHalberdKnightState_Death::Initialize(void* pArg)
 
 void CHalberdKnightState_Death::OnState_Start(void* pArg)
 {
+	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pHalberdKnight->Set_LookTarget(false);
 	m_pHalberdKnight->Set_Active_Colliders(false);
 	m_pHalberdKnight->InActive_StunnedMark();

@@ -2,6 +2,8 @@
 
 #include "EnemyStats.h"
 
+#include "Main_Camera.h"
+
 CVillagerFState_Death::CVillagerFState_Death(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVillagerFState_Base(pDevice, pContext)
 {
@@ -17,9 +19,12 @@ HRESULT CVillagerFState_Death::Initialize(void* pArg)
 
 void CVillagerFState_Death::OnState_Start(void* pArg)
 {
+	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pVillager_F->Set_LookTarget(false);
 	m_pVillager_F->Set_Active_Colliders(false);
 	m_pVillager_F->InActive_StunnedMark();
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");
 
 	m_pModel->Change_Animation(LV1Villager_F_Die01, 0.1f, false);
 }

@@ -4,20 +4,11 @@
     <Filter Include="04. UI">
       <UniqueIdentifier>{05e2490f-83af-4688-86c7-d0def919f5ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels">
-      <UniqueIdentifier>{2fd56b7c-25e0-41fb-978b-b8be6be0a2aa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="00. MainApp">
       <UniqueIdentifier>{edc3c5d1-ea6b-4e29-b34d-540396673e0f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\00. Loading">
-      <UniqueIdentifier>{415cf11b-c036-4b34-a51b-7fe799dac4c8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="97. Managers">
       <UniqueIdentifier>{917e7d2a-74dc-4341-a9d3-99dd0cb1e949}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\00. Loading\Loader">
-      <UniqueIdentifier>{d7a516a4-2521-4980-a217-4807612ec8bf}</UniqueIdentifier>
     </Filter>
     <Filter Include="98. Default">
       <UniqueIdentifier>{9a853736-99fd-4100-b927-5433508f68ad}</UniqueIdentifier>
@@ -55,9 +46,6 @@
     <Filter Include="04. UI\Manager">
       <UniqueIdentifier>{49b2b2bd-e722-453c-a364-a1e51d4201ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Levels\01. Title">
-      <UniqueIdentifier>{ed0f00ae-1f6c-491f-aba4-8aa13c98d29f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05. Interface">
       <UniqueIdentifier>{4bbf10dd-1327-4520-b373-5bcb6768e3af}</UniqueIdentifier>
     </Filter>
@@ -93,18 +81,6 @@
     </Filter>
     <Filter Include="04. UI\InGameUI\06. UI_StunnedMark">
       <UniqueIdentifier>{b0fb57d9-67f0-4e22-9b4c-065174a48161}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\02. Stage1">
-      <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\99. Tool">
-      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\03. Stage_Odur">
-      <UniqueIdentifier>{fa72e65b-2a3d-4ef5-a873-3a2e88a51f98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01. Levels\04. Stage_Urd">
-      <UniqueIdentifier>{0d4346eb-41ee-4875-b8d3-17030437ad7d}</UniqueIdentifier>
     </Filter>
     <Filter Include="04. UI\InGameUI\07. UI_SkillIcon">
       <UniqueIdentifier>{2c865bca-0373-45d3-8d9e-a266dc2d7e1b}</UniqueIdentifier>
@@ -685,9 +661,6 @@
     <Filter Include="02. GameObjects\03. Weapon">
       <UniqueIdentifier>{e1821772-e7ef-4395-9234-57c63d5459b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\03. Weapon\PlagueWeapon">
-      <UniqueIdentifier>{64c61017-3ead-4a1d-b9bd-12f5f3d7447a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\04. MapObject">
       <UniqueIdentifier>{da660398-3255-4bae-85c1-c53f7ba4521f}</UniqueIdentifier>
     </Filter>
@@ -727,6 +700,48 @@
     <Filter Include="02. GameObjects\06. LockOnCurve">
       <UniqueIdentifier>{73b1ae38-c60b-40c5-928c-6dd4e924ce9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObjects\05. Effect\Effect_Trail">
+      <UniqueIdentifier>{e298ba84-21cd-46ad-b1c5-523daa4f7a5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffect\Trail">
+      <UniqueIdentifier>{84f2d875-07cc-49de-80ba-18ef9e42d970}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\Skill">
+      <UniqueIdentifier>{72d7a579-e3bb-47c8-ad59-8dcf093649d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp\01. Levels">
+      <UniqueIdentifier>{2fd56b7c-25e0-41fb-978b-b8be6be0a2aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp\01. Levels\00. Loading">
+      <UniqueIdentifier>{415cf11b-c036-4b34-a51b-7fe799dac4c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp\01. Levels\00. Loading\Loader">
+      <UniqueIdentifier>{d7a516a4-2521-4980-a217-4807612ec8bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp\01. Levels\01. Title">
+      <UniqueIdentifier>{ed0f00ae-1f6c-491f-aba4-8aa13c98d29f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp\01. Levels\02. Stage1">
+      <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp\01. Levels\99. Tool">
+      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp\01. Levels\03. Stage_Odur">
+      <UniqueIdentifier>{fa72e65b-2a3d-4ef5-a873-3a2e88a51f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00. MainApp\01. Levels\04. Stage_Urd">
+      <UniqueIdentifier>{0d4346eb-41ee-4875-b8d3-17030437ad7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Components">
+      <UniqueIdentifier>{cfbb1e11-27ea-4deb-9910-d96f1f249dda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06. Components\01. Attackable">
+      <UniqueIdentifier>{a0b981b3-a482-4fdb-91b7-f579b8de0a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\05. Effect\Effect_Hit">
+      <UniqueIdentifier>{eae1b140-b763-4c97-b68a-bbc39d871cdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -751,10 +766,10 @@
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Loader.h">
-      <Filter>01. Levels\00. Loading\Loader</Filter>
+      <Filter>00. MainApp\01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Stage1.h">
-      <Filter>01. Levels\02. Stage1</Filter>
+      <Filter>00. MainApp\01. Levels\02. Stage1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Levels_Header.h">
       <Filter>99. Defines\Headers</Filter>
@@ -766,7 +781,7 @@
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Tool.h">
-      <Filter>01. Levels\99. Tool</Filter>
+      <Filter>00. MainApp\01. Levels\99. Tool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ImGui_Main.h">
       <Filter>100. IMGUI\00. ImGui_Main</Filter>
@@ -981,9 +996,6 @@
     <ClInclude Include="..\Public\PlayerState_ChargeStart.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Start</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlayerState_ClawAttack_Long.h">
-      <Filter>02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Long</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PlayerState_ChargeLoop.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Loop</Filter>
     </ClInclude>
@@ -998,9 +1010,6 @@
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_ClawAttack_Short.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Short</Filter>
-    </ClInclude>
-    <ClInclude Include="..\public\Villager_F.h">
-      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\VillagerFState_Base.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F\State\00. VillagerFState_Base</Filter>
@@ -1155,9 +1164,6 @@
     <ClInclude Include="..\Public\UI_SkillIcon.h">
       <Filter>04. UI\InGameUI\07. UI_SkillIcon</Filter>
     </ClInclude>
-    <ClInclude Include="..\Public\PlagueWeapon.h">
-      <Filter>02. GameObjects\03. Weapon\PlagueWeapon</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\PlayerState_PW_Axe.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe</Filter>
     </ClInclude>
@@ -1180,7 +1186,7 @@
       <Filter>99. Defines\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ClientLevel.h">
-      <Filter>01. Levels</Filter>
+      <Filter>00. MainApp\01. Levels</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Climb_Start.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start</Filter>
@@ -1288,7 +1294,7 @@
       <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Odur.h">
-      <Filter>01. Levels\03. Stage_Odur</Filter>
+      <Filter>00. MainApp\01. Levels\03. Stage_Odur</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_GetUp.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp</Filter>
@@ -1339,7 +1345,7 @@
       <Filter>02. GameObjects\05. Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
-      <Filter>01. Levels\01. Title</Filter>
+      <Filter>00. MainApp\01. Levels\01. Title</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Mesh.h">
       <Filter>02. GameObjects\05. Effect\Effect_Mesh</Filter>
@@ -1362,6 +1368,24 @@
     <ClInclude Include="..\Public\LockOnCurve.h">
       <Filter>02. GameObjects\06. LockOnCurve</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Villager_F.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_M</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Trail.h">
+      <Filter>02. GameObjects\05. Effect\Effect_Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\ToolEffect_Trail.h">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffect\Trail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Attackable.h">
+      <Filter>06. Components\01. Attackable</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_ClawAttack_Long.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Long</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Effect_Hit.h">
+      <Filter>02. GameObjects\05. Effect\Effect_Hit</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1371,13 +1395,13 @@
       <Filter>00. MainApp</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Loading.cpp">
-      <Filter>01. Levels\00. Loading</Filter>
+      <Filter>00. MainApp\01. Levels\00. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Loader.cpp">
-      <Filter>01. Levels\00. Loading\Loader</Filter>
+      <Filter>00. MainApp\01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Stage1.cpp">
-      <Filter>01. Levels\02. Stage1</Filter>
+      <Filter>00. MainApp\01. Levels\02. Stage1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObjects\00. Background</Filter>
@@ -1386,7 +1410,7 @@
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Tool.cpp">
-      <Filter>01. Levels\99. Tool</Filter>
+      <Filter>00. MainApp\01. Levels\99. Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ImGui_Main.cpp">
       <Filter>100. IMGUI\00. ImGui_Main</Filter>
@@ -1465,9 +1489,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\OdurState_Hit.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\03. OdurState_Hit</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\Character.cpp">
-      <Filter>02. GameObjects\02. Character</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Avoid.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\04. PlayerState_Avoid</Filter>
@@ -1579,9 +1600,6 @@
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_ChargeComplete.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Complete</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Private\PlayerState_ClawAttack_Long.cpp">
-      <Filter>02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Long</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_ChargeLoop.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\10. PlayerState_Charge\Charge_Loop</Filter>
@@ -1739,9 +1757,6 @@
     <ClCompile Include="..\Private\UI_SkillIcon.cpp">
       <Filter>04. UI\InGameUI\07. UI_SkillIcon</Filter>
     </ClCompile>
-    <ClCompile Include="..\Private\PlagueWeapon.cpp">
-      <Filter>02. GameObjects\03. Weapon\PlagueWeapon</Filter>
-    </ClCompile>
     <ClCompile Include="..\Private\PlayerState_PW_Axe.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Axe</Filter>
     </ClCompile>
@@ -1758,7 +1773,7 @@
       <Filter>02. GameObjects\04. MapObject\02. Ladder\Ladder_Down</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ClientLevel.cpp">
-      <Filter>01. Levels</Filter>
+      <Filter>00. MainApp\01. Levels</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Climb_Start.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start</Filter>
@@ -1854,7 +1869,7 @@
       <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Odur.cpp">
-      <Filter>01. Levels\03. Stage_Odur</Filter>
+      <Filter>00. MainApp\01. Levels\03. Stage_Odur</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_GetUp.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp</Filter>
@@ -1925,6 +1940,24 @@
     <ClCompile Include="..\Private\LockOnCurve.cpp">
       <Filter>02. GameObjects\06. LockOnCurve</Filter>
     </ClCompile>
+    <ClCompile Include="..\Private\Effect_Trail.cpp">
+      <Filter>02. GameObjects\05. Effect\Effect_Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Character.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\ToolEffect_Trail.cpp">
+      <Filter>02. GameObjects\99. ToolObject\6. ToolEffect\Trail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Attackable.cpp">
+      <Filter>06. Components\01. Attackable</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_ClawAttack_Long.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\11. PlayerState_ClawAttack\ClawAttack_Long</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Effect_Hit.cpp">
+      <Filter>02. GameObjects\05. Effect\Effect_Hit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -1981,6 +2014,9 @@
     </FxCompile>
     <FxCompile Include="..\Bin\ShaderFiles\Shader_LockOnCurve.hlsl">
       <Filter>96. ShaderFiles</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_EffectTrail.hlsl">
+      <Filter>96. ShaderFiles\Effect</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

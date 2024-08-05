@@ -333,6 +333,9 @@ void CTransform::Add_RollInput(_float fRadian)
 	_vector		vUp =	Get_State(STATE_UP);
 	_vector		vLook = Get_State(STATE_LOOK);
 
+	if (0.f == XMVector3Length(vRight).m128_f32[0])
+		return;
+
 	_matrix	RotationMatrix = XMMatrixRotationAxis(vRight, fRadian);
 
 	vRight	= XMVector3TransformNormal(vRight, RotationMatrix);
@@ -350,6 +353,9 @@ void CTransform::Add_YawInput(_float fRadian)
 	_vector		vUp = Get_State(STATE_UP);
 	_vector		vLook = Get_State(STATE_LOOK);
 
+	if (0.f == XMVector3Length(vUp).m128_f32[0])
+		return;
+
 	_matrix	RotationMatrix = XMMatrixRotationAxis(vUp, fRadian);
 
 	vRight = XMVector3TransformNormal(vRight, RotationMatrix);
@@ -366,6 +372,9 @@ void CTransform::Add_PitchInput(_float fRadian)
 	_vector		vRight = Get_State(STATE_RIGHT);
 	_vector		vUp = Get_State(STATE_UP);
 	_vector		vLook = Get_State(STATE_LOOK);
+
+	if (0.f == XMVector3Length(vLook).m128_f32[0])
+		return;
 
 	_matrix	RotationMatrix = XMMatrixRotationAxis(vLook, fRadian);
 

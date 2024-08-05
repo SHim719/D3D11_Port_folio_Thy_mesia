@@ -27,6 +27,28 @@ HRESULT CUI_DamageFont::Initialize(void* pArg)
 
 	m_pTransform->Set_Scale({ 40.f, 40.f, 1.f });
 
+	DAMAGEFONTDESC* pDesc = (DAMAGEFONTDESC*)pArg;
+
+	m_strDamage = pDesc->strDamage;
+
+	_vector vScreenPosition = XMLoadFloat4(&pDesc->vWorldPosition);
+
+	_matrix ViewMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
+	_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
+
+	vScreenPosition = XMVector3TransformCoord(vScreenPosition, ViewMatrix);
+	vScreenPosition = XMVector3TransformCoord(vScreenPosition, ProjMatrix);
+	vScreenPosition = XMVector3TransformCoord(vScreenPosition, XMLoadFloat4x4(&m_ViewportMatrix));
+
+	vScreenPosition.m128_f32[0] += (_float)JoRandom::Random_Int(-20, 20);
+	vScreenPosition.m128_f32[1] -= 20.f;
+
+	vScreenPosition.m128_f32[0] -= m_fFontGapX * _float(m_strDamage.size() >> 1);
+
+	XMStoreFloat4(&m_vRenderStartPos, Convert_ScreenToRenderPos(vScreenPosition));
+
+	m_fAlpha = 1.f;
+
 	return S_OK;
 }
 
@@ -37,7 +59,7 @@ void CUI_DamageFont::Tick(_float fTimeDelta)
 	if (m_fAlpha < 0.f)
 	{
 		m_fAlpha = 0.f;
-		m_bReturnToPool = true;
+		m_bDestroyed = true;
 	}
 
 	m_vRenderStartPos.y += m_fFontMoveSpeed * fTimeDelta;
@@ -74,35 +96,6 @@ HRESULT CUI_DamageFont::Render()
 
 		vRenderPos.m128_f32[0] += m_fFontGapX;
 	}
-
-	return S_OK;
-}
-
-HRESULT CUI_DamageFont::OnEnter_Layer(void* pArg)
-{
-	__super::OnEnter_Layer(nullptr);
-
-	DAMAGEFONTDESC* pDesc = (DAMAGEFONTDESC*)pArg;
-	
-	m_strDamage = pDesc->strDamage;
-
-	_vector vScreenPosition = XMLoadFloat4(&pDesc->vWorldPosition);
-
-	_matrix ViewMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_VIEW);
-	_matrix ProjMatrix = m_pGameInstance->Get_TransformMatrix(CPipeLine::D3DTS_PROJ);
-
-	vScreenPosition = XMVector3TransformCoord(vScreenPosition, ViewMatrix);
-	vScreenPosition = XMVector3TransformCoord(vScreenPosition, ProjMatrix);
-	vScreenPosition = XMVector3TransformCoord(vScreenPosition, XMLoadFloat4x4(&m_ViewportMatrix));
-
-	vScreenPosition.m128_f32[0] += (_float)JoRandom::Random_Int(-20, 20);
-	vScreenPosition.m128_f32[1] -= 20.f;
-
-	vScreenPosition.m128_f32[0] -= m_fFontGapX * _float(m_strDamage.size() >> 1);
-
-	XMStoreFloat4(&m_vRenderStartPos, Convert_ScreenToRenderPos(vScreenPosition));
-
-	m_fAlpha = 1.f;
 
 	return S_OK;
 }

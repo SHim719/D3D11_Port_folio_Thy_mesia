@@ -190,6 +190,9 @@
     <Filter Include="01.Utility\03. Components\03. VIBuffer\00. Rect\VIBuffer_Rect_NorTex">
       <UniqueIdentifier>{b0b55605-9d69-45f1-819a-50c69e332529}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Utility\03. Components\03. VIBuffer\05. Trail">
+      <UniqueIdentifier>{1ce0ec30-eb14-48d5-9365-79d44ca70057}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Public\Base.h">
@@ -396,6 +399,9 @@
     <ClInclude Include="..\Public\Engine_Render_Descs.h">
       <Filter>99.Defines</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\VIBuffer_Trail.h">
+      <Filter>01.Utility\03. Components\03. VIBuffer\05. Trail</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Private\Base.cpp">
@@ -574,6 +580,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\VIBuffer_Rect_NorTex.cpp">
       <Filter>01.Utility\03. Components\03. VIBuffer\00. Rect\VIBuffer_Rect_NorTex</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\VIBuffer_Trail.cpp">
+      <Filter>01.Utility\03. Components\03. VIBuffer\05. Trail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

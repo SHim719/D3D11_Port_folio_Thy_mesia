@@ -35,7 +35,6 @@ HRESULT CLevel_Odur::Initialize()
 	if (FAILED(Load_Map(L"../../Resources/Maps/StageOdur/")))
 		return E_FAIL;
 
-
 	//LIGHT_DESC			LightDesc{};
 	//LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	//LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
@@ -45,9 +44,7 @@ HRESULT CLevel_Odur::Initialize()
 	//
 	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
 	//	return E_FAIL;
-
-
-		
+	
 	return S_OK;
 }
 

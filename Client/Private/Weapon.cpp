@@ -2,6 +2,8 @@
 
 #include "Bone.h"
 
+#include "Effect_Trail.h"
+
 
 CWeapon::CWeapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -35,6 +37,9 @@ HRESULT CWeapon::Initialize(void* pArg)
 	Safe_AddRef(m_pSocketBone);
 	Safe_AddRef(m_pParentTransform);
 
+	if (pWeaponDesc->bTrail)
+		m_pEffect_Trail = static_cast<CEffect_Trail*>(m_pGameInstance->Clone_GameObject(pWeaponDesc->wstrTrailTag));
+		
 	return S_OK;
 }
 
@@ -47,6 +52,12 @@ void CWeapon::Tick(_float fTimeDelta)
 
 	m_pTransform->Set_WorldMatrix(SocketMatrix * m_pParentTransform->Get_WorldMatrix());
 
+	if (m_bTrailActivated)
+	{
+		m_pEffect_Trail->Update_ParentMatrix(m_pTransform->Get_WorldMatrix());
+		m_pEffect_Trail->Tick(fTimeDelta);
+	}
+		
 	if (m_pCollider)
 		m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 }
@@ -67,6 +78,12 @@ void CWeapon::LateTick(_float fTimeDelta)
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_BLEND, this);
 	else
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+
+	if (m_bTrailActivated) 
+	{
+		m_pEffect_Trail->LateTick(fTimeDelta);
+	}
+	
 }
 
 HRESULT CWeapon::Render()
@@ -97,10 +114,20 @@ HRESULT CWeapon::Render()
 		if (FAILED(m_pModel->Render(m_pShader, i, iPassIndex)))
 			return E_FAIL;
 	}
-
 	return S_OK;
 }
 
+
+void CWeapon::Set_Active_Trail(_bool bActive)
+{
+	m_bTrailActivated = bActive;
+	if (true == bActive)
+	{
+		m_pEffect_Trail->Reset_TrailAcc();
+		m_pEffect_Trail->Update_ParentMatrix(m_pTransform->Get_WorldMatrix());
+	}
+	
+}
 
 HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)
 {
@@ -110,7 +137,10 @@ HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxModel"), TEXT("Shader"), (CComponent**)&m_pShader)))
 		return E_FAIL;
 
-	if (L"" != pDesc->wstrModelTag)
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Attackable"), TEXT("Attackable"), (CComponent**)&m_pAttackable)))
+		return E_FAIL;
+
+	if (pDesc->wstrModelTag.size())
 	{
 		if (FAILED(__super::Add_Component(pDesc->iLevelID, pDesc->wstrModelTag, TEXT("Model"), (CComponent**)&m_pModel)))
 			return E_FAIL;
@@ -126,7 +156,7 @@ HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)
 
 		pDesc->pColliderDesc->pOwner = this;
 
-		if (FAILED(__super::Add_Component(LEVEL_STATIC, wstrColliderTag, TEXT("Collider"), (CComponent**)&m_pCollider, 
+		if (FAILED(__super::Add_Component(LEVEL_STATIC, wstrColliderTag, TEXT("Collider"), (CComponent**)&m_pCollider,
 			pDesc->pColliderDesc)))
 			return E_FAIL;
 	}
@@ -169,5 +199,6 @@ void CWeapon::Free()
 	Safe_Release(m_pShader);
 	Safe_Release(m_pModel);
 	Safe_Release(m_pCollider);
-
+	Safe_Release(m_pEffect_Trail);
+	Safe_Release(m_pAttackable);
 }

@@ -26,6 +26,13 @@ void CPlayerState_PlunderRush::OnState_Start(void* pArg)
 
 	m_pPlayer->Update_AttackDesc();
 
+	RADIALBLUR_DESCS RadialDescs{};
+	RadialDescs.fBlurRadius = 10.f;
+	RadialDescs.fBlurStrength = 1.5f;
+
+	m_pGameInstance->Active_RadialBlur(RadialDescs);
+	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
+
 	m_pModel->Change_AnimationWithStartFrame(Corvus_Raven_ClawLong_ChargeFull, 40, 0.05f);
 }
 
@@ -44,7 +51,8 @@ void CPlayerState_PlunderRush::Update(_float fTimeDelta)
 	}
 
 
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	if (!m_pPlayer->Is_CollEnemy())
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 
 }
 
@@ -60,6 +68,8 @@ void CPlayerState_PlunderRush::OnState_End()
 {
 	m_pPlayer->Set_Active_DefaultWeapons(true);
 	m_pPlayer->Set_Active_Claws(false);
+
+	m_pGameInstance->Inactive_RadialBlur(0.5f);
 }
 
 void CPlayerState_PlunderRush::Init_AttackDesc()

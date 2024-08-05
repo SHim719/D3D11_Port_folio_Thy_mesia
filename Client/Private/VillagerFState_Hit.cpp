@@ -1,5 +1,7 @@
 #include "VillagerFState_Hit.h"
 
+#include "Main_Camera.h"
+
 CVillagerFState_Hit::CVillagerFState_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVillagerFState_Base(pDevice, pContext)
 {
@@ -45,6 +47,13 @@ void CVillagerFState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 	}
 
 	m_iHitCount = (m_iHitCount + 1) % (m_iMaxHitCount + 1);
+
+	string strBloodEffect = m_iHitCount % 2 == 0 ? "Effect_Blood_R_Vill_F" : "Effect_Blood_L_Vill_F";
+	EFFECTMGR->Active_Effect(strBloodEffect, &m_pVillager_F->Get_EffectSpawnDesc());
+
+	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pVillager_F->Get_EffectSpawnDesc());
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
 
 	_int iRandNum = JoRandom::Random_Int(0, m_iMaxHitCount);
 

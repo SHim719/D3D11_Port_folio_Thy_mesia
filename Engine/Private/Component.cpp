@@ -2,6 +2,12 @@
 
 #include "GameInstance.h"
 
+CComponent::CComponent()
+	: m_pGameInstance(CGameInstance::Get_Instance())
+{
+	Safe_AddRef(m_pGameInstance);
+}
+
 CComponent::CComponent(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
 	, m_pContext(pContext)

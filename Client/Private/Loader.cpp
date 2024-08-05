@@ -4,7 +4,6 @@
 
 #include "Main_Camera.h"
 #include "Player.h"
-#include "PlagueWeapon.h"
 
 #include "Odur.h"
 #include "Odur_Card.h"
@@ -32,6 +31,8 @@
 #include "Effect_Group.h"
 #include "Effect_Particle.h"
 #include "Effect_Mesh.h"
+#include "Effect_Trail.h"
+#include "Effect_Hit.h"
 
 #include "LockOnCurve.h"
 
@@ -101,9 +102,6 @@ HRESULT CLoader::Loading_Default()
 		return E_FAIL;
 
 	if (FAILED(Ready_Player()))
-		return E_FAIL;
-
-	if (FAILED(Ready_PlagueWeapon()))
 		return E_FAIL;
 
 	if (FAILED(Ready_UIResource()))
@@ -229,25 +227,6 @@ HRESULT CLoader::Ready_Player()
 		"../../Resources/Models/Corvus/", "Corvus_Saber.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Player", CPlayer::Create(m_pDevice, m_pContext));
-
-	return S_OK;
-}
-
-HRESULT CLoader::Ready_PlagueWeapon()
-{
-	//m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Axe", CModel::Create(m_pDevice, m_pContext,
-	//	"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Axe.dat"));
-	//
-	//m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Hammer", CModel::Create(m_pDevice, m_pContext,
-	//	"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Hammer.dat"));
-	//
-	//m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_Spear", CModel::Create(m_pDevice, m_pContext,
-	//	"../../Resources/Models/Corvus/PlagueWeapon/", "PW_Spear.dat"));
-	//
-	//m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_PW_TwinBlade", CModel::Create(m_pDevice, m_pContext,
-	//	"../../Resources/Models/Corvus/PlagueWeapon/", "PW_TwinSword.dat"));
-
-	m_pGameInstance->Add_Prototype(L"Prototype_PlagueWeapon", CPlagueWeapon::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -575,6 +554,9 @@ HRESULT CLoader::Ready_UI()
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_EnemyBar", CUI_EnemyBar::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_DamageFont", CUI_DamageFont::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -586,7 +568,13 @@ HRESULT CLoader::Ready_Effects()
 	if (FAILED(Ready_EffectGroup()))
 		return E_FAIL;
 
+	if (FAILED(Ready_EffectTrail()))
+		return E_FAIL;
+
 	if (FAILED(EFFECTMGR->Initialize()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Effect_Hit", CEffect_Hit::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
@@ -600,7 +588,7 @@ HRESULT CLoader::Ready_EffectResources()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Mask/Masking/%d.png", 25))))
+		L"../../Resources/Effect/Mask/Masking/%d.png", 27))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
@@ -657,6 +645,41 @@ HRESULT CLoader::Ready_EffectGroup()
 			assert(false);
 	}
 	
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_EffectTrail()
+{
+	fs::path EffectTrailPath(L"../../Resources/Effect/EffectTrails/");
+
+	for (const fs::directory_entry& entry : fs::directory_iterator(EffectTrailPath))
+	{
+		if (entry.is_directory())
+			continue;
+
+		fs::path fileName = entry.path().filename();
+		fs::path fileTitle = fileName.stem();
+
+		if (fileName.extension().generic_string() == ".ini")
+			continue;
+
+		ifstream fin(entry.path());
+
+		_uint iNumEffects = 0;
+		fin.read((_char*)&iNumEffects, sizeof(_uint));
+		if (iNumEffects > 1)
+			assert(false);
+
+		CGameEffect::EFFECTTYPE eEffectType;
+		fin.read((_char*)&eEffectType, sizeof(CGameEffect::EFFECTTYPE));
+		if (eEffectType != CGameEffect::TRAIL)
+			assert(false);
+		
+		wstring wstrTrailTag = L"Prototype_Trail_" + fileTitle.generic_wstring();
+		if (FAILED(m_pGameInstance->Add_Prototype(wstrTrailTag, CEffect_Trail::Create(m_pDevice, m_pContext, fin))))
+			assert(false);
+	}
+
 	return S_OK;
 }
 

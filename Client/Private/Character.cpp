@@ -25,6 +25,8 @@ void CCharacter::Decide_PassIdx()
 {
 	if (m_bRimLight)
 		m_iPassIdx = 3;
+	else if (m_bAlphaBlend)
+		m_iPassIdx = 1;
 	else if (m_bDissolve)
 		m_iPassIdx = 2;
 	else
