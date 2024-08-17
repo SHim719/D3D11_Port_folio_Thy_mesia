@@ -19,7 +19,6 @@ namespace Client
 		KNOCKBACK,
 		KNOCKDOWN,
 		AIR,
-		BIG_HIT,
 		VERY_BIG_HIT,
 		ENEMYATTACKTYPE_END,
 	};
@@ -176,7 +175,7 @@ namespace Client
 		_int			iRow = { 0 };
 	}PARTICLE_INFO;
 
-	typedef struct tagMeshEffectInfo
+	typedef struct tagOldMeshEffectInfo
 	{
 		_tchar		szModelTag[MAX_PATH];
 		_float		fSpawnTime = { 0.f };
@@ -207,6 +206,47 @@ namespace Client
 		_float2		vStartNoiseUVOffset = { 0.f, 0.f };
 		_float2		vNoiseUVSpeed = { 0.f, 0.f };
 
+	}OLDMESHEFFECT_INFO;
+
+	typedef struct tagMeshEffectInfo
+	{
+		_tchar		szModelTag[MAX_PATH];
+		_float		fSpawnTime = { 0.f };
+
+		_float4		vColor = { 1.f, 1.f, 1.f, 1.f };
+
+		_bool		bColorLerp = { false };
+		_float4		vStartColor = { 1.f, 1.f, 1.f, 1.f };
+		_float4		vColorEnd = { 1.f, 1.f, 1.f, 1.f };
+
+		_float3		vStartPosition = { 0.f, 0.f, 0.f };
+
+		_bool		bLocal = { true };
+		_float		fTurnSpeed = { 0.f };
+		_float4		vRotationAxis = { 0.f, 0.f, 0.f, 0.f };
+
+		_bool		bRotationLerp = { false };
+		_float3		vStartRotation = { 0.f, 0.f, 0.f };
+		_float3		vRotationEnd = { 0.f, 0.f, 0.f };
+
+		_bool		bScaleLerp = { false };
+		_float3		vStartScale = { 1.f, 1.f, 1.f };
+		_float3		vScaleEnd = { 1.f, 1.f, 1.f };
+
+		_float2		vStartMaskUVOffset = { 0.f, 0.f };
+		_float2     vMaskUVSpeed = { 0.f, 0.f };
+		_float2		vMinMaskUVOffset = { 0.f, 0.f };
+		_float2		vMaxMaskUVOffset = { 1.f, 1.f };
+		_int		iMaskSampler = { 0 };
+		
+		_float2		vStartNoiseUVOffset = { 0.f, 0.f };
+		_float2		vNoiseUVSpeed = { 0.f, 0.f };
+		_float2		vMinNoiseUVOffset = { 0.f, 0.f };
+		_float2		vMaxNoiseUVOffset = { 1.f, 1.f };
+		_int		iNoiseSampler = { 0 };
+
+		_bool		bDistortion = { false };
+		_float		fDistortion_Intensity = { 0.f };
 	}MESHEFFECT_INFO;
 
 

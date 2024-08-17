@@ -21,7 +21,8 @@ void COdurState_KickCombo::OnState_Start(void* pArg)
 	m_pOdur->Set_Stanced(true);
 	m_pOdur->Set_LookTarget(true);
 
-	m_pOdur->Update_AttackDesc();
+	for (_uint i = 0; i < 2; ++i)
+		m_pOdur->Update_AttackDesc();
 
 	m_pModel->Change_Animation(Magician_KickCombo);
 }
@@ -39,25 +40,25 @@ void COdurState_KickCombo::OnState_End()
 
 void COdurState_KickCombo::Init_AttackDesc()
 {
-	m_AttackDescs.reserve(3);
+	m_AttackDescs.reserve(2);
 
 	ATTACKDESC AttackDesc;
 	AttackDesc.pAttacker = m_pOdur;
 	AttackDesc.eEnemyAttackType = NORMAL;
+	AttackDesc.iDamage = 42;
 
-	m_AttackDescs.emplace_back(COdur::FOOT_R, AttackDesc);
 	m_AttackDescs.emplace_back(COdur::FOOT_R, AttackDesc);
 
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
+	AttackDesc.iDamage = 83;
 
 	m_AttackDescs.emplace_back(COdur::SWORD, AttackDesc);
 }
 
 void COdurState_KickCombo::Change_To_Disappear()
 {
-	_int* iDir = new _int;
 	m_pOdur->Swap_Bone();
-	m_pGameInstance->Add_Event(bind(&COdur::Change_State, m_pOdur, (_uint)OdurState::State_DisappearMove, iDir));
+	ADD_EVENT(bind(&COdur::Change_State, m_pOdur, (_uint)OdurState::State_DisappearMove, &m_iDisappearDir));
 }
 
 COdurState_KickCombo* COdurState_KickCombo::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

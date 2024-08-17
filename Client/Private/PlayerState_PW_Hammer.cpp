@@ -1,5 +1,6 @@
 #include "PlayerState_PW_Hammer.h"
 
+
 CPlayerState_PW_Hammer::CPlayerState_PW_Hammer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayerState_Base(pDevice, pContext)
 {
@@ -10,7 +11,10 @@ HRESULT CPlayerState_PW_Hammer::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_pModel->Bind_Func("Shaking_PW_Hammer", bind(&CMain_Camera::Play_CameraShake, m_pMain_Camera, "Shaking_PW_Hammer"));
+
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry
+	, PlayerState::State_Healing };
 
 	return S_OK;
 }
@@ -27,6 +31,8 @@ void CPlayerState_PW_Hammer::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_HAMMER, true);
 	m_pPlayer->Set_Adjust_NaviY(false);
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Hammer", &m_pPlayer->Get_EffectSpawnDesc());
+
+	Reset_AttackDesc();
 
 	m_pPlayer->Update_AttackDesc();
 
@@ -71,6 +77,11 @@ void CPlayerState_PW_Hammer::Init_AttackDesc()
 	m_AttackDescs.emplace_back(CPlayer::PW_HAMMER, AtkDesc);
 }
 
+void CPlayerState_PW_Hammer::Reset_AttackDesc()
+{
+	m_AttackDescs[0].second = m_pPlayer->Get_PlayerStats()->Get_SkillAttackDesc(SKILLTYPE::HAMMER);
+
+}
 
 
 CPlayerState_PW_Hammer* CPlayerState_PW_Hammer::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

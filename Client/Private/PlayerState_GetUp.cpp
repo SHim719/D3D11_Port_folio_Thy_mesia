@@ -33,7 +33,6 @@ void CPlayerState_GetUp::OnState_End()
 {
 }
 
-
 CPlayerState_GetUp* CPlayerState_GetUp::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {
 	CPlayerState_GetUp* pInstance = new CPlayerState_GetUp(pDevice, pContext);

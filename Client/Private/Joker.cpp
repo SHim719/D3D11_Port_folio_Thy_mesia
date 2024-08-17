@@ -60,7 +60,7 @@ HRESULT CJoker::Initialize(void* pArg)
 	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
 	m_tEffectSpawnDesc.pParentModel = m_pModel;
 
-	m_fRotRate = 6.f;
+	m_fRotRate = 2.f;
 
 	XMStoreFloat4(&m_vCullingOffset, XMVectorSet(0.f, 1.5f, 0.f, 0.f));
 
@@ -68,6 +68,11 @@ HRESULT CJoker::Initialize(void* pArg)
 	m_pModel->Set_AnimPlay();
 
 	return S_OK;
+}
+
+void CJoker::Tick(_float fTimeDelta)
+{
+	__super::Tick(fTimeDelta);		
 }
 
 void CJoker::Bind_KeyFrames()
@@ -85,9 +90,7 @@ void CJoker::Bind_KeyFrames()
 
 void CJoker::Percept_Target()
 {
-	_int iRandNum = JoRandom::Random_Int(0, 1);
-
-	//Change_State((_uint)Joker_State::State_Walk);
+	Change_State((_uint)JokerState::State_Walk);
 }
 
 void CJoker::Change_To_NextComboAnim()
@@ -151,7 +154,7 @@ HRESULT CJoker::Ready_States()
 	
 	m_States[(_uint)JokerState::State_Idle] = CJokerState_Idle::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_Walk] = CJokerState_Walk::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)JokerState::State_Hit] = CJokerState_Hit::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)JokerState::State_Hit] = CJokerState_Hit::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_ComboA] = CJokerState_ComboA::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_ComboB] = CJokerState_ComboB::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_TurnAttack_R] = CJokerState_TurnAttack_R::Create(m_pDevice, m_pContext, this);
@@ -161,6 +164,7 @@ HRESULT CJoker::Ready_States()
 	m_States[(_uint)JokerState::State_WheelWind_End] = CJokerState_WheelWind_End::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_JumpAttack] = CJokerState_JumpAttack::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_StrongAttack] = CJokerState_StrongAttack::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)JokerState::State_ShockAttack] = CJokerState_ShockAttack::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_Stunned_Start] = CJokerState_Stunned_Start::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_Stunned_Loop] = CJokerState_Stunned_Loop::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)JokerState::State_Executed_Start] = CJokerState_Executed_Start::Create(m_pDevice, m_pContext, this);
@@ -177,7 +181,7 @@ HRESULT CJoker::Ready_Weapon()
 	ColliderDesc.eType = CCollider::SPHERE;
 	ColliderDesc.pOwner = this;
 	ColliderDesc.vCenter = { 1.f, 0.f, 0.f };
-	ColliderDesc.vSize = { 1.f, 0.1f, 0.1f };
+	ColliderDesc.vSize = { 2.f, 0.1f, 0.1f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
 	ColliderDesc.bActive = false;
 	ColliderDesc.strCollisionLayer = "Enemy_Weapon";
@@ -213,7 +217,7 @@ HRESULT CJoker::Ready_UI()
 {
 	CUI_EnemyBar::UIENEMYBARDESC EnemyBarDesc;
 	EnemyBarDesc.pStats = m_pStats;
-	EnemyBarDesc.vOffset.y = 3.5f;
+	EnemyBarDesc.vOffset.y = 2.5f;
 	EnemyBarDesc.pOwnerTransform = m_pTransform;
 
 	m_pEnemyBar = static_cast<CUI_EnemyBar*>(m_pGameInstance->Clone_GameObject(L"Prototype_EnemyBar", &EnemyBarDesc));

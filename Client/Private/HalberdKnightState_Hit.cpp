@@ -1,5 +1,7 @@
 #include "HalberdKnightState_Hit.h"
 
+#include "Main_Camera.h"
+
 CHalberdKnightState_Hit::CHalberdKnightState_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CHalberdKnightState_Base(pDevice, pContext)
 {
@@ -29,6 +31,15 @@ void CHalberdKnightState_Hit::OnState_Start(void* pArg)
 		m_pModel->Change_Animation(HArmorLV1_Halberds_HurtCounter);
 		break;
 	}
+
+
+	string strBloodEffect = m_iHitCount % 2 == 0 ? "Effect_Blood_R_Vill_M" : "Effect_Blood_L_Vill_M";
+	EFFECTMGR->Active_Effect(strBloodEffect, &m_pHalberdKnight->Get_EffectSpawnDesc());
+
+	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pHalberdKnight->Get_EffectSpawnDesc());
+
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
 
 }
 

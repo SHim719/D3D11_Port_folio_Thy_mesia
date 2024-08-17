@@ -17,8 +17,6 @@ HRESULT CHalberdKnightState_Stunned_Loop::Initialize(void* pArg)
 
 void CHalberdKnightState_Stunned_Loop::OnState_Start(void* pArg)
 {
-	static_cast<CPlayer*>(m_pHalberdKnight->Get_Target())->Add_StunnedEnemy(m_pHalberdKnight);
-
 	m_pModel->Change_Animation(HArmorLV1_Halberds_HurtStunLoop);
 }
 

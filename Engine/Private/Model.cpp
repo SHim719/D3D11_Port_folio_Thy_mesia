@@ -134,6 +134,9 @@ HRESULT CModel::Bind_Buffers(_uint iMeshIdx)
 
 void CModel::Reset_PrevRootPos()
 {
+	if (m_iRootBoneIdx >= (_uint)m_Bones.size())
+		return;
+
 	_vector vInitRootPos = m_Animations[m_iCurrentAnimIndex]->Get_InitRootPos();
 	vInitRootPos = XMVector3TransformCoord(vInitRootPos, XMLoadFloat4x4(&m_PivotMatrix));
 
@@ -147,7 +150,7 @@ _vector CModel::Get_NowRootQuat() const
 
 void CModel::Calc_DeltaRootPos()
 {
-	if (m_bPreview)
+	if (m_bPreview || m_iRootBoneIdx >= (_uint)m_Bones.size())
 		return;
 
 	_matrix TransformMatrix = m_Bones[m_iRootBoneIdx]->Get_Transformation() * XMLoadFloat4x4(&m_PivotMatrix);
@@ -389,7 +392,8 @@ HRESULT CModel::Import_Bones(ifstream& fin)
 	}
 
 	m_iRootBoneIdx = Find_BoneIndex("root");
-	m_Bones[m_iRootBoneIdx]->Set_RootBone();
+	if (m_iRootBoneIdx < m_Bones.size())
+		m_Bones[m_iRootBoneIdx]->Set_RootBone();
 
 	return S_OK;
 }

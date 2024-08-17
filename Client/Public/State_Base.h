@@ -53,6 +53,7 @@ public:
 
 protected:
 	virtual void Init_AttackDesc();
+	virtual void Reset_AttackDesc();
 
 	void Reset_AttackIdx() {
 		m_iNowAttackIdx = 0;

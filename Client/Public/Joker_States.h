@@ -11,10 +11,11 @@
 #include "JokerState_WheelWind_End.h"
 #include "JokerState_JumpAttack.h"
 #include "JokerState_StrongAttack.h"
+#include "JokerState_ShockAttack.h"
 #include "JokerState_Stunned_Start.h"
 #include "JokerState_Stunned_Loop.h"
 #include "JokerState_Executed_Start.h"
 #include "JokerState_Executed_End.h"
-//#include "JokerState_Hit.h"
+#include "JokerState_Hit.h"
 
 

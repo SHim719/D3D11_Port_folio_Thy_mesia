@@ -70,7 +70,7 @@ void CEffect_Group::Check_Destroy()
 void CEffect_Group::Start_Effect(void* pArg)
 {
 	CGameEffect::EFFECTSPAWNDESC* SpawnDesc = (CGameEffect::EFFECTSPAWNDESC*)pArg;
-
+	
 	for (auto& pEffect : m_Effects)
 		pEffect->Restart_Effect(SpawnDesc);
 }

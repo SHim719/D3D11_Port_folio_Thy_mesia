@@ -22,6 +22,12 @@ float   g_fGlowIntensity;
 
 bool    g_bBloom;
 
+bool    g_bDistortion;
+float   g_fDistortionIntensity;
+
 int     g_iSpriteCol, g_iSpriteRow;
+int     g_iMaskSampler = 0;
+int     g_iNoiseSampler = 0;
+
 
 #endif

@@ -11,10 +11,6 @@ texture2D		g_NormalTexture;
 texture2D		g_DissolveTexture;
 float			g_fDissolveAmount;
 
-float4			g_vGlowColor;
-float			g_fGlowRange;
-float			g_fGlowFalloff;
-
 float4          g_vCamPosition;
 float4          g_vRimColor;
 float           g_fRimPower;
@@ -38,9 +34,9 @@ struct VS_OUT
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
 	float4		vProjPos : TEXCOORD2;
+    float3      vTangent : TANGENT;
+    float3      vBinormal : BINORMAL;
 };
-
-
 
 
 VS_OUT VS_MAIN(VS_IN In)
@@ -61,10 +57,13 @@ VS_OUT VS_MAIN(VS_IN In)
 
 	vector		vBonePosition = mul(float4(In.vPosition, 1.f), BoneMatrix);
 	vector		vNormal = mul(float4(In.vNormal, 0.f), BoneMatrix);
+    vector      vTangent = mul(float4(In.vTangent, 0.f), BoneMatrix);
     vector      vPosition = mul(vBonePosition, matWVP);
 
 	Out.vPosition = vPosition;
     Out.vNormal = normalize(mul(vNormal, g_WorldMatrix).xyz);
+    Out.vTangent = normalize(mul(float4(In.vTangent, 0.f), g_WorldMatrix).xyz);
+    Out.vBinormal = normalize(cross(Out.vNormal, Out.vTangent));
 	Out.vTexUV = In.vTexUV;
     Out.vWorldPos = mul(vBonePosition, g_WorldMatrix);
 	Out.vProjPos = vPosition;
@@ -79,6 +78,8 @@ struct PS_IN
 	float2		vTexUV : TEXCOORD0;
 	float4		vWorldPos : TEXCOORD1;
 	float4		vProjPos : TEXCOORD2;
+    float3      vTangent : TANGENT;
+    float3      vBinormal : BINORMAL;
 };
 
 struct PS_OUT
@@ -96,9 +97,14 @@ PS_OUT PS_MAIN(PS_IN In)
 	
     if (Out.vDiffuse.a < 0.1f)
         discard;
-	
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+    
+    vector vNormalDesc = g_NormalTexture.Sample(LinearWrapSampler, In.vTexUV);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+    vNormal = mul(vNormal, WorldMatrix);
+    
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 100.f, 0.f, 0.f);
 
 	return Out;
 }
@@ -108,15 +114,10 @@ PS_OUT PS_MAIN_ALPHABLEND(PS_IN In)
     PS_OUT Out = (PS_OUT) 0;
 
     Out.vDiffuse = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV);
-	
-    if (Out.vDiffuse.a < 0.1f)
-        discard;
-
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	//
-	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-	
     Out.vDiffuse.a *= g_fAlpha;
+    
+    if (Out.vDiffuse.a == 0.1f)
+        discard;
 
     return Out;
 }
@@ -156,8 +157,13 @@ PS_OUT_GLOW PS_MAIN_DISSOLVE(PS_IN In)
     }
 	
 	
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearWrapSampler, In.vTexUV);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+    vNormal = mul(vNormal, WorldMatrix);
+    
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 100.f, 0.f, 0.f);
 
     return Out;
 }
@@ -172,9 +178,14 @@ PS_OUT_GLOW PS_MAIN_RIMLIGHT(PS_IN In)
         discard;
     
     float3 vToCamera = normalize(g_vCamPosition.xyz - In.vWorldPos.xyz);
+    
+    vector vNormalDesc = g_NormalTexture.Sample(LinearWrapSampler, In.vTexUV);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+    vNormal = mul(vNormal, WorldMatrix);
 	
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 100.f, 0.f, 0.f);
     
     float fRim = abs(1.f - dot(In.vNormal, vToCamera));
     fRim = smoothstep(0.f, 1.f, fRim);

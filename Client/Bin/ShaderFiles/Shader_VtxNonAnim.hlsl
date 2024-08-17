@@ -75,7 +75,7 @@ struct PS_OUT
 {
 	float4		vDiffuse : SV_TARGET0;
 	float4		vNormal : SV_TARGET1;
-	//float4		vDepth : SV_TARGET2;
+	float4		vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -87,19 +87,14 @@ PS_OUT PS_MAIN(PS_IN In)
     if (Out.vDiffuse.a < 0.1f)
         discard;
 	
-    Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
-	
-	
-	//vector vNormalDesc = g_NormalTexture.Sample(LinearWrapSampler, In.vTexUV);
-	//
-	//float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	vector vNormalDesc = g_NormalTexture.Sample(LinearWrapSampler, In.vTexUV);
+	float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+	float3x3	WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+	vNormal = mul(vNormal, WorldMatrix);
+    
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 
-	//float3x3	WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
-
-	//vNormal = mul(vNormal, WorldMatrix);
-
-	//Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
-	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 100.f, 0.f, 0.f);
 
 	return Out;
 }
@@ -170,21 +165,21 @@ PS_OUT_PICKING PS_MAIN_PICKING(PS_IN_PICKING In)
     return Out;
 }
 
-struct VS_IN_AISEMY
+struct VS_IN_GLOW
 {
     float3 vPosition : POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
 
-struct VS_OUT_AISEMY
+struct VS_OUT_GLOW
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
 
-VS_OUT_AISEMY VS_MAIN_AISEMY(VS_IN_AISEMY In)
+VS_OUT_GLOW VS_MAIN_AISEMY(VS_IN_GLOW In)
 {
-    VS_OUT_AISEMY Out = (VS_OUT_AISEMY) 0;
+    VS_OUT_GLOW Out = (VS_OUT_GLOW) 0;
 
     matrix matWV, matWVP;
 
@@ -198,22 +193,22 @@ VS_OUT_AISEMY VS_MAIN_AISEMY(VS_IN_AISEMY In)
     return Out;
 }
 
-struct PS_IN_AISEMY
+struct PS_IN_GLOW
 {
     float4 vPosition : SV_POSITION;
     float2 vTexcoord : TEXCOORD0;
 };
 
-struct PS_OUT_AISEMY
+struct PS_OUT_GLOW
 {
     float4 vColor : SV_TARGET0;
     float4 vGlow : SV_TARGET1;
     //float4 vBloom : SV_TARGET2;
 };
 
-PS_OUT_AISEMY PS_MAIN_AISEMY(PS_IN_AISEMY In)
+PS_OUT_GLOW PS_MAIN_AISEMY(PS_IN_GLOW In)
 {
-    PS_OUT_AISEMY Out = (PS_OUT_AISEMY) 0;
+    PS_OUT_GLOW Out = (PS_OUT_GLOW) 0;
     
     float fNoise = 1.f;
     float fDissolve = 0.f;
@@ -244,6 +239,28 @@ PS_OUT_AISEMY PS_MAIN_AISEMY(PS_IN_AISEMY In)
     
     return Out;
 }
+
+
+PS_OUT_GLOW PS_MAIN_GLOW(PS_IN_GLOW In)
+{
+    PS_OUT_GLOW Out = (PS_OUT_GLOW) 0;
+    
+    float4 vColor = float4(0.5f, 0.5f, 0.f, 1.f);
+
+    if (vColor.a <= 0.f)
+        discard;
+    
+    Out.vColor = vColor;
+   
+    float4 vGlowColor = float4(1.f, 1.f, 0.f, 1.f);
+    
+    float3 vGlow = vGlowColor.rgb;
+    Out.vGlow = Out.vColor;
+    Out.vGlow.rgb *= vGlow * 5.f;
+    
+    return Out;
+}
+
 
 
 technique11 DefaultTechinque
@@ -304,6 +321,22 @@ technique11 DefaultTechinque
         PixelShader = compile ps_5_0 PS_MAIN_AISEMY();
         ComputeShader = NULL;
     }
+
+    pass Glow // 4
+    {
+        SetBlendState(BS_None, vector(1.f, 1.f, 1.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_Default, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN_AISEMY();
+        HullShader = NULL;
+        GeometryShader = NULL;
+        DomainShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_GLOW();
+        ComputeShader = NULL;
+    }
+
+ 
 	
 }
 

@@ -1,4 +1,5 @@
 #include "PlayerState_Parry.h"
+#include "PlayerState_ParrySuccess.h"
 
 CPlayerState_Parry::CPlayerState_Parry(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayerState_Base(pDevice, pContext)
@@ -12,10 +13,7 @@ HRESULT CPlayerState_Parry::Initialize(void* pArg)
 
 	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_LockOn
 		, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart,
-		PlayerState::State_Avoid, PlayerState::State_Parry };
-
-	m_pModel->Bind_Func("Enable_Parry", bind(&CPlayerState_Parry::Enable_Parry, this));
-	m_pModel->Bind_Func("Disable_Parry", bind(&CPlayerState_Parry::Disable_Parry, this));
+		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 
 	return S_OK;
 }
@@ -24,7 +22,8 @@ void CPlayerState_Parry::OnState_Start(void* pArg)
 {
 	m_pPlayer->Set_CanNextState(false);
 	m_pPlayer->Set_CanRotation(true);
-	m_bCanParry = true;
+	m_pPlayer->Set_EnableJog(false);
+	m_pPlayer->Set_CanParry(true);
 
 	if ((_uint)PlayerState::State_ParrySuccess == m_pPlayer->Get_PrevState() ||
 		(_uint)PlayerState::State_Parry == m_pPlayer->Get_PrevState())
@@ -58,17 +57,18 @@ void CPlayerState_Parry::Late_Update(_float fTimeDelta)
 
 void CPlayerState_Parry::OnState_End()
 {
-	
+	m_pPlayer->Set_EnableJog(true);
 }
 
 void CPlayerState_Parry::OnHit(const ATTACKDESC& AttackDesc)
 {
-	if (m_bCanParry && VERY_BIG_HIT != AttackDesc.eEnemyAttackType)
+	if (true == m_pPlayer->Can_Parry() && AttackDesc.eEnemyAttackType < AIR)
 	{
-		m_pPlayer->Change_State((_uint)PlayerState::State_ParrySuccess, &m_iParryDir);
-
-		if (AttackDesc.pAttacker)
-			AttackDesc.pAttacker->Take_Damage(m_pPlayerStats->Get_NormalAttackDesc());
+		CPlayerState_ParrySuccess::PARRY_DESC ParryDesc{};
+		ParryDesc.iParryDir = m_iParryDir;
+		ParryDesc.AttackDesc = AttackDesc;
+		m_pPlayer->Change_State((_uint)PlayerState::State_ParrySuccess, &ParryDesc);
+	
 	}
 	else
 	{

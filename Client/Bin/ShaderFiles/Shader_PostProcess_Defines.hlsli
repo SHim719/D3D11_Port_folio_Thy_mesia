@@ -12,6 +12,13 @@ float2  g_vBlurCenter;
 float   g_fBlurRadius;
 ///////////////////////////////////
 
+// COLOR_INVERSION/////////////////////
+float   g_fInversionRatio = 1.f;
+
+/////////////////////////////////////
+
+
+
 
 float3 LinearToneMapping(float3 color)
 {
@@ -56,5 +63,20 @@ float3 lumaBasedReinhardToneMapping(float3 color)
     color = pow(color, invGamma);
     return color;
 }
+
+DepthStencilState DSS_RenderOnlyStencilEqual
+{
+    DepthEnable = false; 
+    DepthWriteMask = zero;
+
+    StencilEnable = true;
+    StencilReadMask = 0xFF;
+    StencilWriteMask = 0xFF;
+
+    FrontFaceStencilFunc = equal; 
+    FrontFaceStencilFail = keep; 
+    FrontFaceStencilDepthFail = keep;
+    FrontFaceStencilPass = keep; 
+};
 
 #endif

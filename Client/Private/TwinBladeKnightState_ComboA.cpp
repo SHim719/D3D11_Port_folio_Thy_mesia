@@ -64,7 +64,7 @@ void CTwinBladeKnightState_ComboA::Init_AttackDesc()
 	m_AttackDescs.emplace_back(CTwinBladeKnight::BLADE_R, AttackDesc);
 	m_AttackDescs.emplace_back(CTwinBladeKnight::BLADE_R, AttackDesc);
 
-	AttackDesc.eEnemyAttackType = BIG_HIT;
+	AttackDesc.eEnemyAttackType = SEMIKNOCKBACK;
 
 	m_AttackDescs.emplace_back(CTwinBladeKnight::BLADE_L, AttackDesc);
 }

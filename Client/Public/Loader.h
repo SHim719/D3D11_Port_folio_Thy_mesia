@@ -28,6 +28,7 @@ private:
 	HRESULT Loading_Default();
 	HRESULT Loading_Stage1();
 	HRESULT Loading_StageOdur();
+	HRESULT Loading_StageUrd();
 
 private:
 	HRESULT Ready_Camera();
@@ -40,6 +41,7 @@ private:
 	HRESULT Ready_Joker();
 	HRESULT Ready_HalberdKnight();
 	HRESULT Ready_TwinBladeKnight();
+	HRESULT Ready_Urd();
 
 	HRESULT Ready_MapObjects(const wstring& wstrPath);
 
@@ -52,6 +54,7 @@ private:
 	HRESULT Ready_EffectTrail();
 
 	HRESULT Ready_Etc();
+	HRESULT Ready_Sound();
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

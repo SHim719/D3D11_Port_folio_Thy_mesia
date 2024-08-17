@@ -20,6 +20,9 @@ private:
 	void Init_AttackDesc()				override;
 	void Change_To_Disappear();
 
+private:
+	_int m_iDisappearDir = { 1 };
+
 public:
 	static COdurState_KickCombo* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

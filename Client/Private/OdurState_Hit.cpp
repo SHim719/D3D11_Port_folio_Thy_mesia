@@ -10,27 +10,34 @@ HRESULT COdurState_Hit::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pModel->Bind_Func("Change_HitToNextState", bind(&COdurState_Hit::Decide_State, this));
+
 	return S_OK;
 }
 
 void COdurState_Hit::OnState_Start(void* pArg)
 {
+	string strBloodEffect = m_iHitCount % 2 == 0 ? "Effect_Blood_R_Odur" : "Effect_Blood_L_Odur";
+	EFFECTMGR->Active_Effect(strBloodEffect, &m_pOdur->Get_EffectSpawnDesc());
+	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pOdur->Get_EffectSpawnDesc());
+	
 	m_pModel->Change_Animation(Magician_HurtFL + m_iHitCount % 2);
 }
 
 void COdurState_Hit::Update(_float fTimeDelta)
 {
-	if (m_pModel->Is_AnimComplete())
-	{
-		Decide_State();
-		return;
-	}
-		
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+}
+
+void COdurState_Hit::Late_Update(_float fTimeDelta)
+{
+	if (m_pModel->Is_AnimComplete())
+		Decide_State();
 }
 
 void COdurState_Hit::OnState_End()
 {
+	m_iHitCount = 0;
 }
 
 void COdurState_Hit::OnHit(const ATTACKDESC& AttackDesc)

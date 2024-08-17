@@ -85,6 +85,14 @@ public:
 	_bool Is_Active_RadialBlur() const {
 		return m_pRenderer->Is_Active_RadialBlur();
 	}
+
+	void Active_ColorInversion() {
+		m_pRenderer->Active_ColorInversion();
+	}
+	void Inactive_ColorInversion(_float fLerpTime) {
+		m_pRenderer->Inactive_ColorInversion(fLerpTime);
+	}
+
 #pragma endregion
 
 #pragma region KEY_MANAGER
@@ -106,6 +114,7 @@ public:
 	HRESULT SetVolume(const wstring& strSoundTag, const _float& fVolume);
 	HRESULT SetPosition(const wstring& strSoundTag, _float fPosition);
 	_bool Is_Playing(const wstring& strSoundTag);
+	HRESULT Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime);
 #pragma endregion
 
 #pragma region FRUSTUM
@@ -117,6 +126,7 @@ public:
 	_matrix Get_TransformMatrix(CPipeLine::TRANSFORMSTATE eTransformState) const;
 	_float4x4 Get_TransformFloat4x4(CPipeLine::TRANSFORMSTATE eTransformState) const;
 	_float4x4 Get_TransformFloat4x4_TP(CPipeLine::TRANSFORMSTATE eTransformState) const;
+	_float4x4 Get_TransformFloat4x4_Inverse_TP(CPipeLine::TRANSFORMSTATE eTransformState) const;
 	_float4 Get_CamPosition() const;
 #pragma endregion
 
@@ -149,7 +159,7 @@ public:
 
 #pragma region LIGHT_MANAGER
 	const LIGHT_DESC* Get_LightDesc(_uint iIndex) const;
-	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+	HRESULT Add_Light(class CLight* pLight);
 	HRESULT Render_Lights(class CShader* pShader, CVIBuffer* pVIBuffer);
 #pragma endregion
 

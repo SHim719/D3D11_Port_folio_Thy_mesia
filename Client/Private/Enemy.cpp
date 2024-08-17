@@ -3,6 +3,7 @@
 #include "Bone.h"
 #include "Weapon.h"
 #include "Player.h"
+#include "PlayerStats.h"
 
 #include "UI_Manager.h"
 
@@ -20,6 +21,7 @@ CEnemy::CEnemy(const CEnemy& rhs)
 	, m_eExecutionTag(rhs.m_eExecutionTag)
 	, m_eSkillType(rhs.m_eSkillType)
 	, m_iStunnedStateIdx(rhs.m_iStunnedStateIdx)
+	, m_iStunnedStartStateIdx(rhs.m_iStunnedStartStateIdx)
 	, m_iDeathStateIdx(rhs.m_iDeathStateIdx)
 	, m_iExecutionStateIdx(rhs.m_iExecutionStateIdx)
 {
@@ -52,7 +54,10 @@ void CEnemy::Tick(_float fTimeDelta)
 	{
 		Update_Dissolve(fTimeDelta);
 		if (false == m_bDissolve)
+		{
 			Set_Active(false);
+			OnDeath();
+		}
 	}
 
 	if (m_bRimLight)
@@ -103,8 +108,8 @@ HRESULT CEnemy::Render()
 		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;
 
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
@@ -152,6 +157,20 @@ void CEnemy::Decide_PassIdx()
 		m_iPassIdx = 0;
 
 }
+void CEnemy::OnDeath()
+{
+	CPlayerStats* pStats = static_cast<CPlayer*>(s_pTarget)->Get_PlayerStats();
+
+	if (SKILLTYPE::SKILLTYPE_END == m_eSkillType || pStats->Is_SkillActived(m_eSkillType))
+		return;
+
+	pStats->Active_Skill(m_eSkillType);
+	vector<SKILLTYPE> PopupResources;
+	PopupResources.emplace_back(m_eSkillType);
+
+	UIMGR->Active_UI("UI_Popup", &PopupResources);
+}
+
 void CEnemy::Percept_Target()
 {
 }
@@ -231,7 +250,7 @@ void CEnemy::Active_StunnedMark()
 
 void CEnemy::InActive_StunnedMark()
 {
-	if (false == m_bStunnedMarked)
+ 	if (false == m_bStunnedMarked)
 		return;
 
 	m_bStunnedMarked = false;

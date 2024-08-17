@@ -25,6 +25,8 @@ struct VS_OUT
     float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
 };
 
 
@@ -44,6 +46,8 @@ VS_OUT VS_MAIN(VS_IN In)
     Out.vPosition = mul(vPosition, matVP);
     Out.vNormal = normalize(mul(float4(In.vNormal, 0.f), TransformMatrix).xyz);
     Out.vTexUV = In.vTexUV;
+    Out.vTangent = normalize(mul(vector(In.vTangent, 0.f), TransformMatrix).xyz);
+    Out.vBinormal = normalize(cross(Out.vNormal, Out.vTangent));
     Out.vWorldPos = mul(vector(In.vPosition, 1.f), TransformMatrix);
     Out.vProjPos = Out.vPosition;
 
@@ -57,13 +61,15 @@ struct PS_IN
     float2 vTexUV : TEXCOORD0;
     float4 vWorldPos : TEXCOORD1;
     float4 vProjPos : TEXCOORD2;
+    float3 vTangent : TANGENT;
+    float3 vBinormal : BINORMAL;
 };
 
 struct PS_OUT
 {
     float4 vDiffuse : SV_TARGET0;
 	float4 vNormal : SV_TARGET1;
-	//float4		vDepth : SV_TARGET2;
+	float4 vDepth : SV_TARGET2;
 };
 
 PS_OUT PS_MAIN(PS_IN In)
@@ -75,10 +81,14 @@ PS_OUT PS_MAIN(PS_IN In)
     if (Out.vDiffuse.a < 0.1f)
         discard;
     
-	Out.vNormal = vector(In.vNormal.xyz * 0.5f + 0.5f, 0.f);
+    vector vNormalDesc = g_NormalTexture.Sample(LinearWrapSampler, In.vTexUV);
+    float3 vNormal = vNormalDesc.xyz * 2.f - 1.f;
+    float3x3 WorldMatrix = float3x3(In.vTangent, In.vBinormal, In.vNormal);
+    vNormal = mul(vNormal, WorldMatrix);
+    
+    Out.vNormal = vector(vNormal * 0.5f + 0.5f, 0.f);
 
-	//Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 1000.f, 0.f, 0.f);
-
+	Out.vDepth = vector(In.vProjPos.z / In.vProjPos.w, In.vProjPos.w / 100.f, 0.f, 0.f);
 
     return Out;
 }

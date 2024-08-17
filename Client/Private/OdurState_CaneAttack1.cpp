@@ -19,10 +19,12 @@ void COdurState_CaneAttack1::OnState_Start(void* pArg)
 	m_pOdur->Set_LookTarget(true);
 	Reset_AttackIdx();
 
-	m_pOdur->Update_AttackDesc();
-
+	for (_uint i = 0; i < 2; ++i)
+		m_pOdur->Update_AttackDesc();
+	
 	m_pModel->Change_Animation(Magician_CaneAttack03);
 
+	EFFECTMGR->Active_Effect("Effect_Odur_Cane_Attack1_Cloak_Particle", &m_pOdur->Get_EffectSpawnDesc());
 }
 
 void COdurState_CaneAttack1::Update(_float fTimeDelta)
@@ -46,11 +48,12 @@ void COdurState_CaneAttack1::Init_AttackDesc()
 	ATTACKDESC AttackDesc;
 	AttackDesc.pAttacker = m_pOdur;
 	AttackDesc.eEnemyAttackType = NORMAL;
-	AttackDesc.iDamage = 100;
+	AttackDesc.iDamage = 48;
 
 	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
 
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
+	AttackDesc.iDamage = 65;
 
 	m_AttackDescs.emplace_back(COdur::FOOT_L, AttackDesc);
 }

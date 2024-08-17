@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Client_Defines.h"
-#include "GameObject.h"
+#include "GameEffect.h"
 
 
 BEGIN(Client)
@@ -11,10 +11,12 @@ class CEffect_Hit: public CGameObject
 public:
 	typedef struct tagEffect_HitDesc
 	{
-		CCollider::COLLIDERDESC*	pColliderDesc = nullptr;
-		ATTACKDESC					AttackDesc = {};
-		_float4x4					SpawnMatrix = {};
-		class CEffect_Group*		pEffect_Group = nullptr;
+		CCollider::COLLIDERDESC*		pColliderDesc = nullptr;
+		_float4							vSpawnPos = {};
+		ATTACKDESC						AttackDesc = {};
+		CGameEffect::EFFECTSPAWNDESC	EffectSpawnDesc{};
+		class CEffect_Group*			pEffect_Group = nullptr;
+		_uint							iTag = 0;
 	} EFFECT_HITDESC;
 
 protected:
@@ -43,6 +45,7 @@ public:
 private:
 	class CEffect_Group*	m_pEffect_Group = { nullptr };
 	CCollider*				m_pCollider = { nullptr };
+
 
 protected:
 	HRESULT Ready_Components(void* pArg);

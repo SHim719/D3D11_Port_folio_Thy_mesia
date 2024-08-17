@@ -33,6 +33,8 @@ HRESULT CUI_PlunderSlot::Initialize(void* pArg)
 	if (nullptr == m_pSkillIcon)
 		return E_FAIL;
 
+	m_pSkillIcon->Get_Transform()->Set_Position(Convert_ScreenToRenderPos(XMVectorSet(1200.f, 630.f, 1.f, 1.f)));
+
 	m_pTransform->Set_Scale({ 150.f, 150.f, 1.f });
 
 	m_pTransform->Set_Position(Convert_ScreenToRenderPos(XMVectorSet(1200.f, 630.f, 1.f, 1.f)));

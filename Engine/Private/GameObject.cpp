@@ -18,6 +18,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	: m_pDevice{ rhs.m_pDevice }
 	, m_pContext{rhs.m_pContext }
 	, m_pGameInstance{ rhs.m_pGameInstance }
+	, m_iTag {rhs.m_iTag}
 	, m_bDestroyed { false }
 	, m_fDissolveAmount { rhs.m_fDissolveAmount }
 	, m_fDissolveSpeed { rhs.m_fDissolveSpeed }

@@ -64,9 +64,9 @@ HRESULT CPerceptionBounding::Ready_Component()
 	ColliderDesc.eType = CCollider::SPHERE;
 	ColliderDesc.pOwner = this;
 	ColliderDesc.strCollisionLayer = "PerceptionBounding";
-	ColliderDesc.vCenter = { 0.f, 0.3f, 0.f };
+	ColliderDesc.vCenter = { 0.f, 1.f, 0.f };
 	ColliderDesc.vRotation = { 0.f, 0.f, 0.f };
-	ColliderDesc.vSize = { 6.f, 0.f, 0.f };
+	ColliderDesc.vSize = { 8.f, 0.f, 0.f };
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("Collider"), (CComponent**)&m_pPerceptionCollider, &ColliderDesc)))
 		return E_FAIL;

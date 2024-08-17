@@ -42,9 +42,9 @@ public:
 	HRESULT Render()					override;
 
 protected:
-	CGameObject* m_pOwner = { nullptr };
-	CBone* m_pSocketBone = { nullptr };
-	CTransform* m_pParentTransform = { nullptr };
+	CGameObject*	m_pOwner = { nullptr };
+	CBone*			m_pSocketBone = { nullptr };
+	CTransform*		m_pParentTransform = { nullptr };
 
 public:
 	void Swap_SocketBone(CBone*& pBone) {
@@ -68,11 +68,16 @@ public:
 	}
 
 protected:
-	_bool			m_bAlphaBlend = { false };
+	_bool			m_bAlphaEnabled = { false };
 	_float			m_fAlpha = { 1.f };
 
 public:
-	void Set_Alpha(_float fAlpha) { m_fAlpha = fAlpha; }
+	void Set_Alpha(_float fAlpha) { 
+		m_fAlpha = fAlpha; }
+
+	void Set_AlphaEnable(_bool bEnable) { 
+		m_bAlphaEnabled = bEnable;
+	}
 
 protected:
 	_bool					m_bTrailActivated = { false };

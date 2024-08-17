@@ -2,6 +2,8 @@
 
 #include "Player.h"
 
+#include "Effect_Manager.h"
+
 COdurState_Parry::COdurState_Parry(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: COdurState_Base(pDevice, pContext)
 {
@@ -26,44 +28,47 @@ void COdurState_Parry::OnState_Start(void* pArg)
 	Decide_Animation();
 
 	m_pOdur->Update_AttackDesc();
+
+	EFFECTMGR->Active_Effect("Effect_Enemy_Parry_Particle", &m_pOdur->Get_EffectSpawnDesc());
 }
 
 void COdurState_Parry::Update(_float fTimeDelta)
 {
-	if (m_pModel->Is_AnimComplete())
-	{
-		Decide_State();
-		return;
-	}
-
 	if (false == m_pOdur->Is_CollPlayer())
 		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
+void COdurState_Parry::Late_Update(_float fTimeDetla)
+{
+	if (m_pModel->Is_AnimComplete())
+		Decide_State();
+}
+
 void COdurState_Parry::OnState_End()
 {
+
 	
 }
 
 void COdurState_Parry::Init_AttackDesc()
 {
-	m_ParryAttackDescs[0].reserve(2);
-	m_ParryAttackDescs[1].reserve(2);
+	m_ParryAttackDescs[0].reserve(1);
+	m_ParryAttackDescs[1].reserve(1);
 
 	ATTACKDESC AtkDesc;
 	AtkDesc.pAttacker = m_pOdur;
 	AtkDesc.eEnemyAttackType = NORMAL;
-	m_ParryAttackDescs[0].emplace_back(COdur::CANE, AtkDesc);
-	m_ParryAttackDescs[1].emplace_back(COdur::SWORD, AtkDesc);
+	AtkDesc.iDamage = 47;
 	m_ParryAttackDescs[1].emplace_back(COdur::SWORD, AtkDesc);
 	
 	AtkDesc.eEnemyAttackType = KNOCKBACK;
+	AtkDesc.iDamage = 80;
 	m_ParryAttackDescs[0].emplace_back(COdur::FOOT_L, AtkDesc);
 }
 
 void COdurState_Parry::Decide_Animation()
 {
-	_int iRandNum = JoRandom::Random_Int(0, 1);
+	_int iRandNum = 1;// JoRandom::Random_Int(0, 1);
 	
 	if (iRandNum)
 		m_pModel->Change_Animation(Magician_Parry01); // µÚ·Î°¬´Ù°¡ ½»»è

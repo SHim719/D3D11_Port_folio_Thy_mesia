@@ -15,6 +15,11 @@
 #include "HalberdKnight.h"
 #include "TwinBladeKnight.h"
 
+#include "Urd.h"
+#include "Urd_Weapon.h"
+#include "Urd_MagicCircle.h"
+#include "Urd_InversionSphere.h"
+
 #include "PerceptionBounding.h"
 
 #include "MapObject.h"
@@ -35,6 +40,7 @@
 #include "Effect_Hit.h"
 
 #include "LockOnCurve.h"
+#include "LightObject.h"
 
 CLoader::CLoader(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: m_pDevice(pDevice)
@@ -82,6 +88,9 @@ unsigned int CLoader::Loading()
 	case LEVEL_ODUR:
 		hr = Loading_StageOdur();
 		break;
+	case LEVEL_URD:
+		hr = Loading_StageUrd();
+		break;
 	}
 
 	LeaveCriticalSection(&m_CriticalSection);
@@ -114,6 +123,9 @@ HRESULT CLoader::Loading_Default()
 		return E_FAIL;
 
 	if (FAILED(Ready_Etc()))
+		return E_FAIL;
+
+	if (FAILED(Ready_Sound()))
 		return E_FAIL;
 
 	return S_OK;
@@ -174,6 +186,26 @@ HRESULT CLoader::Loading_StageOdur()
 	return S_OK;
 }
 
+HRESULT CLoader::Loading_StageUrd()
+{
+	lstrcpy(m_szLoadingText, TEXT("Loading..."));
+
+	if (FAILED(Ready_Urd()))
+		return E_FAIL;
+
+	if (FAILED(Ready_MapObjects(L"../../Resources/MapObjects/StageUrd/")))
+		return E_FAIL;
+
+	m_pGameInstance->Add_Prototype(LEVEL_URD, L"Prototype_Navigation", CNavigation::Create(m_pDevice, m_pContext,
+		TEXT("../../Resources/NaviData/StageUrd_Navi.dat")));
+
+	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
+
+	m_bIsFinished = true;
+	
+	return S_OK;
+}
+
 
 CLoader* CLoader::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, LEVEL eNextLevelID)
 {
@@ -218,7 +250,7 @@ HRESULT CLoader::Ready_Weapon()
 HRESULT CLoader::Ready_Player()
 {
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_Player", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/", "Corvus_No1.dat", "../../Resources/KeyFrame/Player/"));
+		"../../Resources/Models/Corvus/", "Corvus_No2.dat", "../../Resources/KeyFrame/Player/"));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Model_Player_Dagger", CModel::Create(m_pDevice, m_pContext,
 		"../../Resources/Models/Corvus/", "Corvus_Dagger.dat"));
@@ -311,6 +343,28 @@ HRESULT CLoader::Ready_TwinBladeKnight()
 		"../../Resources/Models/TwinBladeKnight/", "Sword.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_TwinBladeKnight", CTwinBladeKnight::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Urd()
+{
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Urd", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Urd/", "Urd.dat", "../../Resources/KeyFrame/Urd/"));
+
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Urd_Sword", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Urd/", "SM_Urd_Sword.dat"));
+
+	m_pGameInstance->Add_Prototype(m_eNextLevelID, L"Prototype_Model_Urd_Weapon_VFX", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Urd/", "UrdSword_VFX.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Urd_Weapon", CUrd_Weapon::Create(m_pDevice, m_pContext));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Urd_MagicCircle", CUrd_MagicCircle::Create(m_pDevice, m_pContext));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Urd_InversionSphere", CUrd_InversionSphere::Create(m_pDevice, m_pContext));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Urd", CUrd::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }
@@ -537,6 +591,13 @@ HRESULT CLoader::Ready_UIResource()
 
 #pragma endregion
 
+#pragma region PotionSlot
+
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_PotionSlot", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/Potion/UI_PotionSlot.dds"))))
+		return E_FAIL;
+
+#pragma endregion
+
 	return S_OK;
 }
 
@@ -588,11 +649,11 @@ HRESULT CLoader::Ready_EffectResources()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Mask/Masking/%d.png", 27))))
+		L"../../Resources/Effect/Mask/Masking/%d.dds", 40))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Noise/%d.png", 16))))
+		L"../../Resources/Effect/Noise/%d.dds", 17))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Dissolve", CTexture::Create(m_pDevice, m_pContext,
@@ -708,6 +769,23 @@ HRESULT CLoader::Ready_Etc()
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_LockOnCurve", CLockOnCurve::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_LightObject", CLightObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CLoader::Ready_Sound()
+{
+	if (FAILED(m_pGameInstance->Create_Sound("../../Resources/Sounds/BGM/Stage2Boss.mp3", L"Urd_BGM1")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Create_Sound("../../Resources/Sounds/BGM/Stage2Boss.mp3", L"Urd_BGM2")))
+		return E_FAIL;
+
+
+
 
 	return S_OK;
 }

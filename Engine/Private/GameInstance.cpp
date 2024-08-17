@@ -4,6 +4,8 @@
 
 #include "MyCamera.h"
 
+#include "Light.h"
+
 IMPLEMENT_SINGLETON(CGameInstance)
 
 CGameInstance::CGameInstance()
@@ -106,8 +108,9 @@ void CGameInstance::Tick_Engine(_float fTimeDelta)
 
 	m_pObject_Manager->LateTick(fTimeDelta * m_fTimeScale);
 
-	m_pRenderer->Tick(fTimeDelta);
+	m_pRenderer->Tick(fTimeDelta * m_fTimeScale);
 	m_pLevel_Manager->Tick(fTimeDelta);
+	m_pSound_Manager->Tick(fTimeDelta);
 }
 
 HRESULT CGameInstance::Draw()
@@ -424,6 +427,10 @@ _bool CGameInstance::Is_Playing(const wstring& strSoundTag)
 
 	return m_pSound_Manager->Is_Playing(strSoundTag);
 }
+HRESULT CGameInstance::Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime)
+{
+	return m_pSound_Manager->Set_Sound_FadeOut(strSoundTag, fTime);
+}
 #pragma endregion
 
 
@@ -466,6 +473,14 @@ _float4x4 CGameInstance::Get_TransformFloat4x4_TP(CPipeLine::TRANSFORMSTATE eTra
 		return _float4x4();
 
 	return m_pPipeLine->Get_TransformFloat4x4_TP(eTransformState);
+}
+
+_float4x4 CGameInstance::Get_TransformFloat4x4_Inverse_TP(CPipeLine::TRANSFORMSTATE eTransformState) const
+{
+	if (nullptr == m_pPipeLine)
+		return _float4x4();
+
+	return m_pPipeLine->Get_TransformFloat4x4_Inverse_TP(eTransformState);
 }
 
 _float4 CGameInstance::Get_CamPosition() const
@@ -566,9 +581,9 @@ const LIGHT_DESC* CGameInstance::Get_LightDesc(_uint iIndex) const
 	return m_pLight_Manager->Get_LightDesc(iIndex);
 }
 
-HRESULT CGameInstance::Add_Light(const LIGHT_DESC& LightDesc)
+HRESULT CGameInstance::Add_Light(CLight* pLight)
 {
-	return m_pLight_Manager->Add_Light(LightDesc);
+	return m_pLight_Manager->Add_Light(pLight);
 }
 
 HRESULT CGameInstance::Render_Lights(CShader* pShader, CVIBuffer* pVIBuffer)

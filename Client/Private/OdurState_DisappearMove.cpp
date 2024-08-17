@@ -26,19 +26,21 @@ void COdurState_DisappearMove::OnState_Start(void* pArg)
 	{
 		m_iDir = 1;
 		m_pModel->Change_Animation(Magician_DisappearMove_B);
-
-		_int* pParam = (_int*)pArg;
-		Safe_Delete(pParam);
-		return;
+	}
+	else
+	{
+		Decide_Animation();
 	}
 
-	Decide_Animation();
+	EFFECTMGR->Active_Effect("Effect_Odur_Disappear_Particle", &m_pOdur->Get_EffectSpawnDesc());
 }
 
 void COdurState_DisappearMove::Update(_float fTimeDelta)
 {
-	if (false == m_pOdur->Is_CollPlayer())
-		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	if (0 == m_iDir && m_pOdur->Is_CollPlayer())
+		return;
+
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 void COdurState_DisappearMove::OnState_End()

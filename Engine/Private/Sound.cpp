@@ -19,6 +19,17 @@ void CSound::Stop()
 	m_pChannel->stop();
 }
 
+_bool CSound::Fade_Out(_float fTimeDelta)
+{
+	m_fFadeOutTimeAcc -= fTimeDelta;
+	if (m_fFadeOutTimeAcc < 0.f)
+		m_fFadeOutTimeAcc = 0.f;
+
+	SetVolume(m_fFadeOutTimeAcc / m_fFadeOutTime);
+
+	return m_fFadeOutTimeAcc == 0.f;
+}
+
 _bool CSound::Is_Playing()
 {
 	_bool isPlaying;
@@ -31,16 +42,21 @@ void CSound::SetVolume(const float& _fVolume)
 	m_pChannel->setVolume(_fVolume);
 }
 
-void CSound::SetPosition(_float _vPosition)
+void CSound::SetPosition(_float _fPositionSec)
 {
 	if (nullptr == m_pSound) return;
 	if (nullptr != m_pChannel)
 	{
-		UINT iLen;
-		m_pSound->getLength(&iLen, FMOD_TIMEUNIT_MS);
-		_vPosition = (float)iLen * _vPosition / 100.f;
+		_uint iLenMS;
+		m_pSound->getLength(&iLenMS, FMOD_TIMEUNIT_MS);
 
-		m_pChannel->setPosition((int)_vPosition, FMOD_TIMEUNIT_MS);
+		_uint iPositionMS = _uint(_fPositionSec * 1000.0f);
+
+		if (iPositionMS > iLenMS)
+			iPositionMS = iLenMS;
+		
+
+		m_pChannel->setPosition(iPositionMS, FMOD_TIMEUNIT_MS);
 	}
 }
 

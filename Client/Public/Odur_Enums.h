@@ -78,7 +78,9 @@ enum class OdurState
 	State_ExecutionDisappear,
 	State_ReadyExecution,
 	State_Execute,
-	State_Finished,
+	State_Stunned_Start,
+	State_Stunned_Loop,
+	State_Executed,
 	State_Cutscene,
 	State_End,
 };

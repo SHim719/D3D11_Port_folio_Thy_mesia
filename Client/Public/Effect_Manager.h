@@ -24,6 +24,8 @@ public:
 	void Inactive_Effect(const string& strTag, size_t iIdx = 0);
 
 	void Create_Effect_Hit(const string& strTag, void* pArg);
+
+	CEffect_Group* Get_EffectGroup(const string& strTag);
 private:
 	HRESULT Init_Effects();
 	HRESULT Add_EffectGroups(const string& strEffectGroupTags, _uint iNumGroups, const wstring& wstrPrototypeTag);

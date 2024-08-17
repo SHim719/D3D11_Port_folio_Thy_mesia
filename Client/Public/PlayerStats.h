@@ -21,6 +21,8 @@ private:
 	_int			m_iVitality = { 10 };
 
 	_int			m_iSoulCount = { 500 };
+	_int			m_iNowPotionCount = { 5 };
+	_int			m_iMaxPotionCount = { 5 };
 
 	SKILLTYPE		m_ePlunderSkill = { NONE };
 	SKILLTYPE		m_eUsingSkill = { NONE };
@@ -100,20 +102,21 @@ public:
 		m_bShortClaw = bUseShortClaw;
 	}
 
-	void Set_UsingSkill(SKILLTYPE eSkill) {
-		m_eUsingSkill = eSkill;
-	}
-
 	void Obtain_Key() {
 		m_bObtainKey = true;
 	}
 
-	void Active_Skill(SKILLTYPE eSkill) {
-		m_bSkillActived[eSkill] = true;
+	void Active_Skill(SKILLTYPE eSkill);
+
+	void Add_PotionCount(_int iCount);
+
+	_int Get_PotionCount() const {
+		return m_iNowPotionCount;
 	}
 
 public:
 	void Update_PlunderSkill(const SKILLTYPE ePlunderSkill);
+	void Update_UsingSkill(const SKILLTYPE eSkill);
 
 	_int Increase_Hp(_int iHp);
 	void Increase_MaxHp(_int iHp);
@@ -124,6 +127,7 @@ public:
 
 	ATTACKDESC Get_NormalAttackDesc() const;
 	ATTACKDESC Get_PlagueAttackDesc() const;
+	ATTACKDESC Get_SkillAttackDesc(SKILLTYPE eSkillType) const;
 
 private:
 	class CUI_PlayerDefault*	m_pPlayerUI = { nullptr };

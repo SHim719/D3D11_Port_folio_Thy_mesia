@@ -15,6 +15,7 @@ private:
 	void OnState_End()					override;
 
 	void Init_AttackDesc()				override;
+	void Reset_AttackDesc()				override;
 
 public:
 	static CPlayerState_PW_Axe* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

@@ -41,6 +41,15 @@ void CTwinBladeKnightState_Base::OnHit(const ATTACKDESC& AttackDesc)
 		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_Stunned_Start);
 	else if (!m_pTwinBladeKnight->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType)
 		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_Hit, const_cast<ATTACKDESC*>(&AttackDesc));
+
+	//m_iHitCount = (m_iHitCount + 1) % (m_iMaxHitCount + 1);
+	//
+	//string strBloodEffect = m_iHitCount % 2 == 0 ? "Effect_Blood_R_Vill_F" : "Effect_Blood_L_Vill_F";
+	//EFFECTMGR->Active_Effect(strBloodEffect, &m_pVillager_F->Get_EffectSpawnDesc());
+	//
+	//EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pVillager_F->Get_EffectSpawnDesc());
+	//
+	//static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
 }
 
 

@@ -43,6 +43,9 @@ void CLevel_Loading::Tick(_float TimeDelta)
 			case LEVEL_ODUR:
 				pLevel = CLevel_Odur::Create(m_pDevice, m_pContext);
 				break;
+			case LEVEL_URD:
+				pLevel = CLevel_Urd::Create(m_pDevice, m_pContext);
+				break;
 			}
 
 			if (nullptr == pLevel)

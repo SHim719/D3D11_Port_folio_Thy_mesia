@@ -1,4 +1,5 @@
 #include "UI_SkillSlot.h"
+#include "UI_SkillIcon.h"
 
 
 CUI_SkillSlot::CUI_SkillSlot(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -18,13 +19,20 @@ HRESULT CUI_SkillSlot::Initialize(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
 		return E_FAIL;
 
-	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_LockOn"), TEXT("Texture"), (CComponent**)&m_pUITexture)))
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_SkillSlot"), TEXT("Texture"), (CComponent**)&m_pUITexture)))
 		return E_FAIL;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Point"), TEXT("VIBuffer"), (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
-	m_pTransform->Set_Scale({ 100.f, 100.f, 1.f });
+	m_pSkillIcon = static_cast<CUI_SkillIcon*>(m_pGameInstance->Clone_GameObject(L"Prototype_SkillIcon"));
+	if (nullptr == m_pSkillIcon)
+		return E_FAIL;
+
+	m_pSkillIcon->Get_Transform()->Set_Position(Convert_ScreenToRenderPos(XMVectorSet(1120.f, 633.f, 1.f, 1.f)));
+
+	m_pTransform->Set_Scale({ 72.f, 72.f, 1.f });
+	m_pTransform->Set_Position(Convert_ScreenToRenderPos(XMVectorSet(1120.f, 633.f, 1.f, 1.f)));
 
 	return S_OK;
 }
@@ -52,7 +60,13 @@ HRESULT CUI_SkillSlot::Render()
 	if (FAILED(m_pShader->Begin(0)))
 		return E_FAIL;
 
-	return m_pVIBuffer->Render();
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pSkillIcon->Render()))
+		return E_FAIL;
+
+	return S_OK;
 }
 
 HRESULT CUI_SkillSlot::OnEnter_Layer(void* pArg)
@@ -61,6 +75,11 @@ HRESULT CUI_SkillSlot::OnEnter_Layer(void* pArg)
 		return E_FAIL;
 
 	return S_OK;
+}
+
+void CUI_SkillSlot::Update_SkillIcon(const SKILLTYPE eSkillType)
+{
+	m_pSkillIcon->Change_Texture(eSkillType);
 }
 
 CUI_SkillSlot* CUI_SkillSlot::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -94,4 +113,5 @@ void CUI_SkillSlot::Free()
 {
 	__super::Free();
 
+	Safe_Release(m_pSkillIcon);
 }

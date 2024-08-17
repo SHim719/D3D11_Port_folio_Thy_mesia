@@ -13,7 +13,7 @@ HRESULT CPlayerState_Jog::Initialize(void* pArg)
 
 	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Sprint, 
 		PlayerState::State_LockOn, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
-		,PlayerState::State_Avoid, PlayerState::State_Parry };
+		,PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 
 	m_bCanClimb = true;
 

@@ -45,7 +45,7 @@ enum class JokerState
 {
 	State_Idle,
 	State_Walk,
-	//State_Hit,
+	State_Hit,
 	State_ComboA,
 	State_ComboB,
 	State_TurnAttack_R,
@@ -55,6 +55,7 @@ enum class JokerState
 	State_WheelWind_End,
 	State_StrongAttack,
 	State_JumpAttack,
+	State_ShockAttack,
 	State_Stunned_Start,
 	State_Stunned_Loop,
 	State_Executed_Start,

@@ -148,9 +148,6 @@
     <Filter Include="02. GameObjects\99. ToolObject">
       <UniqueIdentifier>{a30fb29b-086b-471a-815d-25ec9dccaec7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\99. ToolObject\2. ToolAnimObj">
-      <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\99. ToolObject\3. ToolColliderObj">
       <UniqueIdentifier>{9db4c5a9-80e3-4486-9561-e6867fbf2c19}</UniqueIdentifier>
     </Filter>
@@ -364,9 +361,6 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\06. OdurState_DisappearMove">
       <UniqueIdentifier>{41fba9d0-531b-429b-acd6-9a272e7d292c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\07. OdurState_Appear">
-      <UniqueIdentifier>{61339d3b-762e-4c70-af71-e9323946bd1c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\08. OdurState_Parry">
       <UniqueIdentifier>{689bbd23-feac-492a-a87c-d13e161e81b9}</UniqueIdentifier>
     </Filter>
@@ -381,12 +375,6 @@
     </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\10. OdurState_Execute\OdurState_ExecutionDisappear">
       <UniqueIdentifier>{39bb80a2-e8fe-4abe-8e07-95a7db28bc91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\11. OdurState_Finished">
-      <UniqueIdentifier>{d0873048-d6db-47c3-bf58-a1dd3db8f270}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\99. OdurState_Cutscene">
-      <UniqueIdentifier>{e8f11dd5-0fa5-489b-be57-d1c3a3f32351}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\Define">
       <UniqueIdentifier>{c814f354-7456-47db-928e-a7d1bda2fa2a}</UniqueIdentifier>
@@ -706,33 +694,6 @@
     <Filter Include="02. GameObjects\99. ToolObject\6. ToolEffect\Trail">
       <UniqueIdentifier>{84f2d875-07cc-49de-80ba-18ef9e42d970}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\Skill">
-      <UniqueIdentifier>{72d7a579-e3bb-47c8-ad59-8dcf093649d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp\01. Levels">
-      <UniqueIdentifier>{2fd56b7c-25e0-41fb-978b-b8be6be0a2aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp\01. Levels\00. Loading">
-      <UniqueIdentifier>{415cf11b-c036-4b34-a51b-7fe799dac4c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp\01. Levels\00. Loading\Loader">
-      <UniqueIdentifier>{d7a516a4-2521-4980-a217-4807612ec8bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp\01. Levels\01. Title">
-      <UniqueIdentifier>{ed0f00ae-1f6c-491f-aba4-8aa13c98d29f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp\01. Levels\02. Stage1">
-      <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp\01. Levels\99. Tool">
-      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp\01. Levels\03. Stage_Odur">
-      <UniqueIdentifier>{fa72e65b-2a3d-4ef5-a873-3a2e88a51f98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="00. MainApp\01. Levels\04. Stage_Urd">
-      <UniqueIdentifier>{0d4346eb-41ee-4875-b8d3-17030437ad7d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="06. Components">
       <UniqueIdentifier>{cfbb1e11-27ea-4deb-9910-d96f1f249dda}</UniqueIdentifier>
     </Filter>
@@ -741,6 +702,168 @@
     </Filter>
     <Filter Include="02. GameObjects\05. Effect\Effect_Hit">
       <UniqueIdentifier>{eae1b140-b763-4c97-b68a-bbc39d871cdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ShockAttack">
+      <UniqueIdentifier>{f189ded1-da2a-4544-930c-99494d1b281b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\20. PlayerState_KnockDown">
+      <UniqueIdentifier>{8f50cb0c-770d-4f58-802a-9ca07521561d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\21. PlayerState_FallDown">
+      <UniqueIdentifier>{58bd0411-c832-4517-b1de-e4ab56ba0169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\01. Player\State\20. PlayerState_KnockDown\KnockDown_GetUp">
+      <UniqueIdentifier>{46b29acb-0cdb-4f0c-aa2e-ff25fec6e8e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\06. JokerState_Hit">
+      <UniqueIdentifier>{e9908510-81c7-4072-9e79-7472dad248f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels">
+      <UniqueIdentifier>{2fd56b7c-25e0-41fb-978b-b8be6be0a2aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\00. Loading">
+      <UniqueIdentifier>{415cf11b-c036-4b34-a51b-7fe799dac4c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\00. Loading\Loader">
+      <UniqueIdentifier>{d7a516a4-2521-4980-a217-4807612ec8bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\01. Title">
+      <UniqueIdentifier>{ed0f00ae-1f6c-491f-aba4-8aa13c98d29f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\02. Stage1">
+      <UniqueIdentifier>{6883c4c2-c1cc-4a8c-98ec-2d1968248151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\99. Tool">
+      <UniqueIdentifier>{a235f9a8-144f-49c1-86a9-ab68df1218eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\03. Stage_Odur">
+      <UniqueIdentifier>{fa72e65b-2a3d-4ef5-a873-3a2e88a51f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Levels\04. Stage_Urd">
+      <UniqueIdentifier>{0d4346eb-41ee-4875-b8d3-17030437ad7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. UI\InGameUI\02. UI_PlayerDefault\UI_PotionSlot">
+      <UniqueIdentifier>{fdaa3886-197b-4804-a9c6-625cac5c95e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\11. OdurState_Executed">
+      <UniqueIdentifier>{d0873048-d6db-47c3-bf58-a1dd3db8f270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\07. OdurState_Appear">
+      <UniqueIdentifier>{61339d3b-762e-4c70-af71-e9323946bd1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned">
+      <UniqueIdentifier>{5f410284-3827-4c99-a891-73989d3b1564}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\Start">
+      <UniqueIdentifier>{038165f0-db8a-4149-a0b4-97acf1895f15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\Loop">
+      <UniqueIdentifier>{98a9db6c-7244-4bd5-9323-0bd6f96c19af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\06. LockOnCurve\07. LightObject">
+      <UniqueIdentifier>{f99a8523-4526-4cc0-9ab2-116535d5d151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Define">
+      <UniqueIdentifier>{591d2660-a031-400c-aeaa-69bfddd46e04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State">
+      <UniqueIdentifier>{ef94c876-fd77-4bb3-8d2f-b7f4d0208531}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\00. UrdState_Base">
+      <UniqueIdentifier>{9bf9cba1-fd98-4d9a-8766-2b3be98fb14c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\01. UrdState_Idle">
+      <UniqueIdentifier>{9eaa6cb4-4acd-46b3-a6e5-e06f36f35b7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\99. UrdState_Cutscene">
+      <UniqueIdentifier>{c2e163a3-74a9-41ef-983f-7be3f0d68778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\02. UrdState_Walk">
+      <UniqueIdentifier>{4331b92f-079d-4713-8b3f-04ad71233cd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Weapon">
+      <UniqueIdentifier>{e8e0588c-d890-4239-b2da-2013dc1f5d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\99. ToolObject\2. ToolAnimObj">
+      <UniqueIdentifier>{f6b5e5a3-abc1-4ddf-89e7-58fe5021d713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Skill">
+      <UniqueIdentifier>{617d3d5d-f1e9-440d-8662-6a78c93ed32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Skill\Urd_MagicCircle">
+      <UniqueIdentifier>{0283e7cf-6131-4fdf-9177-77c629308c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Skill\Urd_InversionSphere">
+      <UniqueIdentifier>{a1da8e34-f9d9-49ac-b4a9-edba7cab165e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill">
+      <UniqueIdentifier>{66e3cc42-5ebe-43c8-99ca-bd7b17489816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill3">
+      <UniqueIdentifier>{5333a291-6ed0-4c53-ba0f-402f13386be9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Ultimate">
+      <UniqueIdentifier>{56edff50-c147-4494-8707-7bf02192d4b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\06. UrdState_Hit">
+      <UniqueIdentifier>{b7d5e9d0-89ea-4f85-8fee-0e23bc3fd9bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\07. UrdState_Stunned">
+      <UniqueIdentifier>{5c3865cc-c4ec-485b-8535-83252e6d6c94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\07. UrdState_Stunned\Start">
+      <UniqueIdentifier>{69bd0626-b13b-4986-bd44-1bc9f4cbd93e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\07. UrdState_Stunned\Loop">
+      <UniqueIdentifier>{bd844573-1045-4578-a36b-aa9993347114}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\08. UrdState_Executed">
+      <UniqueIdentifier>{a729f7f6-7080-44ee-9197-750ddd3a44d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step">
+      <UniqueIdentifier>{6c0e33c5-7054-4cd3-92b6-4f8647499c99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack">
+      <UniqueIdentifier>{97ac8ebc-07d8-4cb0-b221-eebf0095d473}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_B">
+      <UniqueIdentifier>{02d24756-6741-4ee3-8b12-30866d904586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_FLR">
+      <UniqueIdentifier>{9ea83145-a6ee-4f14-b9e6-9f85a356113e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_LR">
+      <UniqueIdentifier>{17ee7134-7e30-4834-ba4e-8e0a5a23cc8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_F">
+      <UniqueIdentifier>{948ba2a7-df77-4cb0-8994-9c8febb9d665}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\09. UrdState_Parry">
+      <UniqueIdentifier>{e03df38d-0281-4d9e-ac43-11ccb0ff9493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_StrongStab">
+      <UniqueIdentifier>{ef08c9c6-9409-4696-8ebb-8d4a34fc594b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\99. OdurState_Cutscene">
+      <UniqueIdentifier>{e8f11dd5-0fa5-489b-be57-d1c3a3f32351}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_DefaultAttack">
+      <UniqueIdentifier>{40975fcc-d8e2-4dab-bd05-e54c8d76c5b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_ExtraAttack">
+      <UniqueIdentifier>{c845acbd-9f86-40b7-bbc2-d9b2d15e7fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_TripleStab">
+      <UniqueIdentifier>{3262d182-9641-4fe8-85be-11eab9f763b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_DashStab">
+      <UniqueIdentifier>{c56f2fa0-2378-4a9e-be83-c463d72fbc85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill2">
+      <UniqueIdentifier>{925e17e0-27d8-4e81-a19a-f980d585dcfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill1">
+      <UniqueIdentifier>{43053395-b93d-43d0-9efd-5b1f6e336b47}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -766,10 +889,10 @@
       <Filter>99. Defines</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Loader.h">
-      <Filter>00. MainApp\01. Levels\00. Loading\Loader</Filter>
+      <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Stage1.h">
-      <Filter>00. MainApp\01. Levels\02. Stage1</Filter>
+      <Filter>01. Levels\02. Stage1</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Levels_Header.h">
       <Filter>99. Defines\Headers</Filter>
@@ -781,7 +904,7 @@
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Tool.h">
-      <Filter>00. MainApp\01. Levels\99. Tool</Filter>
+      <Filter>01. Levels\99. Tool</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ImGui_Main.h">
       <Filter>100. IMGUI\00. ImGui_Main</Filter>
@@ -958,7 +1081,7 @@
       <Filter>05. Interface\01. Cutscene_Actor</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\OdurState_Cutscene.h">
-      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\99. OdurState_Cutscene</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\99. OdurState_Cutscene</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Odur_Card_Cutscene.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\Card\For_Cutscene</Filter>
@@ -1186,7 +1309,7 @@
       <Filter>99. Defines\Headers</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\ClientLevel.h">
-      <Filter>00. MainApp\01. Levels</Filter>
+      <Filter>01. Levels</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_Climb_Start.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start</Filter>
@@ -1294,7 +1417,7 @@
       <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Odur.h">
-      <Filter>00. MainApp\01. Levels\03. Stage_Odur</Filter>
+      <Filter>01. Levels\03. Stage_Odur</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\PlayerState_GetUp.h">
       <Filter>02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp</Filter>
@@ -1345,7 +1468,7 @@
       <Filter>02. GameObjects\05. Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Level_Loading.h">
-      <Filter>00. MainApp\01. Levels\01. Title</Filter>
+      <Filter>01. Levels\01. Title</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\Effect_Mesh.h">
       <Filter>02. GameObjects\05. Effect\Effect_Mesh</Filter>
@@ -1368,9 +1491,6 @@
     <ClInclude Include="..\Public\LockOnCurve.h">
       <Filter>02. GameObjects\06. LockOnCurve</Filter>
     </ClInclude>
-    <ClInclude Include="..\public\Villager_F.h">
-      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_M</Filter>
-    </ClInclude>
     <ClInclude Include="..\Public\Effect_Trail.h">
       <Filter>02. GameObjects\05. Effect\Effect_Trail</Filter>
     </ClInclude>
@@ -1386,6 +1506,126 @@
     <ClInclude Include="..\Public\Effect_Hit.h">
       <Filter>02. GameObjects\05. Effect\Effect_Hit</Filter>
     </ClInclude>
+    <ClInclude Include="..\public\Villager_F.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\LightObject.h">
+      <Filter>02. GameObjects\06. LockOnCurve\07. LightObject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\JokerState_ShockAttack.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ShockAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_KnockDown.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\20. PlayerState_KnockDown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_KnockDown_GetUp.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\20. PlayerState_KnockDown\KnockDown_GetUp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\PlayerState_FallDown.h">
+      <Filter>02. GameObjects\02. Character\01. Player\State\21. PlayerState_FallDown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\JokerState_Hit.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\06. JokerState_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UI_PotionSlot.h">
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_PotionSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Executed.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\11. OdurState_Executed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Stunned_Start.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\OdurState_Stunned_Loop.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Level_Urd.h">
+      <Filter>01. Levels\04. Stage_Urd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Urd.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Urd_States.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Base.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\00. UrdState_Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Urd_Enums.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Define</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Cutscene.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\99. UrdState_Cutscene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Idle.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\01. UrdState_Idle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Walk.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\02. UrdState_Walk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Urd_Weapon.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Skill1.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill1</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Skill3.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill3</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Stunned_Start.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\07. UrdState_Stunned\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Stunned_Loop.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\07. UrdState_Stunned\Loop</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Executed.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\08. UrdState_Executed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Ultimate.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Ultimate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Urd_MagicCircle.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Skill\Urd_MagicCircle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\Urd_InversionSphere.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Skill\Urd_InversionSphere</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Step_F.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_F</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Step_FLR.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_FLR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Step_LR.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_LR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_ExtraAttack.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_ExtraAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_DefaultAttack.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_DefaultAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_StrongStab.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_StrongStab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_TripleStab.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_TripleStab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Hit.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\06. UrdState_Hit</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Step_B.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_B</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Parry.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\09. UrdState_Parry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_DashStab.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_DashStab</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Public\UrdState_Skill2.h">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1395,13 +1635,13 @@
       <Filter>00. MainApp</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Loading.cpp">
-      <Filter>00. MainApp\01. Levels\00. Loading</Filter>
+      <Filter>01. Levels\00. Loading</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Loader.cpp">
-      <Filter>00. MainApp\01. Levels\00. Loading\Loader</Filter>
+      <Filter>01. Levels\00. Loading\Loader</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Stage1.cpp">
-      <Filter>00. MainApp\01. Levels\02. Stage1</Filter>
+      <Filter>01. Levels\02. Stage1</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Background.cpp">
       <Filter>02. GameObjects\00. Background</Filter>
@@ -1410,7 +1650,7 @@
       <Filter>02. GameObjects\01. Camera\Free_Camera</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Tool.cpp">
-      <Filter>00. MainApp\01. Levels\99. Tool</Filter>
+      <Filter>01. Levels\99. Tool</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ImGui_Main.cpp">
       <Filter>100. IMGUI\00. ImGui_Main</Filter>
@@ -1563,7 +1803,7 @@
       <Filter>02. GameObjects\04. MapObject\01. EventTrigger</Filter>
     </ClCompile>
     <ClCompile Include="..\private\OdurState_Cutscene.cpp">
-      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\99. OdurState_Cutscene</Filter>
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\99. OdurState_Cutscene</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Odur_Card_Cutscene.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\Card\For_Cutscene</Filter>
@@ -1773,7 +2013,7 @@
       <Filter>02. GameObjects\04. MapObject\02. Ladder\Ladder_Down</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\ClientLevel.cpp">
-      <Filter>00. MainApp\01. Levels</Filter>
+      <Filter>01. Levels</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_Climb_Start.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\15. PlayerState_Ladder\PlayerState_Climb_Start</Filter>
@@ -1869,7 +2109,7 @@
       <Filter>02. GameObjects\02. Character\01. Player\State\14. PlayerState_PlagueAttack\Spear</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\Level_Odur.cpp">
-      <Filter>00. MainApp\01. Levels\03. Stage_Odur</Filter>
+      <Filter>01. Levels\03. Stage_Odur</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\PlayerState_GetUp.cpp">
       <Filter>02. GameObjects\02. Character\01. Player\State\16. PlayerState_GetUp</Filter>
@@ -1957,6 +2197,117 @@
     </ClCompile>
     <ClCompile Include="..\Private\Effect_Hit.cpp">
       <Filter>02. GameObjects\05. Effect\Effect_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\LightObject.cpp">
+      <Filter>02. GameObjects\06. LockOnCurve\07. LightObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\JokerState_ShockAttack.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ShockAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_KnockDown.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\20. PlayerState_KnockDown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_KnockDown_GetUp.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\20. PlayerState_KnockDown\KnockDown_GetUp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\PlayerState_FallDown.cpp">
+      <Filter>02. GameObjects\02. Character\01. Player\State\21. PlayerState_FallDown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\JokerState_Hit.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\06. JokerState_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_PotionSlot.cpp">
+      <Filter>04. UI\InGameUI\02. UI_PlayerDefault\UI_PotionSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_Executed.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\11. OdurState_Executed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_Stunned_Start.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\OdurState_Stunned_Loop.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Level_Urd.cpp">
+      <Filter>01. Levels\04. Stage_Urd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Urd.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Base.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\00. UrdState_Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Cutscene.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\99. UrdState_Cutscene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Idle.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\01. UrdState_Idle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Walk.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\02. UrdState_Walk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Urd_Weapon.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Skill1.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill1</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Skill3.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill3</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Stunned_Start.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\07. UrdState_Stunned\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Stunned_Loop.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\07. UrdState_Stunned\Loop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Executed.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\08. UrdState_Executed</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Ultimate.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Ultimate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Urd_MagicCircle.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Skill\Urd_MagicCircle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\Urd_InversionSphere.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Skill\Urd_InversionSphere</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Step_F.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_F</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Step_FLR.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_FLR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Step_LR.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_LR</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_ExtraAttack.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_ExtraAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_DefaultAttack.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_DefaultAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_StrongStab.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_StrongStab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_TripleStab.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_TripleStab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Hit.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\06. UrdState_Hit</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Step_B.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\03. UrdState_Step\Step_B</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Parry.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\09. UrdState_Parry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_DashStab.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\04. UrdState_Attack\UrdState_DashStab</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UrdState_Skill2.cpp">
+      <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\State\05. UrdState_Skill\Skill2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

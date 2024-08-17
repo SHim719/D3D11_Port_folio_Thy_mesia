@@ -24,6 +24,7 @@ HRESULT CVillager_M::Initialize_Prototype()
 
 	m_iDeathStateIdx = (_uint)VillagerM_State::State_Death;
 	m_iStunnedStateIdx = (_uint)VillagerM_State::State_Stunned_Loop;
+	m_iStunnedStartStateIdx = (_uint)VillagerM_State::State_Stunned_Start;
 
 	return S_OK;
 }
@@ -76,6 +77,7 @@ void CVillager_M::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Set_Stanced, this, true));
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
+	m_pModel->Bind_Func("Active_Dissolve", bind(&CGameObject::Active_Dissolve, this));
 }
 
 void CVillager_M::Percept_Target()
@@ -138,6 +140,9 @@ HRESULT CVillager_M::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Dissolve"), TEXT("Dissolve_Texture"), (CComponent**)&m_pDissolveTexture)))
+		return E_FAIL;
 
 	return S_OK;
 }

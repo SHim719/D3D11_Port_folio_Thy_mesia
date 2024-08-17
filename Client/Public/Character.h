@@ -24,8 +24,10 @@ protected:
 
 public:
 	void Change_State(_uint eState, void* pArg = nullptr);
-	_uint Get_PrevState() const { return m_iPrevState; }
-	_uint Get_NowState() const { return m_iState; }
+	_uint Get_PrevState() const {
+		return m_iPrevState; }
+	_uint Get_NowState() const { 
+		return m_iState; }
 
 	void Change_Navigation(CNavigation* pNavigation);
 	void Set_NaviIdx(_uint iNaviIdx) {
@@ -40,6 +42,7 @@ public:
 public:
 	void Hit(const ATTACKDESC& AttackDesc);
 	virtual _int Take_Damage(const ATTACKDESC& AttackDesc);
+	virtual void OnDeath();
 
 protected:
 	_bool							m_bStanced = { false };
@@ -78,15 +81,18 @@ public:
 protected:
 	void Compute_YPos();
 	void Update_Colliders();
+	
+protected:
+	class CLightObject* m_pLightObject = { false };
 
 protected:
-	_bool			m_bAlphaBlend = { false };
+	_bool				m_bAlphaBlend = { false };
 
 protected:
-	_bool			m_bRimLight = { false };
-	_float			m_fRimTimeAcc = { 0.f };
-	_float4			m_vNowRimColor = {};
-	RIMLIGHTDESC	m_tRimLightDesc = {};
+	_bool				m_bRimLight = { false };
+	_float				m_fRimTimeAcc = { 0.f };
+	_float4				m_vNowRimColor = {};
+	RIMLIGHTDESC		m_tRimLightDesc = {};
 
 protected:
 	void Update_RimLight(_float fTimeDelta);

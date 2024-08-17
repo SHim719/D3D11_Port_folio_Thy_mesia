@@ -8,7 +8,8 @@ class ENGINE_DLL CRenderer final : public CBase
 {
 public:
 	enum RENDERGROUP { RENDER_PRIORITY, RENDER_NONBLEND, RENDER_NONLIGHT, RENDER_BLEND
-		, RENDER_EFFECT_NONBLEND, RENDER_EFFECT_BLEND, RENDER_GLOW, RENDER_UI, RENDER_END };
+		, RENDER_EFFECT_NONBLEND, RENDER_EFFECT_BLEND, RENDER_GLOW, RENDER_DISTORTION, RENDER_STENCIL,
+		RENDER_UI, RENDER_END };
 private:
 	CRenderer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	virtual ~CRenderer() = default;
@@ -30,7 +31,7 @@ private:
 
 private:
 	/* m_WorldMatrix : 화면을 꽉 채우는 직교투영이 빈번히 활용되기때문에 저장해둘꺼야 .*/
-	_float4x4					m_WorldMatrix{};
+	_float4x4				m_WorldMatrix{};
 
 public:
 	HRESULT Initialize();
@@ -53,8 +54,10 @@ private:
 	HRESULT Render_Deferred();
 
 	HRESULT Render_Effect();
-
 	HRESULT Render_Glow();
+	HRESULT Render_Distortion();
+	
+	HRESULT Render_Stencil();
 
 	HRESULT Render_SampleForBloom();
 	HRESULT Render_BrightPass();
@@ -64,6 +67,7 @@ private:
 	HRESULT Render_PostProcess();
 	HRESULT PostProcess_Bloom();
 	HRESULT Render_RadialBlur();
+	HRESULT Render_ColorInversion();
 
 	HRESULT Render_Final();
 
@@ -75,6 +79,7 @@ private:
 	HRESULT Ready_DefaultTargets(_uint iWidth, _uint iHeight);
 	HRESULT Ready_LightTargets(_uint iWidth, _uint iHeight);
 	HRESULT Ready_DeferredTarget(_uint iWidth, _uint iHeight);
+	HRESULT Ready_StencilTarget(_uint iWidth, _uint iHeight);
 	HRESULT Ready_EffectTargets(_uint iWidth, _uint iHeight);
 	HRESULT Ready_GlowTargets(_uint iWidth, _uint iHeight);
 	HRESULT Ready_BloomTargets(_uint iWidth, _uint iHeight);
@@ -131,6 +136,24 @@ public:
 
 	_bool Is_Active_RadialBlur() const {
 		return m_bRadialBlur;
+	}
+
+private:
+	_bool					m_bColor_Inversion = { false };
+	_float					m_fInversionRatio = { 1.f };
+	_float					m_fInversionLerpTime = { 0.f };
+	_float					m_fInversionLerpTimeAcc = { 0.f };
+
+private:
+	void Update_Color_Inversion(_float fTimeDelta);
+
+public:
+	void Active_ColorInversion() {
+		m_bColor_Inversion = true;
+		m_fInversionRatio = 1.f;
+	}
+	void Inactive_ColorInversion(_float fLerpTime) {
+		m_fInversionLerpTime = m_fInversionLerpTimeAcc = fLerpTime;
 	}
 
 private:

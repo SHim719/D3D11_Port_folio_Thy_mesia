@@ -18,17 +18,8 @@ public:
 	void OnHit(const ATTACKDESC& AttackDesc)			override;
 
 private:
-	_bool m_bCanParry = { false };
 	_int  m_iParryDir = 0;
 
-private:
-	void Enable_Parry() {
-		m_bCanParry = true;
-	}
-	
-	void Disable_Parry() {
-		m_bCanParry = false;
-	}
 
 public:
 	static CPlayerState_Parry* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

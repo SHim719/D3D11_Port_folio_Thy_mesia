@@ -13,7 +13,7 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
-		, PlayerState::State_Avoid, PlayerState::State_Parry };
+		, PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 
 	return S_OK;
 }
@@ -108,6 +108,8 @@ void CPlayerState_Attack::Decide_ExecutionState(CEnemy* pExecutionEnemy)
 		m_pModel->Change_Animation(Corvus_VSHArmorLV1_Execution);
 		break;
 	case CEnemy::ODUR:
+		m_pPlayer->Change_State((_uint)PlayerState::State_Execution_Elite, pExecutionEnemy);
+		m_pModel->Change_Animation(Corvus_VSMagician_Execution);
 		break;
 	case CEnemy::URD:
 		break;

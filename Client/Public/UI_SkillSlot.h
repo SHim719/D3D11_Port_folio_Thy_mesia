@@ -18,6 +18,12 @@ public:
 	HRESULT Render()					override;
 
 	HRESULT OnEnter_Layer(void* pArg)	override;
+
+private:
+	class CUI_SkillIcon*	m_pSkillIcon = { nullptr };
+
+public:
+	void Update_SkillIcon(const SKILLTYPE eSkillType);
 	
 public:
 	static CUI_SkillSlot* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

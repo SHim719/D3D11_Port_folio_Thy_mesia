@@ -39,6 +39,7 @@ void CUI::Tick(_float fTimeDelta)
 
 void CUI::LateTick(_float fTimeDelta)
 {
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
 }
 
 HRESULT CUI::Render()

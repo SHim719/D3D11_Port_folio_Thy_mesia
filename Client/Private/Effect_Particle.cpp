@@ -77,14 +77,13 @@ _bool CEffect_Particle::Update_SpawnTime(size_t iIdx, _float fTimeDelta)
 			memcpy(&m_NowParticleDatas[iIdx], &m_InitParticleDatas[iIdx], sizeof(VTXPARTICLE));
 			if (m_tParticleInfo.iParticleMode & (1 << SPAWN_AT_BONE))
 			{
-				memcpy(&m_NowParticleDatas[iIdx], &m_InitParticleDatas[iIdx], sizeof(VTXPARTICLE));
-
 				_matrix ParticleMatrix = XMLoadFloat4x4((_float4x4*)&m_InitParticleDatas[iIdx]);
-				CALC_TF->Set_WorldMatrix(ParticleMatrix);
-				_float3 vStartScale = CALC_TF->Get_Scale();
-
-				CALC_TF->Set_WorldMatrix(XMLoadFloat4x4(&m_BoneMatrix));
-				CALC_TF->Set_Scale(vStartScale);
+				_matrix BoneMatrix = XMLoadFloat4x4(&m_BoneMatrix);
+				CALC_TF->Set_WorldMatrix(ParticleMatrix * BoneMatrix);
+				//_float3 vStartScale = CALC_TF->Get_Scale();
+				
+				//CALC_TF->Set_WorldMatrix(ParticleMatrix * BoneMatrix);
+				//CALC_TF->Set_Scale(vStartScale);
 
 				memcpy(&m_NowParticleDatas[iIdx], &CALC_TF->Get_WorldFloat4x4(), sizeof(_float4x4));
 			}

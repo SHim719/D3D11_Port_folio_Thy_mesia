@@ -45,10 +45,18 @@ void CPlayerState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
 	// 체력감소 죽음상태 체크
 	if (0 == m_pPlayer->Take_Damage(AttackDesc))
+	{
 		//Death
 		int x = 10;
-	else if (false == m_pPlayer->Is_Stanced() || VERY_BIG_HIT == AttackDesc.eEnemyAttackType)
+		return;
+	}
+		
+	if (true == m_pPlayer->Is_Stanced() && AttackDesc.eEnemyAttackType < KNOCKDOWN)
+		return;
+
+	if (AttackDesc.iDamage > 0)
 		m_pPlayer->Change_State((_uint)PlayerState::State_Hit, const_cast<ATTACKDESC*>(&AttackDesc));
+	
 }
 
 _vector CPlayerState_Base::Calc_MoveLook(_bool IsCamOriented)
@@ -125,7 +133,8 @@ _bool CPlayerState_Base::Check_StateChange(PlayerState eState)
 		bStateChange = KEY_NONE(eKeyCode::W) && KEY_NONE(eKeyCode::A) && KEY_NONE(eKeyCode::S) && KEY_NONE(eKeyCode::D);
 		break;
 	case PlayerState::State_Jog:
-		bStateChange = (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D));
+		bStateChange = (KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
+			&& true == m_pPlayer->Can_Jog();
 		break;
 	case PlayerState::State_Sprint:
 		bStateChange = ((KEY_PUSHING(eKeyCode::W) || KEY_PUSHING(eKeyCode::A) || KEY_PUSHING(eKeyCode::S) || KEY_PUSHING(eKeyCode::D))
@@ -144,7 +153,7 @@ _bool CPlayerState_Base::Check_StateChange(PlayerState eState)
 		bStateChange = KEY_PUSHING(eKeyCode::Space);
 		break;
 	case PlayerState::State_Parry:
-		bStateChange =  KEY_PUSHING(eKeyCode::F);
+		bStateChange = KEY_PUSHING(eKeyCode::F);
 		break;
 	case PlayerState::State_ChargeStart:
 	case PlayerState::State_ClawAttack_Short:
@@ -156,6 +165,9 @@ _bool CPlayerState_Base::Check_StateChange(PlayerState eState)
 		break;
 	case PlayerState::State_PlagueAttack:
 		bStateChange = KEY_PUSHING(eKeyCode::One) || KEY_PUSHING(eKeyCode::Two);
+		break;
+	case PlayerState::State_Healing:
+		bStateChange = KEY_PUSHING(eKeyCode::R) && m_pPlayerStats->Get_PotionCount() > 0;
 		break;
 	case PlayerState::State_End:
 		break;
@@ -193,20 +205,27 @@ void CPlayerState_Base::Check_ExtraStateChange(PlayerState eState)
 
 void CPlayerState_Base::Check_PlagueAttack()
 {
-	//if (KEY_PUSHING(eKeyCode::One))
-	//{
-	//
-	//}
+	SKILLTYPE eSkillType = SKILLTYPE::NONE;
 
-	SKILLTYPE ePlunderSkillType = m_pPlayerStats->Get_PlunderSkillType();
+	if (KEY_PUSHING(eKeyCode::One))
+	{
+		eSkillType = m_pPlayerStats->Get_UsingSkillType();
 
-	if (SKILLTYPE::NONE == ePlunderSkillType)
-		return;
+	}
+	else 
+	{
+		eSkillType = m_pPlayerStats->Get_PlunderSkillType();
 
-	_uint iState = (_uint)PlayerState::State_PlagueAttack + ePlunderSkillType;
+		if (SKILLTYPE::NONE == eSkillType)
+			return;
 
-	m_pPlayerStats->Update_PlunderSkill(SKILLTYPE::NONE);
-	m_pPlayer->Set_NowUsingSkill(ePlunderSkillType);
+		m_pPlayerStats->Update_PlunderSkill(SKILLTYPE::NONE);
+	}
+
+
+	_uint iState = (_uint)PlayerState::State_PlagueAttack + eSkillType;
+
+	m_pPlayer->Set_NowUsingSkill(eSkillType);
 	m_pPlayer->Change_State(iState);
 }
 

@@ -28,7 +28,7 @@ HRESULT CWeapon::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_iTag = pWeaponDesc->iTag;
-	m_bAlphaBlend = pWeaponDesc->bAlphaBlend;
+	m_bAlphaEnabled = pWeaponDesc->bAlphaBlend;
 
 	m_pOwner = pWeaponDesc->pOwner;
 	m_pSocketBone = pWeaponDesc->pSocketBone;
@@ -74,29 +74,29 @@ void CWeapon::LateTick(_float fTimeDelta)
 	if (nullptr == m_pModel)
 		return;
 
-	if (true == m_bAlphaBlend)
+	if (m_bTrailActivated)
+		m_pEffect_Trail->LateTick(fTimeDelta);
+
+	if (true == m_bAlphaEnabled && m_fAlpha < 0.5f)
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_BLEND, this);
 	else
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
-
-	if (m_bTrailActivated) 
-	{
-		m_pEffect_Trail->LateTick(fTimeDelta);
-	}
 	
 }
 
 HRESULT CWeapon::Render()
 {
-	_uint iPassIndex = m_bAlphaBlend == true ? 2 : 0;
+	_uint iPassIndex = 0;
 		
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 
-	if (m_bAlphaBlend)
+	if (m_bAlphaEnabled && m_fAlpha < 0.5f)
 	{
 		if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 			return E_FAIL;
+
+		iPassIndex = 2;
 	}
 		
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
@@ -105,8 +105,9 @@ HRESULT CWeapon::Render()
 	{
 		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
+
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;
 
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
@@ -123,10 +124,10 @@ void CWeapon::Set_Active_Trail(_bool bActive)
 	m_bTrailActivated = bActive;
 	if (true == bActive)
 	{
+		m_pEffect_Trail->Reset_TrailBuffer();
 		m_pEffect_Trail->Reset_TrailAcc();
 		m_pEffect_Trail->Update_ParentMatrix(m_pTransform->Get_WorldMatrix());
 	}
-	
 }
 
 HRESULT CWeapon::Ready_Components(WEAPONDESC* pDesc)

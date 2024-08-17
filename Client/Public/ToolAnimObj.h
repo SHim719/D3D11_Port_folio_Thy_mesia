@@ -9,7 +9,7 @@ BEGIN(Client)
 class CToolAnimObj final : public CGameObject
 {
 public:
-	enum PrototypeCharacter { Corvus, Odur, Villager_F, Villager_M, Joker, HalberdKnight, TwinBladeKnight };
+	enum PrototypeCharacter { Corvus, Odur, Villager_F, Villager_M, Joker, HalberdKnight, TwinBladeKnight, Urd, Urd_Weapon };
 
 private:
 	CToolAnimObj(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -35,6 +35,8 @@ private:
 	HRESULT Ready_Joker();
 	HRESULT Ready_HalberdKnight();
 	HRESULT Ready_TwinBladeKnight();
+	HRESULT Ready_Urd();
+	HRESULT Ready_Urd_Weapon();
 
 public:
 	CModel* Get_Model() const { return m_pModel; }

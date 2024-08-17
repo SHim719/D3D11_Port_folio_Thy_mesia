@@ -33,6 +33,9 @@ HRESULT CRenderer::Initialize()
 	if (FAILED(Ready_DeferredTarget((_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height)))
 		return E_FAIL;
 
+	if (FAILED(Ready_StencilTarget((_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height)))
+		return E_FAIL;
+
 	if (FAILED(Ready_EffectTargets((_uint)ViewportDesc.Width, (_uint)ViewportDesc.Height)))
 		return E_FAIL;
 
@@ -96,6 +99,9 @@ void CRenderer::Tick(_float fTimeDelta)
 {
 	if (m_bRadialBlur)
 		Update_RadialBlur(fTimeDelta);
+
+	if (m_bColor_Inversion)
+		Update_Color_Inversion(fTimeDelta);
 }
 
 HRESULT CRenderer::Draw()
@@ -116,6 +122,12 @@ HRESULT CRenderer::Draw()
 		return E_FAIL;
 
 	if (FAILED(Render_Glow()))
+		return E_FAIL;
+
+	if (FAILED(Render_Distortion()))
+		return E_FAIL;
+
+	if (FAILED(Render_Stencil()))
 		return E_FAIL;
 
 	if (FAILED(Render_NonLight()))
@@ -256,6 +268,18 @@ HRESULT CRenderer::Render_LightAcc()
 	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Normal"), m_pDeferredShader, "g_NormalTexture")))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Depth"), m_pDeferredShader, "g_DepthTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pDeferredShader->Set_RawValue("g_ViewMatrixInv", &m_pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_VIEW), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pDeferredShader->Set_RawValue("g_ProjMatrixInv", &m_pGameInstance->Get_TransformFloat4x4_Inverse_TP(CPipeLine::D3DTS_PROJ), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pDeferredShader->Set_RawValue("g_vCamPosition", &m_pGameInstance->Get_CamPosition(), sizeof(_float4))))
+		return E_FAIL;
+
 	if (FAILED(m_pVIBuffer->Bind_Buffers()))
 		return E_FAIL;
 
@@ -279,6 +303,9 @@ HRESULT CRenderer::Render_Deferred()
 	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Shade"), m_pDeferredShader, "g_ShadeTexture")))
 		return E_FAIL;
 
+	//if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Depth"), m_pDeferredShader, "g_DepthTexture")))
+	//	return E_FAIL;
+
 	if (FAILED(m_pDeferredShader->Begin(3)))
 		return E_FAIL;
 
@@ -297,6 +324,9 @@ HRESULT CRenderer::Render_Deferred()
 HRESULT CRenderer::Render_Effect()
 {
 	if (FAILED(m_pGameInstance->Begin_MRT_NoClear(L"MRT_Effect")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Clear_Target(L"Target_Distortion")))
 		return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Clear_Target(L"Target_Glow")))
@@ -393,6 +423,57 @@ HRESULT CRenderer::Render_Glow()
 	return S_OK;
 }
 
+HRESULT CRenderer::Render_Distortion()
+{
+	if (m_RenderObjects[RENDERGROUP::RENDER_DISTORTION].empty())
+		return S_OK;
+
+	if (FAILED(m_pVIBuffer->Bind_Buffers()))
+		return E_FAIL;
+
+	if (FAILED(Copy_RenderTarget(L"Target_Deferred")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NoClear(L"MRT_Deferred")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Copy"), m_pPostProcessShader, "g_OriginTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Distortion"), m_pPostProcessShader, "g_DistortionTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Begin(5)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	for (auto& pRenderObject : m_RenderObjects[RENDER_DISTORTION])
+		Safe_Release(pRenderObject);
+
+	m_RenderObjects[RENDER_DISTORTION].clear();
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_Stencil()
+{
+	if (FAILED(m_pGameInstance->Begin_MRT(L"MRT_Stencil")))
+		return E_FAIL;
+
+	Draw_Objects(RENDER_STENCIL);
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Render_PostProcess()
 {
 	if (FAILED(m_pVIBuffer->Bind_Buffers()))
@@ -404,6 +485,13 @@ HRESULT CRenderer::Render_PostProcess()
 	if (m_bRadialBlur)
 	{
 		if (FAILED(Render_RadialBlur()))
+			return E_FAIL;
+	}
+
+
+	if (m_bColor_Inversion)
+	{
+		if (FAILED(Render_ColorInversion()))
 			return E_FAIL;
 	}
 	
@@ -460,6 +548,32 @@ HRESULT CRenderer::Render_RadialBlur()
 		return E_FAIL;
 
 	if (FAILED(m_pPostProcessShader->Begin(3)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->End_MRT()))
+		return E_FAIL;
+
+	return S_OK;
+}
+
+HRESULT CRenderer::Render_ColorInversion()
+{
+	if (FAILED(Copy_RenderTarget(L"Target_Deferred")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Begin_MRT_NoClear(L"MRT_Deferred")))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Bind_RT_SRV(TEXT("Target_Copy"), m_pPostProcessShader, "g_OriginTexture")))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Set_RawValue("g_fInversionRatio", &m_fInversionRatio, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pPostProcessShader->Begin(6)))
 		return E_FAIL;
 
 	if (FAILED(m_pVIBuffer->Render()))
@@ -762,7 +876,7 @@ HRESULT CRenderer::Ready_DefaultTargets(_uint iWidth, _uint iHeight)
 HRESULT CRenderer::Ready_LightTargets(_uint iWidth, _uint iHeight)
 {
 	/* For.Target_Shade */
-	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(1.f, 1.f, 1.f, 1.f))))
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Shade"), iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_LightAcc"), TEXT("Target_Shade"))))
@@ -782,9 +896,23 @@ HRESULT CRenderer::Ready_DeferredTarget(_uint iWidth, _uint iHeight)
 	return S_OK;
 }
 
+HRESULT CRenderer::Ready_StencilTarget(_uint iWidth, _uint iHeight)
+{
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Stencil"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Stencil"), TEXT("Target_Stencil"))))
+		return E_FAIL;
+
+	return S_OK;
+}
+
 HRESULT CRenderer::Ready_EffectTargets(_uint iWidth, _uint iHeight)
 {
 	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Glow"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Distortion"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Add_RenderTarget(TEXT("Target_Effect_Bloom"), iWidth, iHeight, DXGI_FORMAT_R8G8B8A8_UNORM, _float4(0.f, 0.f, 0.f, 0.f))))
@@ -794,6 +922,9 @@ HRESULT CRenderer::Ready_EffectTargets(_uint iWidth, _uint iHeight)
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Glow"))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Distortion"))))
 		return E_FAIL;
 
 	//if (FAILED(m_pGameInstance->Add_MRT(TEXT("MRT_Effect"), TEXT("Target_Effect_Bloom"))))
@@ -886,6 +1017,24 @@ HRESULT CRenderer::Ready_BloomTargets(_uint iWidth, _uint iHeight)
 }
 
 
+void CRenderer::Update_Color_Inversion(_float fTimeDelta)
+{
+	if (m_fInversionLerpTimeAcc > 0.f)
+	{
+		m_fInversionLerpTimeAcc -= fTimeDelta;
+
+		_float fRatio = m_fInversionLerpTimeAcc / m_fInversionLerpTime;
+
+		if (m_fInversionLerpTimeAcc < 0.f)
+		{
+			m_bColor_Inversion = false;
+			m_fInversionLerpTimeAcc = 0.f;
+			return;
+		}
+		m_fInversionRatio = XMVectorLerp(XMVectorZero(), XMVectorSet(1.f, 0.f, 0.f, 0.f), fRatio).m128_f32[0];
+	}
+
+}
 
 HRESULT CRenderer::Ready_Buffers()
 {

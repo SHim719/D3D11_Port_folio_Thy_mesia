@@ -32,7 +32,9 @@ void CVillagerMState_Death::OnState_Start(void* pArg)
 void CVillagerMState_Death::Update(_float fTimeDelta)
 {
 	if (!m_pModel->Is_AnimComplete())
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	
+		
 }
 
 void CVillagerMState_Death::Late_Update(_float fTimeDelta)

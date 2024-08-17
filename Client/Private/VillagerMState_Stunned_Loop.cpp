@@ -17,8 +17,6 @@ HRESULT CVillagerMState_Stunned_Loop::Initialize(void* pArg)
 
 void CVillagerMState_Stunned_Loop::OnState_Start(void* pArg)
 {
-	static_cast<CPlayer*>(m_pVillager_M->Get_Target())->Add_StunnedEnemy(m_pVillager_M);
-
 	m_pModel->Change_Animation(LV1Villager_M_HurtStunLoop);
 	
 }

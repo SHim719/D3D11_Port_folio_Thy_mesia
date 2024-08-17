@@ -21,7 +21,6 @@ private:
 
 	void Bind_KeyFrames()				override;
 	void Percept_Target()				override;
-
 private:
 	HRESULT Ready_Components(void* pArg);
 	HRESULT Ready_States();

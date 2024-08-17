@@ -14,6 +14,25 @@ HRESULT CSound_Manager::Initialize()
 	return S_OK;
 }
 
+void CSound_Manager::Tick(_float fTimeDelta)
+{
+	for (auto it = m_FadeOut_Sounds.begin(); it != m_FadeOut_Sounds.end();)
+	{
+		CSound* pSound = *it;
+		if (pSound->Fade_Out(fTimeDelta))
+		{
+			pSound->SetVolume(1.f);
+			pSound->Stop();
+			it = m_FadeOut_Sounds.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
+
+
 HRESULT CSound_Manager::Create_Sound(const string& strPath, const wstring& strSoundTag)
 {
 	CSound* pSound = CSound::Create(m_pFmodCore, strPath);
@@ -94,6 +113,19 @@ _bool CSound_Manager::Is_Playing(const wstring& strSoundTag)
 		return false;
 
 	return it->second->Is_Playing();
+}
+
+HRESULT CSound_Manager::Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime)
+{
+	auto it = m_Sounds.find(strSoundTag);
+
+	if (m_Sounds.end() == it)
+		return E_FAIL;
+
+	it->second->Set_FadeOutTime(fTime);
+	m_FadeOut_Sounds.emplace_back(it->second);
+
+	return S_OK;
 }
 
 CSound_Manager* CSound_Manager::Create()

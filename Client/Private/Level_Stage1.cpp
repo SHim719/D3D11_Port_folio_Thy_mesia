@@ -21,8 +21,8 @@ HRESULT CLevel_Stage1::Initialize()
 	CCamera::CAMERADESC camDesc{};
 	camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	camDesc.fNear = 0.1f;
-	camDesc.fFar = 200.f;
-	camDesc.fFovy = 65.f;
+	camDesc.fFar = 100.f;
+	camDesc.fFovy = 60.f;
 	camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
 	camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
 
@@ -30,7 +30,7 @@ HRESULT CLevel_Stage1::Initialize()
 	m_pGameInstance->Change_MainCamera(pMainCamera);
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Player", L"Prototype_Player"));
-	//pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.313f, 0.f, -3.63f, 1.f));
+	//pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 	pPlayer->Get_Transform()->Set_Position(XMVectorSet(-32.614f, -2.014f, 116.430f, 1.f));
 	pPlayer->Reset_NaviData(LEVEL_STAGE1);
 
@@ -44,13 +44,13 @@ HRESULT CLevel_Stage1::Initialize()
 
 	LIGHT_DESC			LightDesc{};
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
+	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vDirection = _float4(1.f, -1.f, 0.f, 0.f);
-
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+	LightDesc.fLightStrength = 1.f;
+	
+	m_pGameInstance->Add_Clone(LEVEL_STAGE1, L"Light", L"Prototype_LightObject", &LightDesc);
 
 	UIMGR->Active_UI("UI_PlayerDefault");
 	return S_OK;
@@ -59,7 +59,7 @@ HRESULT CLevel_Stage1::Initialize()
 void CLevel_Stage1::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::L))
-		Ready_ChangeLevel(LEVEL_ODUR);
+		Ready_ChangeLevel(LEVEL_URD);
 }
 
 HRESULT CLevel_Stage1::Render()

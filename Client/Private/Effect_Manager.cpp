@@ -74,11 +74,29 @@ void CEffect_Manager::Create_Effect_Hit(const string& strTag, void* pArg)
 			CEffect_Hit::EFFECT_HITDESC* pEffectHitDesc = (CEffect_Hit::EFFECT_HITDESC*)pArg;
 
 			pEffectHitDesc->pEffect_Group = pEffect_Group;
+			Safe_AddRef(pEffect_Group);
 
-			m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Effect", L"Prototype_Effect_Hit");
+			m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Effect", L"Prototype_Effect_Hit", pEffectHitDesc);
 			return;
 		}
 	}
+}
+
+CEffect_Group* CEffect_Manager::Get_EffectGroup(const string& strTag)
+{
+	auto it = m_EffectGroups.find(strTag);
+	if (m_EffectGroups.end() == it)
+		return nullptr;
+
+	vector<CEffect_Group*>& EffectGroups = it->second;
+
+	for (auto& pEffect_Group : EffectGroups)
+	{
+		if (false == pEffect_Group->Is_Using())
+			return pEffect_Group;
+	}
+
+	return nullptr;
 }
 
 
@@ -197,7 +215,7 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer_Start", 1, L"Prototype_Effect_Corvus_PW_Hammer_Start")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer_Slash", 1, L"Prototype_Corvus_PW_Hammer_Slash")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer_Slash", 1, L"Prototype_Effect_Corvus_PW_Hammer_Slash")))
 		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_Hammer_Impact", 1, L"Prototype_Effect_Corvus_PW_Hammer_Impact")))
@@ -211,7 +229,12 @@ HRESULT CEffect_Manager::Init_Effects()
 #pragma region HitParticle
 	if (FAILED(Add_EffectGroups("Effect_Enemy_Hit_Particle", 5, L"Prototype_Effect_Enemy_Hit_Particle")))
 		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Enemy_Parry_Particle", 1, L"Prototype_Effect_Enemy_Parry_Particle")))
+		assert(false);
+
 #pragma endregion
+
 
 #pragma region Blood
 	if (FAILED(Add_EffectGroups("Effect_Blood_L_TwinBladeKnight", 3, L"Prototype_Effect_Blood_L_TwinBladeKnight")))
@@ -232,6 +255,103 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Blood_R_Vill_M", 3, L"Prototype_Effect_Blood_R_Vill_M")))
 		assert(false);
 
+	if (FAILED(Add_EffectGroups("Effect_Blood_L_Joker", 3, L"Prototype_Effect_Blood_L_Joker")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_R_Joker", 3, L"Prototype_Effect_Blood_R_Joker")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_L_Odur", 3, L"Prototype_Effect_Blood_L_Odur")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_R_Odur", 3, L"Prototype_Effect_Blood_R_Odur")))
+		assert(false);
+
+#pragma endregion
+
+#pragma region Joker
+
+	if (FAILED(Add_EffectGroups("Effect_Joker_Impact", 1, L"Prototype_Effect_Joker_Impact")))
+		assert(false);
+
+#pragma endregion
+
+#pragma region Odur
+	if (FAILED(Add_EffectGroups("Effect_Odur_Cane_Attack1_Cloak_Particle", 1, L"Prototype_Effect_Odur_Cane_Attack1_Cloak_Particle")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Odur_Cane_Attack1_Particle", 1, L"Prototype_Effect_Odur_Cane_Attack1_Particle")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Odur_Cane_Kick_Effect", 1, L"Prototype_Effect_Odur_Cane_Kick_Effect")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Odur_Cane_Kick_Particle", 1, L"Prototype_Effect_Odur_Cane_Kick_Particle")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Odur_Disappear_Particle", 1, L"Prototype_Effect_Odur_Disappear_Particle")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Odur_Execution_Blood", 1, L"Prototype_Effect_Odur_Execution_Blood")))
+		assert(false);
+	
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Execution_Odur_Blood", 1, L"Prototype_Effect_Corvus_Execution_Odur_Blood")))
+		assert(false);
+
+
+#pragma endregion
+
+#pragma region Urd
+	if (FAILED(Add_EffectGroups("Effect_Urd_Cutscene_Sword_Impact", 1, L"Prototype_Effect_Urd_Cutscene_Sword_Impact")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Cutscene_Particle", 1, L"Prototype_Effect_Urd_Cutscene_Particle")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Sword_Effect", 10, L"Prototype_Effect_Urd_Sword_Effect")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Sword_Impact", 10, L"Prototype_Effect_Urd_Sword_Impact")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_MagicCircle_Appear", 10, L"Prototype_Effect_Urd_MagicCircle_Appear")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_MagicCircle_Impact", 10, L"Prototype_Effect_Urd_MagicCircle_Impact")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Ready_SP01", 1, L"Prototype_Effect_Urd_Ready_SP01")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Sword_Default", 1, L"Prototype_Effect_Urd_Sword_Default")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Step_Particle", 3, L"Prototype_Effect_Urd_Step_Particle")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_DefaultAttack_Particle1", 1, L"Prototype_Effect_Urd_DefaultAttack_Particle1")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_DefaultAttack_Particle2", 1, L"Prototype_Effect_Urd_DefaultAttack_Particle2")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Pierce", 3, L"Prototype_Effect_Urd_Pierce")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Pierce_Start", 1, L"Prototype_Effect_Urd_Pierce_Start")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Slash_Horizontal", 1, L"Prototype_Effect_Urd_Slash_Horizontal")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Slash_Vertical", 1, L"Prototype_Effect_Urd_Slash_Vertical")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Dash_Stab", 1, L"Prototype_Effect_Urd_Dash_Stab")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Strong_Stab", 1, L"Prototype_Effect_Urd_Strong_Stab")))
+		assert(false);
 #pragma endregion
 
 	return S_OK;
@@ -243,7 +363,12 @@ HRESULT CEffect_Manager::Add_EffectGroups(const string& strEffectGroupTags, _uin
 	vecGroups.reserve(iNumGroups);
 
 	for (_uint i = 0; i < iNumGroups; ++i)
-		vecGroups.emplace_back(static_cast<CEffect_Group*>(m_pGameInstance->Clone_GameObject(wstrPrototypeTag)));
+	{
+		CEffect_Group* pEffectGroup = static_cast<CEffect_Group*>(m_pGameInstance->Clone_GameObject(wstrPrototypeTag));
+		if (nullptr == pEffectGroup)
+			return E_FAIL;
+		vecGroups.emplace_back(pEffectGroup);
+	}
 
 	m_EffectGroups.emplace(strEffectGroupTags, vecGroups);
 

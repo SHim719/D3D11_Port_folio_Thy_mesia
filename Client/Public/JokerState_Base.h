@@ -17,8 +17,6 @@ public:
 	void OnState_End()								override;
 
 	void OnHit(const ATTACKDESC& AttackDesc)		override;
-
-	void Change_To_NextComboAnim();
 protected:
 	CJoker*		m_pJoker = { nullptr };
 	CTransform* m_pTargetTransform = { nullptr };

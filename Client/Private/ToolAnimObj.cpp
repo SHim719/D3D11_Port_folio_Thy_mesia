@@ -69,7 +69,15 @@ HRESULT CToolAnimObj::Initialize(void* pArg)
 			return E_FAIL;
 		break;
 	}
-		
+
+	case Urd:
+		if (FAILED(Ready_Urd()))
+			return E_FAIL;
+		break;
+
+	case Urd_Weapon:
+		if (FAILED(Ready_Urd_Weapon()))
+			return E_FAIL;
 	}
 
 	m_pModel->Set_Preview(true);
@@ -146,11 +154,12 @@ HRESULT CToolAnimObj::Ready_Corvus()
 	//if (nullptr == pDagger)
 	//	return E_FAIL;
 	//
-	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
-	//WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
-	//CGameObject* pSaber = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
-	//if (nullptr == pSaber)
-	//	return E_FAIL;
+
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Player_Saber";
+	CGameObject* pSaber = m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+	if (nullptr == pSaber)
+		return E_FAIL;
 
 	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
 	//WeaponDesc.wstrModelTag = L"Prototype_Model_PW_Axe";
@@ -319,6 +328,55 @@ HRESULT CToolAnimObj::Ready_TwinBladeKnight()
 
 	return S_OK;
 }
+
+HRESULT CToolAnimObj::Ready_Urd()
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_TOOL, L"Prototype_Model_Urd", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
+
+	CWeapon::WEAPONDESC WeaponDesc;
+	WeaponDesc.iLevelID = LEVEL_TOOL;
+	WeaponDesc.pParentTransform = m_pTransform;
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");//m_pModel->Get_Bone("AnimTargetPoint");
+	WeaponDesc.wstrModelTag = L"Prototype_Model_Urd_Sword";
+	WeaponDesc.pColliderDesc = nullptr;
+
+	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Weapon", &WeaponDesc);
+
+	//WeaponDesc.iLevelID = LEVEL_TOOL;
+	//WeaponDesc.pParentTransform = m_pTransform;
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+	//WeaponDesc.wstrModelTag = L"Prototype_Model_Urd_Weapon_VFX";
+	//WeaponDesc.pColliderDesc = nullptr;
+	//
+	//m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Weapon", L"Prototype_Urd_Weapon", &WeaponDesc);
+
+	//WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_l");
+
+	return S_OK;
+}
+
+HRESULT CToolAnimObj::Ready_Urd_Weapon()
+{
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Shader_VtxAnim"), TEXT("Shader"), (CComponent**)&m_pShader)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(GET_CURLEVEL, L"Prototype_Model_Urd_Weapon_VFX", L"Model", (CComponent**)&m_pModel)))
+		return E_FAIL;
+
+
+	return S_OK;
+}
+
 
 
 CToolAnimObj* CToolAnimObj::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

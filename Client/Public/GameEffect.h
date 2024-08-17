@@ -52,7 +52,7 @@ protected:
 	_int			m_iNoiseTextureIdx = { -1 };
 	_int			m_iEmissiveTextureIdx = { -1 };
 	_int			m_iPassIdx = { 0 };
-
+	
 	_int			m_iRenderGroup = CRenderer::RENDER_EFFECT_BLEND;
 
 	_float4			m_vTextureFlag = { 0.f, 0.f, 0.f, 0.f };

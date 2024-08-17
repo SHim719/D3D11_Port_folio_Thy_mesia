@@ -19,6 +19,7 @@ void COdurState_CaneAttack2::OnState_Start(void* pArg)
 {
 	m_pOdur->Set_Stanced(true);
 	m_pOdur->Set_LookTarget(true);
+
 	Reset_AttackIdx();
 
 	m_pOdur->Update_AttackDesc();
@@ -45,20 +46,21 @@ void COdurState_CaneAttack2::OnState_End()
 
 void COdurState_CaneAttack2::Init_AttackDesc()
 {
-	m_AttackDescs.reserve(3);
+	m_AttackDescs.reserve(2);
 
 	ATTACKDESC AttackDesc;
 	AttackDesc.pAttacker = m_pOdur;
 	AttackDesc.eEnemyAttackType = NORMAL;
+	AttackDesc.iDamage = 45;
 
-	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
 	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
 
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
+	AttackDesc.iDamage = 67;
 
 	m_AttackDescs.emplace_back(COdur::CANE, AttackDesc);
-
 }
+
 
 void COdurState_CaneAttack2::ChangeAnim_Cane2ToCane1()
 {

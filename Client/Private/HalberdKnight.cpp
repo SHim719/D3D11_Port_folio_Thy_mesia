@@ -25,6 +25,7 @@ HRESULT CHalberdKnight::Initialize_Prototype()
 
 	m_iDeathStateIdx = (_uint)HalberdKnight_State::State_Death;
 	m_iStunnedStateIdx = (_uint)HalberdKnight_State::State_Stunned_Loop;
+	m_iStunnedStartStateIdx = (_uint)HalberdKnight_State::State_Stunned_Start;
 
 	return S_OK;
 }
@@ -53,6 +54,9 @@ HRESULT CHalberdKnight::Initialize(void* pArg)
 
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"PerceptionBounding", L"Prototype_PerceptionBounding", this);
 
+	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
+	m_tEffectSpawnDesc.pParentModel = m_pModel;
+
 	m_bLookTarget = false;
 
 	m_fCullingRadius = 1.5f;
@@ -74,6 +78,7 @@ void CHalberdKnight::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("ChangeToNextAttackAnim", bind(&CHalberdKnight::Change_To_NextComboAnim, this));
+	m_pModel->Bind_Func("Active_Dissolve", bind(&CGameObject::Active_Dissolve, this));
 }
 
 void CHalberdKnight::Change_To_NextComboAnim()
@@ -135,6 +140,9 @@ HRESULT CHalberdKnight::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Dissolve"), TEXT("Dissolve_Texture"), (CComponent**)&m_pDissolveTexture)))
+		return E_FAIL;
 
 	return S_OK;
 }

@@ -18,6 +18,7 @@ void CPlayerState_Sit::OnState_Start(void* pArg)
 {
 	m_pMain_Camera->SetState_UI();
 	m_pPlayerStats->SetHp_Full();
+	m_pPlayerStats->Add_PotionCount(5);
 
 	m_pModel->Change_Animation(Corvus_ArchiveSitStart);
 }

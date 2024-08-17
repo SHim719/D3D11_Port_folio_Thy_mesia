@@ -55,10 +55,25 @@ void CMain_Camera::Init_CameraShakingDescs()
 	ShakingDesc.fShakingForce = 0.4f;
 	m_ShakingDescs.emplace("Shaking_Execution", ShakingDesc);
 
-
 	ShakingDesc.fShakeTime = 0.15f;
 	ShakingDesc.fShakingForce = 0.2f;
 	m_ShakingDescs.emplace("Shaking_Claw_Long", ShakingDesc);
+
+	ShakingDesc.fShakeTime = 0.3f;
+	ShakingDesc.fShakingForce = 1.f;
+	m_ShakingDescs.emplace("Shaking_PW_Hammer", ShakingDesc);
+
+	ShakingDesc.fShakeTime = 0.5f;
+	ShakingDesc.fShakingForce = 1.5f;
+	m_ShakingDescs.emplace("Shaking_Joker_Impact", ShakingDesc);
+
+	ShakingDesc.fShakeTime = 0.1f;
+	ShakingDesc.fShakingForce = 0.2f;
+	m_ShakingDescs.emplace("Shaking_Parry_Normal", ShakingDesc);
+
+	ShakingDesc.fShakeTime = 0.1f;
+	ShakingDesc.fShakingForce = 0.3f;
+	m_ShakingDescs.emplace("Shaking_Parry_Big", ShakingDesc);
 
 }
 
@@ -173,7 +188,7 @@ void CMain_Camera::SetState_LockOn()
 	Desc.pAttachBone = m_pTargetBone;
 
 	m_pPlayer->Toggle_LockOn(m_pTargetTransform);
-	m_fFollowingSpeed = 4.5f;
+	m_fFollowingSpeed = m_fLockonFollowingSpeed;
 
 	UIMGR->Active_UI("UI_LockOn", &Desc);
 	m_pLockOnCurve->OnEnter_Layer(nullptr);
@@ -195,7 +210,7 @@ void CMain_Camera::SetState_LockOn_To_Default()
 
 	m_pPlayer->Toggle_LockOn();
 
-	m_fFollowingSpeed = 2.5f;
+	m_fFollowingSpeed = m_fFollowingSpeed;
 
 	m_pTarget = nullptr;
 
@@ -231,6 +246,9 @@ void CMain_Camera::Play_CameraShake(const string& strTag)
 {
 	auto it = m_ShakingDescs.find(strTag);
 	if (m_ShakingDescs.end() == it)
+		return;
+
+	if (m_tShakingDesc.fShakeTime > 0.f && m_tShakingDesc.fShakingForce > it->second.fShakingForce)
 		return;
 
 	m_tShakingDesc = it->second;
@@ -431,6 +449,11 @@ CGameObject* CMain_Camera::Find_LockOnTarget()
 	
 	for (auto& pGameObject : GameObjects)
 	{
+		CEnemy* pEnemy = static_cast<CEnemy*>(pGameObject);
+		if (false == pEnemy->Is_Active() || true == pEnemy->Is_OutOfLayer() ||
+			pEnemy->Is_Death())
+			continue;
+
 		_vector vTargetPos = pGameObject->Get_Transform()->Get_Position();
 
 		_float fDist = XMVector3Length(vTargetPos - vPlayerPos).m128_f32[0];

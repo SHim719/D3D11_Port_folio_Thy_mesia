@@ -75,6 +75,10 @@ void CCollider::Set_Size(_fvector vSize)
 {
 }
 
+void CCollider::Set_Center(_fvector vCenter)
+{
+}
+
 void CCollider::Enroll_Collider()
 {
 	m_pGameInstance->Add_ColliderToLayer(m_strCollisionLayer, this);

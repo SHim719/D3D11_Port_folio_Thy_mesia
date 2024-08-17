@@ -128,8 +128,6 @@ void CCollision_Manager::Execute_Collision(const string& strDstLayer, const stri
 				{
 					++SrcIt;
 				}
-					
-
 				continue;
 			}
 
@@ -191,7 +189,7 @@ void CCollision_Manager::Push_Object(CCollider* pDstCollider, CCollider* pSrcCol
 
 			_vector vPushDir = vDstCenter - vSrcCenter;
 			
-			_float fDist = vDstRadius + vSrcRadius - XMVectorGetX(XMVector3Length(vPushDir)) - 0.00001f;
+			_float fDist = vDstRadius + vSrcRadius - XMVectorGetX(XMVector3Length(vPushDir)) - 0.1f;
 
 			if (fDist > 0.f) {
 				vPushDir = XMVector3Normalize(XMVectorSetY(vPushDir, 0.f));

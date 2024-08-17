@@ -11,19 +11,24 @@ private:
 	CSound_Manager();
 	virtual ~CSound_Manager() = default;
 
+public:
 	HRESULT Initialize();
+	void Tick(_float fTimeDelta);
+
 public:
 	HRESULT Create_Sound(const string& strPath, const wstring& strSoundTag);
 	HRESULT Play(const wstring& strSoundTag, _bool bLoop);
 	HRESULT Stop(const wstring& strSoundTag);
 	HRESULT SetVolume(const wstring& strSoundTag, const _float& fVolume);
 	HRESULT SetPosition(const wstring& strSoundTag, _float fPosition);
+	HRESULT Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime);
 
 	_bool Is_Playing(const wstring& strSoundTag);
 private:
 	class CFMOD_Core* m_pFmodCore = { nullptr };
 
-	map<const wstring, class CSound*> m_Sounds;
+	map<const wstring, class CSound*>	m_Sounds;
+	list<class CSound*>					m_FadeOut_Sounds;
 
 public:
 	static CSound_Manager* Create();

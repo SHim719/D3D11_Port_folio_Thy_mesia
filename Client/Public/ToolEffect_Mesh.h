@@ -32,16 +32,22 @@ private:
 	void Update_Color();
 	void Update_UV(_float fTimeDelta);
 	void Update_LifeTime(_float fTimeDelta);
-
 	void Update_FinalMatrix();
+
+private:
+	void Update_ClipRange(_float fTimeDelta);
+
 private:
 	MESHEFFECT_INFO		m_tMeshEffectInfo{};
+	OLDMESHEFFECT_INFO  m_tOldMeshEffectInfo{};
 
 	_float2				m_vMaskUVOffset = { 0.f, 0.f };
 	_float2				m_vNoiseUVOffset = { 0.f, 0.f };
 
 	_float4x4			m_FinalMatrix = {};
 	_float				m_fSpawnTimeAcc = 0.f;
+
+	_float				m_fClipRange = { 0.f };
 private:
 	CTransform*			m_pLocalTransform = { nullptr };
 	CModel*				m_pModel = { nullptr };

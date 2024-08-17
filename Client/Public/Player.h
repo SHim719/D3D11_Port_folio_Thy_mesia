@@ -72,7 +72,9 @@ private:
 	_bool					m_bCanNextState = { false };
 	_bool					m_bCanNextAttack = { false };
 	_bool					m_bCanRotation = { true };
+	_bool					m_bCanParry = { false };
 	_bool					m_bInvincible = { false };
+	_bool					m_bEnableJog = { true };
 	
 	_float4x4				m_PrevWorldMatrix = {}; // 컷신시작전 위치
 
@@ -81,8 +83,9 @@ private:
 	_uint					m_iPlayerLadderHeight = { 0 }; // 플레이어 사다리높이 - 왼쪽 발 기준(제일 낮은높이)
 	_bool					m_bIsClimbStartDown = { false };
 
-	_float					m_fHitGap = { 0.2f };
+	_float					m_fHitGap = { 0.1f };
 	_float					m_fHitGapAcc = { 0.f };
+
 public:
 	_bool Is_LockOn() const { 
 		return m_bLockOn; }
@@ -96,6 +99,15 @@ public:
 	_bool Can_NextAttack() const {
 		return m_bCanNextAttack;
 	}
+
+	_bool Can_Jog() const {
+		return m_bEnableJog;
+	}
+
+	_bool Can_Parry() const {
+		return m_bCanParry;
+	}
+
 	_bool Is_Invincible() const { 
 		return m_bInvincible; }
 
@@ -127,12 +139,20 @@ public:
 		m_bCanRotation = bCanRotation;
 	}
 
+	void Set_EnableJog(_bool bEnableJog) {
+		m_bEnableJog = bEnableJog;
+	}
+
 	void Set_Invincible(_bool bInvincible) {
 		m_bInvincible = bInvincible;
 	}
 
 	void Set_CanNextAttack(_bool bCanNextAttack) {
 		m_bCanNextAttack = bCanNextAttack;
+	}
+
+	void Set_CanParry(_bool bCanParry) {
+		m_bCanParry = bCanParry;
 	}
 
 	void Set_NowUsingSkill(SKILLTYPE eType) {

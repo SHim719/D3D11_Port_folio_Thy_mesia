@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 
+#include "Main_Camera.h"
+
 CHalberdKnightState_Base::CHalberdKnightState_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CState_Base(pDevice, pContext)
 {
@@ -41,6 +43,13 @@ void CHalberdKnightState_Base::OnHit(const ATTACKDESC& AttackDesc)
 		m_pHalberdKnight->Change_State((_uint)HalberdKnight_State::State_Stunned_Start);
 	else if (!m_pHalberdKnight->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType)
 		m_pHalberdKnight->Change_State((_uint)HalberdKnight_State::State_Hit,  const_cast<ATTACKDESC*>(&AttackDesc));
+
+	_int iRandNum = JoRandom::Random_Int(0, 1);
+	string strBloodEffect = iRandNum == 0 ? "Effect_Blood_R_Vill_M" : "Effect_Blood_L_Vill_M";
+	EFFECTMGR->Active_Effect(strBloodEffect, &m_pHalberdKnight->Get_EffectSpawnDesc());
+	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pHalberdKnight->Get_EffectSpawnDesc());
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
 }
 
 

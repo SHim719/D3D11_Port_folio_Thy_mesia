@@ -12,7 +12,7 @@ HRESULT CPlayerState_Sprint::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_LockOn, PlayerState::State_Attack, PlayerState::State_PlagueAttack
-		, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry };
+		, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 	
 	m_PossibleStates.reserve(m_PossibleStates.size() + 2);
 	m_PossibleStates.emplace_back(PlayerState::State_Idle);

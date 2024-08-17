@@ -25,8 +25,7 @@ HRESULT CLevel_Odur::Initialize()
 	pPlayer->Reset_NaviData(LEVEL_ODUR);
 	pPlayer->Enroll_AllColliders();
 
-	UIMGR->Active_UI("UI_PlayerBar");
-	UIMGR->Active_UI("UI_PlunderSlot");
+	UIMGR->Active_UI("UI_PlayerDefault");
 
 	CMain_Camera* pMainCamera = static_cast<CMain_Camera*>(m_pGameInstance->Get_MainCamera());
 	pMainCamera->Set_Active(true);
@@ -35,15 +34,16 @@ HRESULT CLevel_Odur::Initialize()
 	if (FAILED(Load_Map(L"../../Resources/Maps/StageOdur/")))
 		return E_FAIL;
 
-	//LIGHT_DESC			LightDesc{};
-	//LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
-	//LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	//LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
-	//LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	//LightDesc.vDirection = _float4(1.f, -1.f, 0.f, 0.f);
-	//
-	//if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-	//	return E_FAIL;
+	LIGHT_DESC			LightDesc{};
+	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
+	LightDesc.vAmbient = _float4(0.6f, 0.6f, 0.6f, 1.f);
+	LightDesc.vDiffuse = _float4(0.5f, 0.5f, 0.5f, 1.f);
+	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
+	LightDesc.vDirection = _float4(1.f, -1.f, 0.f, 0.f);
+	LightDesc.fLightStrength = 1.f;
+
+	m_pGameInstance->Add_Clone(LEVEL_ODUR, L"Light", L"Prototype_LightObject", &LightDesc);
+
 	
 	return S_OK;
 }

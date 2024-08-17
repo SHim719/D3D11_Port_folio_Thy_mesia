@@ -45,16 +45,16 @@ void CEventTrigger::LateTick(_float fTimeDelta)
 
 void CEventTrigger::OnCollisionEnter(CGameObject* pOther)
 {
-	switch (m_eTriggerEvent)
-	{
-	case START_ODUR_CUTSCENE:
-		CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
-		break;
+	//switch (m_eTriggerEvent)
+	//{
+	//case START_ODUR_CUTSCENE:
+	//	CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
+	//	break;
 	//case START_URD_CUTSCENE:
 	//	CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_URD);
 	//	break;
-	}
-	
+	//}
+	//
 	ADD_EVENT(bind(&CGameObject::Set_Destroy, this, true));
 }
 

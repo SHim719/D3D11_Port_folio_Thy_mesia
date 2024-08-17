@@ -86,6 +86,8 @@ void CFadeScreen::Tick(_float fTimeDelta)
 		}
 		break;
 	}
+
+	
 }
 
 void CFadeScreen::LateTick(_float fTimeDelta)

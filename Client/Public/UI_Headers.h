@@ -18,3 +18,4 @@
 #include "UI_Stats.h"
 #include "UI_PlayerDefault.h"
 #include "UI_Popup.h"
+#include "UI_PotionSlot.h"

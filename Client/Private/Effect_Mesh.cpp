@@ -43,6 +43,8 @@ void CEffect_Mesh::Tick(_float fTimeDelta)
 	Update_UV(fTimeDelta);
 	Update_LifeTime(fTimeDelta);
 
+	Update_ClipRange(fTimeDelta);
+
 	Update_FinalMatrix();
 }
 
@@ -55,6 +57,9 @@ void CEffect_Mesh::LateTick(_float fTimeDelta)
 
 	if (m_bGlow)
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
+
+	if (m_tMeshEffectInfo.bDistortion)
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_DISTORTION, this);
 }
 
 HRESULT CEffect_Mesh::Render()
@@ -95,6 +100,7 @@ void CEffect_Mesh::Restart_Effect(EFFECTSPAWNDESC* pDesc)
 	m_bComplete = false;
 	m_fSpawnTimeAcc = m_tMeshEffectInfo.fSpawnTime;
 	m_bNoRender = true;
+	m_fClipRange = 0.f;
 
 	m_tMeshEffectInfo.vColor = m_tMeshEffectInfo.vStartColor;
 	m_vMaskUVOffset = m_tMeshEffectInfo.vStartMaskUVOffset;
@@ -191,18 +197,35 @@ void CEffect_Mesh::Update_UV(_float fTimeDelta)
 	m_vMaskUVOffset.x += m_tMeshEffectInfo.vMaskUVSpeed.x * fTimeDelta;
 	m_vMaskUVOffset.y += m_tMeshEffectInfo.vMaskUVSpeed.y * fTimeDelta;
 
-	if (fabsf(m_vMaskUVOffset.x) >= 9999.f)
-		m_vMaskUVOffset.x = 0.f;
-	if (fabsf(m_vMaskUVOffset.y) >= 9999.f)
-		m_vMaskUVOffset.y = 0.f;
+	if (1 == m_tMeshEffectInfo.iMaskSampler) // Clamp
+	{
+		m_vMaskUVOffset.x = clamp(m_vMaskUVOffset.x, m_tMeshEffectInfo.vMinMaskUVOffset.x, m_tMeshEffectInfo.vMaxMaskUVOffset.x);
+		m_vMaskUVOffset.y = clamp(m_vMaskUVOffset.y, m_tMeshEffectInfo.vMinMaskUVOffset.y, m_tMeshEffectInfo.vMaxMaskUVOffset.y);
+	}
+	else // Wrap
+	{
+		if (fabsf(m_vMaskUVOffset.x) >= 9999.f)
+			m_vMaskUVOffset.x = 0.f;
+		if (fabsf(m_vMaskUVOffset.y) >= 9999.f)
+			m_vMaskUVOffset.y = 0.f;
+	}
+
 
 	m_vNoiseUVOffset.x += m_tMeshEffectInfo.vNoiseUVSpeed.x * fTimeDelta;
 	m_vNoiseUVOffset.y += m_tMeshEffectInfo.vNoiseUVSpeed.y * fTimeDelta;
 
-	if (fabsf(m_vNoiseUVOffset.x) >= 9999.f)
-		m_vNoiseUVOffset.x = 0.f;
-	if (fabsf(m_vNoiseUVOffset.y) >= 9999.f)
-		m_vNoiseUVOffset.y = 0.f;
+	if (1 == m_tMeshEffectInfo.iNoiseSampler) // Clamp
+	{
+		m_vNoiseUVOffset.x = clamp(m_vNoiseUVOffset.x, m_tMeshEffectInfo.vMinNoiseUVOffset.x, m_tMeshEffectInfo.vMaxNoiseUVOffset.x);
+		m_vNoiseUVOffset.y = clamp(m_vNoiseUVOffset.y, m_tMeshEffectInfo.vMinNoiseUVOffset.y, m_tMeshEffectInfo.vMaxNoiseUVOffset.y);
+	}
+	else
+	{
+		if (fabsf(m_vNoiseUVOffset.x) >= 9999.f)
+			m_vNoiseUVOffset.x = 0.f;
+		if (fabsf(m_vNoiseUVOffset.y) >= 9999.f)
+			m_vNoiseUVOffset.y = 0.f;
+	}
 
 }
 
@@ -235,6 +258,14 @@ void CEffect_Mesh::Update_FinalMatrix()
 	XMStoreFloat4x4(&m_FinalMatrix, XMMatrixTranspose(FinalMatrix));
 }
 
+void CEffect_Mesh::Update_ClipRange(_float fTimeDelta)
+{
+	if (1 != m_iPassIdx)
+		return;
+
+	m_fClipRange += 0.5f * fTimeDelta;
+}
+
 HRESULT CEffect_Mesh::Ready_Components()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform)))
@@ -243,7 +274,6 @@ HRESULT CEffect_Mesh::Ready_Components()
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Local_Transform"), (CComponent**)&m_pLocalTransform)))
 		return E_FAIL;
 	
-
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Masking"), TEXT("MaskTexture"), (CComponent**)&m_pMaskTexture)))
 		return E_FAIL;
 
@@ -302,6 +332,21 @@ HRESULT CEffect_Mesh::Bind_GlobalVariables()
 			return E_FAIL;
 	}
 
+	if (FAILED(m_pShader->Set_RawValue("g_bDistortion", &m_tMeshEffectInfo.bDistortion, sizeof(_bool))))
+		return E_FAIL;
+
+	if (m_tMeshEffectInfo.bDistortion)
+	{
+		if (FAILED(m_pShader->Set_RawValue("g_fDistortionIntensity", &m_tMeshEffectInfo.fDistortion_Intensity, sizeof(_float))))
+			return E_FAIL;
+	}
+
+	if (1 == m_iPassIdx)
+	{
+		if (FAILED(m_pShader->Set_RawValue("g_fClipRange", &m_fClipRange, sizeof(_float))))
+			return E_FAIL;
+	}
+
 	return S_OK;
 }
 
@@ -312,15 +357,22 @@ HRESULT CEffect_Mesh::Bind_ShaderResources()
 
 	if (-1 != m_iMaskTextureIdx)
 	{
+		if (FAILED(m_pShader->Set_RawValue("g_iMaskSampler", &m_tMeshEffectInfo.iMaskSampler, sizeof(_int))))
+			return E_FAIL;
+
 		if (FAILED(m_pMaskTexture->Set_SRV(m_pShader, "g_MaskTexture", m_iMaskTextureIdx)))
 			return E_FAIL;
 	}
 
 	if (-1 != m_iNoiseTextureIdx)
 	{
+		if (FAILED(m_pShader->Set_RawValue("g_iNoiseSampler", &m_tMeshEffectInfo.iNoiseSampler, sizeof(_int))))
+			return E_FAIL;
+
 		if (FAILED(m_pNoiseTexture->Set_SRV(m_pShader, "g_NoiseTexture", m_iNoiseTextureIdx)))
 			return E_FAIL;
 	}
+
 
 	return S_OK;
 

@@ -31,6 +31,9 @@
 #include "PlayerState_FoundBeacon.h"
 #include "PlayerState_Sit.h"
 #include "PlayerState_Healing.h"
+#include "PlayerState_KnockDown.h"
+#include "PlayerState_KnockDown_GetUp.h"
+#include "PlayerState_FallDown.h"
 
 #include "PlayerState_PW_Axe.h"
 #include "PlayerState_PW_Hammer.h"

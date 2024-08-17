@@ -15,7 +15,7 @@ public:
 
 public:
 	HRESULT Initialize();
-	HRESULT Add_Light(const LIGHT_DESC& LightDesc);
+	HRESULT Add_Light(class CLight* pLight);
 	HRESULT Render(class CShader* pShader, class CVIBuffer* pVIBuffer);
 
 	void Clear_Lights();

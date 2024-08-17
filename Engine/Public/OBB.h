@@ -19,11 +19,17 @@ public:
 	}
 
 public:
-	HRESULT Initialize_Prototype()	override;
-	HRESULT Initialize(void* pArg)								override;
-	void Update(_fmatrix TransformMatrix)						override;
+	HRESULT Initialize_Prototype()				override;
+	HRESULT Initialize(void* pArg)				override;
+	void Update(_fmatrix TransformMatrix)		override;
 	
-														
+								
+	void Set_Size(_fvector vSize)		override {
+		XMStoreFloat3(&m_pOriginal_OBB->Extents, vSize);
+	}
+	void Set_Center(_fvector vCenter)	override {
+		XMStoreFloat3(&m_pOriginal_OBB->Center, vCenter);
+	}
 public:
 	HRESULT Render() override;
 

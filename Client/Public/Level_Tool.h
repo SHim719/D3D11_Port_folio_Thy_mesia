@@ -29,6 +29,7 @@ private:
 	HRESULT Ready_Joker();
 	HRESULT Ready_HalberdKnight();
 	HRESULT Ready_TwinBladeKnight();
+	HRESULT Ready_Urd();
 
 	HRESULT Ready_UIResource();
 	HRESULT Ready_UI();

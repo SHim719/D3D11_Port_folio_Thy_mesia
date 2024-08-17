@@ -173,24 +173,25 @@ void CGameEffect::Update_TextureFlag()
 
 void CGameEffect::Spawn_Effect()
 {
-	if (nullptr == m_pParentTransform)
-		return;
-
-	if ('\0' != m_szBoneName[0])
+	CALC_TF->Set_Position(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	if (nullptr != m_pParentTransform)  
 	{
-		if (m_bFollowOnlyPosition)
+		if ('\0' != m_szBoneName[0])
 		{
-			CALC_TF->Set_WorldMatrix(m_pParentTransform->Get_WorldMatrix());
-			CALC_TF->Attach_To_Bone(m_pParentBone, m_pParentTransform, XMMatrixIdentity(), true);
+			if (m_bFollowOnlyPosition)
+			{
+				CALC_TF->Set_WorldMatrix(m_pParentTransform->Get_WorldMatrix());
+				CALC_TF->Attach_To_Bone(m_pParentBone, m_pParentTransform, XMMatrixIdentity(), true);
+			}
+			else
+				CALC_TF->Attach_To_Bone(m_pParentBone, m_pParentTransform);
 		}
 		else
-			CALC_TF->Attach_To_Bone(m_pParentBone, m_pParentTransform);
+		{
+			CALC_TF->Set_WorldMatrix(m_pParentTransform->Get_WorldMatrix());
+		}
 	}
-	else
-	{
-		CALC_TF->Set_WorldMatrix(m_pParentTransform->Get_WorldMatrix());
-	}
-
+	
 	CALC_TF->Add_Position(XMLoadFloat3(&m_vWorldOffset), true);
 
 	m_pTransform->Set_WorldMatrix(CALC_TF->Get_WorldMatrix());

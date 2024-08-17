@@ -18,7 +18,6 @@ HRESULT CVillagerFState_Stunned_Loop::Initialize(void* pArg)
 void CVillagerFState_Stunned_Loop::OnState_Start(void* pArg)
 {
 	m_pModel->Change_Animation(LV1Villager_F_HurtStunLoop);
-	static_cast<CPlayer*>(m_pVillager_F->Get_Target())->Add_StunnedEnemy(m_pVillager_F);
 }
 
 void CVillagerFState_Stunned_Loop::Update(_float fTimeDelta)

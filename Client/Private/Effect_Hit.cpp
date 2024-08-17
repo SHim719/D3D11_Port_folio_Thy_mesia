@@ -27,13 +27,17 @@ HRESULT CEffect_Hit::Initialize(void* pArg)
 
 	EFFECT_HITDESC* pDesc = (EFFECT_HITDESC*)pArg;
 
-	CGameEffect::EFFECTSPAWNDESC SpawnDesc{};
-	SpawnDesc.pParentTransform = m_pTransform;
+	m_iTag = pDesc->iTag;
+
+	if (nullptr == pDesc->EffectSpawnDesc.pParentTransform)
+		pDesc->EffectSpawnDesc.pParentTransform = m_pTransform;
 
 	m_pEffect_Group = pDesc->pEffect_Group;
-	Safe_AddRef(m_pEffect_Group);
 
-	if (FAILED(OnEnter_Layer(&m_pEffect_Group)))
+	m_pTransform->Set_Position(XMLoadFloat4(&pDesc->vSpawnPos));
+
+	Safe_AddRef(m_pEffect_Group);
+	if (FAILED(m_pEffect_Group->OnEnter_Layer(&pDesc->EffectSpawnDesc)))
 		return E_FAIL;
 
 	m_pGameInstance->Insert_GameObject(GET_CURLEVEL, L"Effect", m_pEffect_Group);
@@ -49,6 +53,12 @@ void CEffect_Hit::Tick(_float fTimeDelta)
 
 void CEffect_Hit::LateTick(_float fTimeDelta)
 {
+	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+
+#ifdef _DEBUG
+	m_pGameInstance->Add_RenderComponent(m_pCollider);
+#endif
+
 }
 
 
@@ -59,7 +69,6 @@ HRESULT CEffect_Hit::Ready_Components(void* pArg)
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Attackable"), TEXT("Attackable"), (CComponent**)&m_pAttackable)))
 		return E_FAIL;
-
 
 	EFFECT_HITDESC* pDesc = (EFFECT_HITDESC*)pArg;
 
@@ -82,8 +91,6 @@ HRESULT CEffect_Hit::Ready_Components(void* pArg)
 	}
 
 	m_pAttackable->Set_AttackDesc(pDesc->AttackDesc);
-
-	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pDesc->SpawnMatrix));
 
 	return S_OK;
 }
@@ -118,7 +125,7 @@ void CEffect_Hit::Free()
 {
 	__super::Free();
 
-	Safe_Release(m_pTransform);
+	Safe_Release(m_pCollider);
 	Safe_Release(m_pAttackable);
 	Safe_Release(m_pEffect_Group);
 }

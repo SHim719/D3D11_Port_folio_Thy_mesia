@@ -11,7 +11,7 @@ HRESULT CPlayerState_ClawAttack_Long::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack,
-		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_ChargeStart };
+		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_ChargeStart, PlayerState::State_Healing };
 
 	m_pModel->Bind_Func("Shaking_Claw_Long", bind(&CMain_Camera::Play_CameraShake, m_pMain_Camera, "Shaking_Claw_Long"));
 
@@ -35,8 +35,8 @@ void CPlayerState_ClawAttack_Long::OnState_Start(void* pArg)
 		m_pModel->Change_AnimationWithStartFrame(Corvus_Raven_ClawLong_L02, 18, 0.1f);
 
 	RADIALBLUR_DESCS RadialDescs{};
-	RadialDescs.fBlurRadius = 10.f;
-	RadialDescs.fBlurStrength = 1.5f;
+	RadialDescs.fBlurRadius = 8.f;
+	RadialDescs.fBlurStrength = 1.f;
 
 	m_pGameInstance->Active_RadialBlur(RadialDescs);
 	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());

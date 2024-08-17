@@ -34,8 +34,11 @@
 
 #include "UI_Headers.h"
 #include "UI_Manager.h"
-
 #include "PerceptionBounding.h"
+
+#include "LightObject.h"
+
+#include "Urd_Weapon.h"
 
 CLevel_Tool::CLevel_Tool(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CLevel(pDevice, pContext)
@@ -83,14 +86,17 @@ HRESULT CLevel_Tool::Initialize()
 	if (FAILED(Ready_TwinBladeKnight()))
 		return E_FAIL;
 
+	if (FAILED(Ready_Urd()))
+		return E_FAIL;
+
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_BaseColor", CTexture::Create(m_pDevice, m_pContext,
 		L"../../Resources/Effect/Diffuse/%d.png", 4));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Mask/Masking/%d.png", 27));
+		L"../../Resources/Effect/Mask/Masking/%d.dds", 41));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Noise/%d.png", 16));
+		L"../../Resources/Effect/Noise/%d.dds", 17));
 
 	m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Dissolve", CTexture::Create(m_pDevice, m_pContext,
 		L"../../Resources/Effect/DissolvePattern.png"));
@@ -112,16 +118,18 @@ HRESULT CLevel_Tool::Render()
 
 HRESULT CLevel_Tool::Ready_Lights()
 {
+	m_pGameInstance->Add_Prototype(L"Prototype_LightObject", CLightObject::Create(m_pDevice, m_pContext));
+
 	LIGHT_DESC			LightDesc{};
 
 	LightDesc.eType = LIGHT_DESC::TYPE_DIRECTIONAL;
 	LightDesc.vDiffuse = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vAmbient = _float4(0.3f, 0.3f, 0.3f, 1.f);
+	LightDesc.vAmbient = _float4(1.f, 1.f, 1.f, 1.f);
 	LightDesc.vSpecular = _float4(1.f, 1.f, 1.f, 1.f);
-	LightDesc.vDirection = _float4(1.f, -1.f, 0.f, 0.f);
+	LightDesc.vDirection = _float4(0.f, -1.f, 0.f, 0.f);
+	LightDesc.fLightStrength = 1.f;
 
-	if (FAILED(m_pGameInstance->Add_Light(LightDesc)))
-		return E_FAIL;
+	m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Light", L"Prototype_LightObject", &LightDesc);
 
 	return S_OK;
 }
@@ -153,7 +161,7 @@ HRESULT CLevel_Tool::Ready_Camera()
 HRESULT CLevel_Tool::Ready_Player()
 {
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player", CModel::Create(m_pDevice, m_pContext,
-		"../../Resources/Models/Corvus/", "Corvus_No1.dat", "../../Resources/KeyFrame/Player/"));
+		"../../Resources/Models/Corvus/", "Corvus_No2.dat", "../../Resources/KeyFrame/Player/"));
 
 	m_pGameInstance->Add_Prototype(LEVEL_TOOL, L"Prototype_Model_Player_Dagger", CModel::Create(m_pDevice, m_pContext,
 		"../../Resources/Models/Corvus/", "Corvus_Dagger.dat"));
@@ -246,6 +254,22 @@ HRESULT CLevel_Tool::Ready_TwinBladeKnight()
 		"../../Resources/Models/TwinBladeKnight/", "Sword.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_TwinBladeKnight", CTwinBladeKnight::Create(m_pDevice, m_pContext));
+
+	return S_OK;
+}
+
+HRESULT CLevel_Tool::Ready_Urd()
+{
+	m_pGameInstance->Add_Prototype(GET_CURLEVEL, L"Prototype_Model_Urd", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Urd/", "Urd.dat", "../../Resources/KeyFrame/Urd/"));
+
+	m_pGameInstance->Add_Prototype(GET_CURLEVEL, L"Prototype_Model_Urd_Sword", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Urd/", "SM_Urd_Sword.dat"));
+
+	m_pGameInstance->Add_Prototype(GET_CURLEVEL, L"Prototype_Model_Urd_Weapon_VFX", CModel::Create(m_pDevice, m_pContext,
+		"../../Resources/Models/Urd/", "UrdSword_VFX.dat"));
+
+	m_pGameInstance->Add_Prototype(L"Prototype_Urd_Weapon", CUrd_Weapon::Create(m_pDevice, m_pContext));
 
 	return S_OK;
 }

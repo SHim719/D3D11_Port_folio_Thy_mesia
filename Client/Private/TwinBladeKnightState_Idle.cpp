@@ -16,6 +16,7 @@ HRESULT CTwinBladeKnightState_Idle::Initialize(void* pArg)
 void CTwinBladeKnightState_Idle::OnState_Start(void* pArg)
 {
 	m_pModel->Change_Animation(LArmor_TwinSwords_IdleN);
+	m_pTwinBladeKnight->Set_Stanced(true);
 }
 
 void CTwinBladeKnightState_Idle::Update(_float fTimeDelta)
@@ -31,7 +32,7 @@ void CTwinBladeKnightState_Idle::Late_Update(_float fTimeDelta)
 
 void CTwinBladeKnightState_Idle::OnState_End()
 {
-
+	m_pTwinBladeKnight->Set_Stanced(false);
 }
 
 CTwinBladeKnightState_Idle* CTwinBladeKnightState_Idle::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

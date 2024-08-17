@@ -331,13 +331,13 @@ void CUI_PW::Change_UsingSkill()
 
 		m_pPlayerStats->Set_UseShortClaw(m_eNowSelected == CLAW_SHORT);
 	}
-	else
+	else if (m_pPlayerStats->Is_SkillActived(Get_SelectedToSkillType()))
 	{
 		Safe_Release(m_pUsingSkillTextures[0]);
 
 		m_pUsingSkillTextures[0] = static_cast<CTexture*>(m_pGameInstance->Clone_Component(LEVEL_STATIC, Get_SkillIconTag()));
 
-		m_pPlayerStats->Set_UsingSkill(Get_SelectedToSkillType());
+		m_pPlayerStats->Update_UsingSkill(Get_SelectedToSkillType());
 	}
 }
 

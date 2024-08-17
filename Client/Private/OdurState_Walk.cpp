@@ -33,7 +33,8 @@ void COdurState_Walk::Update(_float fTimeDelta)
 	switch (m_iDir)
 	{
 	case 0:
-		m_pOwnerTransform->Go_Straight(fTimeDelta, m_pNavigation);
+		if (false == m_pOdur->Is_CollPlayer())
+			m_pOwnerTransform->Go_Straight(fTimeDelta, m_pNavigation);
 		break;
 	case 1:
 		m_pOwnerTransform->Go_Left(fTimeDelta, m_pNavigation);

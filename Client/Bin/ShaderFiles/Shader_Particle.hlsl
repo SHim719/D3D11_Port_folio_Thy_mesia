@@ -216,27 +216,7 @@ PS_OUT PS_MAIN(PS_IN In)
         Out.vGlow.rgb *= vGlow;
     }
   
-    //if (EPSILON < fIntensity_Distortion)
-    //{
-    //    if (bDistortionOnBaseMaterial)
-    //        fDistortion = vColor.r * fIntensity_Distortion;
-    //    else
-    //        fDistortion = fMask * fIntensity_Distortion;
-    //}
-    
-    //if (EPSILON < g_vTextureFlag.w)	// Dissolve
-    //{
-    //    float fDissolve = g_DissolveTexture.Sample(Sampler, vNewUV).x;
-    //    
-	//    //Discard the pixel if the value is below zero
-    //    clip(fDissolve - fDissolve_Amount);
-	//    //Make the pixel emissive if the value is below ~f
-    //    if (fDissolve - fDissolve_Amount < 0.25f)/*0.08f*/
-    //    {
-    //        vColor.xyz += vColor.xyz * float3(0.3f, 0.3f, 0.3f);
-    //    }
-    //}
-    //Out.vDistortion = fDistortion;
+
    
     return Out;
 }

@@ -65,6 +65,10 @@ _int CCharacter::Take_Damage(const ATTACKDESC& AttackDesc)
 	return 0;
 }
 
+void CCharacter::OnDeath()
+{
+}
+
 _vector CCharacter::Get_Center() const
 {
 	return _vector();

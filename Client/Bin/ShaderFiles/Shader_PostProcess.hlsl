@@ -12,6 +12,10 @@ texture2D g_BloomTexture;
 texture2D g_GlowTextureAfterBlur;
 //////////////////////////
 
+// DISTORTION///////////////
+texture2D g_DistortionTexture;
+///////////////////////////
+
 texture2D g_FinalTexture;
 
 struct VS_IN
@@ -47,7 +51,7 @@ struct PS_OUT
     float4 vColor : SV_TARGET0;
 };
 
-PS_OUT PS_MAIN_Copy(PS_IN In)
+PS_OUT PS_MAIN_COPY(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
@@ -58,7 +62,7 @@ PS_OUT PS_MAIN_Copy(PS_IN In)
     return Out;
 }
 
-PS_OUT PS_MAIN_Glow(PS_IN In)
+PS_OUT PS_MAIN_GLOW(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
@@ -67,6 +71,17 @@ PS_OUT PS_MAIN_Glow(PS_IN In)
     
     Out.vColor = vOrigin + vAfterBlur;
     
+    return Out;
+}
+
+PS_OUT PS_MAIN_DISTORTION(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float  fDistortion = g_DistortionTexture.Sample(LinearClampSampler, In.vTexcoord).r;
+    
+    Out.vColor = g_OriginTexture.Sample(LinearClampSampler, In.vTexcoord + float2(fDistortion, fDistortion));
+  
     return Out;
 }
 
@@ -107,8 +122,20 @@ PS_OUT PS_MAIN_RADIALBLUR(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_COLOR_INVERSION(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+    
+    float4 vOriginColor = g_OriginTexture.Sample(LinearClampSampler, In.vTexcoord);
+    float4 vInverseColor = 1.f - vOriginColor;
+   
+    Out.vColor = lerp(vOriginColor, vInverseColor, g_fInversionRatio);
+    
+    return Out;
+}
 
-PS_OUT PS_MAIN_Final(PS_IN In)
+
+PS_OUT PS_MAIN_FINAL(PS_IN In)
 {
     PS_OUT Out = (PS_OUT) 0;
     
@@ -130,7 +157,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         ComputeShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_Copy();
+        PixelShader = compile ps_5_0 PS_MAIN_COPY();
     }
 
     pass Glow // 1
@@ -144,7 +171,7 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         ComputeShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_Glow();
+        PixelShader = compile ps_5_0 PS_MAIN_GLOW();
     }
 
     pass Bloom // 2
@@ -187,7 +214,35 @@ technique11 DefaultTechnique
         HullShader = NULL;
         DomainShader = NULL;
         ComputeShader = NULL;
-        PixelShader = compile ps_5_0 PS_MAIN_Final();
+        PixelShader = compile ps_5_0 PS_MAIN_FINAL();
+    }
+
+    pass Distortion // 5
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_NoZTest_And_Write, 0);
+        SetBlendState(BS_None, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        ComputeShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_DISTORTION();
+    }
+
+    pass Color_Inversion // 6
+    {
+        SetRasterizerState(RS_Default);
+        SetDepthStencilState(DSS_RenderOnlyStencilEqual, 1);
+        SetBlendState(BS_None, float4(0.0f, 0.f, 0.f, 0.f), 0xffffffff);
+		
+        VertexShader = compile vs_5_0 VS_MAIN();
+        GeometryShader = NULL;
+        HullShader = NULL;
+        DomainShader = NULL;
+        ComputeShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_COLOR_INVERSION();
     }
 }
 

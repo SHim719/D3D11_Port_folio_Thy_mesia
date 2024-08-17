@@ -2,6 +2,8 @@
 
 #include "Main_Camera.h"
 
+#include "Player.h"
+
 
 CVillagerMState_Stunned_Start::CVillagerMState_Stunned_Start(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVillagerMState_Base(pDevice, pContext)
@@ -23,12 +25,14 @@ void CVillagerMState_Stunned_Start::OnState_Start(void* pArg)
 
 	RIMLIGHTDESC RimDesc{};
 	RimDesc.bColorLerp = true;
-	RimDesc.fDuration = 2.f;
+	RimDesc.fDuration = 1.5f;
 	RimDesc.fRimPower = 1.f;
 	RimDesc.fRimStrength = 3.f;
 	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };
 
 	m_pVillager_M->Active_RimLight(RimDesc);
+
+	static_cast<CPlayer*>(m_pVillager_M->Get_Target())->Add_StunnedEnemy(m_pVillager_M);
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");
 

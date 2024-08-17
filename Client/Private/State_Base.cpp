@@ -59,6 +59,10 @@ void CState_Base::Init_AttackDesc()
 {
 }
 
+void CState_Base::Reset_AttackDesc()
+{
+}
+
 void CState_Base::Setup_RootRotation()
 {
 	_vector vQuat = m_pModel->Get_NowRootQuat();

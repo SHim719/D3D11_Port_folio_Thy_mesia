@@ -21,6 +21,8 @@
 #include "Effect_Manager.h"
 #include "GameEffect.h"
 
+#include "LightObject.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)
 {
@@ -66,6 +68,18 @@ HRESULT CPlayer::Initialize(void* pArg)
 	Change_State((_uint)PlayerState::State_Idle);
 	m_pModel->Change_Animation(Corvus_SD_Idle, 0.f);
 
+	LIGHT_DESC LightDesc{};
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.vAmbient = { 0.5f, 0.5f, 0.5f, 1.f };
+	LightDesc.vDiffuse = { 0.8f, 0.8f, 0.8f, 1.f };
+	LightDesc.fRange = 6.f;
+	LightDesc.fLightStrength = 1.f;
+	
+	m_pLightObject = static_cast<CLightObject*>(m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Light", L"Prototype_LightObject", &LightDesc));
+	if (nullptr == m_pLightObject)
+		return E_FAIL;
+	m_pLightObject->Set_LightPosition(m_pTransform->Get_Position());
+
 	CUTSCENEMGR->Add_Actor(this);
 
 	return S_OK;
@@ -88,14 +102,14 @@ void CPlayer::Tick(_float fTimeDelta)
 		//
 		//UIMGR->Active_UI("UI_Popup", &eTypes);
 
-		//m_pStats->Update_PlunderSkill(SKILLTYPE::HAMMER);
+		m_pStats->Update_PlunderSkill(SKILLTYPE::HAMMER);
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::SPEAR);
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::TWINBLADE);
-		m_pStats->Update_PlunderSkill(SKILLTYPE::AXE);
+		//m_pStats->Update_PlunderSkill(SKILLTYPE::AXE);
 	}
 
 	if (KEY_DOWN(eKeyCode::M))
-		Change_State((_uint)PlayerState::State_Healing);
+		m_pStats->Increase_Hp(-100);
 	
 
 	if (m_bLockOn)
@@ -122,6 +136,9 @@ void CPlayer::Tick(_float fTimeDelta)
 	if (m_pGameInstance->Is_Active_RadialBlur())
 		m_pGameInstance->Update_BlurCenterWorld(Get_Center());
 
+	if (m_pLightObject && (_uint)PlayerState::State_Cutscene != m_iState)
+		m_pLightObject->Set_LightPosition(m_pTransform->Get_Position());
+		
 	m_pModel->Play_Animation(fTimeDelta);
 }
 
@@ -161,8 +178,8 @@ HRESULT CPlayer::Render()
 		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;
 
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
@@ -192,6 +209,7 @@ void CPlayer::OnEnd_Cutscene()
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&m_PrevWorldMatrix));
 
 	UIMGR->Active_UI("UI_PlayerDefault");
+	m_bNoRender = false;
 
 	Change_State((_uint)PlayerState::State_Idle);
 }
@@ -206,9 +224,13 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Inactive_Claw_L", bind(&CWeapon::Set_Active_Collider, m_Weapons[CLAW_L], false));
 	m_pModel->Bind_Func("Enable_NextState", bind(&CPlayer::Set_CanNextState, this, true));
 	m_pModel->Bind_Func("Disable_NextState", bind(&CPlayer::Set_CanNextState, this, false));
+	m_pModel->Bind_Func("Enable_Jog", bind(&CPlayer::Set_EnableJog, this, true));
+	m_pModel->Bind_Func("Disable_Jog", bind(&CPlayer::Set_EnableJog, this, false));
 	m_pModel->Bind_Func("Disable_Rotation", bind(&CPlayer::Set_CanRotation, this, false));
 	m_pModel->Bind_Func("Enable_NextAttack", bind(&CPlayer::Set_CanNextAttack, this, true));
 	m_pModel->Bind_Func("Disable_NextAttack", bind(&CPlayer::Set_CanNextAttack, this, false));
+	m_pModel->Bind_Func("Enable_Parry", bind(&CPlayer::Set_CanParry, this, true));
+	m_pModel->Bind_Func("Disable_Parry", bind(&CPlayer::Set_CanParry, this, false));
 	m_pModel->Bind_Func("Set_Vulnerable", bind(&CPlayer::Set_Invincible, this, false));
 	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));
 	m_pModel->Bind_Func("Active_PlagueWeapon_Collider", bind(&CPlayer::Set_Active_NowPWCollider, this, true));
@@ -221,6 +243,9 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Active_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, true));
 	m_pModel->Bind_Func("Inactive_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, false));
 	m_pModel->Bind_Func("Healing", bind(&CPlayer::Healing, this));
+	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, 1.5f));
+	m_pModel->Bind_Func("Execution_Odur_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.4f));
+	m_pModel->Bind_Func("Reset_TimeScale", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 1.f));
 	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, 1.5f));
 }
 
@@ -251,6 +276,7 @@ void CPlayer::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_Plunder_Rush_Trail", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Rush_Trail", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Plunder_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Start", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Plunder", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Effect", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Execution_Odur_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Execution_Odur_Blood", &m_tEffectSpawnDesc));
 }
 
 HRESULT CPlayer::Bind_ShaderResources()
@@ -273,7 +299,7 @@ void CPlayer::Update_CanExecutionEnemy()
 	if (m_bLockOn)
 	{
 		_float fAngle = JoMath::Calc_AngleToTarget(m_pTransform->Get_Position(), m_pTargetTransform->Get_Position(), m_pTransform->Get_GroundLook());
-		if (fabsf(fAngle) < To_Radian(60.f))
+		if (fabsf(fAngle) < To_Radian(80.f))
 		{
 			_float fDist = XMVector3Length(m_pTransform->Get_Position() - m_pTargetTransform->Get_Position()).m128_f32[0];
 			if (fDist < m_fExecutionDist)
@@ -289,7 +315,9 @@ void CPlayer::Update_CanExecutionEnemy()
 						}
 						else
 						{
-							m_pExecutionTarget->InActive_StunnedMark();
+
+							if (nullptr != m_pExecutionTarget)
+								m_pExecutionTarget->InActive_StunnedMark();
 						}
 						++it;
 					}
@@ -312,7 +340,7 @@ void CPlayer::Update_CanExecutionEnemy()
 			if ((*it)->Is_Stunned())
 			{
 				_float fAngle = JoMath::Calc_AngleToTarget(m_pTransform->Get_Position(), (*it)->Get_Transform()->Get_Position(), m_pTransform->Get_GroundLook());
-				if (fabsf(fAngle) < To_Radian(60.f))
+				if (fabsf(fAngle) < To_Radian(80.f))
 				{
 					_float fDist = XMVector3Length(m_pTransform->Get_Position() - (*it)->Get_Transform()->Get_Position()).m128_f32[0];
 					if (fDist < m_fExecutionDist && fDist < fMaxDist)
@@ -458,13 +486,18 @@ void CPlayer::OnCollisionEnter(CGameObject* pOther)
 {
 	if (TAG_ENEMY_WEAPON == pOther->Get_Tag())
 	{
-		if (m_fHitGapAcc > 0.f)
+  		if (m_fHitGapAcc > 0.f)
 			return;
 
-		m_fHitGapAcc = m_fHitGap;
-		CWeapon* pEnemyWeapon = static_cast<CWeapon*>(pOther);
+		CAttackable* pAttackable = static_cast<CAttackable*>(pOther->Find_Component(L"Attackable"));
+		if (nullptr == pAttackable)
+			return;
+		
+		ATTACKDESC AttackDesc = pAttackable->Get_AttackDesc();
+		if (AttackDesc.iDamage > 0)
+			m_fHitGapAcc = m_fHitGap;
 
-		m_States[m_iState]->OnHit(pEnemyWeapon->Get_AttackDesc());
+		m_States[m_iState]->OnHit(AttackDesc);
 	}
 	else if (TAG_ENEMY == pOther->Get_Tag())
 	{
@@ -488,7 +521,8 @@ void CPlayer::ChangeToNextComboAnim()
 
 void CPlayer::Healing()
 {
-	m_pStats->Increase_Hp(200);
+	m_pStats->Increase_Hp(300);
+	m_pStats->Add_PotionCount(-1);
 
 	RIMLIGHTDESC RimDesc;
 	RimDesc.fDuration = 1.f;
@@ -504,11 +538,13 @@ void CPlayer::Healing()
 
 _int CPlayer::Take_Damage(const ATTACKDESC& AttackDesc)
 {
-	CUI_DamageFont::DAMAGEFONTDESC DamageFontDesc;
-	DamageFontDesc.strDamage = to_string(AttackDesc.iDamage);
-	XMStoreFloat4(&DamageFontDesc.vWorldPosition, JoMath::Get_BoneWorldPos(m_pModel->Get_Bone("Bip001-Head"), m_pTransform->Get_WorldMatrix()));
-
-	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"UI", L"Prototype_DamageFont", &DamageFontDesc);
+	if (AttackDesc.iDamage > 0)
+	{
+		CUI_DamageFont::DAMAGEFONTDESC DamageFontDesc;
+		DamageFontDesc.strDamage = to_string(AttackDesc.iDamage);
+		XMStoreFloat4(&DamageFontDesc.vWorldPosition, JoMath::Get_BoneWorldPos(m_pModel->Get_Bone("Bip001-Head"), m_pTransform->Get_WorldMatrix()));
+		m_pGameInstance->Add_Clone(GET_CURLEVEL, L"UI", L"Prototype_DamageFont", &DamageFontDesc);
+	}
 
 	return m_pStats->Increase_Hp(-AttackDesc.iDamage);
 }
@@ -613,6 +649,9 @@ HRESULT CPlayer::Ready_States()
 	m_States[(_uint)PlayerState::State_Parry] = CPlayerState_Parry::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_ParrySuccess] = CPlayerState_ParrySuccess::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_Hit] = CPlayerState_Hit::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_KnockDown] = CPlayerState_KnockDown::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_KnockDown_GetUp] = CPlayerState_KnockDown_GetUp::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)PlayerState::State_FallDown] = CPlayerState_FallDown::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_ChargeStart] = CPlayerState_ChargeStart::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_ChargeComplete] = CPlayerState_ChargeComplete::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)PlayerState::State_ChargeLoop] = CPlayerState_ChargeLoop::Create(m_pDevice, m_pContext, this);

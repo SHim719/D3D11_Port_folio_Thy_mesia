@@ -5,8 +5,13 @@
 
 #include "Cutscene_Manager.h"
 #include "UI_Manager.h"
+#include "Effect_Manager.h"
 
 #include "FadeScreen.h"
+
+#include "LightObject.h"
+
+#include "Player.h"
 
 COdur::COdur(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
@@ -21,6 +26,7 @@ COdur::COdur(const COdur& rhs)
 HRESULT COdur::Initialize_Prototype()
 {
 	m_iTag = (_uint)TAG_ENEMY;
+	m_eExecutionTag = ODUR;
 	return S_OK;
 }
 
@@ -41,7 +47,8 @@ HRESULT COdur::Initialize(void* pArg)
 	if (FAILED(Ready_Stats()))
 		return E_FAIL;
 
-	Bind_KeyFrames();
+	if (FAILED(Ready_Light()))
+		return E_FAIL;
 
 	m_pSwapBone = m_pModel->Get_Bone("weapon_l_Sword");
 	Safe_AddRef(m_pSwapBone);
@@ -55,6 +62,13 @@ HRESULT COdur::Initialize(void* pArg)
 	CUTSCENEMGR->Add_Actor(this);
 
 	m_bNoRender = true;
+	m_bLookTarget = false;
+
+	m_iStunnedStateIdx = (_uint)OdurState::State_Stunned_Loop;
+	m_iExecutionStateIdx = (_uint)OdurState::State_Executed;
+
+	Bind_KeyFrames();
+	Bind_KeyFrameEffects();
 
 	return S_OK;
 }
@@ -65,35 +79,24 @@ void COdur::Tick(_float fTimeDelta)
 	{
 		m_bNoRender = false;
 		UIMGR->Active_UI("UI_BossBar", m_pStats);
+		m_pLightObject->Set_Active(true);
 		Change_State((_uint)OdurState::State_Walk);
 	}
 
 	if (KEY_DOWN(eKeyCode::O))
 	{
 		//Change_State((_uint)OdurState::State_DisappearMove);
-
-		Change_State((_uint)OdurState::State_ThrowCard);
+		//Change_State((_uint)OdurState::State_Parry);
+		//Change_State((_uint)OdurState::State_ThrowCard);
 		//Change_State((_uint)OdurState::State_ExecutionDisappear);
-	}
-		
-	if (m_bLookTarget)
-	{
-		m_pTransform->Rotation_Quaternion(
-			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
-				, JoMath::Calc_GroundLook(s_pTarget->Get_Transform()->Get_Position(), m_pTransform->Get_Position())
-				, m_fRotRate * fTimeDelta));
+		Change_State((_uint)OdurState::State_Stunned_Start);
 	}
 
-	m_States[m_iState]->Update(fTimeDelta);
+	__super::Tick(fTimeDelta);
 
-	if (m_bAdjustNaviY)
-		m_pNavigation->Decide_YPos(m_pTransform->Get_Position());
+	if (m_pLightObject)
+		m_pLightObject->Set_LightPosition(m_pTransform->Get_Position() + XMVectorSet(0.f, 2.f, 0.f, 0.f));
 
-	__super::Update_Colliders();
-
-	__super::Tick_Weapons(fTimeDelta);
-
-	m_pModel->Play_Animation(fTimeDelta);
 }
 
 void COdur::LateTick(_float fTimeDelta)
@@ -111,19 +114,19 @@ void COdur::LateTick(_float fTimeDelta)
 	m_pGameInstance->Add_RenderComponent(m_pCollider);
 	m_pGameInstance->Add_RenderComponent(m_pHitBoxCollider);
 #endif
-	CRenderer::RENDERGROUP RenderGroup = m_fAlpha != 1.f ? CRenderer::RENDER_BLEND : CRenderer::RENDER_NONBLEND;
+
+	CRenderer::RENDERGROUP RenderGroup = m_fAlpha < m_fAlphaCritical ? CRenderer::RENDER_BLEND : CRenderer::RENDER_NONBLEND;
 
 	m_pGameInstance->Add_RenderObject(RenderGroup, this);
+	if (m_bDissolve || m_bRimLight)
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 }
 
 HRESULT COdur::Render()
 {
-	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-		return E_FAIL;
+	_uint iPassIdx = m_iPassIdx;
 
-	_uint iPassIdx = 0;
-
-	if (m_fAlpha <= 0.2f)
+	if (m_fAlpha < m_fAlphaCritical && 0 == m_iPassIdx)
 	{
 		if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 			return E_FAIL;
@@ -131,7 +134,7 @@ HRESULT COdur::Render()
 		iPassIdx = 1;
 	}
 
-	if (FAILED(m_pModel->SetUp_BoneMatrices(m_pShader)))
+	if (FAILED(Bind_ShaderResources()))
 		return E_FAIL;
 
 	_uint		iNumMeshes = m_pModel->Get_NumMeshes();
@@ -140,8 +143,8 @@ HRESULT COdur::Render()
 	{
 		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
+
+		m_pModel->SetUp_OnShader(m_pShader, i, TextureType_NORMALS, "g_NormalTexture");
 
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
@@ -186,8 +189,22 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));	
 	m_pModel->Bind_Func("Odur_Execute_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.2f));	
 	m_pModel->Bind_Func("Reset_Timer", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 1.f));
-	m_pModel->Bind_Func("Enable_WeaponTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[CANE], true));
-	m_pModel->Bind_Func("Disable_WeaponTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[CANE], false));
+	m_pModel->Bind_Func("Enable_CaneTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[CANE], true));
+	m_pModel->Bind_Func("Disable_CaneTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[CANE], false));
+	m_pModel->Bind_Func("Enable_SwordTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[SWORD], true));
+	m_pModel->Bind_Func("Disable_SwordTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[SWORD], false));
+	m_pModel->Bind_Func("Odur_Light_On", bind(&CGameObject::Set_Active, m_pLightObject, true));
+
+}
+
+void COdur::Bind_KeyFrameEffects()
+{
+	m_pModel->Bind_Func("Effect_Odur_Cane_Attack1_Cloak_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Cane_Attack1_Cloak_Particle", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Odur_Cane_Attack1_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Cane_Attack1_Particle", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Odur_Cane_Kick_Effect", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Cane_Kick_Effect", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Odur_Cane_Kick_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Cane_Kick_Particle", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Odur_Disappear_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Disappear_Particle", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Odur_Execution_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Execution_Blood", &m_tEffectSpawnDesc));
 }
 
 void COdur::Swap_Bone()
@@ -195,9 +212,39 @@ void COdur::Swap_Bone()
 	m_Weapons[SWORD]->Swap_SocketBone(m_pSwapBone);
 }
 
+void COdur::Set_Alpha_Increase()
+{
+	m_bAlphaIncrease = true;
+	m_bAlphaEnabled = true;
+	for (auto& pWeapon : m_Weapons)
+		pWeapon->Set_AlphaEnable(true);
+}
+
+void COdur::Set_Alpha_Decrease()
+{
+	m_bAlphaIncrease = false;
+	m_bAlphaEnabled = true;
+	for (auto& pWeapon : m_Weapons)
+		pWeapon->Set_AlphaEnable(false);
+
+}
+
+void COdur::SetState_Death()
+{
+	m_bExecutionEnd = true;
+}
+
+void COdur::SetState_Executed(void* pArg)
+{
+	Change_State(m_iExecutionStateIdx, pArg);
+	s_pTarget->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&m_InitWorldMatrix));
+
+	UIMGR->Inactive_UI("UI_BossBar");
+}
+
 void COdur::Update_Alpha(_float fTimeDelta)
 {
-	if (false == m_bAlphaEnable)
+	if (false == m_bAlphaEnabled)
 		return;
 		
 	_float fDeltaSpeed = m_fDeltaAlphaSpeed * (m_bAlphaIncrease == false ? -1.f : 1.f);
@@ -207,7 +254,7 @@ void COdur::Update_Alpha(_float fTimeDelta)
 	m_fAlpha = clamp(m_fAlpha, 0.f, 1.f);
 
 	if (1.f == m_fAlpha || 0.f == m_fAlpha)
-		m_bAlphaEnable = false;
+		m_bAlphaEnabled = false;
 
 	Update_WeaponAlpha();
 }
@@ -267,6 +314,9 @@ HRESULT COdur::Ready_Components(void* pArg)
 
 	m_InitWorldMatrix = pLoadDesc->WorldMatrix;
 
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Dissolve"), TEXT("Dissolve_Texture"), (CComponent**)&m_pDissolveTexture)))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -287,8 +337,10 @@ HRESULT COdur::Ready_States()
 	m_States[(_uint)OdurState::State_ThrowCard] = COdurState_ThrowCard::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_ExecutionDisappear] = COdurState_ExecutionDisappear::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_ReadyExecution] = COdurState_ReadyExecution::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Stunned_Start] = COdurState_Stunned_Start::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Stunned_Loop] = COdurState_Stunned_Loop::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_Execute] = COdurState_Execute::Create(m_pDevice, m_pContext, this);
-	//m_States[(_uint)OdurState::State_Finished] = COdurState_Execute::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)OdurState::State_Executed] = COdurState_Executed::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)OdurState::State_Cutscene] = COdurState_Cutscene::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
@@ -330,6 +382,7 @@ HRESULT COdur::Ready_Weapons()
 
 	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r_Sword");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Odur_Sword";
+	WeaponDesc.wstrTrailTag = L"Prototype_Trail_Odur_Sword_Trail";
 	m_Weapons[SWORD] = static_cast<CWeapon*>(m_pGameInstance->Clone_GameObject(L"Prototype_Weapon", &WeaponDesc));
 	if (nullptr == m_Weapons[SWORD])
 		return E_FAIL;
@@ -360,11 +413,31 @@ HRESULT COdur::Ready_Stats()
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"¿ÀµÎ¸£";
 	EnemyDesc.iMaxHp = 1000;
+	EnemyDesc.bIsBoss = true;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 
 	return S_OK;
 }
+
+HRESULT COdur::Ready_Light()
+{
+	LIGHT_DESC LightDesc{};
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.vAmbient = { 0.5f, 0.5f, 0.5f, 1.f };
+	LightDesc.vDiffuse = { 0.8f, 0.8f, 0.8f, 1.f };
+	LightDesc.fRange = 5.f;
+	LightDesc.fLightStrength = 1.f;
+
+	m_pLightObject = static_cast<CLightObject*>(m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Light", L"Prototype_LightObject", &LightDesc));
+	if (nullptr == m_pLightObject)
+		return E_FAIL;
+	m_pLightObject->Set_LightPosition(m_pTransform->Get_Position() + XMVectorSet(0.f, 2.2f, 0.f, 0.f));
+	m_pLightObject->Set_Active(false);
+
+	return S_OK;
+}
+
 
 
 COdur* COdur::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)

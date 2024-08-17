@@ -42,8 +42,9 @@ void COdurState_ThrowCard::OnState_Start(void* pArg)
 
 	m_iCurAnimIdx = 0;
 
-	//m_iThrowState = m_iThrowCount == (m_iMaxThrowCount - 1) ? 1 : 0;
-	m_iThrowState = 1;
+	m_iThrowState = m_iThrowCount == (m_iMaxThrowCount - 1) ? 1 : 0;
+	//m_iThrowState = 1;
+	m_iThrowCount += 1;
 
 	m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);
 }
@@ -124,7 +125,7 @@ void COdurState_ThrowCard::Throw_Card(_fvector vLook)
 
 void COdurState_ThrowCard::Throw_SingleCard()
 {
-	Throw_Card(JoMath::Calc_GroundLook(m_pTargetTransform->Get_Position(), m_pOwnerTransform->Get_Position()));
+	Throw_Card(XMVector3Normalize(XMVectorSetY(m_pTargetTransform->Get_Position() - Calc_LeftHandPos(), -0.3f)));
 }
 
 void COdurState_ThrowCard::Throw_MultipleCards()

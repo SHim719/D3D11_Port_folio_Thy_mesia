@@ -15,7 +15,7 @@ HRESULT CPlayerState_Avoid::Initialize(void* pArg)
 
 	m_PossibleStates = {  PlayerState::State_Jog, PlayerState::State_LockOn
 		, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
-		, PlayerState::State_Avoid, PlayerState::State_Parry };
+		, PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 
 	return S_OK;
 }
@@ -24,6 +24,7 @@ void CPlayerState_Avoid::OnState_Start(void* pArg)
 {	
 	m_pPlayer->Set_CanNextState(false);
 	m_pPlayer->Set_CanRotation(true);
+	m_pPlayer->Set_EnableJog(false);
 
 	m_pPlayer->Set_Invincible(true);
 
@@ -56,6 +57,8 @@ void CPlayerState_Avoid::OnState_End()
 {
 	m_vMoveAxis.x = 0.f;
 	m_vMoveAxis.y = 0.f;
+
+	m_pPlayer->Set_EnableJog(true);
 }
 
 void CPlayerState_Avoid::OnHit(const ATTACKDESC& AttackDesc)
@@ -113,7 +116,7 @@ void CPlayerState_Avoid::Decide_Animation()
 	}
 	else
 	{
-		m_pModel->Change_Animation(Corvus_SD_AvoidF);
+		m_pModel->Change_Animation(Corvus_SD_AvoidShortMag_F);
 	}
 }
 

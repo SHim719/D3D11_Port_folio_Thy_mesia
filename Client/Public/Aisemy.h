@@ -19,6 +19,9 @@ private:
 	HRESULT Render()					override;
 
 private:
+	class CLightObject* m_pLight = { nullptr };
+
+private:
 	_float2		m_vNoiseUVOffset = { 0.f, 0.f };
 	_float2		m_vNoiseUVSpeed = { 0.4f, -0.2f };
 

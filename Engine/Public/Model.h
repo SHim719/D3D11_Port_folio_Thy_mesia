@@ -77,7 +77,10 @@ public:
 
 	void Reset_PrevRootPos();
 	_vector Get_NowRootQuat() const;
-
+	
+	void Set_RootBoneIdx(_uint iIdx) {
+		m_iRootBoneIdx = iIdx;
+	}
 private:
 	void Calc_DeltaRootPos();
 

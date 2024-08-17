@@ -122,7 +122,6 @@ _uint CChannel::Blend_Transformation(_float fBlendRatio, _float fPlayTime, _uint
 		memcpy(&curKeyFrame.vScale, &vScale, sizeof(_float3));
 		memcpy(&curKeyFrame.vRotation, &vRotation, sizeof(_float4));
 		memcpy(&curKeyFrame.vPosition, &vPosition, sizeof(_float3));
-
 		pBone->Set_BlendTransformation(curKeyFrame, fBlendRatio);
 	}
 

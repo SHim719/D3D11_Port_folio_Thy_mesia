@@ -25,7 +25,7 @@ protected:
 
 	HRESULT Bind_ShaderResources()		override;
 	void Decide_PassIdx()				override;
-
+	void OnDeath()						override;
 protected:
 	static CGameObject* s_pTarget;
 
@@ -50,11 +50,13 @@ protected:
 	_bool	m_bLookTarget = { true };
 	_bool	m_bCollPlayer = { false };
 	_bool	m_bStunnedMarked = { false };
+	_bool	m_bExecutionEnd = { false };
 	_float	m_fRotRate	= { 10.f };
 
-	_uint	m_iStunnedStateIdx = { 0 };
-	_uint	m_iDeathStateIdx = { 0 };
-	_uint	m_iExecutionStateIdx = { 0 };
+	_uint	m_iStunnedStateIdx = { 9999 };
+	_uint	m_iStunnedStartStateIdx = { 9999 };
+	_uint	m_iDeathStateIdx = { 9999 };
+	_uint	m_iExecutionStateIdx = { 9999 };
 
 	EXECUTION_TAG			m_eExecutionTag = { DEFAULT };
 	SKILLTYPE				m_eSkillType = { SKILLTYPE_END };
@@ -63,15 +65,18 @@ protected:
 public:
 	virtual void Percept_Target();
 
-	void SetState_Death();
-	void SetState_Executed(void* pArg);
-
+	virtual void SetState_Death();
+	virtual void SetState_Executed(void* pArg);
 
 	_bool Is_Stunned() {
-		return m_iState == m_iStunnedStateIdx;
+		return m_iState == m_iStunnedStartStateIdx || m_iState == m_iStunnedStateIdx;
 	}
 	_bool Is_Death() {
 		return m_iState == m_iDeathStateIdx;
+	}
+
+	_bool Is_ExecutionEnd() const {
+		return m_bExecutionEnd;
 	}
 
 	CBone* Find_SpineBone();

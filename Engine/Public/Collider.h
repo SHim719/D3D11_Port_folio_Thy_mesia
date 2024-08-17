@@ -39,6 +39,8 @@ public:
 	virtual _vector Get_Size() const;
 	virtual void Set_Size(_fvector vSize);
 
+	virtual void Set_Center(_fvector vCenter);
+
 	void Enroll_Collider();
 protected:
 	static _uint		iCollisionID;

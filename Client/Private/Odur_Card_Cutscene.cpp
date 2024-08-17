@@ -37,11 +37,10 @@ void COdur_Card_Cutscene::Tick(_float fTimeDelta)
 
 void COdur_Card_Cutscene::LateTick(_float fTimeDelta)
 {
-	//_matrix CutsceneOffsetMatrix = XMMatrixRotationX(To_Radian(-90.f));
+	m_pTransform->Attach_To_Bone(m_AttachDesc.pAttachBone, m_AttachDesc.pParentTransform);
 
-	m_pTransform->Attach_To_Bone(m_AttachDesc.pAttachBone, m_AttachDesc.pParentTransform);// , CutsceneOffsetMatrix);
-
-	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT_NONBLEND, this);
+	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
 }
 
 HRESULT COdur_Card_Cutscene::Render()
@@ -60,16 +59,13 @@ HRESULT COdur_Card_Cutscene::Render()
 
 	for (_uint i = 0; i < iNumMeshes; ++i)
 	{
-		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_BaseTexture")))
 			return E_FAIL;
-
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
 
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
+		if (FAILED(m_pModel->Render(m_pShader, i, 4)))
 			return E_FAIL;
 	}
 

@@ -31,10 +31,16 @@ void CCutscene_Manager::OnEnter_Cutscene(CUTSCENE_NUMBER eCutscene)
 
 		UIMGR->Active_UI("FadeScreen", &FadeDesc);
 	}
-		break;
-
 	case ENCOUNTER_URD:
-		break;
+	{
+		CFadeScreen::FADEDESC FadeDesc;
+		FadeDesc.eFadeColor = CFadeScreen::BLACK;
+		FadeDesc.fFadeOutSpeed = 0.5f;
+		FadeDesc.fFadeInSpeed = 5.f;
+		FadeDesc.pCallback_FadeOutEnd = move(bind(&CCutscene_Manager::OnStart_Cutscene, this));
+
+		UIMGR->Active_UI("FadeScreen", &FadeDesc);
+	}
 	}
 
 	for (auto it = m_CutsceneActors.begin(); it != m_CutsceneActors.end(); ++it)

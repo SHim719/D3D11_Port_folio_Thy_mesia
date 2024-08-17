@@ -51,7 +51,7 @@ void CHalberdKnightState_Attack2::Init_AttackDesc()
 
 	ATTACKDESC AttackDesc;
 	AttackDesc.iDamage = 60;
-	AttackDesc.eEnemyAttackType = BIG_HIT;
+	AttackDesc.eEnemyAttackType = SEMIKNOCKBACK;
 	AttackDesc.pAttacker = m_pHalberdKnight;
 
 	m_AttackDescs.emplace_back(CHalberdKnight::SPEAR, AttackDesc);

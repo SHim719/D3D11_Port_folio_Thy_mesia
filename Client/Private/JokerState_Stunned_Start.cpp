@@ -17,6 +17,8 @@ void CJokerState_Stunned_Start::OnState_Start(void* pArg)
 {
 	m_pJoker->Set_LookTarget(false);
 
+	m_pGameInstance->Set_TimeScaleWithRealTime(0.2f, 1.f);
+
 	m_pModel->Change_Animation(Joker_Stun_Start);
 }
 

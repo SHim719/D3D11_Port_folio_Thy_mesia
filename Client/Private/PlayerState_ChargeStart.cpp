@@ -41,6 +41,8 @@ void CPlayerState_ChargeStart::Update(_float fTimeDelta)
 		if (0.f != vNewLook.m128_f32[0] || 0.f != vNewLook.m128_f32[1])
 			Rotate_To_Look(vNewLook, fTimeDelta);
 	}
+
+	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 }
 
 void CPlayerState_ChargeStart::Late_Update(_float fTimeDelta)

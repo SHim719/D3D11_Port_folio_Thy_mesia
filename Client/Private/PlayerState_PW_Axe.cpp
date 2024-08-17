@@ -10,7 +10,8 @@ HRESULT CPlayerState_PW_Axe::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry
+	, PlayerState::State_Healing };
 
 	return S_OK;
 }
@@ -26,6 +27,9 @@ void CPlayerState_PW_Axe::OnState_Start(void* pArg)
 
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_AXE, true);
 	m_pPlayer->Set_Adjust_NaviY(false);
+
+	Reset_AttackDesc();
+
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Axe", &m_pPlayer->Get_EffectSpawnDesc());
 
 	m_pPlayer->Update_AttackDesc();
@@ -71,7 +75,10 @@ void CPlayerState_PW_Axe::Init_AttackDesc()
 	m_AttackDescs.emplace_back(CPlayer::PW_AXE, AtkDesc);
 }
 
-
+void CPlayerState_PW_Axe::Reset_AttackDesc()
+{
+	m_AttackDescs[0].second = m_pPlayer->Get_PlayerStats()->Get_SkillAttackDesc(SKILLTYPE::AXE);
+}
 
 CPlayerState_PW_Axe* CPlayerState_PW_Axe::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {

@@ -10,7 +10,8 @@ HRESULT CPlayerState_PW_TwinBlade::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry };
+	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry
+	, PlayerState::State_Healing };
 
 	return S_OK;
 }
@@ -28,6 +29,7 @@ void CPlayerState_PW_TwinBlade::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_TWINBLADE_R, true);
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_TwinBlade", &m_pPlayer->Get_EffectSpawnDesc());
 
+	Reset_AttackDesc();
 	m_pPlayer->Update_AttackDesc();
 
 	m_pModel->Change_Animation(Corvus_PW_TwinSwords_1);
@@ -66,22 +68,20 @@ void CPlayerState_PW_TwinBlade::OnState_End()
 
 void CPlayerState_PW_TwinBlade::Init_AttackDesc()
 {
-	m_AttackDescs.reserve(7);
+	m_AttackDescs.reserve(2);
 
 	ATTACKDESC AtkDesc = m_pPlayerStats->Get_PlagueAttackDesc();
 	AtkDesc.iDamage = AtkDesc.iPlagueDamage;
 
 	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_L, AtkDesc);
 	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_R, AtkDesc);
-	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_R, AtkDesc);
-	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_L, AtkDesc);
-	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_R, AtkDesc);
-	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_L, AtkDesc);
-	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_R, AtkDesc);
-
 }
 
-
+void CPlayerState_PW_TwinBlade::Reset_AttackDesc()
+{
+	m_AttackDescs[0].second = m_pPlayer->Get_PlayerStats()->Get_SkillAttackDesc(SKILLTYPE::TWINBLADE);
+	m_AttackDescs[1].second = m_pPlayer->Get_PlayerStats()->Get_SkillAttackDesc(SKILLTYPE::TWINBLADE);
+}
 
 CPlayerState_PW_TwinBlade* CPlayerState_PW_TwinBlade::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {

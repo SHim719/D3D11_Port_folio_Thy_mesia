@@ -55,7 +55,9 @@ public:
 	void Active_Dissolve();
 	void Update_Dissolve(_float fTimeDelta);
 
-
+	_bool Is_Dissolving() const {
+		return m_bDissolve;
+	}
 public:
 	CTransform* Get_Transform() { return m_pTransform; }
 

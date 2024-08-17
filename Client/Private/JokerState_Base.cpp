@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 
+#include "Main_Camera.h"
+
 CJokerState_Base::CJokerState_Base(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	:CState_Base(pDevice, pContext)
 {
@@ -39,6 +41,15 @@ void CJokerState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
 	if (0 == m_pJoker->Take_Damage(AttackDesc))
 		m_pJoker->Change_State((_uint)JokerState::State_Stunned_Start);
+	else if (IGNORE_STANCE == AttackDesc.ePlayerAttackType)
+		m_pJoker->Change_State((_uint)JokerState::State_Hit);
+
+	_int iRandNum = JoRandom::Random_Int(0, 1);
+	string strBloodEffect = iRandNum == 0 ? "Effect_Blood_R_Joker" : "Effect_Blood_L_Joker";
+	EFFECTMGR->Active_Effect(strBloodEffect, &m_pJoker->Get_EffectSpawnDesc());
+	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pJoker->Get_EffectSpawnDesc());
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
 }
 
 void CJokerState_Base::Decide_State()
@@ -81,24 +92,30 @@ void CJokerState_Base::Decide_Attack()
 	}
 	else
 	{
-		_int iRandNum = JoRandom::Random_Int(0, 3);
-	
-		switch (iRandNum)
+		_int iRandNum = JoRandom::Random_Int(0, 9);
+		if (iRandNum >= 9)
 		{
-		case 0:
-			m_pJoker->Change_State((_uint)JokerState::State_ComboA);
-			break;
-		case 1:
-			m_pJoker->Change_State((_uint)JokerState::State_ComboB);
-			break;
-		case 2:
-			m_pJoker->Change_State((_uint)JokerState::State_WheelWind_Start);
-			break;
-		case 3:
-			m_pJoker->Change_State((_uint)JokerState::State_StrongAttack);
-			break;
+			m_pJoker->Change_State((_uint)JokerState::State_ShockAttack);
 		}
-		
+		else
+		{
+			iRandNum = JoRandom::Random_Int(0, 3);
+			switch (iRandNum)
+			{
+			case 0:
+				m_pJoker->Change_State((_uint)JokerState::State_ComboA);
+				break;
+			case 1:
+				m_pJoker->Change_State((_uint)JokerState::State_ComboB);
+				break;
+			case 2:
+				m_pJoker->Change_State((_uint)JokerState::State_WheelWind_Start);
+				break;
+			case 3:
+				m_pJoker->Change_State((_uint)JokerState::State_StrongAttack);
+				break;
+			}
+		}		
 	}
 }
 

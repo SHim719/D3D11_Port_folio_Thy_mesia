@@ -19,14 +19,16 @@ private:
 public:
 	void Update_HpBar(_int iMaxHp, _int iHp);
 	void Update_SoulBar(_int iSoulCount);
-	void Update_SkillSlot();
+	void Update_SkillSlot(SKILLTYPE eSkillType);
 	void Update_PlunderSlot(SKILLTYPE eSkilType);
+	void Update_PotionSlot(_int iPotionCount);
 
 private:
 	class CUI_PlayerBar*	m_pPlayerBar	= { nullptr };
 	class CUI_SoulBar*		m_pSoulBar		= { nullptr };
 	class CUI_SkillSlot*	m_pSkillSlot	= { nullptr };
 	class CUI_PlunderSlot*	m_pPlunderSlot	= { nullptr };
+	class CUI_PotionSlot*	m_pPotionSlot	= { nullptr };
 
 public:
 	static CUI_PlayerDefault* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

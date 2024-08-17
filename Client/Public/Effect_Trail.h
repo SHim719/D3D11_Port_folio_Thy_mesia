@@ -39,6 +39,10 @@ public:
 		XMStoreFloat4x4(&m_ParentMatrix, ParentMatrix);
 	}
 
+	void Reset_TrailBuffer() {
+		m_pTrailBuffer->Reset_Points();
+	}
+
 private:
 	CVIBuffer_Trail*	m_pTrailBuffer = { nullptr };
 

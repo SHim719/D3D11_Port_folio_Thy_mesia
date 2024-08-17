@@ -22,6 +22,7 @@ void CPlayerState_Parried::OnState_Start(void* pArg)
 	m_pPlayer->Set_CanRotation(false);
 	m_pPlayer->Inactive_AllWeaponColliders();
 
+	m_pMain_Camera->Play_CameraShake("Shaking_Claw_Long");
 	m_pModel->Change_Animation(Corvus_SD_Rebound_R, 0.f);
 }
 

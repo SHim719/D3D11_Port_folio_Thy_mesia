@@ -1,6 +1,8 @@
 #include "VillagerFState_Stunned_Start.h"
 #include "Main_Camera.h"
 
+#include "Player.h"
+
 CVillagerFState_Stunned_Start::CVillagerFState_Stunned_Start(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CVillagerFState_Base(pDevice, pContext)
 {
@@ -19,9 +21,11 @@ void CVillagerFState_Stunned_Start::OnState_Start(void* pArg)
 	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pVillager_F->Set_LookTarget(false);
 
+	static_cast<CPlayer*>(m_pVillager_F->Get_Target())->Add_StunnedEnemy(m_pVillager_F);
+
 	RIMLIGHTDESC RimDesc{};
 	RimDesc.bColorLerp = true;
-	RimDesc.fDuration = 2.f;
+	RimDesc.fDuration = 1.5f;
 	RimDesc.fRimPower = 1.f;
 	RimDesc.fRimStrength = 3.f;
 	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };

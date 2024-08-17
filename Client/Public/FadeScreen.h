@@ -51,6 +51,7 @@ private:
 	function<void()>	m_Callback_FadeOutEnd = { nullptr };
 	function<void()>	m_Callback_FadeInStart = { nullptr };
 	function<void()>	m_Callback_FadeInEnd = { nullptr };
+
 public:
 	static CFadeScreen* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
 	CGameObject* Clone(void* pArg = nullptr)	override;

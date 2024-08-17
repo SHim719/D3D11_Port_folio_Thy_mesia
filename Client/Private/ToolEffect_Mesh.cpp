@@ -49,6 +49,8 @@ void CToolEffect_Mesh::Tick(_float fTimeDelta)
 	Update_UV(fTimeDelta);
 	Update_LifeTime(fTimeDelta);
 
+	Update_ClipRange(fTimeDelta);
+
 	Update_FinalMatrix();
 }
 
@@ -61,6 +63,9 @@ void CToolEffect_Mesh::LateTick(_float fTimeDelta)
 
 	if (m_bGlow)
 		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
+
+	if (m_tMeshEffectInfo.bDistortion)
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_DISTORTION, this);
 }
 
 HRESULT CToolEffect_Mesh::Render()
@@ -98,8 +103,36 @@ HRESULT CToolEffect_Mesh::Load_EffectData(ifstream& fin)
 
 	fin.read((_char*)&m_tMeshEffectInfo, sizeof(MESHEFFECT_INFO));
 
-
-
+	//fin.read((_char*)&m_tOldMeshEffectInfo, sizeof(OLDMESHEFFECT_INFO));
+	//
+	//wcscpy_s(m_tMeshEffectInfo.szModelTag, m_tOldMeshEffectInfo.szModelTag);
+	//m_tMeshEffectInfo.fSpawnTime = m_tOldMeshEffectInfo.fSpawnTime;
+	//m_tMeshEffectInfo.vColor = m_tOldMeshEffectInfo.vColor;
+	//m_tMeshEffectInfo.bColorLerp = m_tOldMeshEffectInfo.bColorLerp;
+	//
+	//m_tMeshEffectInfo.vStartColor = m_tOldMeshEffectInfo.vStartColor;
+	//m_tMeshEffectInfo.vColorEnd = m_tOldMeshEffectInfo.vColorEnd;
+	//
+	//m_tMeshEffectInfo.vStartPosition = m_tOldMeshEffectInfo.vStartPosition;
+	//
+	//m_tMeshEffectInfo.bLocal = m_tOldMeshEffectInfo.bLocal;
+	//m_tMeshEffectInfo.fTurnSpeed = m_tOldMeshEffectInfo.fTurnSpeed;
+	//m_tMeshEffectInfo.vRotationAxis = m_tOldMeshEffectInfo.vRotationAxis;
+	//
+	//m_tMeshEffectInfo.bRotationLerp = m_tOldMeshEffectInfo.bRotationLerp;
+	//m_tMeshEffectInfo.vStartRotation = m_tOldMeshEffectInfo.vStartRotation;
+	//m_tMeshEffectInfo.vRotationEnd = m_tOldMeshEffectInfo.vRotationEnd;
+	//
+	//m_tMeshEffectInfo.bScaleLerp = m_tOldMeshEffectInfo.bScaleLerp;
+	//m_tMeshEffectInfo.vStartScale = m_tOldMeshEffectInfo.vStartScale;
+	//m_tMeshEffectInfo.vScaleEnd = m_tOldMeshEffectInfo.vScaleEnd;
+	//
+	//m_tMeshEffectInfo.vStartMaskUVOffset = m_tOldMeshEffectInfo.vStartMaskUVOffset;
+	//m_tMeshEffectInfo.vMaskUVSpeed = m_tOldMeshEffectInfo.vMaskUVSpeed;
+	//
+	//m_tMeshEffectInfo.vStartNoiseUVOffset = m_tOldMeshEffectInfo.vStartNoiseUVOffset;
+	//m_tMeshEffectInfo.vNoiseUVSpeed = m_tOldMeshEffectInfo.vNoiseUVSpeed;
+	
 	return S_OK;
 }
 
@@ -112,6 +145,7 @@ void CToolEffect_Mesh::Restart_Effect(EFFECTSPAWNDESC* pDesc)
 	m_fTimeAcc = 0.f;
 	m_fSpawnTimeAcc = m_tMeshEffectInfo.fSpawnTime;
 	m_bNoRender = true;
+	m_fClipRange = 0.f;
 
 	m_tMeshEffectInfo.vColor = m_tMeshEffectInfo.vStartColor;
 	m_vMaskUVOffset = m_tMeshEffectInfo.vStartMaskUVOffset;
@@ -135,6 +169,7 @@ _bool CToolEffect_Mesh::Update_SpawnTime(_float fTimeDelta)
 		m_fSpawnTimeAcc -= fTimeDelta;
 		if (m_fSpawnTimeAcc < 0.f)
 		{
+			CALC_TF->Set_Position(XMVectorSet(0.f, 0.f, 0.f, 1.f));
 			Spawn_Effect();
 			m_bNoRender = false;
 			return true;
@@ -225,18 +260,37 @@ void CToolEffect_Mesh::Update_UV(_float fTimeDelta)
 	m_vMaskUVOffset.x += m_tMeshEffectInfo.vMaskUVSpeed.x * fTimeDelta;
 	m_vMaskUVOffset.y += m_tMeshEffectInfo.vMaskUVSpeed.y * fTimeDelta;
 
-	if (fabsf(m_vMaskUVOffset.x) >= 9999.f)
-		m_vMaskUVOffset.x = 0.f;
-	if (fabsf(m_vMaskUVOffset.y) >= 9999.f)
-		m_vMaskUVOffset.y = 0.f;
+	if (1 == m_tMeshEffectInfo.iMaskSampler) // Clamp
+	{
+		m_vMaskUVOffset.x = clamp(m_vMaskUVOffset.x, m_tMeshEffectInfo.vMinMaskUVOffset.x, m_tMeshEffectInfo.vMaxMaskUVOffset.x);
+		m_vMaskUVOffset.y = clamp(m_vMaskUVOffset.y, m_tMeshEffectInfo.vMinMaskUVOffset.y, m_tMeshEffectInfo.vMaxMaskUVOffset.y);
+	}
+	else // Wrap
+	{
+		if (fabsf(m_vMaskUVOffset.x) >= 9999.f)
+			m_vMaskUVOffset.x = 0.f;
+		if (fabsf(m_vMaskUVOffset.y) >= 9999.f)
+			m_vMaskUVOffset.y = 0.f;
+	}
+
+	
 
 	m_vNoiseUVOffset.x += m_tMeshEffectInfo.vNoiseUVSpeed.x * fTimeDelta;
 	m_vNoiseUVOffset.y += m_tMeshEffectInfo.vNoiseUVSpeed.y * fTimeDelta;
 
-	if (fabsf(m_vNoiseUVOffset.x) >= 9999.f)
-		m_vNoiseUVOffset.x = 0.f;
-	if (fabsf(m_vNoiseUVOffset.y) >= 9999.f)
-		m_vNoiseUVOffset.y = 0.f;
+	if (1 == m_tMeshEffectInfo.iNoiseSampler) // Clamp
+	{
+		m_vNoiseUVOffset.x = clamp(m_vNoiseUVOffset.x, m_tMeshEffectInfo.vMinNoiseUVOffset.x, m_tMeshEffectInfo.vMaxNoiseUVOffset.x);
+		m_vNoiseUVOffset.y = clamp(m_vNoiseUVOffset.y, m_tMeshEffectInfo.vMinNoiseUVOffset.y, m_tMeshEffectInfo.vMaxNoiseUVOffset.y);
+	}
+	else
+	{
+		if (fabsf(m_vNoiseUVOffset.x) >= 9999.f)
+			m_vNoiseUVOffset.x = 0.f;
+		if (fabsf(m_vNoiseUVOffset.y) >= 9999.f)
+			m_vNoiseUVOffset.y = 0.f;
+	}
+
 
 }
 
@@ -267,6 +321,15 @@ void CToolEffect_Mesh::Update_FinalMatrix()
 	_matrix FinalMatrix = LocalMatrix * WorldMatrix;
 
 	XMStoreFloat4x4(&m_FinalMatrix, XMMatrixTranspose(FinalMatrix));
+}
+
+void CToolEffect_Mesh::Update_ClipRange(_float fTimeDelta)
+{
+	if (1 != m_iPassIdx)
+		return;
+
+	m_fClipRange += 0.5f * fTimeDelta;
+
 }
 
 HRESULT CToolEffect_Mesh::Ready_Components()
@@ -336,6 +399,22 @@ HRESULT CToolEffect_Mesh::Bind_GlobalVariables()
 			return E_FAIL;
 	}
 
+	if (FAILED(m_pShader->Set_RawValue("g_bDistortion", &m_tMeshEffectInfo.bDistortion, sizeof(_bool))))
+		return E_FAIL;
+
+	if (m_tMeshEffectInfo.bDistortion)
+	{
+		if (FAILED(m_pShader->Set_RawValue("g_fDistortionIntensity", &m_tMeshEffectInfo.fDistortion_Intensity, sizeof(_float))))
+			return E_FAIL;
+	}
+
+	if (1 == m_iPassIdx)
+	{
+		if (FAILED(m_pShader->Set_RawValue("g_fClipRange", &m_fClipRange, sizeof(_float))))
+			return E_FAIL;
+	}
+
+
 	return S_OK;
 }
 
@@ -346,12 +425,18 @@ HRESULT CToolEffect_Mesh::Bind_ShaderResources()
 
 	if (-1 != m_iMaskTextureIdx)
 	{
+		if (FAILED(m_pShader->Set_RawValue("g_iMaskSampler", &m_tMeshEffectInfo.iMaskSampler, sizeof(_int))))
+			return E_FAIL;
+
 		if (FAILED(m_pMaskTexture->Set_SRV(m_pShader, "g_MaskTexture", m_iMaskTextureIdx)))
 			return E_FAIL;
 	}
 
 	if (-1 != m_iNoiseTextureIdx)
 	{
+		if (FAILED(m_pShader->Set_RawValue("g_iNoiseSampler", &m_tMeshEffectInfo.iNoiseSampler, sizeof(_int))))
+			return E_FAIL;
+
 		if (FAILED(m_pNoiseTexture->Set_SRV(m_pShader, "g_NoiseTexture", m_iNoiseTextureIdx)))
 			return E_FAIL;
 	}

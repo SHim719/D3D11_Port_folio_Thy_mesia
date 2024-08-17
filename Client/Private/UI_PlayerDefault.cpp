@@ -3,6 +3,7 @@
 #include "UI_SoulBar.h"
 #include "UI_SkillSlot.h"
 #include "UI_PlunderSlot.h"
+#include "UI_PotionSlot.h"
 
 #include "Player.h"
 #include "PlayerStats.h"
@@ -25,6 +26,7 @@ HRESULT CUI_PlayerDefault::Initialize(void* pArg)
 	m_pSoulBar		= CUI_SoulBar::Create(m_pDevice, m_pContext);
 	m_pSkillSlot	= CUI_SkillSlot::Create(m_pDevice, m_pContext);
 	m_pPlunderSlot	= CUI_PlunderSlot::Create(m_pDevice, m_pContext);
+	m_pPotionSlot	= CUI_PotionSlot::Create(m_pDevice, m_pContext);
 
 	GET_PLAYER->Get_PlayerStats()->Set_PlayerDefaultUI(this);
 
@@ -49,16 +51,20 @@ HRESULT CUI_PlayerDefault::Render()
 	if (FAILED(m_pSoulBar->Render()))
 		return E_FAIL;
 
-	//if (FAILED(m_pSkillSlot->Render()))
-	//	return E_FAIL;
+	if (FAILED(m_pSkillSlot->Render()))
+		return E_FAIL;
 
 	if (FAILED(m_pPlunderSlot->Render()))
+		return E_FAIL;
+
+	if (FAILED(m_pPotionSlot->Render()))
 		return E_FAIL;
 
 	m_pContext->GSSetShader(nullptr, nullptr, 0);
 
 	m_pPlayerBar->Draw_HpText();
 	m_pSoulBar->Draw_SoulText();
+	m_pPotionSlot->Render_PotionCount();
 
 	return S_OK;
 }
@@ -74,13 +80,19 @@ void CUI_PlayerDefault::Update_SoulBar(_int iSoulCount)
 	m_pSoulBar->Set_SoulNumber(iSoulCount);
 }
 
-void CUI_PlayerDefault::Update_SkillSlot()
+void CUI_PlayerDefault::Update_SkillSlot(SKILLTYPE eSkillType)
 {
+	m_pSkillSlot->Update_SkillIcon(eSkillType);
 }
 
 void CUI_PlayerDefault::Update_PlunderSlot(SKILLTYPE eSkilType)
 {
 	m_pPlunderSlot->Update_SkillIcon(eSkilType);
+}
+
+void CUI_PlayerDefault::Update_PotionSlot(_int iPotionCount)
+{
+	m_pPotionSlot->Set_PotionCount(iPotionCount);
 }
 
 
@@ -111,4 +123,5 @@ void CUI_PlayerDefault::Free()
 	Safe_Release(m_pSoulBar);
 	Safe_Release(m_pSkillSlot);
 	Safe_Release(m_pPlunderSlot);
+	Safe_Release(m_pPotionSlot);
 }

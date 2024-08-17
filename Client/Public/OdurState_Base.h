@@ -22,7 +22,7 @@ protected:
 	COdur*			m_pOdur = { nullptr };
 	CTransform*		m_pTargetTransform = { nullptr };
 
-protected:
+public:
 	virtual void Decide_State();
 	void Decide_Attack();
 

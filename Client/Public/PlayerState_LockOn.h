@@ -21,6 +21,10 @@ private:
 private:
 	_float2 m_vPrevMoveAxis = { 0.f, 0.f };
 
+	_bool m_bAxisChanging = { false };
+	_float m_fChangingTerm = { 0.05f };
+	_float m_fChangingTermAcc = { 0.f };
+
 public:
 	static CPlayerState_LockOn* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

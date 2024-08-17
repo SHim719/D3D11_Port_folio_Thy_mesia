@@ -32,7 +32,7 @@ namespace Engine
 		XMFLOAT4	vDirection;
 		XMFLOAT4	vPosition;
 		float		fRange;
-
+		float		fLightStrength;
 	}LIGHT_DESC;
 
 	typedef ENGINE_DLL struct tagParticleDesc

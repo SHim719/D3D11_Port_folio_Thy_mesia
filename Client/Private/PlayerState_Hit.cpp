@@ -11,7 +11,7 @@ HRESULT CPlayerState_Hit::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack
-		, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry };
+		, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 
 	return S_OK;
 }
@@ -24,7 +24,7 @@ void CPlayerState_Hit::OnState_Start(void* pArg)
 
 	ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;
 
-	if (false == m_pPlayer->Is_LockOn())
+	if (false == m_pPlayer->Is_LockOn() && nullptr != pAttackDesc->pAttacker)
 		m_pOwnerTransform->LookAt2D(pAttackDesc->pAttacker->Get_Transform()->Get_Position());
 
 	switch (pAttackDesc->eEnemyAttackType)
@@ -37,8 +37,17 @@ void CPlayerState_Hit::OnState_Start(void* pArg)
 		m_pModel->Change_Animation(Corvus_SD_HurtMFL + m_iHitDir);
 		m_iHitDir = (m_iHitDir + 1) % 2;
 		break;
+	case SEMIKNOCKBACK:
+		m_pModel->Change_Animation(Corvus_SD_HurtLF);
+		break;
 	case KNOCKBACK:
 		m_pModel->Change_Animation(Corvus_SD_KnockBackF);
+		break;
+	case KNOCKDOWN:
+		m_pPlayer->Change_State((_uint)PlayerState::State_KnockDown);
+		break;
+	case AIR:
+		m_pPlayer->Change_State((_uint)PlayerState::State_FallDown);
 		break;
 	case VERY_BIG_HIT:
 		m_pModel->Change_Animation(Corvus_SD_HurtXXLF);
@@ -62,7 +71,7 @@ void CPlayerState_Hit::Late_Update(_float fTimeDelta)
 
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
-		m_pPlayer->Change_State((_uint)ePlayerState);
+		Check_ExtraStateChange(ePlayerState);
 }
 
 void CPlayerState_Hit::OnState_End()

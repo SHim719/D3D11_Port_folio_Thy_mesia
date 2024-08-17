@@ -2,6 +2,8 @@
 
 #include "Enemy.h"
 
+#include "UI_Manager.h"
+
 CPlayerState_Execution_Elite::CPlayerState_Execution_Elite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayerState_Base(pDevice, pContext)
 {
@@ -39,6 +41,8 @@ void CPlayerState_Execution_Elite::OnState_Start(void* pArg)
 	m_pMain_Camera->SetState_Cutscene(AttachDesc);
 
 	m_pPlayer->Set_Adjust_NaviY(false);
+
+	
 }
 
 void CPlayerState_Execution_Elite::Update(_float fTimeDelta)
@@ -86,4 +90,5 @@ CPlayerState_Execution_Elite* CPlayerState_Execution_Elite::Create(ID3D11Device*
 void CPlayerState_Execution_Elite::Free()
 {
 	__super::Free();
+	Safe_Release(m_pExecutionEnemy);
 }

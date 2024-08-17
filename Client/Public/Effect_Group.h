@@ -12,7 +12,7 @@ private:
 	CEffect_Group(const CEffect_Group& rhs);
 	virtual ~CEffect_Group() = default;
 
-private:
+public:
 	HRESULT Initialize_Prototype(ifstream& fin);
 	HRESULT Initialize(void* pArg)					override;
 	void Tick(_float fTimeDelta)					override;
@@ -26,6 +26,10 @@ public:
 
 	_bool Is_Using() const {
 		return m_bUsing;
+	}
+
+	void Set_Using(_bool bUsing) {
+		m_bUsing = bUsing;
 	}
 
 	HRESULT Load_EffectGroup(ifstream& fin);

@@ -79,6 +79,25 @@ DepthStencilState DSS_Effect
     DepthWriteMask = zero;
 };
 
+DepthStencilState DSS_WriteStencil
+{
+    DepthEnable = true;
+    DepthWriteMask = zero; 
+    DepthFunc = always;
+
+    StencilEnable = true;
+    StencilReadMask = 0xff;
+    StencilWriteMask = 0xff;
+
+    FrontFaceStencilFunc = always;
+    FrontFaceStencilPass = replace;
+    FrontFaceStencilFail = keep;
+
+    BackFaceStencilFunc = always;
+    BackFaceStencilPass = replace;
+    BackFaceStencilFail = keep;
+};
+
 BlendState BS_None
 {
     BlendEnable[0] = false;
@@ -90,20 +109,6 @@ BlendState BS_AlphaBlend
     SrcBlend[0] = SRC_ALPHA;
     DestBlend[0] = INV_SRC_ALPHA;
     BlendOp[0] = Add;
-};
-
-BlendState BS_AlphaBlendEffect
-{
-    BlendEnable[0] = true;
-    BlendEnable[1] = true;
-
-    SrcBlend = SRC_ALPHA;
-    DestBlend = INV_SRC_ALPHA;
-    BlendOp = Add;
-
-    SrcBlendAlpha = Src_Alpha;
-    DestBlendAlpha = Dest_Alpha;
-    BlendOpAlpha = MAX;
 };
 
 BlendState BS_EffectBlend
@@ -125,6 +130,8 @@ BlendState BS_OneBlend
     DestBlend = one;
     BlendOp = Add;
 };
+
+
 
 
 #endif

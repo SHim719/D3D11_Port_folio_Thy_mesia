@@ -32,6 +32,7 @@ private:
 	void OnEnd_Cutscene()									override;
 
 	void Bind_KeyFrames()									override;
+	void Bind_KeyFrameEffects()								override;
 
 private:
 	CBone*		m_pSwapBone = { nullptr };
@@ -39,22 +40,17 @@ private:
 
 	_float		m_fAlpha = { 1.f };
 	_float		m_fDeltaAlphaSpeed = { 2.f };
-	_bool		m_bAlphaEnable = { false };
+	_float		m_fAlphaCritical = { 0.5f };
 	_bool		m_bAlphaIncrease = { false };
+	_bool		m_bAlphaEnabled = { false };
 
 	_bool		m_bCardPattern = { false };
 
 	_float4x4	m_InitWorldMatrix = {};
 public:
 	void Swap_Bone();
-
-	void Set_Alpha_Increase() {
-		m_bAlphaIncrease = true; m_bAlphaEnable = true;
-	}
-
-	void Set_Alpha_Decrease() {
-		m_bAlphaIncrease = false; m_bAlphaEnable = true;
-	}
+	void Set_Alpha_Increase();
+	void Set_Alpha_Decrease();
 
 	void Set_Alpha(_float fAlpha) {
 		m_fAlpha = fAlpha; Update_WeaponAlpha();
@@ -65,8 +61,11 @@ public:
 	}
 
 	void Set_CardPattern(_bool bCardPattern) {
-		m_bCardPattern = m_bCardPattern;
+		m_bCardPattern = bCardPattern;
 	}
+
+	void SetState_Death()				override;
+	void SetState_Executed(void* pArg)	override;
 
 private:
 	void Update_Alpha(_float fTimeDelta);
@@ -77,6 +76,7 @@ private:
 	HRESULT Ready_States();
 	HRESULT Ready_Weapons();
 	HRESULT Ready_Stats();
+	HRESULT Ready_Light();
 
 public:
 	static COdur* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

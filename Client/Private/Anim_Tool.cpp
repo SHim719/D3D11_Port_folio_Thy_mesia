@@ -27,6 +27,8 @@ HRESULT CAnim_Tool::Initialize(void* pArg)
     m_strModelLists.emplace_back("Prototype_Model_Joker");
     m_strModelLists.emplace_back("Prototype_Model_HalberdKnight");
     m_strModelLists.emplace_back("Prototype_Model_TwinBladeKnight");
+    m_strModelLists.emplace_back("Prototype_Model_Urd");
+    m_strModelLists.emplace_back("Prototype_Model_Urd_Weapon_VFX");
 	return S_OK;
 }
 
@@ -83,6 +85,9 @@ HRESULT CAnim_Tool::Load_KeyFrameNames(_int iSelModelIdx)
         break;
     case 6:
         strFullPath = "../../Resources/KeyFrame/KeyFrames_TwinBladeKnight.txt";
+        break;
+    case 7:
+        strFullPath = "../../Resources/KeyFrame/KeyFrames_Urd.txt";
         break;
     }
 
@@ -1181,16 +1186,33 @@ void CAnim_Tool::EffectMesh_Desc_Window()
 
     ImGui::DragFloat2("StartMaskUVOffset", (_float*)&pEffect->m_tMeshEffectInfo.vStartMaskUVOffset, 0.01f, 0.f, 99.f);
     ImGui::DragFloat2("MaskUVSpeed", (_float*)&pEffect->m_tMeshEffectInfo.vMaskUVSpeed, 0.01f, 0.f, 99.f);
+    ImGui::InputInt("MaskSampler", &pEffect->m_tMeshEffectInfo.iMaskSampler);
+    if (1 == pEffect->m_tMeshEffectInfo.iMaskSampler)
+    {
+        ImGui::DragFloat2("MaskMinUVOffset", (_float*)&pEffect->m_tMeshEffectInfo.vMinMaskUVOffset, 0.01f, -99.f, 99.f);
+        ImGui::DragFloat2("MaskMaxUVOffset", (_float*)&pEffect->m_tMeshEffectInfo.vMaxMaskUVOffset, 0.01f, -99.f, 99.f);
+    }
 
     ImGui::DragFloat2("StartNoiseUVOffset", (_float*)&pEffect->m_tMeshEffectInfo.vStartNoiseUVOffset, 0.01f, 0.f, 99.f);
     ImGui::DragFloat2("NoiseUVSpeed", (_float*)&pEffect->m_tMeshEffectInfo.vNoiseUVSpeed, 0.01f, 0.f, 99.f);
-
+    ImGui::InputInt("NoiseSampler", &pEffect->m_tMeshEffectInfo.iNoiseSampler);
+    if (1 == pEffect->m_tMeshEffectInfo.iNoiseSampler)
+    {
+        ImGui::DragFloat2("NoiseMinUVOffset", (_float*)&pEffect->m_tMeshEffectInfo.vMinNoiseUVOffset, 0.01f, -99.f, 99.f);
+        ImGui::DragFloat2("NoiseMaxUVOffset", (_float*)&pEffect->m_tMeshEffectInfo.vMaxNoiseUVOffset, 0.01f, -99.f, 99.f);
+    }
 
     ImGui::Checkbox("Glow?", &pEffect->m_bGlow);
     if (pEffect->m_bGlow)
     {
         ImGui::DragFloat4("Glow Color", (_float*)&pEffect->m_vGlowColor, 0.1f, 0.f, 1.f);
         ImGui::DragFloat("Glow Intensity", (_float*)&pEffect->m_fGlowIntensity, 0.1f, 0.f, 99.f);
+    }
+
+    ImGui::Checkbox("Distortion?", &pEffect->m_tMeshEffectInfo.bDistortion);
+    if (pEffect->m_tMeshEffectInfo.bDistortion)
+    {
+        ImGui::DragFloat("Distortion Intensity", (_float*)&pEffect->m_tMeshEffectInfo.fDistortion_Intensity, 0.1f, 0.f, 99.f);
     }
 
     ImGui::Checkbox("Bloom?", &pEffect->m_bBloom);

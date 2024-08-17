@@ -11,7 +11,7 @@ HRESULT CPlayerState_LockOn::Initialize(void* pArg)
 		return E_FAIL;
 	
 	m_PossibleStates = { PlayerState::State_Idle, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
-		, PlayerState::State_Avoid, PlayerState::State_Parry };
+		, PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 
 	return S_OK;
 }
@@ -20,6 +20,7 @@ void CPlayerState_LockOn::OnState_Start(void* pArg)
 {
 	m_pPlayer->Set_CanNextState(true);
 	m_pPlayer->Set_CanRotation(true);
+	m_bAxisChanging = false;
 
 	m_pOwnerTransform->Set_Speed(m_fJogSpeed);
 }
@@ -33,6 +34,13 @@ void CPlayerState_LockOn::Update(_float fTimeDelta)
 	}
 		
 	_vector vNewLook = Calc_MoveLook(false);
+
+	if (m_bAxisChanging)
+	{
+		m_fChangingTermAcc += fTimeDelta;
+		if (m_fChangingTermAcc > m_fChangingTerm)
+			m_fChangingTermAcc = m_fChangingTerm;
+	}
 
 	Change_WalkAnimation();
 
@@ -55,26 +63,31 @@ void CPlayerState_LockOn::OnState_End()
 
 void CPlayerState_LockOn::Change_WalkAnimation()
 {
-	if (m_vPrevMoveAxis.x == m_vMoveAxis.x && m_vPrevMoveAxis.y == m_vMoveAxis.y)
+	if (m_vPrevMoveAxis.x == m_vMoveAxis.x && m_vPrevMoveAxis.y == m_vMoveAxis.y && false == m_bAxisChanging)
 		return;
 
 	if (1.f == m_vMoveAxis.x)
 	{
 		if (-1.f == m_vMoveAxis.y)
 			m_pModel->Change_Animation(Corvus_SD_RunBR);
-		else if (0.f == m_vMoveAxis.y)
+		else if (1.f == m_vMoveAxis.y)
+			m_pModel->Change_Animation(Corvus_SD_RunFR);
+		else if (Corvus_SD_RunL == m_pModel->Get_CurrentAnimIndex())
 			m_pModel->Change_Animation(Corvus_SD_RunR, 0.f);
 		else
-			m_pModel->Change_Animation(Corvus_SD_RunFR);
+			m_pModel->Change_Animation(Corvus_SD_RunR);
 	}
 	else if (-1.f == m_vMoveAxis.x)
 	{
 		if (-1.f == m_vMoveAxis.y)
 			m_pModel->Change_Animation(Corvus_SD_RunBL);
-		else if (0.f == m_vMoveAxis.y)
+		else if (1.f == m_vMoveAxis.y)
+			m_pModel->Change_Animation(Corvus_SD_RunFL);
+		else if (Corvus_SD_RunR == m_pModel->Get_CurrentAnimIndex())
 			m_pModel->Change_Animation(Corvus_SD_RunL, 0.f);
 		else
-			m_pModel->Change_Animation(Corvus_SD_RunFL);
+			m_pModel->Change_Animation(Corvus_SD_RunL);
+			
 	}
 	else
 	{

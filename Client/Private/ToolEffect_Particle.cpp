@@ -70,11 +70,10 @@ _bool CToolEffect_Particle::Update_SpawnTime(size_t iIdx, _float fTimeDelta)
 		m_NowParticleDescs[iIdx].fSpawnTime -= fTimeDelta;
 		if (m_NowParticleDescs[iIdx].fSpawnTime < 0.f)
 		{
+		
 			memcpy(&m_NowParticleDatas[iIdx], &m_InitParticleDatas[iIdx], sizeof(VTXPARTICLE));
 			if (m_pParentBone && m_tParticleInfo.iParticleMode & (1 << SPAWN_AT_BONE))
 			{
-				memcpy(&m_NowParticleDatas[iIdx], &m_InitParticleDatas[iIdx], sizeof(VTXPARTICLE));
-
 				_matrix ParticleMatrix = XMLoadFloat4x4((_float4x4*)&m_InitParticleDatas[iIdx]);
 				_matrix BoneMatrix = XMLoadFloat4x4(&m_BoneMatrix);
 				CALC_TF->Set_WorldMatrix(ParticleMatrix * BoneMatrix);
@@ -295,7 +294,8 @@ void CToolEffect_Particle::Remake_Particle()
 		memcpy(&VtxParticle, &TransformMatrix, sizeof(_float4x4));
 
 		VtxParticle.fLifeTime = JoRandom::Random_Float(m_tParticleInfo.fLifeTimeMin, m_tParticleInfo.fLifeTimeMax);
-		VtxParticle.vColor = JoRandom::Random_Float4(m_tParticleInfo.vStartColorMin, m_tParticleInfo.vStartColorMax);
+		VtxParticle.vColor 
+			= JoRandom::Random_Float4(m_tParticleInfo.vStartColorMin, m_tParticleInfo.vStartColorMax);
 
 		memcpy(&m_NowParticleDatas[i], &VtxParticle, sizeof(VTXPARTICLE));
 		memcpy(&m_InitParticleDatas[i], &VtxParticle, sizeof(VTXPARTICLE));

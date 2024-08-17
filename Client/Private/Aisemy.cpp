@@ -1,5 +1,7 @@
 #include "Aisemy.h"
 
+#include "LightObject.h"
+
 CAisemy::CAisemy(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
 {
@@ -25,14 +27,25 @@ HRESULT CAisemy::Initialize(void* pArg)
 	m_fDissolveAmount = 1.f;
 	m_bDissolve = true;
 
+	LIGHT_DESC LightDesc{};
+	LightDesc.eType = LIGHT_DESC::TYPE_POINT;
+	LightDesc.vAmbient = { 0.f, 1.f, 0.6f, 1.f };
+	LightDesc.vDiffuse = { 0.f, 1.f, 0.6f, 1.f };
+	LightDesc.fRange = 2.5f;
+	LightDesc.fLightStrength = 1.5f;
+
+	m_pLight = static_cast<CLightObject*>(m_pGameInstance->Add_Clone(GET_CURLEVEL, L"Light", L"Prototype_LightObject", &LightDesc));
+
 	return S_OK;
 }
 
 void CAisemy::Tick(_float fTimeDelta)
 {
 	Update_Dissolve(fTimeDelta);
-	
+
 	Update_UV(fTimeDelta);
+
+	m_pLight->Set_LightPosition(m_pTransform->Get_Position() + XMVectorSet(0.f, 1.f, 0.f, 0.f));
 }
 
 void CAisemy::LateTick(_float fTimeDelta)

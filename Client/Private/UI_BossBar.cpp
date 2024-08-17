@@ -82,6 +82,9 @@ HRESULT CUI_BossBar::OnEnter_Layer(void* pArg)
 
 	pStats->Set_BossBar(this);
 
+	m_pHpProgressBar->Set_Ratio(1.f);
+	m_pMpProgressBar->Set_Ratio(1.f);
+
 	m_wstrBossName = pStats->Get_Name();
 
 	return S_OK;
@@ -94,7 +97,7 @@ void CUI_BossBar::Update_EnemyHp(_int iHp)
 
 void CUI_BossBar::Update_EnemyMp(_int iMp)
 {
-	m_pHpProgressBar->Set_Ratio((_float)iMp / m_iMaxHp);
+	m_pMpProgressBar->Set_Ratio((_float)iMp / m_iMaxHp);
 }
 
 void CUI_BossBar::Draw_BossNameText()

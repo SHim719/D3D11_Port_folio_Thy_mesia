@@ -23,13 +23,13 @@ HRESULT CLight_Manager::Initialize()
 	return S_OK;
 }
 
-HRESULT CLight_Manager::Add_Light(const LIGHT_DESC& LightDesc)
+HRESULT CLight_Manager::Add_Light(CLight* pLight)
 {
-	CLight* pLight = CLight::Create(LightDesc);
 	if (nullptr == pLight)
 		return E_FAIL;
 
 	m_Lights.emplace_back(pLight);
+	Safe_AddRef(pLight);
 
 	return S_OK;
 }
@@ -39,8 +39,11 @@ HRESULT CLight_Manager::Render(CShader* pShader, CVIBuffer* pVIBuffer)
 	for (auto& pLight : m_Lights)
 		pLight->Render(pShader, pVIBuffer);
 
+	Clear_Lights();
+
 	return S_OK;
 }
+
 
 void CLight_Manager::Clear_Lights()
 {

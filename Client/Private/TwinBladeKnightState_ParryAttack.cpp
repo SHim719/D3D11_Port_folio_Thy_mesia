@@ -64,7 +64,7 @@ void CTwinBladeKnightState_ParryAttack::Init_AttackDesc()
 	m_AttackDescs.emplace_back(CTwinBladeKnight::BLADE_R, AttackDesc);
 	
 	AttackDesc.iDamage = 40;
-	AttackDesc.eEnemyAttackType = BIG_HIT;
+	AttackDesc.eEnemyAttackType = SEMIKNOCKBACK;
 	m_AttackDescs.emplace_back(CTwinBladeKnight::BLADE_R, AttackDesc);
 }
 

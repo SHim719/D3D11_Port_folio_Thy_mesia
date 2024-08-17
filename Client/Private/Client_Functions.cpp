@@ -122,10 +122,7 @@ namespace JoMath
 	}
 	_vector Calc_GroundLook(_fvector vDst, _fvector vSrc)
 	{
-		_vector vGroundLook = XMVectorSetY(vDst - vSrc, 0.f);
-		vGroundLook = XMVector3Normalize(vDst - vSrc);
-
-		return vGroundLook;
+		return XMVector3Normalize(XMVectorSetY(vDst - vSrc, 0.f));
 	}
 
 	_vector Get_BoneWorldPos(Engine::CBone* pBone, _fmatrix ParentMatrix)

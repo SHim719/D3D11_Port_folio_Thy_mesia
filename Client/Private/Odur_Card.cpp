@@ -60,7 +60,7 @@ void COdur_Card::Tick(_float fTimeDelta)
 	{
 		_vector vPlayerPos = m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Player")->Get_Transform()->Get_Position();
 
-		_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - m_pTransform->Get_Position(), -0.1f));
+		_vector vDir = XMVector3Normalize(XMVectorSetY(vPlayerPos - m_pTransform->Get_Position(), -0.01f));
 
 		m_pTransform->Go_Dir(vDir, fTimeDelta);
 	}
@@ -76,7 +76,11 @@ void COdur_Card::LateTick(_float fTimeDelta)
 #endif
 
 	if (m_pGameInstance->In_WorldFrustum(m_pTransform->Get_Position(), 1.f))
-		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_NONBLEND, this);
+	{
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_EFFECT_BLEND, this);
+		m_pGameInstance->Add_RenderObject(CRenderer::RENDER_GLOW, this);
+	}
+		
 }
 
 HRESULT COdur_Card::Render()
@@ -96,7 +100,7 @@ HRESULT COdur_Card::Render()
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
 
-		if (FAILED(m_pModel->Render(m_pShader, i, 0)))
+		if (FAILED(m_pModel->Render(m_pShader, i, 4)))
 			return E_FAIL;
 	}
 
@@ -135,6 +139,9 @@ HRESULT COdur_Card::Ready_Component()
 	ColliderDesc.bActive = true;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Sphere"), TEXT("Collider"), (CComponent**)&m_pCollider, &ColliderDesc)))
+		return E_FAIL;
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Attackable"), TEXT("Attackable"), (CComponent**)&m_pAttackable)))
 		return E_FAIL;
 	
 
