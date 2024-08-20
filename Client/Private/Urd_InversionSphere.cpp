@@ -38,7 +38,7 @@ void CUrd_InversionSphere::Tick(_float fTimeDelta)
 			m_pGameInstance->Inactive_ColorInversion(m_fLerpTime);
 
 		if (vNowScale.m128_f32[0] >= 8.f && 20.f == m_fScalingSpeed)
-			m_fScalingSpeed = 200.f;
+			m_fScalingSpeed = 250.f;
 
 		XMStoreFloat3(&m_vNowScale, vNowScale);
 		m_pTransform->Set_Scale(m_vNowScale);

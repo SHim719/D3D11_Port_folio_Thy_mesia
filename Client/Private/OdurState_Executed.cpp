@@ -27,21 +27,21 @@ void COdurState_Executed::OnState_Start(void* pArg)
 	m_pOdur->Set_Active_Colliders(false);
 	m_pOdur->InActive_StunnedMark();
 
-	m_pGameInstance->Set_TimeScaleWithRealTime(0.2f, 1.5f);
+	m_pGameInstance->Set_TimeScaleWithRealTime(0.2f, 1.1f);
+
+	PLAY_SOUND(L"Odur_Executed_All", false, 1.f);
 
 	m_pModel->Change_Animation(Magician_VSCorvus_TakeExecution, 0.f, false);
 }
 
 void COdurState_Executed::Update(_float fTimeDelta)
 {
-
+	if (false == m_pOdur->Is_ExecutionEnd())
+		m_pOwnerTransform->Attach_To_Bone(m_AttachDesc.pAttachBone, m_AttachDesc.pParentTransform, XMMatrixRotationX(-XM_PIDIV2));
 }
 
 void COdurState_Executed::Late_Update(_float fTimeDelta)
 {
-	if (false == m_pOdur->Is_ExecutionEnd())
-		m_pOwnerTransform->Attach_To_Bone(m_AttachDesc.pAttachBone, m_AttachDesc.pParentTransform, XMMatrixRotationX(-XM_PIDIV2));
-	
 	if (true == m_pModel->Is_AnimComplete() && false == m_pOdur->Is_Dissolving())
 		m_pOdur->Active_Dissolve();
 
@@ -52,6 +52,7 @@ void COdurState_Executed::OnState_End()
 	Safe_Release(m_AttachDesc.pAttachBone);
 	Safe_Release(m_AttachDesc.pParentTransform);
 }
+
 
 
 COdurState_Executed* COdurState_Executed::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

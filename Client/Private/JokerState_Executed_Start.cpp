@@ -21,10 +21,11 @@ void CJokerState_Executed_Start::OnState_Start(void* pArg)
 	Safe_AddRef(m_AttachDesc.pAttachBone);
 	Safe_AddRef(m_AttachDesc.pParentTransform);
 
-
 	m_pJoker->Set_LookTarget(false);
 	m_pJoker->Set_Active_Colliders(false);
 	m_pJoker->InActive_StunnedMark();
+
+	PLAY_SOUND(L"Joker_Executed", false, 0.8f);
 
 	m_pModel->Change_Animation(Joker_TakeExecution_Start, 0.f);
 }

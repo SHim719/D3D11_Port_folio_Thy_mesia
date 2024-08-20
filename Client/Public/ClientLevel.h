@@ -15,6 +15,9 @@ protected:
 	HRESULT Load_Map(const wstring& wstrMapPath);
 	HRESULT Load_MapObjects(vector<LOADOBJDESC>& LoadObjDescs, const _float& fCullingRadius, const wstring& wstrPrototypeTag);
 	void Ready_ChangeLevel(LEVEL eNextLevel);
+
+protected:
+	wstring m_wstrBGMTag = L"";
 };
 
 END

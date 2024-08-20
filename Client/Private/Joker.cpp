@@ -7,6 +7,8 @@
 #include "UI_Manager.h"
 #include "UI_EnemyBar.h"
 
+#include "Main_Camera.h"
+
 CJoker::CJoker(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -51,6 +53,7 @@ HRESULT CJoker::Initialize(void* pArg)
 		return E_FAIL;
 
 	Bind_KeyFrames();
+	Bind_KeyFrameSounds();
 
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"PerceptionBounding", L"Prototype_PerceptionBounding", this);
 
@@ -87,6 +90,16 @@ void CJoker::Bind_KeyFrames()
 	m_pModel->Bind_Func("ChangeToNextAttack", bind(&CJoker::Change_To_NextComboAnim, this));
 }
 
+void CJoker::Bind_KeyFrameSounds()
+{
+	m_pModel->Bind_Func("Sound_HammerWhoosh", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Hammer_Whoosh", 1, 2, false, 0.4f));
+	m_pModel->Bind_Func("Sound_Vocal_Swing", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Joker_Vocal_Swing", 1, 2, false, 0.7f));
+	m_pModel->Bind_Func("Sound_Vocal_StrongAttack", bind(&CGameInstance::Play, m_pGameInstance, L"Joker_Vocal_StrongAttack", false, 0.7f));
+	m_pModel->Bind_Func("Sound_Vocal_ShockImpact", bind(&CGameInstance::Play, m_pGameInstance, L"Sound_Vocal_ShockImpact", false, 0.7f));
+	m_pModel->Bind_Func("Sound_Step", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"FootStep_Heavy", 1, 2, false, 0.7f));
+
+}
+
 
 void CJoker::Percept_Target()
 {
@@ -96,6 +109,13 @@ void CJoker::Percept_Target()
 void CJoker::Change_To_NextComboAnim()
 {
 	ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, m_pModel->Get_CurrentAnimIndex() + 1, 0.1f, true));
+}
+
+void CJoker::StrongAttack_Impact()
+{
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_PW_Hammer");
+	EFFECTMGR->Active_Effect("Effect_Joker_StrongAttack_Impact", &m_tEffectSpawnDesc);
+	PLAY_SOUND(L"Joker_Shock_Impact", false, 0.6f);
 }
 
 HRESULT CJoker::Ready_Components(void* pArg)
@@ -206,7 +226,7 @@ HRESULT CJoker::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"Á¶Ä¿";
-	EnemyDesc.iMaxHp = 500;
+	EnemyDesc.iMaxHp = 10;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 

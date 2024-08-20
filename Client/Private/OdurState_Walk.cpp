@@ -54,11 +54,6 @@ void COdurState_Walk::OnState_End()
 
 }
 
-void COdurState_Walk::OnHit(const ATTACKDESC& AttackDesc)
-{
-	m_pOdur->Change_State((_uint)OdurState::State_Hit);
-}
-
 void COdurState_Walk::Decide_Animation()
 {
 	m_iDir = 0;

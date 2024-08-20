@@ -233,8 +233,9 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Enemy_Parry_Particle", 1, L"Prototype_Effect_Enemy_Parry_Particle")))
 		assert(false);
 
+	if (FAILED(Add_EffectGroups("Effect_TwinBlade_Hit", 1, L"Prototype_Effect_TwinBlade_Hit")))
+		assert(false);
 #pragma endregion
-
 
 #pragma region Blood
 	if (FAILED(Add_EffectGroups("Effect_Blood_L_TwinBladeKnight", 3, L"Prototype_Effect_Blood_L_TwinBladeKnight")))
@@ -274,6 +275,9 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Joker_Impact", 1, L"Prototype_Effect_Joker_Impact")))
 		assert(false);
 
+	if (FAILED(Add_EffectGroups("Effect_Joker_StrongAttack_Impact", 1, L"Prototype_Effect_Joker_StrongAttack_Impact")))
+		assert(false);
+
 #pragma endregion
 
 #pragma region Odur
@@ -298,6 +302,8 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Corvus_Execution_Odur_Blood", 1, L"Prototype_Effect_Corvus_Execution_Odur_Blood")))
 		assert(false);
 
+	if (FAILED(Add_EffectGroups("Effect_Odur_Execution_Knee", 1, L"Prototype_Effect_Odur_Execution_Knee")))
+		assert(false);
 
 #pragma endregion
 
@@ -335,10 +341,10 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Urd_DefaultAttack_Particle2", 1, L"Prototype_Effect_Urd_DefaultAttack_Particle2")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Urd_Pierce", 3, L"Prototype_Effect_Urd_Pierce")))
+	if (FAILED(Add_EffectGroups("Effect_Urd_Pierce", 5, L"Prototype_Effect_Urd_Pierce")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Urd_Pierce_Start", 1, L"Prototype_Effect_Urd_Pierce_Start")))
+	if (FAILED(Add_EffectGroups("Effect_Urd_Pierce_Start", 2, L"Prototype_Effect_Urd_Pierce_Start")))
 		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Urd_Slash_Horizontal", 1, L"Prototype_Effect_Urd_Slash_Horizontal")))
@@ -352,6 +358,19 @@ HRESULT CEffect_Manager::Init_Effects()
 
 	if (FAILED(Add_EffectGroups("Effect_Urd_Strong_Stab", 1, L"Prototype_Effect_Urd_Strong_Stab")))
 		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Strong_Stab_Particle", 1, L"Prototype_Effect_Urd_Strong_Stab_Particle")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_VS_Urd_Spark", 1, L"Prototype_Effect_Corvus_VS_Urd_Spark")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Execution_Blood", 1, L"Prototype_Effect_Urd_Execution_Blood")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Urd_Execution_Blood_Phase2", 1, L"Prototype_Effect_Urd_Execution_Blood_Phase2")))
+		assert(false);
+	
 #pragma endregion
 
 	return S_OK;

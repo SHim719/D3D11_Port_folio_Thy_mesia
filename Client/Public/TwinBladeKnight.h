@@ -20,6 +20,8 @@ private:
 	HRESULT Initialize(void* pArg)		override;
 
 	void Bind_KeyFrames()				override;
+	void Bind_KeyFrameSounds()			override;
+
 	void Percept_Target()				override;
 
 	void Change_To_NextComboAnim();

@@ -32,6 +32,8 @@ void CUrdState_DashStab::OnState_Start(void* pArg)
 		m_pModel->Change_Animation(Urd_Attack04_DashSting_R);
 
 	EFFECTMGR->Active_Effect("Effect_Urd_Step_Particle", &m_pUrd->Get_EffectSpawnDesc());
+
+	PLAY_SOUND(L"Urd_DashStab", false, 1.f);
 }
 
 void CUrdState_DashStab::Update(_float fTimeDelta)

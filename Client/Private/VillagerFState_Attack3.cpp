@@ -10,7 +10,7 @@ HRESULT CVillagerFState_Attack3::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
-
+	m_pModel->Bind_Func("Sound_StrongAttackVoice", bind(&CGameInstance::Play, m_pGameInstance, L"VillagerF_Voice_AttackLong", false, 0.5f));
 
 	return S_OK;
 }

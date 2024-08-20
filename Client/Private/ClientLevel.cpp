@@ -128,6 +128,8 @@ HRESULT CClientLevel::Load_MapObjects(vector<LOADOBJDESC>& LoadObjDescs, const _
 
 void CClientLevel::Ready_ChangeLevel(LEVEL eNextLevel)
 {
+    m_pGameInstance->Stop(m_wstrBGMTag);
+
     CPlayer* pPlayer = static_cast<CPlayer*>(m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Player"));
     pPlayer->Set_Active(false);
     UIMGR->Inactive_UI("UI_PlayerDefault");

@@ -13,6 +13,9 @@ HRESULT CPlayerState_PW_Spear::Initialize(void* pArg)
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry,
 		PlayerState::State_Healing };
 
+	m_pModel->Bind_Func("Sound_PW_Spear", bind(&CGameInstance::Play, m_pGameInstance, L"PW_Spear", false, 0.6f));
+		//PLAY_SOUND(L"PW_Spear", false, 0.7f);
+
 	return S_OK;
 }
 
@@ -27,6 +30,7 @@ void CPlayerState_PW_Spear::OnState_Start(void* pArg)
 
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_SPEAR, true);
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Spear", &m_pPlayer->Get_EffectSpawnDesc());
+	
 
 	Reset_AttackDesc();
 
@@ -61,6 +65,9 @@ void CPlayerState_PW_Spear::OnState_End()
 
 	EFFECTMGR->Inactive_Effect("Effect_Corvus_PW_Spear");
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Spear_Disappear", &m_pPlayer->Get_EffectSpawnDesc());
+
+	if (m_pGameInstance->Is_Playing(L"PW_Spear"))
+		m_pGameInstance->Stop(L"PW_Spear");
 }
 
 void CPlayerState_PW_Spear::Init_AttackDesc()

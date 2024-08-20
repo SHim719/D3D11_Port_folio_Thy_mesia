@@ -28,6 +28,7 @@ void CPlayerState_Avoid::OnState_Start(void* pArg)
 
 	m_pPlayer->Set_Invincible(true);
 
+	PLAY_SOUND(L"Corvus_Avoid", false, 1.f);
 	Decide_Animation();
 }
 
@@ -59,6 +60,7 @@ void CPlayerState_Avoid::OnState_End()
 	m_vMoveAxis.y = 0.f;
 
 	m_pPlayer->Set_EnableJog(true);
+	m_pPlayer->Set_Invincible(false);
 }
 
 void CPlayerState_Avoid::OnHit(const ATTACKDESC& AttackDesc)

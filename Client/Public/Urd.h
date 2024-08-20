@@ -31,8 +31,11 @@ private:
 	void OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)	override;
 	void OnEnd_Cutscene()									override;
 
+	void Play_BGM();
+
 	void Bind_KeyFrames()									override;
 	void Bind_KeyFrameEffects()								override;
+	void Bind_KeyFrameSounds()								override;
 
 private:
 	CBone*				m_pSwapBone = { nullptr };
@@ -41,9 +44,15 @@ private:
 	_float4x4			m_InitWorldMatrix = {};
 	_bool				m_bPhase2 = { false };
 	_bool				m_bInvincible = { false };
+
+	_bool				m_bSPSkill_Explosion = { false };
+	_float				m_fExplosion_Gap = { 0.4f };
+	_float				m_fExplosion_GapAcc = { 0.f };
+
+	_float				m_fPauseTerm = { 0.f };
 private:
 	vector<class CUrd_Weapon*>  m_Urd_Weapons;
-	size_t						m_iNowWeaponIdx = { 0 };
+	size_t						m_iNowWeaponIdx = { 999999 };
 	size_t						m_iNumActivatedWeapons = { 0 };
 
 	_int						m_iStepCount = { 0 };
@@ -52,21 +61,22 @@ private:
 
 private:
 	void Active_Ultimate_Skill();
-
+	void Explode_Time_Lag(_float fTimeDelta);
+	
 public:
 	void Swap_Bone();
 	void Active_UrdWeapon();
 	void Active_MagicCircle(_bool bUltimate);
 	void Release_UrdWeapon(_bool bThrow);
+	void Resize_WeaponCollider(_bool bOrigin);
+	void Set_NowWeapon_Disappear();
 
 	void SetState_Death()				override;
 	void SetState_Executed(void* pArg)	override;
 
 	void Decide_State();
 
-	void Active_Phase2() {
-		m_bPhase2 = true;
-	}
+	void Active_Phase2();
 
 	_bool Is_Phase2() {
 		return m_bPhase2;
@@ -78,6 +88,10 @@ public:
 
 	_bool Is_Invincible() {
 		return m_bInvincible;
+	}
+
+	_matrix Get_InitWorldMatrix() {
+		return XMLoadFloat4x4(&m_InitWorldMatrix);
 	}
 
 	size_t Get_NumActivatedWeapons() {
@@ -110,7 +124,11 @@ public:
 		++m_iStepCount;
 	}
 
-	void Resize_WeaponCollider(_bool bOrigin);
+	void Pause_Anim(_float fPauseTerm) {
+		m_bPauseAnim = true;
+		m_fPauseTerm = fPauseTerm;
+	}
+
 
 private:
 	HRESULT Ready_Components(void* pArg);

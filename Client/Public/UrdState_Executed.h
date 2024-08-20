@@ -18,6 +18,23 @@ private:
 private:
 	ATTACHDESC	m_AttachDesc = {};
 
+	_bool		m_bOnlyPosition = { false };
+
+private:
+	void Die();
+
+	void Set_OnlyPosition() {
+		m_bOnlyPosition = true;
+	}
+
+	void Spawn_Effect_Execution_Blood_Phase2()
+	{
+		if (true == m_pUrd->Is_Phase2())
+			EFFECTMGR->Active_Effect("Effect_Urd_Execution_Blood_Phase2", &m_pUrd->Get_EffectSpawnDesc());
+	}
+
+	
+	
 public:
 	static CUrdState_Executed* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

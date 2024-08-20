@@ -25,16 +25,19 @@ void CVillagerFState_Stunned_Start::OnState_Start(void* pArg)
 
 	RIMLIGHTDESC RimDesc{};
 	RimDesc.bColorLerp = true;
-	RimDesc.fDuration = 1.5f;
+	RimDesc.fDuration = 0.5f;
 	RimDesc.fRimPower = 1.f;
 	RimDesc.fRimStrength = 3.f;
 	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };
+
+	PLAY_SOUND(L"Normal_KillChance", false, 1.f);
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");
 
 	m_pVillager_F->Active_RimLight(RimDesc);
 
 	m_pModel->Change_Animation(LV1Villager_F_HurtStunStart);
+
 }
 
 void CVillagerFState_Stunned_Start::Update(_float fTimeDelta)

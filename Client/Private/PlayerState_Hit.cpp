@@ -68,7 +68,6 @@ void CPlayerState_Hit::Late_Update(_float fTimeDelta)
 		return;
 	}
 		
-
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
 		Check_ExtraStateChange(ePlayerState);

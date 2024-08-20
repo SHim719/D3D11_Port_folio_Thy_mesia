@@ -32,6 +32,7 @@ void CUrdState_Step_F::OnState_Start(void* pArg)
 
 	EFFECTMGR->Active_Effect("Effect_Urd_Step_Particle", &m_pUrd->Get_EffectSpawnDesc());
 
+	m_pGameInstance->Play_RandomSound(L"Urd_MagicMove", 1, 2, false, 1.f);
 }
 
 void CUrdState_Step_F::Update(_float fTimeDelta)

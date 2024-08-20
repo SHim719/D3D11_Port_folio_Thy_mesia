@@ -23,7 +23,7 @@ public:
 private:
 	_float		m_fScalingSpeed = { 20.f };
 	_float3		m_vNowScale = { 1.f, 1.f, 1.f };
-	_float		m_fTargetScale = { 250.f };
+	_float		m_fTargetScale = { 300.f };
 
 	_float		m_fLerpTime = { 0.7f };
 

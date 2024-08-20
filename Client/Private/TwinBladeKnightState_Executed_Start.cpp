@@ -12,6 +12,8 @@ HRESULT CTwinBladeKnightState_Executed_Start::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pModel->Bind_Func("Sound_Execution_End", bind(&CGameInstance::Play, m_pGameInstance, L"Twin_Execution_Hit", false, 1.f));
+
 	return S_OK;
 }
 
@@ -24,6 +26,8 @@ void CTwinBladeKnightState_Executed_Start::OnState_Start(void* pArg)
 	m_pTwinBladeKnight->Set_LookTarget(false);
 	m_pTwinBladeKnight->Set_Active_Colliders(false);
 	m_pTwinBladeKnight->InActive_StunnedMark();
+
+	PLAY_SOUND(L"Twin_Execution_Start", false, 0.8f);
 
 	m_pModel->Change_Animation(HArmorLV1_Halberds_VS_TakeExecution, 0.f, false);
 }

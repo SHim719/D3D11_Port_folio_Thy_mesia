@@ -27,6 +27,8 @@ void CVillagerFState_Death::OnState_Start(void* pArg)
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");
 
 	m_pModel->Change_Animation(LV1Villager_F_Die01, 0.1f, false);
+
+	PLAY_SOUND(L"VillagerF_Voice_Die1", false, 1.f);
 }
 
 void CVillagerFState_Death::Update(_float fTimeDelta)

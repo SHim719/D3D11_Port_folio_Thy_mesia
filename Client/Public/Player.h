@@ -30,6 +30,7 @@ private:
 
 	void Bind_KeyFrames()									override;
 	void Bind_KeyFrameEffects()								override;
+	void Bind_KeyFrameSounds()								override;
 
 	HRESULT Bind_ShaderResources()							override;
 

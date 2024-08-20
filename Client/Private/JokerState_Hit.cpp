@@ -17,6 +17,7 @@ void CJokerState_Hit::OnState_Start(void* pArg)
 {
 	m_pJoker->Set_LookTarget(true);
 
+
 	m_pModel->Change_Animation(Joker_HurtCounter);
 }
 

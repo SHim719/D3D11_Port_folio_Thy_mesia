@@ -4,6 +4,8 @@
 
 #include "UI_Manager.h"
 
+#include "Urd.h"
+
 CPlayerState_Execution_Elite::CPlayerState_Execution_Elite(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayerState_Base(pDevice, pContext)
 {
@@ -42,7 +44,6 @@ void CPlayerState_Execution_Elite::OnState_Start(void* pArg)
 
 	m_pPlayer->Set_Adjust_NaviY(false);
 
-	
 }
 
 void CPlayerState_Execution_Elite::Update(_float fTimeDelta)
@@ -72,6 +73,7 @@ void CPlayerState_Execution_Elite::OnState_End()
 	m_pPlayer->Set_CanNextState(true);
 	m_pPlayer->Set_Adjust_NaviY(true);
 }
+
 
 
 CPlayerState_Execution_Elite* CPlayerState_Execution_Elite::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

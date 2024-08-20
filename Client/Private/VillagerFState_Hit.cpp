@@ -17,7 +17,7 @@ HRESULT CVillagerFState_Hit::Initialize(void* pArg)
 
 void CVillagerFState_Hit::OnState_Start(void* pArg)
 {
-	m_pVillager_F->Set_LookTarget(true);
+	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
 	m_pModel->Change_Animation(LV1Villager_F_HurtM_FL + m_iHitCount % 2);
 }
@@ -61,7 +61,10 @@ void CVillagerFState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 		Decide_Attack();
 	else
 		OnState_Start(nullptr);
+
+	Play_HitSound();
 }
+
 
 CVillagerFState_Hit* CVillagerFState_Hit::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {

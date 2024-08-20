@@ -13,6 +13,8 @@
 
 #include "Urd_MagicCircle.h"
 
+#include "Main_Camera.h"
+
 
 CUrd_Weapon::CUrd_Weapon(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CWeapon(pDevice, pContext)
@@ -101,7 +103,8 @@ void CUrd_Weapon::Tick(_float fTimeDelta)
 				m_pCollider->Set_Active(false);
 				if (false == m_bParried)
 					Active_LandingImpact();
-				
+
+				PLAY_SOUND(L"Urd_Sword_Land", false, 1.f);
 				static_cast<CUrd*>(m_pOwner)->Active_MagicCircle(false);
 			}
 		}
@@ -155,6 +158,9 @@ HRESULT CUrd_Weapon::OnEnter_Layer(void* pArg)
 	m_pEffect_SwordDefault->OnEnter_Layer(&m_EffectSpawnDesc);
 	Safe_AddRef(m_pEffect_SwordDefault);
 
+	m_pCollider->Enroll_Collider();
+	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+
 	m_pGameInstance->Insert_GameObject(GET_CURLEVEL, L"Effect", m_pEffect_SwordDefault);
 
 	return S_OK;
@@ -176,16 +182,23 @@ void CUrd_Weapon::Released(_bool bThrow)
 	}
 	else
 	{
+		PLAY_SOUND(L"Urd_Skill_Stick", false, 0.7f);
+		PLAY_SOUND(L"Urd_SkillHit", false, 1.f);
 		Active_LandingImpact();
+		static_cast<CUrd*>(m_pOwner)->Active_MagicCircle(false);
 	}
 	
 }
 
-void CUrd_Weapon::Active_MagicCircle(_bool bUltimate)
+void CUrd_Weapon::Disappear()
 {
-	if (false == m_bUsing || false == m_bLanded)
-		return;
-	
+	m_bReturnToPool = true;
+	m_bUsing = false;
+	m_pEffect_SwordDefault->End_Effect();
+}
+
+void CUrd_Weapon::Active_MagicCircle(_bool bUltimate)
+{	
 	Safe_AddRef(m_pMagicCircle);
 	CUrd_MagicCircle::URD_MAGICCIRCLE_DESC Desc;
 	XMStoreFloat4(&Desc.vPosition, m_pTransform->Get_Position());
@@ -195,9 +208,10 @@ void CUrd_Weapon::Active_MagicCircle(_bool bUltimate)
 	m_pGameInstance->Insert_GameObject(GET_CURLEVEL, L"Effect", m_pMagicCircle);
 }
 
-void CUrd_Weapon::Explode_MagicCircle()
+void CUrd_Weapon::Explode_MagicCircle(_bool bDisappear)
 {
-	m_pMagicCircle->Explosion();
+	m_pMagicCircle->Explosion(bDisappear);
+	
 }
 
 void CUrd_Weapon::Active_LandingImpact()
@@ -217,7 +231,9 @@ void CUrd_Weapon::Active_LandingImpact()
 
 	EFFECTMGR->Create_Effect_Hit("Effect_Urd_Sword_Impact", &EffectHitDesc);
 
-	//static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Joker_Impact");
+	PLAY_SOUND(L"Urd_Sword_Land", false, 1.f);
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Urd_Sword_Landing");
 }
 
 void CUrd_Weapon::OnCollisionEnter(CGameObject* pOther)
@@ -257,6 +273,7 @@ HRESULT CUrd_Weapon::Ready_Components(WEAPONDESC* pDesc)
 			wstrColliderTag = L"Prototype_Sphere";
 
 		pDesc->pColliderDesc->pOwner = this;
+		pDesc->pColliderDesc->bActive = false;
 
 		if (FAILED(__super::Add_Component(LEVEL_STATIC, wstrColliderTag, TEXT("Collider"), (CComponent**)&m_pCollider,
 			pDesc->pColliderDesc)))

@@ -69,6 +69,7 @@ HRESULT COdur::Initialize(void* pArg)
 
 	Bind_KeyFrames();
 	Bind_KeyFrameEffects();
+	Bind_KeyFrameSounds();
 
 	return S_OK;
 }
@@ -81,15 +82,18 @@ void COdur::Tick(_float fTimeDelta)
 		UIMGR->Active_UI("UI_BossBar", m_pStats);
 		m_pLightObject->Set_Active(true);
 		Change_State((_uint)OdurState::State_Walk);
+
+		PLAY_SOUND(L"BGM_Odur", true, 1.f);
 	}
 
 	if (KEY_DOWN(eKeyCode::O))
 	{
-		//Change_State((_uint)OdurState::State_DisappearMove);
+		//Change_State((_uint)OdurState::State_DisappearWalk);
 		//Change_State((_uint)OdurState::State_Parry);
-		//Change_State((_uint)OdurState::State_ThrowCard);
+		Change_State((_uint)OdurState::State_ThrowCard);
 		//Change_State((_uint)OdurState::State_ExecutionDisappear);
-		Change_State((_uint)OdurState::State_Stunned_Start);
+		//Change_State((_uint)OdurState::State_Stunned_Start);
+		//Change_State((_uint)OdurState::State_KickCombo);
 	}
 
 	__super::Tick(fTimeDelta);
@@ -186,8 +190,8 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_Stanced", bind(&CCharacter::Set_Stanced, this, true));
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
-	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));	
-	m_pModel->Bind_Func("Odur_Execute_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.2f));	
+	m_pModel->Bind_Func("Enable_Render", bind(&CGameObject::Set_NoRender, this, false));
+	m_pModel->Bind_Func("Odur_Execute_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.2f));
 	m_pModel->Bind_Func("Reset_Timer", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 1.f));
 	m_pModel->Bind_Func("Enable_CaneTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[CANE], true));
 	m_pModel->Bind_Func("Disable_CaneTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[CANE], false));
@@ -205,6 +209,20 @@ void COdur::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_Odur_Cane_Kick_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Cane_Kick_Particle", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Odur_Disappear_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Disappear_Particle", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Odur_Execution_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Execution_Blood", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Odur_Execution_Knee", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Execution_Knee", &m_tEffectSpawnDesc));
+}
+
+void COdur::Bind_KeyFrameSounds()
+{
+	m_pModel->Bind_Func("Sound_Odur_Cutscene_Voice1", bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Cutscene_Voice1", false, 1.f));
+	m_pModel->Bind_Func("Sound_Odur_Cutscene_Voice2", bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Cutscene_Voice2", false, 1.f));
+	m_pModel->Bind_Func("Sound_Odur_CaneAttack2_1", bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Cane_Attack2_1", false, 0.6f));
+	m_pModel->Bind_Func("Sound_Odur_CaneAttack2_2", bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Cane_Attack2_2", false, 0.6f));
+	m_pModel->Bind_Func("Sound_Odur_CaneAttack2_3", bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Cane_Attack2_3", false, 0.6f));
+	m_pModel->Bind_Func("Sound_Odur_CaneAttack1_All", bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Cane_Attack1_All", false, 0.6f));
+	m_pModel->Bind_Func("Sound_Odur_FootStep", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"FootStep_Magician", 1, 3, false, 1.f));
+	m_pModel->Bind_Func("Sound_Odur_Parry_Kick", bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Parry_Kick", false, 1.f));
+	m_pModel->Bind_Func("Sound_Odur_Parry_Slash", bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Parry_Slash", false, 1.f));
 }
 
 void COdur::Swap_Bone()
@@ -225,7 +243,7 @@ void COdur::Set_Alpha_Decrease()
 	m_bAlphaIncrease = false;
 	m_bAlphaEnabled = true;
 	for (auto& pWeapon : m_Weapons)
-		pWeapon->Set_AlphaEnable(false);
+		pWeapon->Set_AlphaEnable(true);
 
 }
 

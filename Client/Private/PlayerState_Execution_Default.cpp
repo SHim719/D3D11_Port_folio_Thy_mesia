@@ -21,9 +21,12 @@ HRESULT CPlayerState_Execution_Default::Initialize(void* pArg)
 void CPlayerState_Execution_Default::OnState_Start(void* pArg)
 {
 	m_pPlayer->Set_CanNextState(false);
+	m_pPlayer->Set_Invincible(true);
 
 	m_pExecutionEnemy = (CEnemy*)pArg;
 	m_pExecutionEnemy->Set_Active_Colliders(false);
+	m_pOwnerTransform->LookAt2D(m_pExecutionEnemy->Get_Transform()->Get_Position());
+
 
 	RADIALBLUR_DESCS RadialDescs{};
 	RadialDescs.fBlurRadius = 10.f;
@@ -31,6 +34,7 @@ void CPlayerState_Execution_Default::OnState_Start(void* pArg)
 
 	m_pGameInstance->Active_RadialBlur(RadialDescs);
 	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
+	PLAY_SOUND(L"Corvus_Execution_Default", false, 0.8f);
 
 	m_pModel->Change_Animation(Corvus_VS_LightExecute01L + m_iExecutionCount % 2);
 }
@@ -67,7 +71,7 @@ void CPlayerState_Execution_Default::Late_Update(_float fTimeDelta)
 void CPlayerState_Execution_Default::OnState_End()
 {
 	m_pGameInstance->Inactive_RadialBlur(0.5f);
-
+	m_pPlayer->Set_Invincible(false);
 	m_iExecutionCount = 0;
 }
 

@@ -48,15 +48,18 @@ void CMain_Camera::Init_CameraShakingDescs()
 	CMain_Camera::SHAKINGDESC ShakingDesc;
 	ShakingDesc.fShakeTime = 0.1f;
 	ShakingDesc.fShakingForce = 0.1f;
-
 	m_ShakingDescs.emplace("Shaking_Hit", ShakingDesc);
 
-	ShakingDesc.fShakeTime = 0.1f;
+	ShakingDesc.fShakeTime = 0.3f;
+	ShakingDesc.fShakingForce = 0.4f;
+	m_ShakingDescs.emplace("Shaking_Big_Hit", ShakingDesc);
+
+	ShakingDesc.fShakeTime = 0.15f;
 	ShakingDesc.fShakingForce = 0.4f;
 	m_ShakingDescs.emplace("Shaking_Execution", ShakingDesc);
 
 	ShakingDesc.fShakeTime = 0.15f;
-	ShakingDesc.fShakingForce = 0.2f;
+	ShakingDesc.fShakingForce = 0.3f;
 	m_ShakingDescs.emplace("Shaking_Claw_Long", ShakingDesc);
 
 	ShakingDesc.fShakeTime = 0.3f;
@@ -72,9 +75,16 @@ void CMain_Camera::Init_CameraShakingDescs()
 	m_ShakingDescs.emplace("Shaking_Parry_Normal", ShakingDesc);
 
 	ShakingDesc.fShakeTime = 0.1f;
-	ShakingDesc.fShakingForce = 0.3f;
+	ShakingDesc.fShakingForce = 0.4f;
 	m_ShakingDescs.emplace("Shaking_Parry_Big", ShakingDesc);
 
+	ShakingDesc.fShakeTime = 0.2f;
+	ShakingDesc.fShakingForce = 0.5f;
+	m_ShakingDescs.emplace("Shaking_Urd_Sword_Landing", ShakingDesc);
+
+	ShakingDesc.fShakeTime = 1.5f;
+	ShakingDesc.fShakingForce = 0.6f;
+	m_ShakingDescs.emplace("Shaking_Explosion", ShakingDesc);
 }
 
 void CMain_Camera::OnActive()

@@ -84,6 +84,8 @@ void CVillager_F::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("Active_Dissolve", bind(&CGameObject::Active_Dissolve, this));
+
+	m_pModel->Bind_Func("Sound_AttackVoice", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"VillagerF_Voice_Attack", 1, 2, false, 0.6f));
 }
 
 void CVillager_F::Percept_Target()
@@ -95,6 +97,7 @@ void CVillager_F::Percept_Target()
 	else
 		Change_State((_uint)VillagerF_State::State_Attack3);
 }
+
 
 HRESULT CVillager_F::Ready_Components(void* pArg)
 {

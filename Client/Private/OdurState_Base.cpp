@@ -40,44 +40,59 @@ void COdurState_Base::OnState_End()
 void COdurState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
 	if (0 == m_pOdur->Take_Damage(AttackDesc))
-		int x = 10; // Á×À½ Ã³¸®
+		m_pOdur->Change_State((_uint)OdurState::State_Stunned_Start);
 	else if (!m_pOdur->Is_Stanced())
-	{
 		m_pOdur->Change_State((_uint)OdurState::State_Hit);
-		return;
-	}
+	
 		
-
 	_int iRandNum = JoRandom::Random_Int(0, 1);
 	string strBloodEffect = iRandNum == 0 ? "Effect_Blood_R_Odur" : "Effect_Blood_L_Odur";
 	EFFECTMGR->Active_Effect(strBloodEffect, &m_pOdur->Get_EffectSpawnDesc());
 	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pOdur->Get_EffectSpawnDesc());
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
+
+	Play_HitSound();
 }
 
 void COdurState_Base::Decide_State()
 {
 	_int iRandNum = JoRandom::Random_Int(0, 9);
 
-	if (iRandNum < 5)
+	if (iRandNum < 4)
 		Decide_Attack();
 	else if (iRandNum < 8)
-		m_pOdur->Change_State((_uint)OdurState::State_DisappearMove);
+		m_pOdur->Change_State((_uint)OdurState::State_DisappearWalk);
 	else
 		m_pOdur->Change_State((_uint)OdurState::State_Walk);
 }
 
 void COdurState_Base::Decide_Attack()
 {
-	_int 	iRandNum = JoRandom::Random_Int(0, 2);
+	_float fDist = XMVector3Length(m_pOwnerTransform->Get_Position() - m_pTargetTransform->Get_Position()).m128_f32[0];
 
-	if (0 == iRandNum)
-		m_pOdur->Change_State((_uint)OdurState::State_CaneAttack1);
-	else if (1 == iRandNum)
-		m_pOdur->Change_State((_uint)OdurState::State_CaneAttack2);
-	else
-		m_pOdur->Change_State((_uint)OdurState::State_KickCombo);
+	_int iRangeMax = fDist > 3.5f ? 3 : 2;
+	_int iRandNum = JoRandom::Random_Int(0, iRangeMax);
+
+	_uint iState = 0;
+	
+	switch (iRandNum)
+	{
+	case 0:
+		iState = (_uint)OdurState::State_CaneAttack1;
+		break;
+	case 1:
+		iState = (_uint)OdurState::State_CaneAttack2;
+		break;
+	case 2:
+		iState = (_uint)OdurState::State_KickCombo;
+		break;
+	case 3:
+		iState = (_uint)OdurState::State_ThrowCard;
+		break;
+	}
+
+	m_pOdur->Change_State(iState);
 }
 
 void COdurState_Base::Free()

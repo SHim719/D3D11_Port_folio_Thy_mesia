@@ -55,6 +55,7 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	Bind_KeyFrames();
 	Bind_KeyFrameEffects();
+	Bind_KeyFrameSounds();
 
 	m_tEffectSpawnDesc.pParentTransform = m_pTransform;
 	m_tEffectSpawnDesc.pParentModel = m_pModel;
@@ -102,8 +103,8 @@ void CPlayer::Tick(_float fTimeDelta)
 		//
 		//UIMGR->Active_UI("UI_Popup", &eTypes);
 
-		m_pStats->Update_PlunderSkill(SKILLTYPE::HAMMER);
-		//m_pStats->Update_PlunderSkill(SKILLTYPE::SPEAR);
+		//m_pStats->Update_PlunderSkill(SKILLTYPE::HAMMER);
+		m_pStats->Update_PlunderSkill(SKILLTYPE::SPEAR);
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::TWINBLADE);
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::AXE);
 	}
@@ -245,6 +246,7 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Healing", bind(&CPlayer::Healing, this));
 	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, 1.5f));
 	m_pModel->Bind_Func("Execution_Odur_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.4f));
+	m_pModel->Bind_Func("Execution_Urd_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.2f));
 	m_pModel->Bind_Func("Reset_TimeScale", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 1.f));
 	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, 1.5f));
 }
@@ -276,7 +278,17 @@ void CPlayer::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_Plunder_Rush_Trail", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Rush_Trail", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Plunder_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Start", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Plunder", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Effect", &m_tEffectSpawnDesc));
+
 	m_pModel->Bind_Func("Effect_Execution_Odur_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Execution_Odur_Blood", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Execution_Urd_Spark", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_VS_Urd_Spark", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Exectuion_Urd_Blood1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Execution_Blood", &m_tEffectSpawnDesc));
+
+}
+
+void CPlayer::Bind_KeyFrameSounds()
+{
+	
+	
 }
 
 HRESULT CPlayer::Bind_ShaderResources()
@@ -533,6 +545,7 @@ void CPlayer::Healing()
 	Active_RimLight(RimDesc);
 
 	EFFECTMGR->Active_Effect("Effect_Corvus_Healing", &Get_EffectSpawnDesc());
+	PLAY_SOUND(L"Healing", false, 0.8f);
 }
 
 

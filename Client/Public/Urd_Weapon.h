@@ -34,14 +34,15 @@ private:
 
 public:
 	void Released(_bool bThrow);
-	
+	void Disappear();
+
+
 	_bool Is_Using() const {
 		return m_bUsing;
 	}
 
 	void Active_MagicCircle(_bool bUltimate);
-	void Explode_MagicCircle();
-
+	void Explode_MagicCircle(_bool bDisappear = false);
 
 	void Active_LandingImpact();
 

@@ -50,6 +50,8 @@ void CJokerState_Base::OnHit(const ATTACKDESC& AttackDesc)
 	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pJoker->Get_EffectSpawnDesc());
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
+
+	Play_HitSound();
 }
 
 void CJokerState_Base::Decide_State()

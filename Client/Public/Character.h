@@ -15,6 +15,7 @@ protected:
 
 	virtual void Bind_KeyFrames();
 	virtual void Bind_KeyFrameEffects();
+	virtual void Bind_KeyFrameSounds();
 
 	virtual void Decide_PassIdx();
 protected:
@@ -78,8 +79,8 @@ public:
 		m_bAdjustNaviY = b;
 	}
 
-protected:
 	void Compute_YPos();
+protected:
 	void Update_Colliders();
 	
 protected:

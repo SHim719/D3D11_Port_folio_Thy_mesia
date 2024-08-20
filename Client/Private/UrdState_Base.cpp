@@ -42,7 +42,6 @@ void CUrdState_Base::OnHit(const ATTACKDESC& AttackDesc)
 	if (true == m_pUrd->Is_Invincible())
 		return;
 
-
 	if (0 == m_pUrd->Take_Damage(AttackDesc))
 	{
 		m_pUrd->Change_State((_uint)UrdState::State_Stunned_Start);
@@ -50,7 +49,6 @@ void CUrdState_Base::OnHit(const ATTACKDESC& AttackDesc)
 	else if (!m_pUrd->Is_Stanced())
 	{
 		m_pUrd->Change_State((_uint)UrdState::State_Hit);
-		return;
 	}
 	
 	_int iRandNum = JoRandom::Random_Int(0, 1);
@@ -59,11 +57,12 @@ void CUrdState_Base::OnHit(const ATTACKDESC& AttackDesc)
 	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pUrd->Get_EffectSpawnDesc());
 	
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
+	Play_HitSound();
 }
 
 void CUrdState_Base::Decide_State()
 {
-	int iRandNum = JoRandom::Random_Int(0, 4);
+	int iRandNum = JoRandom::Random_Int(0, 7);
 
 	if (iRandNum < 1 && true == m_pUrd->Can_EnableSkill())
 	{
@@ -76,7 +75,7 @@ void CUrdState_Base::Decide_State()
 			iState = (_uint)UrdState::State_Skill1;
 		m_pUrd->Change_State(iState);
 	}
-	else if (iRandNum < 4)
+	else if (iRandNum < 6)
 	{
 		Decide_Step();
 	}

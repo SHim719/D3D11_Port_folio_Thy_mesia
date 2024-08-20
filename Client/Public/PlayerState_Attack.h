@@ -21,6 +21,8 @@ private:
 	void Decide_ExecutionState(class CEnemy* pExecutionEnemy);
 
 	void Check_NextAttack();
+
+	void Play_AttackSound();
 private:
 	_uint			m_iNowComboCnt = 0;
 	_uint			m_iMaxComboCnt = 5;

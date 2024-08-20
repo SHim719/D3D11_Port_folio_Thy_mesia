@@ -1,5 +1,7 @@
 #include "TwinBladeKnightState_Hit.h"
 
+#include "Main_Camera.h"
+
 CTwinBladeKnightState_Hit::CTwinBladeKnightState_Hit(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CTwinBladeKnightState_Base(pDevice, pContext)
 {
@@ -23,17 +25,12 @@ void CTwinBladeKnightState_Hit::OnState_Start(void* pArg)
 	{
 	case ATTACK_NORMAL:
 	case PLUNDER:
-	{
 		m_pModel->Change_Animation(LArmor_TwinSwords_HurtM_FL + m_iHitCount % 2);
-		string strBloodEffect = m_iHitCount % 2 == 0 ? "Effect_Blood_R_TwinBladeKnight" : "Effect_Blood_L_TwinBladeKnight";
-		EFFECTMGR->Active_Effect(strBloodEffect, &m_pTwinBladeKnight->Get_EffectSpawnDesc());
-	}
 		break;
 	case IGNORE_STANCE:
 		m_pModel->Change_Animation(LArmor_TwinSwords_HurtCounter);
 		break;
 	}
-
 }
 
 void CTwinBladeKnightState_Hit::Update(_float fTimeDelta)
@@ -72,11 +69,25 @@ void CTwinBladeKnightState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 	_int iRandNum = JoRandom::Random_Int(0, m_iMaxHitCount);
 
 	if (iRandNum <= m_iHitCount)
+	{
 		Decide_Attack();
+	}	
 	else if (iRandNum > m_iMaxHitCount - 5 && ATTACK_NORMAL == AttackDesc.ePlayerAttackType)
+	{
 		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_ParryAttack);
+		return;
+	}
 	else
+	{
 		OnState_Start(const_cast<ATTACKDESC*>(&AttackDesc));
+	}
+
+	EFFECTMGR->Active_Effect("Effect_TwinBlade_Hit", &m_pTwinBladeKnight->Get_EffectSpawnDesc());
+	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pTwinBladeKnight->Get_EffectSpawnDesc());
+	
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
+		
+	Play_HitSound();
 }
 
 CTwinBladeKnightState_Hit* CTwinBladeKnightState_Hit::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

@@ -384,39 +384,50 @@ HRESULT CGameInstance::Create_Sound(const string& strPath, const wstring& strSou
 	return m_pSound_Manager->Create_Sound(strPath, strSoundTag);
 }
 
-HRESULT CGameInstance::Play(const wstring& strSoundTag, _bool bLoop)
+void CGameInstance::Play(const wstring& strSoundTag, _bool bLoop, _float fVolume)
 {
 	if (nullptr == m_pSound_Manager)
-		return E_FAIL;
+		return;
 
-	return m_pSound_Manager->Play(strSoundTag, bLoop);
+	m_pSound_Manager->Play(strSoundTag, bLoop, fVolume);
 
-	return S_OK;
 }
 
-HRESULT CGameInstance::Stop(const wstring& strSoundTag)
+void CGameInstance::Play_RandomSound(const wstring& strSoundTag, _int iMin, _int iMax, _bool bLoop, _float fVolume)
 {
 	if (nullptr == m_pSound_Manager)
-		return E_FAIL;
+		return;
 
-	return m_pSound_Manager->Stop(strSoundTag);
+	std::random_device RD;
+	std::mt19937 gen(RD());
+
+	std::uniform_int_distribution<_int> dis(iMin, iMax);
+
+	m_pSound_Manager->Play(strSoundTag + to_wstring(dis(gen)), bLoop, fVolume);
+}
+
+void CGameInstance::Stop(const wstring& strSoundTag)
+{
+	if (nullptr == m_pSound_Manager)
+		return;
+	m_pSound_Manager->Stop(strSoundTag);
 }
 
 
-HRESULT CGameInstance::SetVolume(const wstring& strSoundTag, const _float& fVolume)
+void CGameInstance::SetVolume(const wstring& strSoundTag, const _float& fVolume)
 {
 	if (nullptr == m_pSound_Manager)
-		return E_FAIL;
+		return;
 
-	return m_pSound_Manager->SetVolume(strSoundTag, fVolume);
+	m_pSound_Manager->SetVolume(strSoundTag, fVolume);
 }
 
-HRESULT CGameInstance::SetPosition(const wstring& strSoundTag, _float fPosition)
+void CGameInstance::SetPosition(const wstring& strSoundTag, _float fPosition)
 {
 	if (nullptr == m_pSound_Manager)
-		return E_FAIL;
-	
-	return m_pSound_Manager->SetPosition(strSoundTag, fPosition);
+		return;
+
+	m_pSound_Manager->SetPosition(strSoundTag, fPosition);
 }
 
 
@@ -427,9 +438,19 @@ _bool CGameInstance::Is_Playing(const wstring& strSoundTag)
 
 	return m_pSound_Manager->Is_Playing(strSoundTag);
 }
-HRESULT CGameInstance::Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime)
+void CGameInstance::Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime)
 {
-	return m_pSound_Manager->Set_Sound_FadeOut(strSoundTag, fTime);
+	if (nullptr == m_pSound_Manager)
+		return;
+
+	m_pSound_Manager->Set_Sound_FadeOut(strSoundTag, fTime);
+}
+CSound* CGameInstance::Get_Sound(const wstring& strSoundTag)
+{
+	if (nullptr == m_pSound_Manager)
+		return nullptr;
+
+	return m_pSound_Manager->Get_Sound(strSoundTag);
 }
 #pragma endregion
 

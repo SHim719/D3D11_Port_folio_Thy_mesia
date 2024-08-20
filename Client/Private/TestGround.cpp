@@ -21,7 +21,7 @@ HRESULT CTestGround::Initialize(void* pArg)
 	if (FAILED(Ready_Components()))
 		return E_FAIL;
 
-	//m_pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), To_Radian(90.f));
+	m_pTransform->Rotation(XMVectorSet(1.f, 0.f, 0.f, 0.f), To_Radian(90.f));
 	m_pTransform->Set_Scale({ 10.f, 10.f, 1.f });
 	m_pTransform->Set_Position(XMVectorSet(0.f, 0.f, 5.f, 1.f));
 
@@ -39,7 +39,6 @@ void CTestGround::LateTick(_float fTimeDelta)
 
 HRESULT CTestGround::Render()
 {
-
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
 		return E_FAIL;
 

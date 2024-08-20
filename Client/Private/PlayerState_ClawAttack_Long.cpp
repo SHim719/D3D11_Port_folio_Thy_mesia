@@ -14,6 +14,7 @@ HRESULT CPlayerState_ClawAttack_Long::Initialize(void* pArg)
 		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_ChargeStart, PlayerState::State_Healing };
 
 	m_pModel->Bind_Func("Shaking_Claw_Long", bind(&CMain_Camera::Play_CameraShake, m_pMain_Camera, "Shaking_Claw_Long"));
+	m_pModel->Bind_Func("Sound_ClawLong", bind(&CGameInstance::Play, m_pGameInstance, L"Corvus_ClawLong1", false, 0.8f));
 
 	return S_OK;
 }
@@ -36,7 +37,7 @@ void CPlayerState_ClawAttack_Long::OnState_Start(void* pArg)
 
 	RADIALBLUR_DESCS RadialDescs{};
 	RadialDescs.fBlurRadius = 8.f;
-	RadialDescs.fBlurStrength = 1.f;
+	RadialDescs.fBlurStrength = 1.5f;
 
 	m_pGameInstance->Active_RadialBlur(RadialDescs);
 	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
@@ -107,6 +108,14 @@ void CPlayerState_ClawAttack_Long::Check_ExtraStateChange(PlayerState eState)
 		m_pPlayer->Change_State((_uint)eState);
 		break;
 	}
+}
+
+void CPlayerState_ClawAttack_Long::Play_ClawLongSound()
+{
+	_int iRandNum = JoRandom::Random_Int(1, 2);
+	wstring wstrSoundtag = L"Corvus_ClawLong" + to_wstring(iRandNum);
+
+	PLAY_SOUND(wstrSoundtag, false, 0.8f);
 }
 
 

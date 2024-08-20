@@ -36,6 +36,11 @@ void CPlayerState_ParrySuccess::OnState_Start(void* pArg)
 		m_pOwnerTransform->LookAt2D(Desc->AttackDesc.pAttacker->Get_Transform()->Get_Position());
 	}
 	
+	EFFECTMGR->Active_Effect("Effect_Corvus_Parry_Success", &m_pPlayer->Get_EffectSpawnDesc());
+
+	Play_CameraShake(Desc->AttackDesc);
+
+
 	_int iRandNum = JoRandom::Random_Int(0, 1);
 
 	if (0 == m_iParryDir)
@@ -43,9 +48,10 @@ void CPlayerState_ParrySuccess::OnState_Start(void* pArg)
 	else
 		m_pModel->Change_Animation(Corvus_SD_ParryDeflect_R + iRandNum, 0.f);
 
-	EFFECTMGR->Active_Effect("Effect_Corvus_Parry_Success", &m_pPlayer->Get_EffectSpawnDesc());
+	iRandNum = JoRandom::Random_Int(1, 3);
+	wstring wstrSoundTag = L"Parry_Success" + to_wstring(iRandNum);
 
-	Play_CameraShake(Desc->AttackDesc);
+	PLAY_SOUND(wstrSoundTag, false, 1.f);
 }
 
 void CPlayerState_ParrySuccess::Update(_float fTimeDelta)

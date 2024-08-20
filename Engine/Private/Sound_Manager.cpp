@@ -57,14 +57,27 @@ HRESULT CSound_Manager::Create_Sound(const string& strPath, const wstring& strSo
 	return S_OK;
 }
 
-HRESULT CSound_Manager::Play(const wstring& strSoundTag, _bool bLoop)
+HRESULT CSound_Manager::Play(const wstring& strSoundTag, _bool bLoop, _float fVolume)
 {
 	auto it = m_Sounds.find(strSoundTag);
 	
 	if (m_Sounds.end() == it)
 		return E_FAIL;
 
-	it->second->Play(bLoop);
+	it->second->Play(bLoop, fVolume);
+
+	return S_OK;
+}
+
+HRESULT CSound_Manager::Play_WithPosition(const wstring& strSoundTag, _bool bLoop, _float fPositionSec, _float fVolume)
+{
+	auto it = m_Sounds.find(strSoundTag);
+
+	if (m_Sounds.end() == it)
+		return E_FAIL;
+
+	it->second->Play(bLoop, fVolume);
+	it->second->SetPosition(fPositionSec);
 
 	return S_OK;
 }
@@ -113,6 +126,16 @@ _bool CSound_Manager::Is_Playing(const wstring& strSoundTag)
 		return false;
 
 	return it->second->Is_Playing();
+}
+
+CSound* CSound_Manager::Get_Sound(const wstring& strSoundTag)
+{
+	auto it = m_Sounds.find(strSoundTag);
+
+	if (m_Sounds.end() == it)
+		return nullptr;
+
+	return it->second;
 }
 
 HRESULT CSound_Manager::Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime)

@@ -19,5 +19,6 @@
 #include "UrdState_Parry.h"
 #include "UrdState_Cutscene.h"
 #include "UrdState_Executed.h"
+#include "UrdState_Dead.h"
 #include "UrdState_Stunned_Start.h"
 #include "UrdState_Stunned_Loop.h"

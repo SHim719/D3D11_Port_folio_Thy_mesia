@@ -26,6 +26,8 @@ void CUrdState_DefaultAttack::OnState_Start(void* pArg)
 	m_pUrd->Update_AttackDesc();
 
 	m_pModel->Change_Animation(Urd_Attack05);
+
+	PLAY_SOUND(L"Urd_DefaultAttack", false, 0.3f);
 }
 
 void CUrdState_DefaultAttack::Update(_float fTimeDelta)
@@ -56,6 +58,7 @@ void CUrdState_DefaultAttack::Init_AttackDesc()
 
 	AttackDesc.eEnemyAttackType = SEMIKNOCKBACK;
 	AttackDesc.iDamage = 87;
+	AttackDesc.strShakingTag = "Shaking_Big_Hit";
 
 	m_AttackDescs.emplace_back(make_pair(CUrd::SWORD, AttackDesc));
 }
@@ -71,17 +74,17 @@ void CUrdState_DefaultAttack::Decide_State()
 			return;
 		else
 		{
-			iRandNum = JoRandom::Random_Int(0, 2);
+			iRandNum = JoRandom::Random_Int(0, 5);
 			switch (iRandNum)
 			{
 			case 0:
-				ADD_EVENT(bind(&CUrdState_Base::Decide_Step, this));
-				break;
-			case 1:
 				ADD_EVENT(bind(&CCharacter::Change_State, m_pUrd, (_uint)State_ExtraAttack, nullptr));
 				break;
-			case 2:
+			case 1:
 				ADD_EVENT(bind(&CCharacter::Change_State, m_pUrd, (_uint)State_Skill2, nullptr));
+				break;
+			default:
+				ADD_EVENT(bind(&CUrdState_Base::Decide_Step, this));
 				break;
 			}
 		}

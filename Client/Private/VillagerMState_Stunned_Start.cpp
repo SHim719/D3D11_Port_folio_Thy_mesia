@@ -25,7 +25,7 @@ void CVillagerMState_Stunned_Start::OnState_Start(void* pArg)
 
 	RIMLIGHTDESC RimDesc{};
 	RimDesc.bColorLerp = true;
-	RimDesc.fDuration = 1.5f;
+	RimDesc.fDuration = 0.5f;
 	RimDesc.fRimPower = 1.f;
 	RimDesc.fRimStrength = 3.f;
 	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };
@@ -35,6 +35,8 @@ void CVillagerMState_Stunned_Start::OnState_Start(void* pArg)
 	static_cast<CPlayer*>(m_pVillager_M->Get_Target())->Add_StunnedEnemy(m_pVillager_M);
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");
+
+	PLAY_SOUND(L"Normal_KillChance", false, 1.f);
 
 	m_pModel->Change_Animation(LV1Villager_M_HurtStunStart);
 }

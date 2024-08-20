@@ -72,6 +72,7 @@ enum UrdState
 	State_Stunned_Start,
 	State_Stunned_Loop,
 	State_Executed,
+	State_Dead,
 	State_Cutscene,
 	State_End,
 };

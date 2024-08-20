@@ -29,11 +29,11 @@ void CPlayerState_PW_Axe::OnState_Start(void* pArg)
 	m_pPlayer->Set_Adjust_NaviY(false);
 
 	Reset_AttackDesc();
-
-	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Axe", &m_pPlayer->Get_EffectSpawnDesc());
-
 	m_pPlayer->Update_AttackDesc();
 
+	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Axe", &m_pPlayer->Get_EffectSpawnDesc());
+	PLAY_SOUND(L"PW_Active", false, 1.f);
+	
 	m_pModel->Change_Animation(Corvus_PW_Axe);
 }
 

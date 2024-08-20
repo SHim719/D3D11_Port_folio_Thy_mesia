@@ -28,6 +28,7 @@ void CPlayerState_PW_TwinBlade::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_TWINBLADE_L, true);
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_TWINBLADE_R, true);
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_TwinBlade", &m_pPlayer->Get_EffectSpawnDesc());
+	PLAY_SOUND(L"PW_TwinBlade", false, 0.7f);
 
 	Reset_AttackDesc();
 	m_pPlayer->Update_AttackDesc();
@@ -64,6 +65,9 @@ void CPlayerState_PW_TwinBlade::OnState_End()
 
 	EFFECTMGR->Inactive_Effect("Effect_Corvus_PW_TwinBlade");
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_TwinBlade_Disappear", &m_pPlayer->Get_EffectSpawnDesc());
+
+	if (m_pGameInstance->Is_Playing(L"PW_TwinBlade"))
+		m_pGameInstance->Stop(L"PW_TwinBlade");
 }
 
 void CPlayerState_PW_TwinBlade::Init_AttackDesc()

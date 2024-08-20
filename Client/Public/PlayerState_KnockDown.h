@@ -19,7 +19,7 @@ private:
 
 private:
 	_bool		m_bCalcDuration = { false };
-	_float		m_fDuration = { 2.f };
+	_float		m_fDuration = { 0.5f };
 	_float		m_fTimeAcc = { 0.f };
 
 public:

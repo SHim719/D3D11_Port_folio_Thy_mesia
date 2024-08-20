@@ -21,26 +21,29 @@ void CCutscene_Manager::OnEnter_Cutscene(CUTSCENE_NUMBER eCutscene)
 
 	switch (m_eNowPlaying)
 	{
-	case ENCOUNTER_ODUR:
-	{
-		CFadeScreen::FADEDESC FadeDesc;
-		FadeDesc.eFadeColor = CFadeScreen::BLACK;
-		FadeDesc.fFadeOutSpeed = 0.5f;
-		FadeDesc.fFadeInSpeed = 2.f;
-		FadeDesc.pCallback_FadeOutEnd = move(bind(&CCutscene_Manager::OnStart_Cutscene, this));
+		case ENCOUNTER_ODUR:
+		{
+			CFadeScreen::FADEDESC FadeDesc;
+			FadeDesc.eFadeColor = CFadeScreen::BLACK;
+			FadeDesc.fFadeOutSpeed = 0.5f;
+			FadeDesc.fFadeInSpeed = 2.f;
+			FadeDesc.pCallback_FadeOutEnd = move(bind(&CGameInstance::Play, m_pGameInstance, L"Odur_Cutscene", false, 1.f));
+			FadeDesc.fExtraTime = 1.5f;
+			FadeDesc.pCallback_FadeInStart = move(bind(&CCutscene_Manager::OnStart_Cutscene, this));
+			UIMGR->Active_UI("FadeScreen", &FadeDesc);
+			break;
+		}
+		case ENCOUNTER_URD:
+		{
+			CFadeScreen::FADEDESC FadeDesc;
+			FadeDesc.eFadeColor = CFadeScreen::BLACK;
+			FadeDesc.fFadeOutSpeed = 0.5f;
+			FadeDesc.fFadeInSpeed = 5.f;
+			FadeDesc.pCallback_FadeOutEnd = move(bind(&CCutscene_Manager::OnStart_Cutscene, this));
 
-		UIMGR->Active_UI("FadeScreen", &FadeDesc);
-	}
-	case ENCOUNTER_URD:
-	{
-		CFadeScreen::FADEDESC FadeDesc;
-		FadeDesc.eFadeColor = CFadeScreen::BLACK;
-		FadeDesc.fFadeOutSpeed = 0.5f;
-		FadeDesc.fFadeInSpeed = 5.f;
-		FadeDesc.pCallback_FadeOutEnd = move(bind(&CCutscene_Manager::OnStart_Cutscene, this));
-
-		UIMGR->Active_UI("FadeScreen", &FadeDesc);
-	}
+			UIMGR->Active_UI("FadeScreen", &FadeDesc);
+			break;
+		}
 	}
 
 	for (auto it = m_CutsceneActors.begin(); it != m_CutsceneActors.end(); ++it)

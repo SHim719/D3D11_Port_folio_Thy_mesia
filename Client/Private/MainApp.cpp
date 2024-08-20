@@ -12,6 +12,7 @@
 #include "MapObject.h"
 #include "Instancing_Object.h"
 #include "Effect_Manager.h"
+#include "BossMusic_Player.h"
 
 //#include "Effect_Mesh.h"
 //#include "Effect_Particle.h"
@@ -63,6 +64,7 @@ HRESULT CMainApp::Initialize()
 void CMainApp::Tick(_float fTimeDelta)
 {
 	m_pGameInstance->Tick_Engine(fTimeDelta);
+	Get_Inst(CBossMusic_Player)->Update();
 
 #ifndef InGame
 	m_pImGui_Main->Tick(fTimeDelta);
@@ -251,6 +253,7 @@ void CMainApp::Free()
 	CUI_Manager::Destroy_Instance();
 	CCutscene_Manager::Destroy_Instance();
 	CEffect_Manager::Destroy_Instance();
+	CBossMusic_Player::Destroy_Instance();
 
 	Safe_Release(m_pImGui_Main);
 	

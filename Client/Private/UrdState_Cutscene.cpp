@@ -40,7 +40,7 @@ void CUrdState_Cutscene::OnState_Start(void* pArg)
 
 	m_pModel->Change_Animation(Urd_Seq_BossFightStart_1, 0.f);
 
-	//m_pUrd->Get_Target()->Get_Transform()->Set_WorldMatrix(m_pOwnerTransform->Get_WorldMatrix());
+	PLAY_SOUND(L"Urd_Cutscene_Start", false, 1.f);
 }
 
 void CUrdState_Cutscene::Update(_float fTimeDelta)

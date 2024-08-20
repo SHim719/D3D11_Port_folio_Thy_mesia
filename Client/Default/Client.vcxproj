@@ -171,6 +171,7 @@
     <ClInclude Include="..\Public\Archive_Chair.h" />
     <ClInclude Include="..\Public\Attackable.h" />
     <ClInclude Include="..\Public\Background.h" />
+    <ClInclude Include="..\Public\BossMusic_Player.h" />
     <ClInclude Include="..\Public\Character.h" />
     <ClInclude Include="..\Public\ClientLevel.h" />
     <ClInclude Include="..\Public\Client_Components.h" />
@@ -366,6 +367,7 @@
     <ClInclude Include="..\Public\UrdState_Base.h" />
     <ClInclude Include="..\Public\UrdState_Cutscene.h" />
     <ClInclude Include="..\Public\UrdState_DashStab.h" />
+    <ClInclude Include="..\Public\UrdState_Dead.h" />
     <ClInclude Include="..\Public\UrdState_DefaultAttack.h" />
     <ClInclude Include="..\Public\UrdState_Executed.h" />
     <ClInclude Include="..\Public\UrdState_ExtraAttack.h" />
@@ -426,6 +428,7 @@
     <ClCompile Include="..\Private\Archive_Chair.cpp" />
     <ClCompile Include="..\Private\Attackable.cpp" />
     <ClCompile Include="..\Private\Background.cpp" />
+    <ClCompile Include="..\Private\BossMusic_Player.cpp" />
     <ClCompile Include="..\Private\Character.cpp" />
     <ClCompile Include="..\Private\ClientLevel.cpp" />
     <ClCompile Include="..\Private\Client_Functions.cpp" />
@@ -603,6 +606,7 @@
     <ClCompile Include="..\Private\UrdState_Base.cpp" />
     <ClCompile Include="..\Private\UrdState_Cutscene.cpp" />
     <ClCompile Include="..\Private\UrdState_DashStab.cpp" />
+    <ClCompile Include="..\Private\UrdState_Dead.cpp" />
     <ClCompile Include="..\Private\UrdState_DefaultAttack.cpp" />
     <ClCompile Include="..\Private\UrdState_Executed.cpp" />
     <ClCompile Include="..\Private\UrdState_ExtraAttack.cpp" />

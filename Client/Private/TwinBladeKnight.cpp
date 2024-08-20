@@ -55,6 +55,7 @@ HRESULT CTwinBladeKnight::Initialize(void* pArg)
 		return E_FAIL;
 
 	Bind_KeyFrames();
+	Bind_KeyFrameSounds();
 
 	m_pGameInstance->Add_Clone(GET_CURLEVEL, L"PerceptionBounding", L"Prototype_PerceptionBounding", this);
 
@@ -85,6 +86,15 @@ void CTwinBladeKnight::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("ChangeToNextAttackAnim", bind(&CTwinBladeKnight::Change_To_NextComboAnim, this));
+}
+
+void CTwinBladeKnight::Bind_KeyFrameSounds()
+{
+	m_pModel->Bind_Func("Sound_VoiceAttack", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"TwinBlade_Voice_Attack", 1, 3, false, 1.f));
+	m_pModel->Bind_Func("Sound_VoiceFinalAttack", bind(&CGameInstance::Play, m_pGameInstance, L"TwinBlade_Voice_FinalAttack", false, 1.f));
+	m_pModel->Bind_Func("Sound_FootStep", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"FootStep_FullPlate", 1, 4, false, 0.5f));
+	m_pModel->Bind_Func("Sound_Slash", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"TwinBlade_Slash", 1, 3, false, 1.f));
+
 }
 
 

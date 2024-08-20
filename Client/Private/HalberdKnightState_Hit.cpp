@@ -17,7 +17,8 @@ HRESULT CHalberdKnightState_Hit::Initialize(void* pArg)
 
 void CHalberdKnightState_Hit::OnState_Start(void* pArg)
 {
-	m_pHalberdKnight->Set_LookTarget(true);
+	m_pHalberdKnight->Set_LookTarget(false);
+	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
 	ATTACKDESC* pAttackDesc = (ATTACKDESC*)pArg;
 	
@@ -41,6 +42,7 @@ void CHalberdKnightState_Hit::OnState_Start(void* pArg)
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
 
+	Play_HitSound();
 }
 
 void CHalberdKnightState_Hit::Update(_float fTimeDelta)

@@ -125,7 +125,10 @@ HRESULT CLoader::Loading_Default()
 	if (FAILED(Ready_Etc()))
 		return E_FAIL;
 
-	if (FAILED(Ready_Sound()))
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/BGM/")))
+		return E_FAIL;
+
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Corvus/")))
 		return E_FAIL;
 
 	return S_OK;
@@ -158,6 +161,9 @@ HRESULT CLoader::Loading_Stage1()
 		
 	m_pGameInstance->Add_Prototype(LEVEL_STAGE1, L"Prototype_Navigation", CNavigation::Create(m_pDevice, m_pContext,
 		TEXT("../../Resources/NaviData/Stage1_Navi.dat")));
+
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Enemy/")))
+		return E_FAIL;
 
 	lstrcpy(m_szLoadingText, TEXT("Load Complete."));
 
@@ -283,6 +289,9 @@ HRESULT CLoader::Ready_Odur()
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Odur", COdur::Create(m_pDevice, m_pContext));
 
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Odur/")))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -292,6 +301,9 @@ HRESULT CLoader::Ready_Villager_F()
 		"../../Resources/Models/Villager_F/", "Villager_F.dat", "../../Resources/KeyFrame/Villager_F/"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Villager_F", CVillager_F::Create(m_pDevice, m_pContext));
+
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Villager_F/")))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -305,6 +317,10 @@ HRESULT CLoader::Ready_Villager_M()
 		"../../Resources/Models/Villager_M/", "Villager_Axe.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Villager_M", CVillager_M::Create(m_pDevice, m_pContext));
+
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Villager_M/")))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -317,6 +333,9 @@ HRESULT CLoader::Ready_Joker()
 		"../../Resources/Models/Joker/", "Joker_Hammer.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Joker", CJoker::Create(m_pDevice, m_pContext));
+
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Joker/")))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -331,6 +350,9 @@ HRESULT CLoader::Ready_HalberdKnight()
 
 	m_pGameInstance->Add_Prototype(L"Prototype_HalberdKnight", CHalberdKnight::Create(m_pDevice, m_pContext));
 
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Halberd_Knight/")))
+		return E_FAIL;
+
 	return S_OK;
 }
 
@@ -343,6 +365,9 @@ HRESULT CLoader::Ready_TwinBladeKnight()
 		"../../Resources/Models/TwinBladeKnight/", "Sword.dat"));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_TwinBladeKnight", CTwinBladeKnight::Create(m_pDevice, m_pContext));
+
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/TwinBladeKnight/")))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -365,6 +390,9 @@ HRESULT CLoader::Ready_Urd()
 	m_pGameInstance->Add_Prototype(L"Prototype_Urd_InversionSphere", CUrd_InversionSphere::Create(m_pDevice, m_pContext));
 
 	m_pGameInstance->Add_Prototype(L"Prototype_Urd", CUrd::Create(m_pDevice, m_pContext));
+
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Urd/")))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -649,7 +677,7 @@ HRESULT CLoader::Ready_EffectResources()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Masking", CTexture::Create(m_pDevice, m_pContext,
-		L"../../Resources/Effect/Mask/Masking/%d.dds", 40))))
+		L"../../Resources/Effect/Mask/Masking/%d.dds", 41))))
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_Noise", CTexture::Create(m_pDevice, m_pContext,
@@ -776,16 +804,19 @@ HRESULT CLoader::Ready_Etc()
 	return S_OK;
 }
 
-HRESULT CLoader::Ready_Sound()
+HRESULT CLoader::Ready_Sound(const wstring& wstrPath)
 {
-	if (FAILED(m_pGameInstance->Create_Sound("../../Resources/Sounds/BGM/Stage2Boss.mp3", L"Urd_BGM1")))
-		return E_FAIL;
+	fs::path SoundPath(wstrPath);
 
-	if (FAILED(m_pGameInstance->Create_Sound("../../Resources/Sounds/BGM/Stage2Boss.mp3", L"Urd_BGM2")))
-		return E_FAIL;
+	for (const fs::directory_entry& entry : fs::directory_iterator(SoundPath))
+	{
+		fs::path fileName = entry.path().filename();
+		fs::path fileTitle = fileName.stem();
 
+		if (FAILED(m_pGameInstance->Create_Sound(entry.path().generic_string().c_str(), fileTitle.generic_wstring())))
+			return E_FAIL;
 
-
+	}
 
 	return S_OK;
 }

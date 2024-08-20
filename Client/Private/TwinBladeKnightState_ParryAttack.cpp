@@ -26,6 +26,10 @@ void CTwinBladeKnightState_ParryAttack::OnState_Start(void* pArg)
 	m_pTwinBladeKnight->Update_AttackDesc();
 
 	m_pModel->Change_Animation(LArmor_TwinSwords_RaidAttack1);
+
+	EFFECTMGR->Active_Effect("Effect_Enemy_Parry_Particle", &m_pTwinBladeKnight->Get_EffectSpawnDesc());
+
+	PLAY_SOUND(L"Parry_Success1", false, 0.8f);
 }
 
 void CTwinBladeKnightState_ParryAttack::Update(_float fTimeDelta)

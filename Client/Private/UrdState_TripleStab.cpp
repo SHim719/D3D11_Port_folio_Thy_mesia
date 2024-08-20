@@ -27,7 +27,20 @@ void CUrdState_TripleStab::OnState_Start(void* pArg)
 	Reset_AttackIdx();
 	m_pUrd->Update_AttackDesc();
 
-	m_pModel->Change_Animation(Urd_Attack01);
+	if ((_uint)UrdState::State_Parry == m_pUrd->Get_PrevState())
+	{
+		m_pModel->Change_AnimationWithStartFrame(Urd_Attack01LV2, 18, 0.05f, true);
+		PLAY_SOUND(L"Urd_Attack1", false, 0.8f);
+		return;
+	}
+	else
+		m_pModel->Change_Animation(Urd_Attack01);
+
+
+	if (m_pUrd->Is_Phase2())
+		PLAY_SOUND(L"Urd_Attack1_P2", false, 0.8f);
+	else
+		PLAY_SOUND(L"Urd_Attack1", false, 0.8f);
 }
 
 void CUrdState_TripleStab::Update(_float fTimeDelta)
@@ -59,21 +72,23 @@ void CUrdState_TripleStab::Init_AttackDesc()
 
 void CUrdState_TripleStab::Decide_State()
 {
-	_int iRandNum = JoRandom::Random_Int(0, 3);
-
+	_int iRandNum = JoRandom::Random_Int(0, 5);
+	
 	switch (iRandNum)
 	{
 	case 0:
-		ADD_EVENT(bind(&CUrdState_Base::Decide_Step, this));
+		if (m_pUrd->Can_EnableSkill())
+			ADD_EVENT(bind(&CCharacter::Change_State, m_pUrd, (_uint)State_Skill2, nullptr));
+		else
+			ADD_EVENT(bind(&CCharacter::Change_State, m_pUrd, (_uint)State_ExtraAttack, nullptr));
 		break;
 	case 1:
 		ADD_EVENT(bind(&CCharacter::Change_State, m_pUrd, (_uint)State_ExtraAttack, nullptr));
 		break;
-	case 2:
-		ADD_EVENT(bind(&CCharacter::Change_State, m_pUrd, (_uint)State_Skill2, nullptr));
+	default:
+		ADD_EVENT(bind(&CUrdState_Base::Decide_Step, this));
 		break;
 	}
-
 }
 
 
@@ -81,7 +96,7 @@ void CUrdState_TripleStab::Attack_OneMore()
 {
 	// 특정프레임에 시작
 	if (m_pUrd->Is_Phase2())
-		ADD_EVENT(bind(&CModel::Change_AnimationWithStartFrame, m_pModel, Urd_Attack02LV2C1, 18, 0.05f, true));
+		ADD_EVENT(bind(&CModel::Change_AnimationWithStartFrame, m_pModel, Urd_Attack01LV2, 18, 0.05f, true));
 }
 
 

@@ -36,7 +36,7 @@ namespace Client
 		class CCharacter*	pAttacker = nullptr;
 		ENEMYATTACKTYPE		eEnemyAttackType;
 		PLAYERATTACKTYPE	ePlayerAttackType = ATTACK_NORMAL;
-		wstring				wstrShakingTag = L"";
+		string				strShakingTag = "";
 		_int				iPlagueDamage = 0;
 		_int				iDamage = 0;
 	}ATTACKDESC;
@@ -258,5 +258,11 @@ namespace Client
 		float			fDuration;
 		_bool			bColorLerp;
 	} RIMLIGHTDESC;
+
+	typedef struct tagBossMusicDesc
+	{
+		wstring			wstrMusicTag = L"";
+		_float			fLoopStartPos = 0.f ;
+	}BOSSMUSICDESC;
 
 }

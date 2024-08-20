@@ -29,7 +29,10 @@ void CUrdState_ExtraAttack::OnState_Start(void* pArg)
 		m_pModel->Change_Animation(Urd_Attack06);
 	else
 		m_pModel->Change_Animation(Urd_Attack07);
+
 }
+
+		
 
 void CUrdState_ExtraAttack::Update(_float fTimeDelta)
 {
@@ -46,7 +49,6 @@ void CUrdState_ExtraAttack::Late_Update(_float fTimeDelta)
 
 void CUrdState_ExtraAttack::OnState_End()
 {
-
 }
 
 void CUrdState_ExtraAttack::Init_AttackDesc()
@@ -54,6 +56,7 @@ void CUrdState_ExtraAttack::Init_AttackDesc()
 	ATTACKDESC AttackDesc{};
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
 	AttackDesc.iDamage = 113;
+	AttackDesc.strShakingTag = "Shaking_Big_Hit";
 
 	m_AttackDescs.emplace_back(make_pair(CUrd::SWORD, AttackDesc));
 

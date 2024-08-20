@@ -27,13 +27,21 @@ public:
 
 	HRESULT OnEnter_Layer(void* pArg)	override;
 
-	void Explosion();
+public:
+	void Explosion(_bool bDisappear = false);
+
+	void Set_ForUltimate() {
+		m_bForUltimate = true;
+	}
+
+	
 private:
 	void Change_Effect(class CEffect_Group* pEffectGroup);
 
 private:
 	_bool	m_bUltimate = { false };
 	_bool	m_bExplosion = { false };
+	_bool	m_bForUltimate = { false };
 	
 	_float  m_fAppearingTime = { 1.5f };
 

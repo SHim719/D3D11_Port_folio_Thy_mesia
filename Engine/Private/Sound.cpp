@@ -4,7 +4,7 @@ CSound::CSound()
 {
 }
 
-void CSound::Play(const bool& _bLoop)
+void CSound::Play(const bool& _bLoop, _float fVolume)
 {
 	if (_bLoop)
 		m_pSound->setMode(FMOD_LOOP_NORMAL);
@@ -12,6 +12,7 @@ void CSound::Play(const bool& _bLoop)
 		m_pSound->setMode(FMOD_LOOP_OFF);
 
 	m_pFMOD_Core->SoundPlay(m_pSound, &m_pChannel);
+	m_pChannel->setVolume(fVolume);
 }
 
 void CSound::Stop()

@@ -14,6 +14,8 @@ HRESULT CPlayerState_Parry::Initialize(void* pArg)
 	m_PossibleStates = { PlayerState::State_Jog, PlayerState::State_LockOn
 		, PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart,
 		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
+	
+	m_pModel->Bind_Func("Sound_Parry_Wind", bind(&CPlayerState_Parry::PlaySound_ParryWind, this));
 
 	return S_OK;
 }
@@ -74,6 +76,14 @@ void CPlayerState_Parry::OnHit(const ATTACKDESC& AttackDesc)
 	{
 		__super::OnHit(AttackDesc);
 	}
+}
+
+void CPlayerState_Parry::PlaySound_ParryWind()
+{
+	_int iRandNum = JoRandom::Random_Int(1, 2);
+	wstring wstrSoundTag = L"Corvus_Parry_Start" + to_wstring(iRandNum);
+
+	PLAY_SOUND(wstrSoundTag, false, 0.5f);
 }
 
 CPlayerState_Parry* CPlayerState_Parry::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

@@ -22,6 +22,8 @@ void CUrdState_Skill2::OnState_Start(void* pArg)
 
 	m_pModel->Change_Animation(Urd_Skill02_1);
 	m_pUrd->Active_UrdWeapon();
+
+	PLAY_SOUND(L"Urd_Skill_Action", false, 1.f);
 }
 
 void CUrdState_Skill2::Update(_float fTimeDelta)
@@ -38,7 +40,7 @@ void CUrdState_Skill2::Late_Update(_float fTimeDelta)
 
 void CUrdState_Skill2::OnState_End()
 {
-
+	m_pUrd->Set_Adjust_NaviY(true);
 }
 
 

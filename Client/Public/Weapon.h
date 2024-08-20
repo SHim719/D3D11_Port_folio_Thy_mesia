@@ -95,7 +95,7 @@ protected:
 public:
 	void Set_Active_Collider(_bool bActive) {
 		if (m_pCollider)
-			m_pCollider->Set_Active(bActive);
+			ADD_EVENT(bind(&CCollider::Set_Active, m_pCollider, bActive)); 
 	}
 	void Enroll_Collider() {
 		if (m_pCollider)

@@ -36,6 +36,8 @@ HRESULT CEffect_Hit::Initialize(void* pArg)
 
 	m_pTransform->Set_Position(XMLoadFloat4(&pDesc->vSpawnPos));
 
+	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
+
 	Safe_AddRef(m_pEffect_Group);
 	if (FAILED(m_pEffect_Group->OnEnter_Layer(&pDesc->EffectSpawnDesc)))
 		return E_FAIL;

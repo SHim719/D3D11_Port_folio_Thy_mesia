@@ -54,7 +54,8 @@ private:
 	HRESULT Ready_EffectTrail();
 
 	HRESULT Ready_Etc();
-	HRESULT Ready_Sound();
+	
+	HRESULT Ready_Sound(const wstring& wstrPath);
 
 private:
 	ID3D11Device*			m_pDevice = nullptr;

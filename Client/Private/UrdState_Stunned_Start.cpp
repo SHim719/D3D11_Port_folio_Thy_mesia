@@ -18,6 +18,7 @@ HRESULT CUrdState_Stunned_Start::Initialize(void* pArg)
 void CUrdState_Stunned_Start::OnState_Start(void* pArg)
 {
 	m_pUrd->Set_LookTarget(false);
+	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 
 	RIMLIGHTDESC RimDesc{};
 	RimDesc.bColorLerp = true;
@@ -27,8 +28,13 @@ void CUrdState_Stunned_Start::OnState_Start(void* pArg)
 	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };
 
 	m_pUrd->Active_RimLight(RimDesc);
+	m_pUrd->Set_NowWeapon_Disappear();
 
 	m_pGameInstance->Set_TimeScaleWithRealTime(0.4f, 1.f);
+
+	EFFECTMGR->Active_Effect("Effect_Enemy_Parry_Particle", &m_pUrd->Get_EffectSpawnDesc());
+
+	PLAY_SOUND(L"Stunned_Start", false, 1.f);
 
 	m_pModel->Change_Animation(Urd_StunStart);
 }

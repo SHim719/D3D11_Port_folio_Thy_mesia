@@ -23,6 +23,8 @@ void COdurState_ReadyExecution::OnState_Start(void* pArg)
 	m_pOdur->Set_Stanced(true);
 
 	m_pOdur->Set_Alpha_Increase();
+	
+	PLAY_SOUND(L"Odur_Execution", false, 0.8f);
 
 	m_pModel->Change_Animation(Magician_SPAttack1, 0.f);
 }

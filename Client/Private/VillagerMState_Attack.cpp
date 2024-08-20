@@ -10,6 +10,9 @@ HRESULT CVillagerMState_Attack::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pModel->Bind_Func("Sound_AttackVoice", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"VillagerM_Voice_Attack", 1, 3, false, 1.f));
+	m_pModel->Bind_Func("Sound_AxeWoosh", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Villager_WhooshOneHandAxe", 1, 2, false, 1.f));
+
 	return S_OK;
 }
 

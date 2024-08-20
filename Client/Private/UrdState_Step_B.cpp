@@ -21,8 +21,8 @@ void CUrdState_Step_B::OnState_Start(void* pArg)
 	m_pUrd->Set_Stanced(true);
 	m_pUrd->Set_Invincible(true);
 
+	m_pModel->Change_Animation(Urd_StepB);
 	EFFECTMGR->Active_Effect("Effect_Urd_Step_Particle", &m_pUrd->Get_EffectSpawnDesc());
-
 }
 
 void CUrdState_Step_B::Update(_float fTimeDelta)

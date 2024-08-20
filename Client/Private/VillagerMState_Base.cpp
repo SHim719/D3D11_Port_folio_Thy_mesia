@@ -49,6 +49,8 @@ void CVillagerMState_Base::OnHit(const ATTACKDESC& AttackDesc)
 	EFFECTMGR->Active_Effect(strBloodEffect, &m_pVillager_M->Get_EffectSpawnDesc());
 	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pVillager_M->Get_EffectSpawnDesc());
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
+
+	Play_HitSound();
 }
 
 void CVillagerMState_Base::Decide_State()

@@ -17,6 +17,7 @@ public:
 	void OnState_End()								override;
 
 	void OnHit(const ATTACKDESC& AttackDesc)		override;
+	void Play_HitSound(_float fVolume = 0.5f)		override;
 protected:
 	CTwinBladeKnight*	m_pTwinBladeKnight = { nullptr };
 	CTransform*			m_pTargetTransform = { nullptr };

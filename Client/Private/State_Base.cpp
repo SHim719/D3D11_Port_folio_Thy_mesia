@@ -71,6 +71,17 @@ void CState_Base::Setup_RootRotation()
 
 }
 
+void CState_Base::Play_HitSound(_float fVolume)
+{
+	_int iRandNum = JoRandom::Random_Int(1, 2);
+	wstring wstrSoundTag = L"Hit" + to_wstring(iRandNum);
+
+	if (m_pGameInstance->Is_Playing(wstrSoundTag))
+		fVolume *= 0.7f;
+
+	PLAY_SOUND(wstrSoundTag, false, fVolume);
+}
+
 void CState_Base::Free()
 {
 	Safe_Release(m_pGameInstance);

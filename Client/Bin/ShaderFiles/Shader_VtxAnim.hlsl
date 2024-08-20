@@ -138,7 +138,7 @@ PS_OUT_GLOW PS_MAIN_DISSOLVE(PS_IN In)
     float fDissolve = g_DissolveTexture.Sample(LinearWrapSampler, In.vTexUV).r;
     float fClip = fDissolve - g_fDissolveAmount;
 
-    float4 vEdgeColor = float4(1.0f, 1.0f, 1.f, 1.0f);
+    float4 vEdgeColor = float4(1.0f, 1.0f, 1.f, 1.0f) * 3.f;
     float fEdgeWidth = 0.05f;
 	
     if (fClip < 0.001f)
@@ -149,7 +149,7 @@ PS_OUT_GLOW PS_MAIN_DISSOLVE(PS_IN In)
         float fEdgeFactor = smoothstep(0.f, fEdgeWidth, fClip);
         Out.vDiffuse = lerp(vEdgeColor, g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexUV), fEdgeFactor);
         Out.vGlow = Out.vDiffuse;
-        Out.vGlow.rgb *= float4(0.7f, 0.45f, 0.f, 1.f);
+        Out.vGlow.rgb *= float4(1.f, 1.f, 0.f, 1.f) * 0.5f;
     }
     else
     {

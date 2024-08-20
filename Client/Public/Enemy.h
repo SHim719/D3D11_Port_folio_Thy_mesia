@@ -51,6 +51,7 @@ protected:
 	_bool	m_bCollPlayer = { false };
 	_bool	m_bStunnedMarked = { false };
 	_bool	m_bExecutionEnd = { false };
+	_bool	m_bPauseAnim = { false };
 	_float	m_fRotRate	= { 10.f };
 
 	_uint	m_iStunnedStateIdx = { 9999 };
@@ -75,6 +76,10 @@ public:
 		return m_iState == m_iDeathStateIdx;
 	}
 
+	void Set_ExecutionEnd(_bool bExecution) {
+		m_bExecutionEnd = bExecution;
+	}
+
 	_bool Is_ExecutionEnd() const {
 		return m_bExecutionEnd;
 	}
@@ -96,6 +101,10 @@ public:
 		return m_eSkillType;
 	}
 
+
+	void Set_AnimPause(_bool bPause) {
+		m_bPauseAnim = bPause;
+	}
 
 protected:
 	void OnCollisionEnter(CGameObject* pOther)	override;

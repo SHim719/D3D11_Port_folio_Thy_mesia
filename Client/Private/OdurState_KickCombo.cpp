@@ -24,6 +24,7 @@ void COdurState_KickCombo::OnState_Start(void* pArg)
 	for (_uint i = 0; i < 2; ++i)
 		m_pOdur->Update_AttackDesc();
 
+	PLAY_SOUND(L"Odur_KickCombo", false, 0.6f);
 	m_pModel->Change_Animation(Magician_KickCombo);
 }
 
@@ -51,6 +52,7 @@ void COdurState_KickCombo::Init_AttackDesc()
 
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
 	AttackDesc.iDamage = 83;
+	AttackDesc.strShakingTag = "Shaking_Big_Hit";
 
 	m_AttackDescs.emplace_back(COdur::SWORD, AttackDesc);
 }

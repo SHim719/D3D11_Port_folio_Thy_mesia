@@ -21,7 +21,7 @@ HRESULT COdurState_ThrowCard::Initialize(void* pArg)
 	m_StartFrames[0] = { 13, };
 	m_StartFrames[1] = { 24, 13, 4 };
 
-	m_Cards.resize(20);
+	m_Cards.resize(30);
 	for (size_t i = 0; i < m_Cards.size(); ++i)
 		m_Cards[i] = static_cast<COdur_Card*>(m_pGameInstance->Clone_GameObject(L"Prototype_Odur_Card"));
 
@@ -42,9 +42,9 @@ void COdurState_ThrowCard::OnState_Start(void* pArg)
 
 	m_iCurAnimIdx = 0;
 
-	m_iThrowState = m_iThrowCount == (m_iMaxThrowCount - 1) ? 1 : 0;
-	//m_iThrowState = 1;
-	m_iThrowCount += 1;
+	//m_iThrowState = m_iThrowCount == (m_iMaxThrowCount - 1) ? 1 : 0;
+	m_iThrowState = 1;
+	m_iThrowCount = (m_iThrowCount + 1) % m_iMaxThrowCount;
 
 	m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);
 }
@@ -121,6 +121,8 @@ void COdurState_ThrowCard::Throw_Card(_fvector vLook)
 	Safe_AddRef(m_Cards[m_iCurCardIdx]);
 
 	m_iCurCardIdx = (m_iCurCardIdx + 1) % m_Cards.size();
+
+	PLAY_SOUND(L"Throw_Card", false, 1.f);
 }
 
 void COdurState_ThrowCard::Throw_SingleCard()
@@ -131,16 +133,16 @@ void COdurState_ThrowCard::Throw_SingleCard()
 void COdurState_ThrowCard::Throw_MultipleCards()
 {
 	_vector vLook = JoMath::Calc_GroundLook(m_pTargetTransform->Get_Position(), m_pOwnerTransform->Get_Position());
-	vLook.m128_f32[1] = -0.2f;
+	vLook.m128_f32[1] = -0.1f;
 	vLook = XMVector3Normalize(vLook);
 
-	_uint iNumCards = 5;
+	_uint iNumCards = 8;
 
-	_float fSpreadAngle = 40.f;
+	_float fSpreadAngle = 30.f;
 	_float fHalfAngle = fSpreadAngle * 0.5f;
 	_float fDeltaAngle = fSpreadAngle / (iNumCards - 1);
 
-	for (_uint i = 0; i < 5; ++i)
+	for (_uint i = 0; i < iNumCards; ++i)
 	{
 		_float fAngle = -fHalfAngle + fDeltaAngle * i;
 		_matrix RotationMatrix = XMMatrixRotationAxis(YAXIS, To_Radian(fAngle));

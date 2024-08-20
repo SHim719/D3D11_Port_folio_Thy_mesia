@@ -22,7 +22,7 @@ HRESULT CLevel_Stage1::Initialize()
 	camDesc.fAspect = (_float)g_iWinSizeX / g_iWinSizeY;
 	camDesc.fNear = 0.1f;
 	camDesc.fFar = 100.f;
-	camDesc.fFovy = 60.f;
+	camDesc.fFovy = 70.f;
 	camDesc.vAt = { 0.f, 0.f, 1.f, 1.f };
 	camDesc.vEye = { 0.f, 2.f, -2.f, 1.f };
 
@@ -53,6 +53,11 @@ HRESULT CLevel_Stage1::Initialize()
 	m_pGameInstance->Add_Clone(LEVEL_STAGE1, L"Light", L"Prototype_LightObject", &LightDesc);
 
 	UIMGR->Active_UI("UI_PlayerDefault");
+
+	m_wstrBGMTag = L"Stage1BGM";
+
+	PLAY_SOUND(m_wstrBGMTag, true, 1.f);
+
 	return S_OK;
 }
 

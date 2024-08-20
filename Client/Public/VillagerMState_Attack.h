@@ -20,7 +20,6 @@ private:
 
 private:
 	void Decide_Attack();
-
 public:
 	static CVillagerMState_Attack* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

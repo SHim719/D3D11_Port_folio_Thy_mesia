@@ -21,6 +21,10 @@ void CCharacter::Bind_KeyFrameEffects()
 {
 }
 
+void CCharacter::Bind_KeyFrameSounds()
+{
+}
+
 void CCharacter::Decide_PassIdx()
 {
 	if (m_bRimLight)

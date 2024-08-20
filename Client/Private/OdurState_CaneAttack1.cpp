@@ -54,6 +54,7 @@ void COdurState_CaneAttack1::Init_AttackDesc()
 
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
 	AttackDesc.iDamage = 65;
+	AttackDesc.strShakingTag = "Shaking_Big_Hit";
 
 	m_AttackDescs.emplace_back(COdur::FOOT_L, AttackDesc);
 }

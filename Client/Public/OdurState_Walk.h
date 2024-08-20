@@ -15,8 +15,6 @@ public:
 	void Update(_float fTimeDelta)		override;
 	void OnState_End()					override;
 
-	void OnHit(const ATTACKDESC& AttackDesc)				override;
-	
 private:
 	_float	m_fWalkSpeed = { 2.f };
 	_int	m_iDir = { 0 };

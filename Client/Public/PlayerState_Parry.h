@@ -17,6 +17,7 @@ public:
 
 	void OnHit(const ATTACKDESC& AttackDesc)			override;
 
+	void PlaySound_ParryWind();
 private:
 	_int  m_iParryDir = 0;
 

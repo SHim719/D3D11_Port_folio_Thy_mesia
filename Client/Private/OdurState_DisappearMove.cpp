@@ -33,6 +33,8 @@ void COdurState_DisappearMove::OnState_Start(void* pArg)
 	}
 
 	EFFECTMGR->Active_Effect("Effect_Odur_Disappear_Particle", &m_pOdur->Get_EffectSpawnDesc());
+
+	PLAY_SOUND(L"Odur_DisappearMove", false, 0.4f);
 }
 
 void COdurState_DisappearMove::Update(_float fTimeDelta)
@@ -53,11 +55,10 @@ void COdurState_DisappearMove::Decide_Animation()
 	// 카드던지는 패턴 구분해서 만들기
 	m_iDir = 0;
 
-	_bool bCardPattern = (_bool)JoRandom::Random_Int(0, 1);
-
-	m_pOdur->Set_CardPattern(bCardPattern);
-
-	if (bCardPattern)
+	_float fDist = XMVector3Length(m_pTargetTransform->Get_Position() - m_pOwnerTransform->Get_Position()).m128_f32[0];
+	if (fDist >= 6.f)
+		m_pModel->Change_Animation(Magician_DisappearMove_F);
+	else
 	{
 		m_iDir = JoRandom::Random_Int(1, 3);
 
@@ -74,29 +75,7 @@ void COdurState_DisappearMove::Decide_Animation()
 			break;
 		}
 	}
-	else
-	{
-		_float fDist = XMVector3Length(m_pTargetTransform->Get_Position() - m_pOwnerTransform->Get_Position()).m128_f32[0];
-		if (fDist >= 6.f)
-			m_pModel->Change_Animation(Magician_DisappearMove_F);
-		else
-		{
-			m_iDir = JoRandom::Random_Int(1, 3);
-
-			switch (m_iDir)
-			{
-			case 1:
-				m_pModel->Change_Animation(Magician_DisappearMove_B);
-				break;
-			case 2:
-				m_pModel->Change_Animation(Magician_DisappearMove_L);
-				break;
-			case 3:
-				m_pModel->Change_Animation(Magician_DisappearMove_R);
-				break;
-			}
-		}
-	}
+	
 	
 }
 

@@ -43,6 +43,9 @@ void CPlayerState_Base::OnState_End()
 
 void CPlayerState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
+	if (true == m_pPlayer->Is_Invincible() && AttackDesc.eEnemyAttackType < VERY_BIG_HIT)
+		return;
+
 	// 체력감소 죽음상태 체크
 	if (0 == m_pPlayer->Take_Damage(AttackDesc))
 	{
@@ -51,12 +54,13 @@ void CPlayerState_Base::OnHit(const ATTACKDESC& AttackDesc)
 		return;
 	}
 		
-	if (true == m_pPlayer->Is_Stanced() && AttackDesc.eEnemyAttackType < KNOCKDOWN)
-		return;
-
-	if (AttackDesc.iDamage > 0)
+	if (AttackDesc.iDamage > 0 && !(true == m_pPlayer->Is_Stanced() && AttackDesc.eEnemyAttackType < KNOCKDOWN))
+	{
 		m_pPlayer->Change_State((_uint)PlayerState::State_Hit, const_cast<ATTACKDESC*>(&AttackDesc));
-	
+		m_pMain_Camera->Play_CameraShake(AttackDesc.strShakingTag);
+		Play_HitSound();
+	}
+
 }
 
 _vector CPlayerState_Base::Calc_MoveLook(_bool IsCamOriented)

@@ -21,9 +21,9 @@ HRESULT CUrdState_Parry::Initialize(void* pArg)
 
 void CUrdState_Parry::OnState_Start(void* pArg)
 {
-	m_pUrd->Set_LookTarget(false);
 	m_pUrd->Set_Stanced(true);
 	m_pUrd->Set_Adjust_NaviY(false);
+	m_pUrd->Set_LookTarget(true);
 
 	static_cast<CPlayer*>(m_pUrd->Get_Target())->SetState_Parried();
 
@@ -34,10 +34,11 @@ void CUrdState_Parry::OnState_Start(void* pArg)
 	else
 		m_pModel->Change_Animation(Urd_Parry_R);
 
-
 	EFFECTMGR->Active_Effect("Effect_Enemy_Parry_Particle", &m_pUrd->Get_EffectSpawnDesc());
-}
 
+	PLAY_SOUND(L"Parry_Success1", false, 0.7f);
+}
+	
 void CUrdState_Parry::Update(_float fTimeDelta)
 {
 	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
@@ -56,6 +57,7 @@ void CUrdState_Parry::OnState_End()
 
 void CUrdState_Parry::Decide_State()
 {
+
 	_int iRandNum = JoRandom::Random_Int(0, 1);
 	if (0 == iRandNum)
 		ADD_EVENT(bind(&CCharacter::Change_State, m_pUrd, (_uint)UrdState::State_TripleStab, nullptr));
@@ -67,7 +69,7 @@ void CUrdState_Parry::Check_ChangeSkill3()
 {
 	if (false == m_pUrd->Can_EnableSkill())
 		return;
-
+	
 	_int iRandNum = JoRandom::Random_Int(0, 1);
 	if (0 == iRandNum)
 		ADD_EVENT(bind(&CCharacter::Change_State, m_pUrd, (_uint)UrdState::State_Skill3, nullptr));

@@ -20,10 +20,13 @@ private:
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
 
-	void Bind_KeyFrames()				override;	
+	void Bind_KeyFrames()				override;
+	void Bind_KeyFrameSounds()			override;
 
 	void Percept_Target()				override;
 	void Change_To_NextComboAnim();
+
+	void StrongAttack_Impact();
 
 private:
 	HRESULT Ready_Components(void* pArg);

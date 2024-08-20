@@ -17,6 +17,7 @@ void CUrdState_Skill3::OnState_Start(void* pArg)
 {
 	m_pUrd->Set_LookTarget(true);
 	m_pUrd->Set_Stanced(true);
+	m_pUrd->Set_Invincible(true);
 
 	m_pModel->Change_Animation(Urd_Skill03_L);
 	m_pUrd->Active_UrdWeapon();
@@ -36,7 +37,7 @@ void CUrdState_Skill3::Late_Update(_float fTimeDelta)
 
 void CUrdState_Skill3::OnState_End()
 {
-
+	m_pUrd->Set_Adjust_NaviY(true);
 }
 
 

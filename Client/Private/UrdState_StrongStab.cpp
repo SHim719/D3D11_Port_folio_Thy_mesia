@@ -51,6 +51,7 @@ void CUrdState_StrongStab::Init_AttackDesc()
 	ATTACKDESC AttackDesc{};
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
 	AttackDesc.iDamage = 123;
+	AttackDesc.strShakingTag = "Shaking_Big_Hit";
 
 	m_AttackDescs.emplace_back(make_pair(CUrd::SWORD, AttackDesc));
 }

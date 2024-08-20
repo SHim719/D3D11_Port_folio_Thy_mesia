@@ -20,7 +20,7 @@ private:
 
 private:
 	_int	m_iHitCount = { 0 };
-	_int	m_iMaxHitCount = { 15 };
+	_int	m_iMaxHitCount = { 25 };
 
 
 public:

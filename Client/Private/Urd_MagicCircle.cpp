@@ -5,6 +5,7 @@
 #include "Effect_Group.h"
 #include "Effect_Manager.h"
 
+#include "Main_Camera.h"
 
 CUrd_MagicCircle::CUrd_MagicCircle(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -80,22 +81,38 @@ HRESULT CUrd_MagicCircle::OnEnter_Layer(void* pArg)
 	m_bUltimate = pDesc->bUltimate;
 
 	m_bExplosion = false;
+	m_fAppearingTime = 1.5f;
 	m_pCollider->Set_Active(false);
 
 	Change_Effect(m_pEffect_MagicAppear);
 
-	m_fAppearingTime = 1.5f;
+	if (false == m_bForUltimate)
+	{
+		_float fVolume = 1.f;
+		if (true == m_pGameInstance->Is_Playing(L"Magic_Circle_Appear"))
+			fVolume = 0.5f;
+
+		PLAY_SOUND(L"Magic_Circle_Appear", false, fVolume);
+	}
 	
 	return S_OK;
 }
 
-void CUrd_MagicCircle::Explosion()
+void CUrd_MagicCircle::Explosion(_bool bDisappear)
 {
 	m_bExplosion = true;
 	Change_Effect(m_pEffect_MagicImpact);
 	m_pCollider->Set_Active(true);
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 
+	_float fVolume = 1.f;
+	if (false == bDisappear && true == m_pGameInstance->Is_Playing(L"Magic_Circle_Explosion"))
+		fVolume = 0.25f;
+
+	PLAY_SOUND(L"Urd_SkillBomb_02", false, fVolume);
+	PLAY_SOUND(L"Magic_Circle_Explosion", false, fVolume);
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Explosion");
 }
 
 void CUrd_MagicCircle::Change_Effect(CEffect_Group* pEffect)
@@ -104,7 +121,6 @@ void CUrd_MagicCircle::Change_Effect(CEffect_Group* pEffect)
 	m_pNowEffect->Start_Effect(&m_tEffectSpawnDesc);
 	m_pNowEffect->Set_Using(true);
 }
-
 
 HRESULT CUrd_MagicCircle::Ready_Components(void* pArg)
 {

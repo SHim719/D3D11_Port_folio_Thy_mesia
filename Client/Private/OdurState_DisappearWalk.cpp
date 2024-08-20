@@ -19,6 +19,8 @@ void COdurState_DisappearWalk::OnState_Start(void* pArg)
 	m_pOdur->Set_Stanced(true);
 	m_pOdur->Set_Alpha_Decrease();
 
+	m_pGameInstance->Play_RandomSound(L"Odur_Laugh", 1, 3, false, 1.f);
+
 	Decide_Animation();
 }
 

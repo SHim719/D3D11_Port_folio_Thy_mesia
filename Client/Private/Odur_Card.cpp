@@ -42,6 +42,8 @@ HRESULT COdur_Card::OnEnter_Layer(void* pArg)
 	m_pCollider->Enroll_Collider();
 
 	m_bUltimate = (ParamMatrix.r[1].m128_f32[0] == 1.f);
+
+	m_fTimeAcc = 0.f;
 	return S_OK;
 }
 
@@ -94,8 +96,6 @@ HRESULT COdur_Card::Render()
 	{
 		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
 
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
@@ -116,7 +116,7 @@ void COdur_Card::OnCollisionEnter(CGameObject* pOther)
 HRESULT COdur_Card::Ready_Component()
 {
 	CTransform::TRANSFORMDESC TransformDesc;
-	TransformDesc.fSpeedPerSec = 40.f;
+	TransformDesc.fSpeedPerSec = 45.f;
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Transform"), TEXT("Transform"), (CComponent**)&m_pTransform, &TransformDesc)))
 		return E_FAIL;

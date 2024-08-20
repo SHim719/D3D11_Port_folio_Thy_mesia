@@ -60,6 +60,8 @@ protected:
 	}
 
 	void Setup_RootRotation();
+	
+	virtual void Play_HitSound(_float fVolume = 0.5f);
 
 public:
 	void Free() override;

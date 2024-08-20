@@ -4,13 +4,13 @@
 #include "FMOD_Core.h"
 
 BEGIN(Engine)
-class CSound : public CBase
+class ENGINE_DLL CSound : public CBase
 {
 public:
     CSound();
     ~CSound() = default;
 
-    void Play(const bool& _bLoop);
+    void Play(const bool& _bLoop, _float fVolume);
     void Stop();
     _bool Fade_Out(_float fTimeDelta);
     _bool Is_Playing();

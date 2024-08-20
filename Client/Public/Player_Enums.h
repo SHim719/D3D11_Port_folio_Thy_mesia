@@ -140,7 +140,6 @@ enum PlayerAnimName
 	Corvus_VSMagician_Execution,
 	Corvus_VSMagician_SP1Hurt,
 	Corvus_VSMagician_SP2Hurt,
-	Corvus_VSUrd_Execution,
 	Corvus_WalkN,
 	Corvus_SD_Ladder_Descend,
 	Corvus_ArchiveGetup,
@@ -148,6 +147,7 @@ enum PlayerAnimName
 	Corvus_ArchiveSitLoop,
 	Corvus_ArchiveSitStart,
 	Corvus_Raven_ClawParry_End,
+	Corvus_VSUrd_Execution,
 };
 
 enum class PlayerState

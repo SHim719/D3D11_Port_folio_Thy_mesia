@@ -17,12 +17,13 @@ HRESULT COdurState_Stunned_Start::Initialize(void* pArg)
 
 void COdurState_Stunned_Start::OnState_Start(void* pArg)
 {
+	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pOdur->Set_LookTarget(false);
 	m_pOdur->Set_Alpha(1.f);
 
 	RIMLIGHTDESC RimDesc{};
 	RimDesc.bColorLerp = true;
-	RimDesc.fDuration = 1.f;
+	RimDesc.fDuration = 0.5f;
 	RimDesc.fRimPower = 1.f;
 	RimDesc.fRimStrength = 3.f;
 	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };
@@ -30,6 +31,9 @@ void COdurState_Stunned_Start::OnState_Start(void* pArg)
 	m_pOdur->Active_RimLight(RimDesc);
 
 	m_pGameInstance->Set_TimeScaleWithRealTime(0.4f, 1.f);
+	EFFECTMGR->Active_Effect("Effect_Enemy_Parry_Particle", &m_pOdur->Get_EffectSpawnDesc());
+
+	PLAY_SOUND(L"Stunned_Start", false, 1.f);
 
 	m_pModel->Change_Animation(Magician_StunStart_Cane);
 }

@@ -12,6 +12,7 @@
 #define ADD_EVENT(FUNC) m_pGameInstance->Add_Event(FUNC)
 #define GET_PLAYER static_cast<CPlayer*>(m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Player"))
 #define GET_CAMERA m_pGameInstance->Get_MainCamera()
+#define PLAY_SOUND(SOUND, LOOP, VOLUME) m_pGameInstance->Play(SOUND, LOOP, VOLUME)
 
 #define Get_Inst(TYPE) TYPE::Get_Instance()
 

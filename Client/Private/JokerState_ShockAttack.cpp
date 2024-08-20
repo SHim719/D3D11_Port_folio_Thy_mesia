@@ -78,6 +78,8 @@ void CJokerState_ShockAttack::Shock_Attack()
 	EFFECTMGR->Create_Effect_Hit("Effect_Joker_Impact", &EffectHitDesc);
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Joker_Impact");
+
+	PLAY_SOUND(L"Joker_Shock_Impact", false, 1.f);
 }
 
 CJokerState_ShockAttack* CJokerState_ShockAttack::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

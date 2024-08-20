@@ -31,6 +31,7 @@ void CPlayerState_PW_Hammer::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_HAMMER, true);
 	m_pPlayer->Set_Adjust_NaviY(false);
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Hammer", &m_pPlayer->Get_EffectSpawnDesc());
+	PLAY_SOUND(L"PW_Active", false, 1.f);
 
 	Reset_AttackDesc();
 

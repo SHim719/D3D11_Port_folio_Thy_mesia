@@ -66,7 +66,8 @@ void CEnemy::Tick(_float fTimeDelta)
 	}
 		
 
-	m_pModel->Play_Animation(fTimeDelta);
+	if (false == m_bPauseAnim)
+		m_pModel->Play_Animation(fTimeDelta);
 
 }
 void CEnemy::LateTick(_float fTimeDelta)

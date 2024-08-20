@@ -10,24 +10,28 @@ HRESULT CUrdState_Ultimate::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+
+
 	return S_OK;
 }
 
 void CUrdState_Ultimate::OnState_Start(void* pArg)
 {
+	PLAY_SOUND(L"Urd_SP1", false, 1.f);
+
 	m_pModel->Change_Animation(Urd_SPSkill01);
 }
 
 void CUrdState_Ultimate::Update(_float fTimeDelta)
 {
-	if (false == m_pUrd->Is_CollPlayer())
-		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	
+
 }
 
 void CUrdState_Ultimate::Late_Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
-		m_pUrd->Change_State((_uint)UrdState::State_Idle);
+		m_pUrd->Change_State((_uint)UrdState::State_Walk);
 
 }
 

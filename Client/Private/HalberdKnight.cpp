@@ -79,6 +79,10 @@ void CHalberdKnight::Bind_KeyFrames()
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("ChangeToNextAttackAnim", bind(&CHalberdKnight::Change_To_NextComboAnim, this));
 	m_pModel->Bind_Func("Active_Dissolve", bind(&CGameObject::Active_Dissolve, this));
+
+	m_pModel->Bind_Func("Sound_AttackVoice", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Halberds_Voice", 1, 5, false, 0.6f));
+	m_pModel->Bind_Func("Sound_Whoosh", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Spear_Whoosh", 1, 2, false, 0.5f));
+
 }
 
 void CHalberdKnight::Change_To_NextComboAnim()

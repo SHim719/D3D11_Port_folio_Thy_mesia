@@ -26,6 +26,8 @@ void CPlayerState_ChargeStart::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Claws(true);
 	m_bCanClawLong = false;
 
+	PLAY_SOUND(L"Claw_Start", false, 1.f);
+
 	m_pModel->Change_Animation(Corvus_Raven_ClawCommonV2_ChargeStart);
 }
 

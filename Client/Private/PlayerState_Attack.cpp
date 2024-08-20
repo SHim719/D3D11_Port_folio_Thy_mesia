@@ -15,6 +15,9 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_PlagueAttack, PlayerState::State_ChargeStart
 		, PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 
+	m_pModel->Bind_Func("Sound_Attack", bind(&CPlayerState_Attack::Play_AttackSound, this));
+
+
 	return S_OK;
 }
 
@@ -112,6 +115,8 @@ void CPlayerState_Attack::Decide_ExecutionState(CEnemy* pExecutionEnemy)
 		m_pModel->Change_Animation(Corvus_VSMagician_Execution);
 		break;
 	case CEnemy::URD:
+		m_pPlayer->Change_State((_uint)PlayerState::State_Execution_Elite, pExecutionEnemy);
+		m_pModel->Change_Animation(Corvus_VSUrd_Execution);
 		break;
 	}
 }
@@ -123,6 +128,12 @@ void CPlayerState_Attack::Check_NextAttack()
 		m_iNowComboCnt = (m_iNowComboCnt + 1) % m_iMaxComboCnt;
 		OnState_Start(nullptr);
 	}
+}
+
+void CPlayerState_Attack::Play_AttackSound()
+{
+	wstring wstrSoundTag = L"Corvus_Attack" + to_wstring(m_iNowComboCnt + 1);
+	PLAY_SOUND(wstrSoundTag, false, 0.8f);
 }
 
 

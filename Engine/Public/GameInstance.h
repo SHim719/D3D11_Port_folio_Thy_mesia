@@ -109,12 +109,14 @@ public:
 
 #pragma region SOUND_MANAGER
 	HRESULT Create_Sound(const string& strPath, const wstring& strSoundTag);
-	HRESULT Play(const wstring& strSoundTag, _bool bLoop);
-	HRESULT Stop(const wstring& strSoundTag);
-	HRESULT SetVolume(const wstring& strSoundTag, const _float& fVolume);
-	HRESULT SetPosition(const wstring& strSoundTag, _float fPosition);
-	_bool Is_Playing(const wstring& strSoundTag);
-	HRESULT Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime);
+	void	Play(const wstring& strSoundTag, _bool bLoop, _float fVolume = 1.f);
+	void	Play_RandomSound(const wstring& strSoundTag, _int iMin, _int iMax, _bool bLoop, _float fVolume = 1.f);
+	void	Stop(const wstring& strSoundTag);
+	void	SetVolume(const wstring& strSoundTag, const _float& fVolume);
+	void	SetPosition(const wstring& strSoundTag, _float fPosition);
+	_bool	Is_Playing(const wstring& strSoundTag);
+	void	Set_Sound_FadeOut(const wstring& strSoundTag, _float fTime);
+	class CSound* Get_Sound(const wstring& strSoundTag);
 #pragma endregion
 
 #pragma region FRUSTUM

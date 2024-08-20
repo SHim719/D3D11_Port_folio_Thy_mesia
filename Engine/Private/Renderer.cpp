@@ -133,11 +133,12 @@ HRESULT CRenderer::Draw()
 	if (FAILED(Render_NonLight()))
 		return E_FAIL;
 
+	if (FAILED(Render_PostProcess()))
+		return E_FAIL;
+
 	if (FAILED(Render_Blend()))
 		return E_FAIL;
 
-	if (FAILED(Render_PostProcess()))
-		return E_FAIL;
 
 #ifdef _DEBUG
 	if (FAILED(Render_Components()))
@@ -239,7 +240,7 @@ HRESULT CRenderer::Render_NonLight()
 
 HRESULT CRenderer::Render_Blend()
 {
-	//Alpha Sorting
+	
 
 	Draw_Objects(RENDER_BLEND);
 

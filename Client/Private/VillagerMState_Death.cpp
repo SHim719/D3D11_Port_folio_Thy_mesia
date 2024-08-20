@@ -26,6 +26,8 @@ void CVillagerMState_Death::OnState_Start(void* pArg)
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");
 
+	m_pGameInstance->Play(L"VillagerM_Voice_Die", false, 1.f);
+
 	m_pModel->Change_Animation(LV1Villager_M_Die01, 0.1f, false); 
 }
 

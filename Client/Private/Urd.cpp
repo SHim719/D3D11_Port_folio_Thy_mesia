@@ -16,6 +16,8 @@
 #include "Urd_Weapon.h"
 #include "Urd_MagicCircle.h"
 
+#include "BossMusic_Player.h"
+
 CUrd::CUrd(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -71,9 +73,11 @@ HRESULT CUrd::Initialize(void* pArg)
 	m_iExecutionStateIdx = (_uint)UrdState::State_Executed;
 
 	m_pMagicCircle = static_cast<CUrd_MagicCircle*>(m_pGameInstance->Clone_GameObject(L"Prototype_Urd_MagicCircle"));
+	m_pMagicCircle->Set_ForUltimate();
 
 	Bind_KeyFrames();
 	Bind_KeyFrameEffects();
+	Bind_KeyFrameSounds();
 
 	return S_OK;
 }
@@ -86,23 +90,78 @@ void CUrd::Tick(_float fTimeDelta)
 		UIMGR->Active_UI("UI_BossBar", m_pStats);
 		m_pLightObject->Set_Active(true);
 		Change_State((_uint)UrdState::State_Walk);
-		m_pGameInstance->Play(L"Urd_BGM1", true);
+		//Active_Phase2();
+		Play_BGM();
 	}
 	
 	if (KEY_DOWN(eKeyCode::O))
 	{
-		Change_State((_uint)UrdState::State_Skill1);
+		//Change_State((_uint)UrdState::State_Skill1);
+		Change_State((_uint)UrdState::State_Skill3);
+		//Change_State((_uint)UrdState::State_Ultimate);
+		//Change_State((_uint)UrdState::State_TripleStab);
+		//Change_State((_uint)UrdState::State_Stunned_Start);
+		//Change_State((_uint)UrdState::State_DefaultAttack);
+	}
+
+	if (KEY_DOWN(eKeyCode::I))
+	{
+		Change_State((_uint)UrdState::State_Parry);
 		//Change_State((_uint)UrdState::State_Skill3);
 		//Change_State((_uint)UrdState::State_Ultimate);
-		//Change_State((_uint)UrdState::State_Step);
+		//Change_State((_uint)UrdState::State_Stunned_Start);
 	}
 
 
-	__super::Tick(fTimeDelta);
+	if (m_bLookTarget)
+	{
+		m_pTransform->Rotation_Quaternion(
+			JoMath::Slerp_TargetLook(m_pTransform->Get_GroundLook()
+				, JoMath::Calc_GroundLook(s_pTarget->Get_Transform()->Get_Position(), m_pTransform->Get_Position())
+				, m_fRotRate * fTimeDelta));
+	}
 
+	m_States[m_iState]->Update(fTimeDelta);
+
+	if (m_bAdjustNaviY)
+		Compute_YPos();
+
+	__super::Update_Colliders();
+
+	__super::Tick_Weapons(fTimeDelta);
+
+	if (m_bDissolve)
+	{
+		Update_Dissolve(fTimeDelta);
+		if (false == m_bDissolve)
+		{
+			Set_Active(false);
+			OnDeath();
+		}
+	}
+
+	if (m_bRimLight)
+	{
+		Update_RimLight(fTimeDelta);
+	}
+
+
+	if (false == m_bPauseAnim)
+		m_pModel->Play_Animation(fTimeDelta);
+
+	
+	if (m_bPauseAnim)
+	{
+		m_fPauseTerm -= fTimeDelta;
+		if (m_fPauseTerm < 0.f)
+			m_bPauseAnim = false;
+	}
+
+	if (m_bSPSkill_Explosion)
+		Explode_Time_Lag(fTimeDelta);
+	
 	if (m_pLightObject)
 		m_pLightObject->Set_LightPosition(m_pTransform->Get_Position() + XMVectorSet(0.f, 2.f, 0.f, 0.f));
-
 }
 
 void CUrd::LateTick(_float fTimeDelta)
@@ -160,6 +219,26 @@ void CUrd::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
 void CUrd::OnEnd_Cutscene()
 {
 	UIMGR->Active_UI("UI_BossBar", m_pStats);
+	Play_BGM();
+}
+
+void CUrd::Play_BGM()
+{
+	vector<BOSSMUSICDESC> BossMusics;
+	BossMusics.reserve(2);
+
+	BOSSMUSICDESC Desc{};
+	Desc.wstrMusicTag = L"BGM_Urd_Phase1";
+	Desc.fLoopStartPos = 1.f;
+
+	BossMusics.emplace_back(Desc);
+
+	Desc.wstrMusicTag = L"BGM_Urd_Phase2";
+	Desc.fLoopStartPos = 85.205f;
+
+	BossMusics.emplace_back(Desc);
+
+	Get_Inst(CBossMusic_Player)->Play_BossBGM(BossMusics);
 }
 
 void CUrd::Bind_KeyFrames()
@@ -176,8 +255,6 @@ void CUrd::Bind_KeyFrames()
 	m_pModel->Bind_Func("Active_Dissolve", bind(&CCharacter::Active_Dissolve, this));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("Set_Vulnerable", bind(&CUrd::Set_Invincible, this, false));
-	//m_pModel->Bind_Func("Urd_Execute_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.2f));
-	//m_pModel->Bind_Func("Reset_Timer", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 1.f));
 	m_pModel->Bind_Func("Active_Trail", bind(&CWeapon::Set_Active_Trail, m_Weapons[SWORD], true));
 	m_pModel->Bind_Func("Inactive_Trail", bind(&CWeapon::Set_Active_Trail, m_Weapons[SWORD], false));
 	m_pModel->Bind_Func("Release_Weapon", bind(&CUrd::Release_UrdWeapon, this, false));
@@ -185,6 +262,9 @@ void CUrd::Bind_KeyFrames()
 	m_pModel->Bind_Func("Active_MagicCircle_SP", bind(&CUrd::Active_MagicCircle, this, true));
 	m_pModel->Bind_Func("Urd_Ultimate", bind(&CUrd::Active_Ultimate_Skill, this));
 	m_pModel->Bind_Func("Decide_State", bind(&CUrd::Decide_State, this));
+
+	m_pModel->Bind_Func("Pause_Anim_SP", bind(&CUrd::Pause_Anim, this, 0.8f));
+	m_pModel->Bind_Func("Pause_Anim_TS", bind(&CUrd::Pause_Anim, this, 0.5f));
 }
 
 void CUrd::Bind_KeyFrameEffects()
@@ -196,11 +276,28 @@ void CUrd::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_Slash_Horizontal", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Slash_Horizontal", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Slash_Vertical", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Slash_Vertical", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Strong_Stab", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Strong_Stab", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Strong_Stab_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Strong_Stab_Particle", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Pierce_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Pierce_Start", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Pierce", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Pierce", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_DefaultAttack1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_DefaultAttack_Particle1", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_DefaultAttack2", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_DefaultAttack_Particle2", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_DashStab", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Dash_Stab", &m_tEffectSpawnDesc));
+}
+
+void CUrd::Bind_KeyFrameSounds()
+{
+	m_pModel->Bind_Func("Sound_SkillStart", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_SkillStart", false, 0.6f));
+	m_pModel->Bind_Func("Sound_Voice_Skill1_2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_Skill1_2", false, 1.f));
+	m_pModel->Bind_Func("Sound_Voice_Skill3", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_Skill3", false, 1.f));
+	m_pModel->Bind_Func("Sound_Voice_Cutscene1", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_CutScene1", false, 1.f));
+	m_pModel->Bind_Func("Sound_Voice_Cutscene2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_CutScene2", false, 1.f));
+	m_pModel->Bind_Func("Sound_Voice_Attack2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_Attack2", false, 1.f));
+	m_pModel->Bind_Func("Sound_Urd_Attack6", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack6", false, 0.8f));
+	m_pModel->Bind_Func("Sound_Urd_Attack7", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack7", false, 0.8f));
+	m_pModel->Bind_Func("Sound_Urd_Attack2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack2", false, 0.8f));
+	m_pModel->Bind_Func("Sound_Urd_FootStep", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Urd_FootStep", 1, 2, false, 0.5f));
+	m_pModel->Bind_Func("Sound_Voice_ExtraAttack", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Urd_Voice_ExtraAttack", 1, 2, false, 0.8f));
+
 }
 
 void CUrd::Active_Ultimate_Skill()
@@ -214,11 +311,35 @@ void CUrd::Active_Ultimate_Skill()
 
 	m_pMagicCircle->Explosion();
 
-	for (size_t i = 0; i < m_Urd_Weapons.size(); ++i)
+	m_iNowWeaponIdx = 99999;
+	m_bSPSkill_Explosion = true;
+
+	PLAY_SOUND(L"Urd_SPSKill01_Cast", false, 1.f);
+	PLAY_SOUND(L"Urd_SPSKill01_Explosion", false, 1.f);
+}
+
+void CUrd::Explode_Time_Lag(_float fTimeDelta)
+{
+	m_fExplosion_GapAcc += fTimeDelta;
+	if (m_fExplosion_GapAcc > m_fExplosion_Gap)
 	{
-		if (true == m_Urd_Weapons[i]->Is_Using())
-			m_Urd_Weapons[i]->Explode_MagicCircle();
-	}
+		m_fExplosion_GapAcc = 0.f;
+		for (size_t i = 0; i < m_Urd_Weapons.size(); ++i)
+		{
+			if (true == m_Urd_Weapons[i]->Is_Using())
+			{
+				m_Urd_Weapons[i]->Explode_MagicCircle(true);
+				m_Urd_Weapons[i]->Disappear();
+				break;
+			}
+				
+		}
+		m_iNumActivatedWeapons = m_iNumActivatedWeapons > 0 ? m_iNumActivatedWeapons - 1 : 0;
+		if (0 == m_iNumActivatedWeapons)
+			m_bSPSkill_Explosion = false;
+		
+			
+	} 
 }
 
 void CUrd::Swap_Bone()
@@ -232,6 +353,7 @@ void CUrd::Active_UrdWeapon()
 	{
 		if (false == m_Urd_Weapons[i]->Is_Using())
 		{
+			Safe_AddRef(m_Urd_Weapons[i]);
 			m_iNowWeaponIdx = i;
 			m_Urd_Weapons[i]->OnEnter_Layer(nullptr);
 			m_pGameInstance->Insert_GameObject(GET_CURLEVEL, L"Enemy_Weapon", m_Urd_Weapons[i]);
@@ -254,6 +376,7 @@ void CUrd::Active_MagicCircle(_bool bUltimate)
 
 		m_pMagicCircle->OnEnter_Layer(&Desc);
 		m_pGameInstance->Insert_GameObject(GET_CURLEVEL, L"Effect", m_pMagicCircle);
+		m_iNowWeaponIdx = 99999;
 	}
 
 	for (size_t i = 0; i < m_Urd_Weapons.size(); ++i)
@@ -261,6 +384,8 @@ void CUrd::Active_MagicCircle(_bool bUltimate)
 		if (true == m_Urd_Weapons[i]->Is_Using() && i != m_iNowWeaponIdx)
 			m_Urd_Weapons[i]->Active_MagicCircle(bUltimate);
 	}
+
+	m_iNowWeaponIdx = 99999;
 }
 
 
@@ -276,10 +401,20 @@ void CUrd::SetState_Death()
 
 void CUrd::SetState_Executed(void* pArg)
 {
+	if (true == m_bPhase2)
+		UIMGR->Inactive_UI("UI_BossBar");
+
 	Change_State(m_iExecutionStateIdx, pArg);
 	s_pTarget->Get_Transform()->Set_WorldMatrix(XMLoadFloat4x4(&m_InitWorldMatrix));
+	CNavigation* pNavigation = static_cast<CNavigation*>(s_pTarget->Find_Component(L"Navigation"));
 
-	UIMGR->Inactive_UI("UI_BossBar");
+	_fvector vPosition = XMLoadFloat4x4(&m_InitWorldMatrix).r[3];
+
+	pNavigation->Set_CurrentIdx(vPosition);
+
+	static_cast<CCharacter*>(s_pTarget)->Compute_YPos();
+
+	m_Weapons[SWORD]->Set_Active_Trail(false);
 }
 
 void CUrd::Decide_State()
@@ -287,6 +422,13 @@ void CUrd::Decide_State()
 	static_cast<CUrdState_Base*>(m_States[m_iState])->Decide_State();
 }
 
+void CUrd::Active_Phase2()
+{
+	m_bPhase2 = true;
+	m_pStats->Increase_Hp(m_pStats->Get_MaxHp());
+	m_Weapons[SWORD]->Set_Active_Trail(true);
+	Set_Active_Colliders(true);
+}
 
 void CUrd::Resize_WeaponCollider(_bool bOrigin)
 {
@@ -303,6 +445,15 @@ void CUrd::Resize_WeaponCollider(_bool bOrigin)
 		pWeaponCollider->Set_Size(XMVectorSet(3.f, 0.1f, 0.1f, 1.f));
 	}
 	
+}
+
+void CUrd::Set_NowWeapon_Disappear()
+{
+	if (m_iNowWeaponIdx >= m_Urd_Weapons.size())
+		return;
+
+	m_Urd_Weapons[m_iNowWeaponIdx]->Disappear();
+
 }
 
 HRESULT CUrd::Ready_Components(void* pArg)
@@ -384,6 +535,7 @@ HRESULT CUrd::Ready_States()
 	m_States[(_uint)UrdState::State_Stunned_Start] = CUrdState_Stunned_Start::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)UrdState::State_Stunned_Loop] = CUrdState_Stunned_Loop::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)UrdState::State_Executed] = CUrdState_Executed::Create(m_pDevice, m_pContext, this);
+	m_States[(_uint)UrdState::State_Dead] = CUrdState_Dead::Create(m_pDevice, m_pContext, this);
 	m_States[(_uint)UrdState::State_Cutscene] = CUrdState_Cutscene::Create(m_pDevice, m_pContext, this);
 
 	return S_OK;
@@ -406,7 +558,7 @@ HRESULT CUrd::Ready_Weapons()
 	WeaponDesc.iTag = (_uint)TAG_ENEMY_WEAPON;
 	WeaponDesc.iLevelID = LEVEL_URD;
 	WeaponDesc.pParentTransform = m_pTransform;
-	WeaponDesc.pSocketBone = m_pModel->Get_Bone("weapon_r");//m_pModel->Get_Bone("AnimTargetPoint");
+	WeaponDesc.pSocketBone = m_pModel->Get_Bone("AnimTargetPoint");//m_pModel->Get_Bone("weapon_r");
 	WeaponDesc.wstrModelTag = L"Prototype_Model_Urd_Sword";
 	WeaponDesc.pOwner = this;
 	WeaponDesc.pColliderDesc = &ColliderDesc;
@@ -444,7 +596,7 @@ HRESULT CUrd::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"¿ì¸£µå";
-	EnemyDesc.iMaxHp = 1000;
+	EnemyDesc.iMaxHp = 50;
 	EnemyDesc.bIsBoss = true;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
