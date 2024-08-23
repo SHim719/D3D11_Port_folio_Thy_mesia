@@ -17,6 +17,7 @@ private:
 	void Update(_float fTimeDelta)		override;
 	void OnState_End()					override;
 
+	void OnHit(const ATTACKDESC& AttackDesc)	override;
 private:
 	EXECUTEDDESC m_ExecutedDesc;
 

@@ -100,6 +100,7 @@ void CUI_SoulBar::Set_SoulNumber(_uint iSoulNumber)
 	m_bSoulUpdated = true;
 }
 
+
 HRESULT CUI_SoulBar::Ready_Component()
 {
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_MemoryBG"), TEXT("Texture0"), (CComponent**)&m_Textures[BG])))

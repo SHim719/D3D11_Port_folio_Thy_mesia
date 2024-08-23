@@ -1,6 +1,7 @@
 #include "EventTrigger.h"
 
 #include "Cutscene_Manager.h"
+#include "Player.h"
 
 CEventTrigger::CEventTrigger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -49,13 +50,26 @@ void CEventTrigger::OnCollisionEnter(CGameObject* pOther)
 	{
 	case START_ODUR_CUTSCENE:
 		CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_ODUR);
+		ADD_EVENT(bind(&CGameObject::Set_Destroy, this, true));
 		break;
 	case START_URD_CUTSCENE:
 		CUTSCENEMGR->OnEnter_Cutscene(ENCOUNTER_URD);
+		ADD_EVENT(bind(&CGameObject::Set_Destroy, this, true));
+		break;
+	case CHANGE_FOOTSTEP_SOUND:
+	{
+		CPlayer* pPlayer = GET_PLAYER;
+		wstring FootStepTag = pPlayer->Get_FootStepTag();
+		if (L'W' == FootStepTag[9])
+			FootStepTag = L"FootStep_Grass";
+		else
+			FootStepTag = L"FootStep_Wood";
+		pPlayer->Set_FootStepTag(FootStepTag);
 		break;
 	}
+	}
 	
-	ADD_EVENT(bind(&CGameObject::Set_Destroy, this, true));
+
 }
 
 

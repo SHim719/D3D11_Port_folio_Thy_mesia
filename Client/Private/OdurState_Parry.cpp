@@ -30,7 +30,7 @@ void COdurState_Parry::OnState_Start(void* pArg)
 	m_pOdur->Update_AttackDesc();
 
 	EFFECTMGR->Active_Effect("Effect_Enemy_Parry_Particle", &m_pOdur->Get_EffectSpawnDesc());
-	PLAY_SOUND(L"Parry_Success2", false, 0.7f);
+	PLAY_SOUND(L"Parry_Success2", false, 1.f);
 }
 
 void COdurState_Parry::Update(_float fTimeDelta)

@@ -1,6 +1,7 @@
 #include "Door.h"
 
 #include "Player.h"
+#include "PlayerStats.h"
 
 CDoor::CDoor(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CGameObject(pDevice, pContext)
@@ -70,8 +71,8 @@ HRESULT CDoor::Render()
 		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;
 
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
@@ -85,9 +86,19 @@ HRESULT CDoor::Render()
 
 void CDoor::OnCollisionStay(CGameObject* pOther)
 {
-	if (KEY_DOWN(eKeyCode::E))
+	if (KEY_DOWN(eKeyCode::E) && false == m_bOpening)
 	{
-		m_bOpening = true;
+		if (true == GET_PLAYER->Get_PlayerStats()->Have_Key())
+		{
+			m_bOpening = true;
+			PLAY_SOUND(L"Door_Open", false, 1.f);
+		}
+		else
+		{
+
+			m_pGameInstance->Add_Clone(GET_CURLEVEL, L"UI", L"Prototype_Message_NeedKey");
+			PLAY_SOUND(L"Door_Lock", false, 1.f);
+		}
 	}
 
 }

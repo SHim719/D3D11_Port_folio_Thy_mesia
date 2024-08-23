@@ -1,5 +1,7 @@
 #include "PlayerState_ChargeStart.h"
 
+#include "Effect_Manager.h"
+
 CPlayerState_ChargeStart::CPlayerState_ChargeStart(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CPlayerState_Base(pDevice, pContext)
 {
@@ -28,13 +30,14 @@ void CPlayerState_ChargeStart::OnState_Start(void* pArg)
 
 	PLAY_SOUND(L"Claw_Start", false, 1.f);
 
+	ADD_EVENT(bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Charge_Start", m_pPlayer->Get_EffectSpawnDescPtr()));
+
 	m_pModel->Change_Animation(Corvus_Raven_ClawCommonV2_ChargeStart);
 }
 
 void CPlayerState_ChargeStart::Update(_float fTimeDelta)
 {
-	if (m_pModel->Is_AnimComplete())
-		m_pPlayer->Change_State((_uint)PlayerState::State_ChargeComplete);
+	
 	
 	if (m_pPlayer->Can_Rotation() && false == m_pPlayer->Is_LockOn())
 	{
@@ -49,6 +52,12 @@ void CPlayerState_ChargeStart::Update(_float fTimeDelta)
 
 void CPlayerState_ChargeStart::Late_Update(_float fTimeDelta)
 {
+	if (m_pModel->Is_AnimComplete())
+	{
+		m_pPlayer->Change_State((_uint)PlayerState::State_ChargeComplete);
+		return;
+	}
+		
 	PlayerState ePlayerState = Decide_State();
 	if (PlayerState::State_End != ePlayerState)
 		Check_ExtraStateChange(ePlayerState);
@@ -60,6 +69,8 @@ void CPlayerState_ChargeStart::OnState_End()
 {
 	m_pPlayer->Set_Active_DefaultWeapons(true);
 	m_pPlayer->Set_Active_Claws(false);
+
+	EFFECTMGR->Inactive_Effect("Effect_Corvus_Charge_Start");
 }
 
 void CPlayerState_ChargeStart::Check_ExtraStateChange(PlayerState eState)
@@ -68,9 +79,7 @@ void CPlayerState_ChargeStart::Check_ExtraStateChange(PlayerState eState)
 	{
 	case PlayerState::State_ClawAttack_Long:
 	{
-		if (m_pPlayerStats->Is_ShortClaw())
-			m_pPlayer->Change_State((_uint)PlayerState::State_ClawAttack_Short);
-		else if (m_bCanClawLong)
+		if (m_bCanClawLong)
 			m_pPlayer->Change_State((_uint)PlayerState::State_ClawAttack_Long);
 		break;
 	}

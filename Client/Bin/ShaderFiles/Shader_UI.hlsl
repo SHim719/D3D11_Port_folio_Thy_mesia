@@ -5,6 +5,7 @@ texture2D g_DiffuseTexture;
 
 float4  g_vColor;
 float   g_fAlpha;
+float   g_fCoolDownRatio;
 
 struct VS_IN
 {
@@ -147,6 +148,22 @@ PS_OUT PS_MAIN_STUNNEDMARK(PS_IN In)
     return Out;
 }
 
+PS_OUT PS_MAIN_COOLDOWN(PS_IN In)
+{
+    PS_OUT Out = (PS_OUT) 0;
+
+    if (In.vTexcoord.y < g_fCoolDownRatio)
+        discard;
+
+    Out.vColor = g_DiffuseTexture.Sample(LinearWrapSampler, In.vTexcoord); 
+    Out.vColor.a *= 0.5f;
+
+    if (Out.vColor.a < 0.3f)
+        discard;
+
+    return Out;
+}
+
 technique11 DefaultTechnique
 {
     pass DefaultUI //0
@@ -216,6 +233,20 @@ technique11 DefaultTechnique
         DomainShader = NULL;
         GeometryShader = compile gs_5_0 GS_MAIN();
         PixelShader = compile ps_5_0 PS_MAIN_STUNNEDMARK();
+    }
+
+    pass SKILLCOOLDOWN // 5
+    {
+        SetBlendState(BS_AlphaBlend, float4(0.f, 0.f, 0.f, 1.f), 0xffffffff);
+        SetDepthStencilState(DSS_NoZTest_And_Write, 0);
+        SetRasterizerState(RS_Default);
+
+        VertexShader = compile vs_5_0 VS_MAIN();
+        HullShader = NULL;
+        DomainShader = NULL;
+        GeometryShader = compile gs_5_0 GS_MAIN();
+        ComputeShader = NULL;
+        PixelShader = compile ps_5_0 PS_MAIN_COOLDOWN();
     }
 	
 }

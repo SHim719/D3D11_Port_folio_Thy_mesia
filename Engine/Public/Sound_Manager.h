@@ -30,8 +30,8 @@ public:
 private:
 	class CFMOD_Core* m_pFmodCore = { nullptr };
 
-	map<const wstring, class CSound*>	m_Sounds;
-	list<class CSound*>					m_FadeOut_Sounds;
+	unordered_map<wstring, class CSound*>		m_Sounds;
+	list<class CSound*>							m_FadeOut_Sounds;
 
 public:
 	static CSound_Manager* Create();

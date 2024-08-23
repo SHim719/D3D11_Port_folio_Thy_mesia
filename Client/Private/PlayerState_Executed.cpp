@@ -56,6 +56,11 @@ void CPlayerState_Executed::OnState_End()
 	Safe_Release(m_ExecutedDesc.AttachDesc.pParentTransform);
 }
 
+void CPlayerState_Executed::OnHit(const ATTACKDESC& AttackDesc)
+{
+	m_pPlayer->Take_Damage(AttackDesc);
+}
+
 void CPlayerState_Executed::Change_StateToGetUp()
 {
 	ADD_EVENT(bind(&CCharacter::Change_State, m_pPlayer, (_uint)PlayerState::State_GetUp, nullptr));

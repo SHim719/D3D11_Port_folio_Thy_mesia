@@ -75,9 +75,13 @@ void CUI_PlayerDefault::Update_HpBar(_int iMaxHp, _int iHp)
 	m_pPlayerBar->Update_PlayerHp(iMaxHp, iHp);
 }
 
-void CUI_PlayerDefault::Update_SoulBar(_int iSoulCount)
+void CUI_PlayerDefault::Update_SoulBar(_int iSoulCount, _bool bImmediate)
 {
-	m_pSoulBar->Set_SoulNumber(iSoulCount);
+	if (bImmediate)
+		m_pSoulBar->Set_SoulNumber_Immediately(iSoulCount);
+	else
+		m_pSoulBar->Set_SoulNumber(iSoulCount);
+	
 }
 
 void CUI_PlayerDefault::Update_SkillSlot(SKILLTYPE eSkillType)
@@ -93,6 +97,11 @@ void CUI_PlayerDefault::Update_PlunderSlot(SKILLTYPE eSkilType)
 void CUI_PlayerDefault::Update_PotionSlot(_int iPotionCount)
 {
 	m_pPotionSlot->Set_PotionCount(iPotionCount);
+}
+
+void CUI_PlayerDefault::Set_CoolDownRatio(_float fRatio)
+{
+	m_pSkillSlot->Set_CoolDownRatio(fRatio);
 }
 
 

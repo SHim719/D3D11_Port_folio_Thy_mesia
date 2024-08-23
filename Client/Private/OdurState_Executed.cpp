@@ -43,7 +43,11 @@ void COdurState_Executed::Update(_float fTimeDelta)
 void COdurState_Executed::Late_Update(_float fTimeDelta)
 {
 	if (true == m_pModel->Is_AnimComplete() && false == m_pOdur->Is_Dissolving())
+	{
 		m_pOdur->Active_Dissolve();
+		m_pGameInstance->Set_Sound_FadeOut(L"BGM_Odur", 1.f);
+	}
+		
 
 }
 

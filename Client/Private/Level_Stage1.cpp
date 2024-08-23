@@ -6,6 +6,8 @@
 
 #include "UI_Manager.h"
 
+#include "FadeScreen.h"
+
 
 CLevel_Stage1::CLevel_Stage1(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CClientLevel(pDevice, pContext)
@@ -30,9 +32,10 @@ HRESULT CLevel_Stage1::Initialize()
 	m_pGameInstance->Change_MainCamera(pMainCamera);
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pGameInstance->Add_Clone(LEVEL_STATIC, L"Player", L"Prototype_Player"));
-	//pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 0.f, 1.f));
-	pPlayer->Get_Transform()->Set_Position(XMVectorSet(-32.614f, -2.014f, 116.430f, 1.f));
+	pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, 0.f, 1.f));
+	//pPlayer->Get_Transform()->Set_Position(XMVectorSet(-32.614f, -2.014f, 116.430f, 1.f));
 	pPlayer->Reset_NaviData(LEVEL_STAGE1);
+	pPlayer->Set_Active_DefaultEffect(true);
 
 	pMainCamera->Set_Player(pPlayer);
 
@@ -57,6 +60,9 @@ HRESULT CLevel_Stage1::Initialize()
 	m_wstrBGMTag = L"Stage1BGM";
 
 	PLAY_SOUND(m_wstrBGMTag, true, 1.f);
+	PLAY_SOUND(L"Env_Default", true, 0.8f);
+	
+	ShowCursor(FALSE);
 
 	return S_OK;
 }
@@ -64,7 +70,18 @@ HRESULT CLevel_Stage1::Initialize()
 void CLevel_Stage1::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::L))
+	{
 		Ready_ChangeLevel(LEVEL_URD);
+		//CFadeScreen::FADEDESC FadeDesc{};
+		//FadeDesc.fFadeOutSpeed = 0.5f;
+		//FadeDesc.fFadeInSpeed = 10.f;
+		//FadeDesc.fExtraTime = 0.f;
+		//FadeDesc.pCallback_FadeOutEnd = bind(&CClientLevel::Ready_ChangeLevel, this, LEVEL_ODUR);
+		//UIMGR->Active_UI("FadeScreen", &FadeDesc);
+		//
+		//PLAY_SOUND(L"ChangeLevel", false, 1.f);
+	}
+		
 }
 
 HRESULT CLevel_Stage1::Render()

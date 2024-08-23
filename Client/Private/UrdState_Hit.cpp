@@ -33,7 +33,7 @@ void CUrdState_Hit::Update(_float fTimeDelta)
 void CUrdState_Hit::Late_Update(_float fTimeDelta)
 {
 	if (m_pModel->Is_AnimComplete())
-		Decide_State();
+		__super::Decide_State();
 }
 
 void CUrdState_Hit::OnState_End()
@@ -53,7 +53,7 @@ void CUrdState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 
 	_int iRandNum = JoRandom::Random_Int(0, m_iMaxHitCount);
 
-	if (iRandNum <= m_iHitCount)
+	if (ATTACK_NORMAL == AttackDesc.ePlayerAttackType && iRandNum <= m_iHitCount)
 		m_pUrd->Change_State((_uint)UrdState::State_Parry);
 	else
 	{
@@ -65,6 +65,15 @@ void CUrdState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 		OnState_Start(nullptr);
 	}
 		
+}
+
+void CUrdState_Hit::Decide_State()
+{
+	int iRandNum = JoRandom::Random_Int(0, 4);
+
+	if (0 == iRandNum)
+		Decide_Step();
+	
 }
 
 CUrdState_Hit* CUrdState_Hit::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

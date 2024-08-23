@@ -17,6 +17,8 @@ HRESULT CJokerState_Executed_End::Initialize(void* pArg)
 
 void CJokerState_Executed_End::OnState_Start(void* pArg)
 {
+	m_pJoker->Active_Dissolve();
+
 	m_pModel->Change_Animation(Joker_TakeExecution_Loop, 0.f, true);
 }
 

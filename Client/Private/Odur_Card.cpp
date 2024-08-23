@@ -1,5 +1,8 @@
 #include "Odur_Card.h"
 
+#include "GameEffect.h"
+#include "Effect_Manager.h"
+
 COdur_Card::COdur_Card(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CWeapon(pDevice, pContext)
 {
@@ -110,7 +113,11 @@ HRESULT COdur_Card::Render()
 void COdur_Card::OnCollisionEnter(CGameObject* pOther)
 {
 	m_bReturnToPool = true;
-	// ÆÄÆ¼Å¬
+
+	CGameEffect::EFFECTSPAWNDESC EffectSpawnDesc;
+	EffectSpawnDesc.pParentTransform = m_pTransform;
+
+	EFFECTMGR->Active_Effect("Effect_Odur_Card_Explosion", &EffectSpawnDesc);
 }
 
 HRESULT COdur_Card::Ready_Component()

@@ -23,6 +23,7 @@ HRESULT CVillager_F::Initialize_Prototype()
 	m_iStunnedStateIdx = (_uint)VillagerF_State::State_Stunned_Loop;
 	m_iStunnedStartStateIdx = (_uint)VillagerF_State::State_Stunned_Start;
 
+	m_iSoulCount = 50;
 	return S_OK;
 }
 
@@ -84,6 +85,8 @@ void CVillager_F::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("Active_Dissolve", bind(&CGameObject::Active_Dissolve, this));
+
+	m_pModel->Bind_Func("Effect_Execution_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Blood_Execution_Vill_F", &m_tEffectSpawnDesc));
 
 	m_pModel->Bind_Func("Sound_AttackVoice", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"VillagerF_Voice_Attack", 1, 2, false, 0.6f));
 }
@@ -204,7 +207,7 @@ HRESULT CVillager_F::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"∏ÛΩ∫≈Õ1";
-	EnemyDesc.iMaxHp = 100;
+	EnemyDesc.iMaxHp = 70;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 

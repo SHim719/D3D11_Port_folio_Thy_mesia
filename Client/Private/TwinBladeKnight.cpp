@@ -31,6 +31,8 @@ HRESULT CTwinBladeKnight::Initialize_Prototype()
 	m_fDissolveAmount = 0.f;
 
 	Decide_PassIdx();
+
+	m_iSoulCount = 1000;
 	return S_OK;
 }
 
@@ -234,7 +236,7 @@ HRESULT CTwinBladeKnight::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"╫жд╝аб";
-	EnemyDesc.iMaxHp = 50;
+	EnemyDesc.iMaxHp = 200;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 

@@ -13,6 +13,9 @@ HRESULT CPlayerState_PW_Axe::Initialize(void* pArg)
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry
 	, PlayerState::State_Healing };
 
+	m_pModel->Bind_Func("Shaking_PW_Axe", bind(&CMain_Camera::Play_CameraShake, m_pMain_Camera, "Shaking_PW_Axe"));
+	m_pModel->Bind_Func("Sound_PW_Axe_Impact", bind(&CGameInstance::Play, m_pGameInstance, L"PW_Axe_Impact", false, 0.7f));
+
 	return S_OK;
 }
 
@@ -26,7 +29,7 @@ void CPlayerState_PW_Axe::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Claws(false);
 
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_AXE, true);
-	m_pPlayer->Set_Adjust_NaviY(false);
+	//m_pPlayer->Set_Adjust_NaviY(false);
 
 	Reset_AttackDesc();
 	m_pPlayer->Update_AttackDesc();

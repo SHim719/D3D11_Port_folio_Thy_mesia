@@ -16,11 +16,20 @@ public:
 	void Tick(_float fTimeDelta)		override;
 	void LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
+	HRESULT Render_CoolDown();
 
 	HRESULT OnEnter_Layer(void* pArg)	override;
 
+	void Set_CoolDownRatio(_float fRatio) {
+		m_fCoolDownRatio = fRatio;
+	}
+	
 private:
 	class CUI_SkillIcon*	m_pSkillIcon = { nullptr };
+	CTexture*				m_pCoolDown_Texture = { nullptr };
+
+private:
+	_float					m_fCoolDownRatio = { 1.f };
 
 public:
 	void Update_SkillIcon(const SKILLTYPE eSkillType);

@@ -31,6 +31,9 @@ private:
 	vector<BOSSMUSICDESC>			m_BGMInfos;
 	size_t							m_iNowPlayingIdx = { 0 };
 	CSound*							m_pNowPlayingBGM = { nullptr };
+
+
+	_bool							m_bFinished = { false };
 private:
 	void Release();
 };

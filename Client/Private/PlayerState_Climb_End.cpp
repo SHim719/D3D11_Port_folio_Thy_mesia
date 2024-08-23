@@ -61,6 +61,10 @@ void CPlayerState_Climb_End::OnState_End()
 		m_pNavigation->Set_CurrentIdx(m_pPlayer->Get_TargetNaviIdx());
 	else if (false == m_bIsUp && false == m_pPlayer->Is_ClimbStartDown())
 		m_pNavigation->Set_CurrentIdx(m_pPlayer->Get_TargetNaviIdx());
+
+	m_pPlayer->Set_Stanced(false);
+
+	m_pPlayer->Set_Active_DefaultWeapons(true);
 }
 
 CPlayerState_Climb_End* CPlayerState_Climb_End::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

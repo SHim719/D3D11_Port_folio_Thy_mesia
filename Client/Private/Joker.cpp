@@ -9,6 +9,9 @@
 
 #include "Main_Camera.h"
 
+#include "Player.h"
+#include "PlayerStats.h"
+
 CJoker::CJoker(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CEnemy(pDevice, pContext)
 {
@@ -28,6 +31,8 @@ HRESULT CJoker::Initialize_Prototype()
 	m_iDeathStateIdx = (_uint)JokerState::State_Death;
 	m_iExecutionStateIdx = (_uint)JokerState::State_Executed_Start;
 	m_iStunnedStateIdx = (_uint)JokerState::State_Stunned_Loop;
+
+	m_iSoulCount = 1000;
 
 	return S_OK;
 }
@@ -75,7 +80,29 @@ HRESULT CJoker::Initialize(void* pArg)
 
 void CJoker::Tick(_float fTimeDelta)
 {
+	if (KEY_DOWN(eKeyCode::N))
+	{
+		Change_State((_uint)JokerState::State_ShockAttack);
+	}
+
 	__super::Tick(fTimeDelta);		
+}
+
+void CJoker::OnDeath()
+{
+	CPlayerStats* pStats = static_cast<CPlayer*>(s_pTarget)->Get_PlayerStats();
+
+	if (SKILLTYPE::SKILLTYPE_END == m_eSkillType || pStats->Is_SkillActived(m_eSkillType))
+		return;
+
+	pStats->Active_Skill(m_eSkillType);
+	pStats->Obtain_Key();
+
+	vector<SKILLTYPE> PopupResources;
+	PopupResources.emplace_back(m_eSkillType);
+	PopupResources.emplace_back(SKILLTYPE::NONE);
+
+	UIMGR->Active_UI("UI_Popup", &PopupResources);
 }
 
 void CJoker::Bind_KeyFrames()
@@ -88,11 +115,12 @@ void CJoker::Bind_KeyFrames()
 	m_pModel->Bind_Func("Disable_Stanced", bind(&CCharacter::Set_Stanced, this, false));
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("ChangeToNextAttack", bind(&CJoker::Change_To_NextComboAnim, this));
+	m_pModel->Bind_Func("StrongAttack_Impact", bind(&CJoker::StrongAttack_Impact, this));
 }
 
 void CJoker::Bind_KeyFrameSounds()
 {
-	m_pModel->Bind_Func("Sound_HammerWhoosh", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Hammer_Whoosh", 1, 2, false, 0.4f));
+	m_pModel->Bind_Func("Sound_HammerWhoosh", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Hammer_Whoosh", 1, 2, false, 0.6f));
 	m_pModel->Bind_Func("Sound_Vocal_Swing", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Joker_Vocal_Swing", 1, 2, false, 0.7f));
 	m_pModel->Bind_Func("Sound_Vocal_StrongAttack", bind(&CGameInstance::Play, m_pGameInstance, L"Joker_Vocal_StrongAttack", false, 0.7f));
 	m_pModel->Bind_Func("Sound_Vocal_ShockImpact", bind(&CGameInstance::Play, m_pGameInstance, L"Sound_Vocal_ShockImpact", false, 0.7f));
@@ -115,7 +143,7 @@ void CJoker::StrongAttack_Impact()
 {
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_PW_Hammer");
 	EFFECTMGR->Active_Effect("Effect_Joker_StrongAttack_Impact", &m_tEffectSpawnDesc);
-	PLAY_SOUND(L"Joker_Shock_Impact", false, 0.6f);
+	PLAY_SOUND(L"Joker_Shock_Impact", false, 1.f);
 }
 
 HRESULT CJoker::Ready_Components(void* pArg)
@@ -164,6 +192,9 @@ HRESULT CJoker::Ready_Components(void* pArg)
 		return E_FAIL;
 
 	m_pTransform->Set_WorldMatrix(XMLoadFloat4x4(&pLoadDesc->WorldMatrix));
+
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Dissolve"), TEXT("Dissolve_Texture"), (CComponent**)&m_pDissolveTexture)))
+		return E_FAIL;
 
 	return S_OK;
 }
@@ -226,7 +257,7 @@ HRESULT CJoker::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"Á¶Ä¿";
-	EnemyDesc.iMaxHp = 10;
+	EnemyDesc.iMaxHp = 300;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 

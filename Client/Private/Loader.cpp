@@ -536,6 +536,9 @@ HRESULT CLoader::Ready_UIResource()
 	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_LandingScreen_BG", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/LandingMessages/TexUI_LandingScreenBackground.png"))))
 		return E_FAIL;
 
+	if (FAILED(m_pGameInstance->Add_Prototype(LEVEL_STATIC, L"Prototype_Texture_NeedKey", CTexture::Create(m_pDevice, m_pContext, L"../../Resources/UI/LandingMessages/Message_NeedKey.dds"))))
+		return E_FAIL;
+
 #pragma endregion
 
 #pragma region MainMenu
@@ -644,6 +647,9 @@ HRESULT CLoader::Ready_UI()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_DamageFont", CUI_DamageFont::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_Message_NeedKey", CUI_NeedKey::Create(m_pDevice, m_pContext))))
 		return E_FAIL;
 
 	return S_OK;
@@ -799,6 +805,9 @@ HRESULT CLoader::Ready_Etc()
 		return E_FAIL;
 
 	if (FAILED(m_pGameInstance->Add_Prototype(L"Prototype_LightObject", CLightObject::Create(m_pDevice, m_pContext))))
+		return E_FAIL;
+
+	if (FAILED(Ready_Sound(L"../../Resources/Sounds/SoundEffect/Etc/")))
 		return E_FAIL;
 
 	return S_OK;

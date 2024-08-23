@@ -32,6 +32,9 @@ private:
 
 public:
 	void Set_SoulNumber(_uint iSoulNumber);
+	void Set_SoulNumber_Immediately(_uint iSoulNumber) {
+		m_fSoulNumber = (_float)iSoulNumber;
+	}
 
 private:
 	CTexture*	m_Textures[BAR_END] = {};

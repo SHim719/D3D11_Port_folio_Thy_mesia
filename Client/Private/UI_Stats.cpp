@@ -42,15 +42,13 @@ HRESULT CUI_Stats::Initialize(void* pArg)
 
 void CUI_Stats::Tick(_float fTimeDelta)
 {
-	m_bCanLevelUp = m_iStatInfos[SOUL] >= m_iStatInfos[NEED_SOUL];
-	m_bCanLevelDown = (m_iSelectInfo < 3) && (m_iStatInfos[STRENGTH + m_iSelectInfo] > m_iOriginStatInfos[STRENGTH + m_iSelectInfo]);
-	
 
 	if (KEY_DOWN(eKeyCode::Up))
 	{
 		m_iSelectInfo = (m_iSelectInfo + 4 - 1) % 4;
 		if (m_iSelectInfo < 3)
 			m_ArrowMatrices[0].m[3][1] = m_ArrowMatrices[1].m[3][1] = m_vNumberPos[STRENGTH + m_iSelectInfo][1].y;
+		PLAY_SOUND(L"UI_Select", false, 1.f);
 	}
 
 	else if (KEY_DOWN(eKeyCode::Down))
@@ -58,6 +56,7 @@ void CUI_Stats::Tick(_float fTimeDelta)
 		m_iSelectInfo = (m_iSelectInfo + 1) % 4;
 		if (m_iSelectInfo < 3)
 			m_ArrowMatrices[0].m[3][1] = m_ArrowMatrices[1].m[3][1] = m_vNumberPos[STRENGTH + m_iSelectInfo][1].y;
+		PLAY_SOUND(L"UI_Select", false, 1.f);
 	}
 
 	else if (KEY_DOWN(eKeyCode::Right))
@@ -66,7 +65,11 @@ void CUI_Stats::Tick(_float fTimeDelta)
 			return;
 
 		if (m_bCanLevelUp)
+		{
+			PLAY_SOUND(L"UI_Select", false, 1.f);
 			Level_Up();
+		}
+			
 
 	}
 	
@@ -76,11 +79,15 @@ void CUI_Stats::Tick(_float fTimeDelta)
 			return;
 
 		if (m_bCanLevelDown)
+		{
+			PLAY_SOUND(L"UI_Select", false, 1.f);
 			Level_Down();
+		}
 	}
 
 	else if (KEY_DOWN(eKeyCode::Enter) && 3 == m_iSelectInfo)
 	{
+		PLAY_SOUND(L"UI_Menu_Select", false, 1.f);
 		Setting_EditInfo();
 		Exit();
 	}
@@ -89,6 +96,9 @@ void CUI_Stats::Tick(_float fTimeDelta)
 
 void CUI_Stats::LateTick(_float fTimeDelta)
 {
+	m_bCanLevelUp = m_iStatInfos[SOUL] >= m_iStatInfos[NEED_SOUL];
+	m_bCanLevelDown = (m_iSelectInfo < 3) && (m_iStatInfos[STRENGTH + m_iSelectInfo] > m_iOriginStatInfos[STRENGTH + m_iSelectInfo]);
+
 	m_pGameInstance->Add_RenderObject(CRenderer::RENDER_UI, this);
 }
 
@@ -346,6 +356,7 @@ void CUI_Stats::Setting_EditInfo()
 
 void CUI_Stats::Exit()
 {
+
 	CFadeScreen::FADEDESC FadeDesc{};
 	FadeDesc.eFadeColor = CFadeScreen::BLACK;
 	FadeDesc.fFadeOutSpeed = 3.f;

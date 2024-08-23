@@ -171,7 +171,7 @@ _bool CPlayerState_Base::Check_StateChange(PlayerState eState)
 		bStateChange = KEY_PUSHING(eKeyCode::One) || KEY_PUSHING(eKeyCode::Two);
 		break;
 	case PlayerState::State_Healing:
-		bStateChange = KEY_PUSHING(eKeyCode::R) && m_pPlayerStats->Get_PotionCount() > 0;
+		bStateChange = KEY_PUSHING(eKeyCode::R); //&& m_pPlayerStats->Get_PotionCount() > 0;
 		break;
 	case PlayerState::State_End:
 		break;
@@ -211,10 +211,10 @@ void CPlayerState_Base::Check_PlagueAttack()
 {
 	SKILLTYPE eSkillType = SKILLTYPE::NONE;
 
-	if (KEY_PUSHING(eKeyCode::One))
+	if (KEY_PUSHING(eKeyCode::One) && m_pPlayerStats->Can_Use_Skill())
 	{
 		eSkillType = m_pPlayerStats->Get_UsingSkillType();
-
+		m_pPlayerStats->Set_CoolTime();
 	}
 	else 
 	{

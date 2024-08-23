@@ -30,6 +30,7 @@ void CTwinBladeKnightState_Stunned_Start::OnState_Start(void* pArg)
 	m_pTwinBladeKnight->Active_RimLight(RimDesc);
 
 	m_pGameInstance->Set_TimeScaleWithRealTime(0.2f, 1.f);
+	m_pTwinBladeKnight->Set_Active_AllWeapon_Colliders(false);
 
 	PLAY_SOUND(L"Stunned_Start", false, 0.7f);
 	m_pModel->Change_Animation(LArmor_TwinSwords_HurtStunStart);

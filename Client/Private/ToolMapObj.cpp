@@ -113,7 +113,7 @@ HRESULT CToolMapObj::Render()
 
 HRESULT CToolMapObj::Render_Picking(_int iSelectIdx)
 {
-	if (nullptr == m_pShader)
+	if (nullptr == m_pShader || nullptr == m_pModel)
 		return E_FAIL;
 
 	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))

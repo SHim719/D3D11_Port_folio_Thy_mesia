@@ -49,11 +49,17 @@ void CUrdState_ExtraAttack::Late_Update(_float fTimeDelta)
 
 void CUrdState_ExtraAttack::OnState_End()
 {
+	if (m_pGameInstance->Is_Playing(L"Urd_Attack6"))
+		m_pGameInstance->Stop(L"Urd_Attack6");
+	if (m_pGameInstance->Is_Playing(L"Urd_Attack7"))
+		m_pGameInstance->Stop(L"Urd_Attack7");
+		
 }
 
 void CUrdState_ExtraAttack::Init_AttackDesc()
 {
 	ATTACKDESC AttackDesc{};
+	AttackDesc.pAttacker = m_pUrd;
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
 	AttackDesc.iDamage = 113;
 	AttackDesc.strShakingTag = "Shaking_Big_Hit";

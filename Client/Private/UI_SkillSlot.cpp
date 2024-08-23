@@ -22,6 +22,9 @@ HRESULT CUI_SkillSlot::Initialize(void* pArg)
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_SkillSlot"), TEXT("Texture"), (CComponent**)&m_pUITexture)))
 		return E_FAIL;
 
+	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Slot_Inactive"), TEXT("CoolDown_Texture"), (CComponent**)&m_pCoolDown_Texture)))
+		return E_FAIL;
+
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_VIBuffer_Point"), TEXT("VIBuffer"), (CComponent**)&m_pVIBuffer)))
 		return E_FAIL;
 
@@ -64,6 +67,32 @@ HRESULT CUI_SkillSlot::Render()
 		return E_FAIL;
 
 	if (FAILED(m_pSkillIcon->Render()))
+		return E_FAIL;
+
+	if (m_fCoolDownRatio < 1.f)
+	{
+		if (FAILED(Render_CoolDown()))
+			return E_FAIL;
+	}
+	
+	return S_OK;
+}
+
+HRESULT CUI_SkillSlot::Render_CoolDown()
+{
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Set_RawValue("g_fCoolDownRatio", &m_fCoolDownRatio, sizeof(_float))))
+		return E_FAIL;
+
+	if (FAILED(m_pCoolDown_Texture->Set_SRV(m_pShader, "g_DiffuseTexture", 0)))
+		return E_FAIL;
+
+	if (FAILED(m_pShader->Begin(5)))
+		return E_FAIL;
+
+	if (FAILED(m_pVIBuffer->Render()))
 		return E_FAIL;
 
 	return S_OK;
@@ -114,4 +143,5 @@ void CUI_SkillSlot::Free()
 	__super::Free();
 
 	Safe_Release(m_pSkillIcon);
+	Safe_Release(m_pCoolDown_Texture);
 }

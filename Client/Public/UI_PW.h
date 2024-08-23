@@ -7,7 +7,7 @@ BEGIN(Client)
 class CUI_PW final : public CUI
 {
 private:
-	enum UI_PlagueWeapons { AXE, HAMMER, CLAW_LONG, SPEAR, TWIN, CLAW_SHORT, WEAPON_END };
+	enum UI_PlagueWeapons { AXE, HAMMER, SPEAR, TWIN, WEAPON_END };
 
 private:
 	CUI_PW(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);
@@ -27,7 +27,7 @@ private:
 	UI_PlagueWeapons	m_eNowSelected = { AXE };
 
 	_float4				m_vIconPositions[WEAPON_END] = {};
-	_float4				m_vUsingIconPositions[2] = {};
+	_float4				m_vUsingIconPosition = {};
 
 	_float3				m_vIconScale = { 112.f, 112.f, 1.f };
 	_float3				m_vSelectedScale = { 256.f, 252.f, 1.f };
@@ -37,7 +37,7 @@ private:
 
 	_bool				m_bSkillActived[WEAPON_END] = {};
 private:
-	CTexture*	m_pUsingSkillTextures[2] = {nullptr};
+	CTexture*	m_pUsingSkillTexture = {nullptr};
 	CTexture*	m_pInactiveCoverTexture = { nullptr };
 	CTexture*	m_pSelectedTexture = { nullptr };
 	  

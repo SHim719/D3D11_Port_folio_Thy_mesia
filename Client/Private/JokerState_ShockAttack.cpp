@@ -24,6 +24,8 @@ void CJokerState_ShockAttack::OnState_Start(void* pArg)
 	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pJoker->Update_AttackDesc();
 
+	PLAY_SOUND(L"Joker_Vocal_ShockAttack", false, 1.f);
+
 	m_pModel->Change_Animation(Joker_ShockAttack);
 }
 

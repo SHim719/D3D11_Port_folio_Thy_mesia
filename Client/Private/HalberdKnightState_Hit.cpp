@@ -32,17 +32,6 @@ void CHalberdKnightState_Hit::OnState_Start(void* pArg)
 		m_pModel->Change_Animation(HArmorLV1_Halberds_HurtCounter);
 		break;
 	}
-
-
-	string strBloodEffect = m_iHitCount % 2 == 0 ? "Effect_Blood_R_Vill_M" : "Effect_Blood_L_Vill_M";
-	EFFECTMGR->Active_Effect(strBloodEffect, &m_pHalberdKnight->Get_EffectSpawnDesc());
-
-	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pHalberdKnight->Get_EffectSpawnDesc());
-
-
-	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
-
-	Play_HitSound();
 }
 
 void CHalberdKnightState_Hit::Update(_float fTimeDelta)
@@ -77,6 +66,15 @@ void CHalberdKnightState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 		Decide_Attack();
 	else
 		OnState_Start(const_cast<ATTACKDESC*>(&AttackDesc));
+
+	string strBloodEffect = m_iHitCount % 2 == 0 ? "Effect_Blood_R_Vill_M" : "Effect_Blood_L_Vill_M";
+	EFFECTMGR->Active_Effect(strBloodEffect, &m_pHalberdKnight->Get_EffectSpawnDesc());
+
+	EFFECTMGR->Active_Effect("Effect_Enemy_Hit_Particle", &m_pHalberdKnight->Get_EffectSpawnDesc());
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Hit");
+
+	Play_HitSound();
 }
 
 CHalberdKnightState_Hit* CHalberdKnightState_Hit::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

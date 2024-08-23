@@ -50,12 +50,14 @@ void CUrdState_DashStab::Late_Update(_float fTimeDelta)
 
 void CUrdState_DashStab::OnState_End()
 {
-
+	if (m_pGameInstance->Is_Playing(L"Urd_DashStab"))
+		m_pGameInstance->Stop(L"Urd_DashStab");
 }
 
 void CUrdState_DashStab::Init_AttackDesc()
 {
 	ATTACKDESC AttackDesc{};
+	AttackDesc.pAttacker = m_pUrd;
 	AttackDesc.eEnemyAttackType = NORMAL;
 	AttackDesc.iDamage = 87;
 

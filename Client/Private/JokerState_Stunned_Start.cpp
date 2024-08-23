@@ -29,6 +29,7 @@ void CJokerState_Stunned_Start::OnState_Start(void* pArg)
 
 	m_pGameInstance->Set_TimeScaleWithRealTime(0.2f, 1.f);
 
+	EFFECTMGR->Active_Effect("Effect_Enemy_Parry_Particle", &m_pJoker->Get_EffectSpawnDesc());
 	PLAY_SOUND(L"Stunned_Start", false, 1.f);
 	m_pModel->Change_Animation(Joker_Stun_Start);
 }

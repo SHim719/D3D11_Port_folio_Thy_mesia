@@ -59,6 +59,8 @@ protected:
 	_uint	m_iDeathStateIdx = { 9999 };
 	_uint	m_iExecutionStateIdx = { 9999 };
 
+	_int	m_iSoulCount = { 0 };
+
 	EXECUTION_TAG			m_eExecutionTag = { DEFAULT };
 	SKILLTYPE				m_eSkillType = { SKILLTYPE_END };
 

@@ -32,7 +32,10 @@ void CPlayerState_ParrySuccess::OnState_Start(void* pArg)
 	m_iParryDir = Desc->iParryDir;
 	if (nullptr != Desc->AttackDesc.pAttacker)
 	{
-		Desc->AttackDesc.pAttacker->Take_Damage(m_pPlayerStats->Get_NormalAttackDesc());
+		ATTACKDESC ParryAttackDesc = m_pPlayerStats->Get_NormalAttackDesc();
+		ParryAttackDesc.iPlagueDamage = ParryAttackDesc.iDamage;
+		ParryAttackDesc.ePlayerAttackType = PARRY;
+		Desc->AttackDesc.pAttacker->Hit(ParryAttackDesc);
 		m_pOwnerTransform->LookAt2D(Desc->AttackDesc.pAttacker->Get_Transform()->Get_Position());
 	}
 	

@@ -62,6 +62,10 @@ void CMain_Camera::Init_CameraShakingDescs()
 	ShakingDesc.fShakingForce = 0.3f;
 	m_ShakingDescs.emplace("Shaking_Claw_Long", ShakingDesc);
 
+	ShakingDesc.fShakeTime = 0.2f;
+	ShakingDesc.fShakingForce = 0.5f;
+	m_ShakingDescs.emplace("Shaking_PW_Axe", ShakingDesc);
+
 	ShakingDesc.fShakeTime = 0.3f;
 	ShakingDesc.fShakingForce = 1.f;
 	m_ShakingDescs.emplace("Shaking_PW_Hammer", ShakingDesc);
@@ -129,6 +133,7 @@ void CMain_Camera::Tick(_float fTimeDelta)
 void CMain_Camera::LateTick(_float fTimeDelta)
 {
 	Shaking(fTimeDelta);
+	Delta_FovY(fTimeDelta);
 
 	switch (m_eState)
 	{
@@ -270,6 +275,18 @@ void CMain_Camera::Add_DeltaFovYDesc(const DELTAFOVYDESC& DeltaFovYDesc)
 	m_tDeltaFovYDesc = DeltaFovYDesc;
 	m_bDeltaFovY = true;
 	m_bIncreaseFovY = true;
+	m_fDeltaFovY_TimeAcc = 0.f;
+}
+
+void CMain_Camera::End_DeltaFov(_float fReturnLerpTime)
+{
+	if (m_CameraDesc.fFovy == m_fOriginFov || m_tDeltaFovYDesc.fReturnLerpTime > 0.f)
+		return;
+
+	m_tDeltaFovYDesc.fReturnLerpTime = fReturnLerpTime;
+	m_bDeltaFovY = true;
+	m_bIncreaseFovY = false;
+	m_fDeltaFovY_TimeAcc = 0.f;
 }
 
 CBone* CMain_Camera::Find_TargetBone(CModel* pModel)
@@ -372,18 +389,26 @@ void CMain_Camera::Delta_FovY(_float fTimeDelta)
 
 	if (m_bIncreaseFovY)
 	{
-		m_CameraDesc.fFovy += m_tDeltaFovYDesc.fToTargetSpeed * fTimeDelta;
-		if (m_CameraDesc.fFovy >= m_tDeltaFovYDesc.fTargetFovY)
+		m_CameraDesc.fFovy = JoMath::Lerp(m_fOriginFov, m_tDeltaFovYDesc.fTargetFovY, m_fDeltaFovY_TimeAcc / m_tDeltaFovYDesc.fTargetLerpTime);
+		if (m_fDeltaFovY_TimeAcc >= m_tDeltaFovYDesc.fTargetLerpTime)
 		{
-			m_CameraDesc.fFovy = m_tDeltaFovYDesc.fTargetFovY;
 			m_bIncreaseFovY = false;
+			m_fDeltaFovY_TimeAcc = 0.f;
+			if (m_tDeltaFovYDesc.fReturnLerpTime < 0.f)
+				m_bDeltaFovY = false;
 		}
-		else
+	}
+	else
+	{
+		m_CameraDesc.fFovy = JoMath::Lerp(m_fOriginFov, m_tDeltaFovYDesc.fTargetFovY,  1.f - m_fDeltaFovY_TimeAcc / m_tDeltaFovYDesc.fReturnLerpTime);
+		if (m_fDeltaFovY_TimeAcc >= m_tDeltaFovYDesc.fReturnLerpTime)
 		{
-
+			m_fDeltaFovY_TimeAcc = 0.f;
+			m_bDeltaFovY = false;
 		}
 	}
 
+	m_fDeltaFovY_TimeAcc += fTimeDelta;
 }
 
 

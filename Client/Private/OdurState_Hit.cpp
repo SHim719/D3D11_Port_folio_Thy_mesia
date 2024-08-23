@@ -54,7 +54,7 @@ void COdurState_Hit::OnHit(const ATTACKDESC& AttackDesc)
 	
 	_int iRandNum = JoRandom::Random_Int(0, m_iMaxHitCount);
 	
-	if (iRandNum <= m_iHitCount)
+	if (ATTACK_NORMAL == AttackDesc.ePlayerAttackType && iRandNum <= m_iHitCount)
 		m_pOdur->Change_State((_uint)OdurState::State_Parry);
 	else
 	{

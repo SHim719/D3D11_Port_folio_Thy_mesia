@@ -32,6 +32,8 @@ void CPlayerState_Plunder::OnState_Start(void* pArg)
 	m_pTargetEnemy = (CEnemy*)pArg;
 	m_pPlayer->Update_AttackDesc();
 
+	PLAY_SOUND(L"Plunder_Hit_Success", false, 0.7f);
+
 	m_pModel->Change_Animation(Corvus_Raven_ClawShort_PlunderAttack2TT);
 }
 

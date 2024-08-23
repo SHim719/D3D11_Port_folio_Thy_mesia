@@ -17,8 +17,6 @@ private:
 	void Init_AttackDesc()							override;
 	void Check_ExtraStateChange(PlayerState eState)	override;
 
-
-	void Play_ClawLongSound();
 private:
 	_uint	m_iAttackCnt = { 0 };
 

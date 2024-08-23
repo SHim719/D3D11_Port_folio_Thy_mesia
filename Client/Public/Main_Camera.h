@@ -23,8 +23,8 @@ public:
 	typedef struct tagDeltaFovY
 	{
 		_float fTargetFovY = 0.f;
-		_float fToTargetSpeed = 0.f;
-		_float fReturnSpeed = 0.f;
+		_float fTargetLerpTime = 0.f;
+		_float fReturnLerpTime = 0.f;
 	}DELTAFOVYDESC;
 
 protected:
@@ -70,10 +70,11 @@ private:
 	_bool								m_bShaking = { false };
 
 private:
-	DELTAFOVYDESC		m_tDeltaFovYDesc = {};
-	_bool		 		m_bDeltaFovY = { false };
-	_bool		 		m_bIncreaseFovY = { true };
-	_float		 		m_fOriginFov = { };
+	DELTAFOVYDESC						m_tDeltaFovYDesc = {};
+	_bool		 						m_bDeltaFovY = { false };
+	_bool		 						m_bIncreaseFovY = { true };
+	_float		 						m_fOriginFov = { 70.f};
+	_float								m_fDeltaFovY_TimeAcc = { 0.f };
 
 private:
 	class CLockOnCurve* m_pLockOnCurve = { nullptr };
@@ -91,6 +92,7 @@ public:
 
 	void Play_CameraShake(const string& strTag);
 	void Add_DeltaFovYDesc(const DELTAFOVYDESC& DeltaFovYDesc);
+	void End_DeltaFov(_float fReturnLerpTime);
 
 private:
 	void Default_State(_float fTimeDelta);

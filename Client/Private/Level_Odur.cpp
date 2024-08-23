@@ -6,6 +6,7 @@
 
 #include "UI_Manager.h"
 
+#include "FadeScreen.h"
 
 
 CLevel_Odur::CLevel_Odur(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
@@ -24,6 +25,7 @@ HRESULT CLevel_Odur::Initialize()
 	pPlayer->Get_Transform()->Set_Position(XMVectorSet(38.193f, 0.887f, -5.502f, 1.f));
 	pPlayer->Reset_NaviData(LEVEL_ODUR);
 	pPlayer->Enroll_AllColliders();
+	pPlayer->Set_Active_DefaultEffect(true);
 
 	UIMGR->Active_UI("UI_PlayerDefault");
 
@@ -50,7 +52,15 @@ HRESULT CLevel_Odur::Initialize()
 
 void CLevel_Odur::Tick(_float fTimeDelta)
 {
-
+	if (KEY_DOWN(eKeyCode::L))
+	{
+		CFadeScreen::FADEDESC FadeDesc{};
+		FadeDesc.fFadeOutSpeed = 0.5f;
+		FadeDesc.fFadeInSpeed = 10.f;
+		FadeDesc.fExtraTime = 0.f;
+		FadeDesc.pCallback_FadeOutEnd = bind(&CClientLevel::Ready_ChangeLevel, this, LEVEL_URD);
+		UIMGR->Active_UI("FadeScreen", &FadeDesc);
+	}
 }
 
 HRESULT CLevel_Odur::Render()

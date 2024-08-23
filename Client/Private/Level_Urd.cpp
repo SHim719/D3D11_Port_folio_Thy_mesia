@@ -21,13 +21,13 @@ HRESULT CLevel_Urd::Initialize()
 
 	CPlayer* pPlayer = static_cast<CPlayer*>(m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Player"));
 	pPlayer->Set_Active(true);
-	//pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, -14.705f, -82.894f, 1.f));
-	pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, -35.f, 1.f));
+	pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, -14.705f, -82.894f, 1.f));
+	//pPlayer->Get_Transform()->Set_Position(XMVectorSet(0.f, 0.f, -35.f, 1.f));
 	pPlayer->Get_Transform()->LookTo(XMVectorSet(0.f, 0.f, 1.f, 0.f));
 	pPlayer->Reset_NaviData(LEVEL_URD);
 	pPlayer->Enroll_AllColliders();
-
-	
+	pPlayer->Set_FootStepTag(L"FootStep_Stone");
+	pPlayer->Set_Active_DefaultEffect(true);
 
 	UIMGR->Active_UI("UI_PlayerDefault");
 

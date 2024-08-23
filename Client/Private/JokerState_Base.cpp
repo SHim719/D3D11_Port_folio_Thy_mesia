@@ -56,7 +56,7 @@ void CJokerState_Base::OnHit(const ATTACKDESC& AttackDesc)
 
 void CJokerState_Base::Decide_State()
 {
-	_int iRandNum = JoRandom::Random_Int(0, 1);
+	_int iRandNum = JoRandom::Random_Int(0, 2);
 	
 	// 0일때는 유휴상태, 1일때는 공격상태
 	

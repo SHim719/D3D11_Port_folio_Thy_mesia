@@ -32,6 +32,8 @@ void CVillagerMState_Stunned_Start::OnState_Start(void* pArg)
 
 	m_pVillager_M->Active_RimLight(RimDesc);
 
+	m_pVillager_M->Set_Active_AllWeapon_Colliders(false);
+
 	static_cast<CPlayer*>(m_pVillager_M->Get_Target())->Add_StunnedEnemy(m_pVillager_M);
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");

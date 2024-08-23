@@ -29,6 +29,8 @@ void CJokerState_Walk::Update(_float fTimeDelta)
 	m_fTimeAcc += fTimeDelta;
 
 	Move(fTimeDelta);
+
+	
 }
 
 void CJokerState_Walk::Late_Update(_float fTimeDelta)

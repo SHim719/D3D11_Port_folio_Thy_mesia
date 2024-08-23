@@ -132,6 +132,7 @@ void CClientLevel::Ready_ChangeLevel(LEVEL eNextLevel)
 
     CPlayer* pPlayer = static_cast<CPlayer*>(m_pGameInstance->Find_GameObject(LEVEL_STATIC, L"Player"));
     pPlayer->Set_Active(false);
+    pPlayer->Set_Active_DefaultEffect(false);
     UIMGR->Inactive_UI("UI_PlayerDefault");
 
     m_pGameInstance->Get_MainCamera()->Set_Active(false);

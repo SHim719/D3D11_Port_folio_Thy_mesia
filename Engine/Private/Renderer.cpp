@@ -1007,7 +1007,6 @@ HRESULT CRenderer::Ready_BloomTargets(_uint iWidth, _uint iHeight)
 			return E_FAIL;
 	}
 
-
 	if (FAILED(m_pGameInstance->Add_RenderTarget(L"Target_PostBloom", iWidth, iHeight, DXGI_FORMAT_R16G16B16A16_FLOAT, _float4(0.f, 0.f, 0.f, 0.f))))
 		return E_FAIL;
 
@@ -1089,8 +1088,32 @@ HRESULT CRenderer::Bind_Matrices()
 		
 }
 
+void CRenderer::Active_RadialBlur(const RADIALBLUR_DESCS& Descs)
+{
+	Safe_Release(m_tRadialBlurDescs.pActor);
+
+	m_bRadialBlur = true;
+	m_tRadialBlurDescs = Descs;
+	m_fNowBlurStrength = Descs.fBlurStrength;
+	m_fRadialBlurLerpTimeAcc = 0.f;
+
+	Safe_AddRef(Descs.pActor);
+}
+
+void CRenderer::Inactive_RadialBlur(_uint iActorID, _float fLerpTime)
+{
+	if (false == m_bRadialBlur || m_fRadialBlurLerpTimeAcc > 0.f || m_tRadialBlurDescs.pActor->Get_ActorID() != iActorID)
+		return;
+
+	m_fRadialBlurLerpTime = m_fRadialBlurLerpTimeAcc = fLerpTime;
+}
+
+
 void CRenderer::Update_RadialBlur(_float fTimeDelta)
 {
+	if (nullptr != m_tRadialBlurDescs.pActor)
+		XMStoreFloat3(&m_vBlurCenterWorld, m_tRadialBlurDescs.pActor->Get_Center());
+
 	if (m_fRadialBlurLerpTimeAcc > 0.f)
 	{
 		m_fRadialBlurLerpTimeAcc -= fTimeDelta;
@@ -1153,6 +1176,8 @@ void CRenderer::Free()
 		Safe_Release(pShader);
 	
 	m_UsingShaders.clear();
+
+	Safe_Release(m_tRadialBlurDescs.pActor);
 
 	for (auto& RenderObjects : m_RenderObjects)
 	{		

@@ -2,6 +2,8 @@
 
 #include "Player.h"
 
+#include "Main_Camera.h"
+
 CHalberdKnightState_Death::CHalberdKnightState_Death(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CHalberdKnightState_Base(pDevice, pContext)
 {
@@ -23,6 +25,8 @@ void CHalberdKnightState_Death::OnState_Start(void* pArg)
 	m_pHalberdKnight->InActive_StunnedMark();
 
 	PLAY_SOUND(L"Halberds_Die", false, 1.f);
+
+	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");
 
 	m_pModel->Change_Animation(HArmorLV1_Halberds_Dead, 0.1f, false);
 }

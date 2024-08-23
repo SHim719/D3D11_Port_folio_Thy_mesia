@@ -43,12 +43,14 @@ void CUI_Menu::Tick(_float fTimeDelta)
 	{
 		m_eNowMenu = Menu((m_eNowMenu + MENU_END - 1) % MENU_END); 
 		m_pTransform->Set_Position(XMLoadFloat4(&m_vFontPos[m_eNowMenu]));
+		PLAY_SOUND(L"UI_Select", false, 1.f);
 	}
 		
 	else if (KEY_DOWN(eKeyCode::Down))
 	{
 		m_eNowMenu = Menu((m_eNowMenu + 1) % MENU_END);
 		m_pTransform->Set_Position(XMLoadFloat4(&m_vFontPos[m_eNowMenu]));
+		PLAY_SOUND(L"UI_Select", false, 1.f);
 	}
 
 	else if (KEY_DOWN(eKeyCode::Enter))
@@ -99,6 +101,8 @@ void CUI_Menu::Select_Menu()
 		UIMGR->Inactive_Menu();
 		break;
 	}
+
+	PLAY_SOUND(L"UI_Menu_Select", false, 1.f);
 }
 
 HRESULT CUI_Menu::Render_BG()

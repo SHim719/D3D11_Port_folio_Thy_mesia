@@ -24,6 +24,7 @@ CEnemy::CEnemy(const CEnemy& rhs)
 	, m_iStunnedStartStateIdx(rhs.m_iStunnedStartStateIdx)
 	, m_iDeathStateIdx(rhs.m_iDeathStateIdx)
 	, m_iExecutionStateIdx(rhs.m_iExecutionStateIdx)
+	, m_iSoulCount(rhs.m_iSoulCount)
 {
 
 }
@@ -161,6 +162,7 @@ void CEnemy::Decide_PassIdx()
 void CEnemy::OnDeath()
 {
 	CPlayerStats* pStats = static_cast<CPlayer*>(s_pTarget)->Get_PlayerStats();
+	pStats->Increase_SoulCount(m_iSoulCount);
 
 	if (SKILLTYPE::SKILLTYPE_END == m_eSkillType || pStats->Is_SkillActived(m_eSkillType))
 		return;

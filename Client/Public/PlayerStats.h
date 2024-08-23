@@ -8,8 +8,11 @@ class CPlayerStats : public CBase
 private:
 	CPlayerStats();
 	virtual ~CPlayerStats() = default;
+
+public:
+	void Update_CoolDown(_float fTimeDelta);
+
 private: 
-	_bool			m_bShortClaw = { false };
 	_bool			m_bObtainKey = { false };
 
 	_int			m_iLevel = { 1 };
@@ -20,12 +23,15 @@ private:
 	_int			m_iPlague = { 10 };
 	_int			m_iVitality = { 10 };
 
-	_int			m_iSoulCount = { 500 };
+	_int			m_iSoulCount = { 0 };
 	_int			m_iNowPotionCount = { 5 };
 	_int			m_iMaxPotionCount = { 5 };
 
 	SKILLTYPE		m_ePlunderSkill = { NONE };
 	SKILLTYPE		m_eUsingSkill = { NONE };
+
+	_float			m_fSkillCoolTime = { 20.f };
+	_float			m_fSkillCoolTimeAcc = { -1.f };
 
 	_bool			m_bSkillActived[SKILLTYPE::SKILLTYPE_END] = {};
 public:
@@ -35,10 +41,6 @@ public:
 
 	SKILLTYPE Get_UsingSkillType() const {
 		return m_eUsingSkill;
-	}
-
-	_bool Is_ShortClaw() const {
-		return m_bShortClaw;
 	}
 
 	_bool Is_SkillActived(SKILLTYPE eSkillType) const {
@@ -73,6 +75,13 @@ public:
 		return m_iMaxHp;
 	}
 
+	_bool Can_Use_Skill() const {
+		return -1.f == m_fSkillCoolTimeAcc;
+	}
+
+	void Set_CoolTime() {
+		m_fSkillCoolTimeAcc = 0.f;
+	}
 
 	void Set_Strength(_uint iStrength) {
 		m_iStrength = iStrength;
@@ -86,9 +95,7 @@ public:
 		m_iVitality = iVitality;
 	}
 
-	void Set_SoulCount(_int iSoulCount) {
-		m_iSoulCount = iSoulCount;
-	}
+	void Set_SoulCount(_int iSoulCount);
 
 	void Set_PlayerLevel(_int iLevel) {
 		m_iLevel = iLevel;
@@ -96,10 +103,6 @@ public:
 
 	void Set_MaxHp(_int iMaxHp) {
 		m_iMaxHp = iMaxHp;
-	}
-
-	void Set_UseShortClaw(_bool bUseShortClaw) {
-		m_bShortClaw = bUseShortClaw;
 	}
 
 	void Obtain_Key() {

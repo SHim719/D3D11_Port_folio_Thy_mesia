@@ -103,35 +103,43 @@ CEffect_Group* CEffect_Manager::Get_EffectGroup(const string& strTag)
 HRESULT CEffect_Manager::Init_Effects()
 {
 #pragma region Corvus_Default
-	if (FAILED(Add_EffectGroups("Effect_Corvus_Parry_Success", 3, L"Prototype_Effect_Corvus_Parry_Particle")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Parry_Success", 4, L"Prototype_Effect_Corvus_Parry_Particle")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_Healing", 1, L"Prototype_Effect_Corvus_HealingCurve")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Healing", 2, L"Prototype_Effect_Corvus_HealingCurve")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Foot_Particle", 1, L"Prototype_Effect_Corvus_Foot_Particle")))
 		assert(false);
 #pragma endregion
 
 #pragma region Corvus_Attack
-	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack1", 1, L"Prototype_Effect_Corvus_LAttack1")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack1", 2, L"Prototype_Effect_Corvus_LAttack1")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack2", 1, L"Prototype_Effect_Corvus_LAttack2")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack2", 2, L"Prototype_Effect_Corvus_LAttack2")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack3", 1, L"Prototype_Effect_Corvus_LAttack3")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack3", 2, L"Prototype_Effect_Corvus_LAttack3")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack4", 1, L"Prototype_Effect_Corvus_LAttack4")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_LAttack4", 2, L"Prototype_Effect_Corvus_LAttack4")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_Claw_Long1", 1, L"Prototype_Effect_Claw_Long1")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Claw_Long1", 2, L"Prototype_Effect_Claw_Long1")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Corvus_Claw_Long2", 1, L"Prototype_Effect_Claw_Long2")))
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Claw_Long2", 2, L"Prototype_Effect_Claw_Long2")))
 		assert(false);
 #pragma endregion
 
 #pragma region Plunder
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Charge_Start", 1, L"Prototype_Effect_Corvus_Charge_Start")))
+		assert(false);
 
+	if (FAILED(Add_EffectGroups("Effect_Corvus_Charge_Complete", 1, L"Prototype_Effect_Corvus_Charge_Complete")))
+		assert(false);
+	
 	if (FAILED(Add_EffectGroups("Effect_Corvus_Plunder_Rush_Trail", 1, L"Prototype_Effect_Corvus_Plunder_Rush_Trail")))
 		assert(false);
 
@@ -199,6 +207,10 @@ HRESULT CEffect_Manager::Init_Effects()
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_TwinBlade_Slash4", 1, L"Prototype_Effect_Corvus_PW_TwinBlade_Slash4")))
 		assert(false);
 
+	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_TwinBlade_Slash5", 1, L"Prototype_Effect_Corvus_PW_TwinBlade_Slash5")))
+		assert(false);
+	
+
 	if (FAILED(Add_EffectGroups("Effect_Corvus_PW_TwinBlade_Slash_End", 1, L"Prototype_Effect_Corvus_PW_TwinBlade_Slash_End")))
 		assert(false);
 
@@ -238,22 +250,16 @@ HRESULT CEffect_Manager::Init_Effects()
 #pragma endregion
 
 #pragma region Blood
-	if (FAILED(Add_EffectGroups("Effect_Blood_L_TwinBladeKnight", 3, L"Prototype_Effect_Blood_L_TwinBladeKnight")))
+	if (FAILED(Add_EffectGroups("Effect_Blood_L_Vill_F", 5, L"Prototype_Effect_Blood_L_Vill_F")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Blood_R_TwinBladeKnight", 3, L"Prototype_Effect_Blood_R_TwinBladeKnight")))
+	if (FAILED(Add_EffectGroups("Effect_Blood_R_Vill_F", 5, L"Prototype_Effect_Blood_R_Vill_F")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Blood_L_Vill_F", 3, L"Prototype_Effect_Blood_L_Vill_F")))
+	if (FAILED(Add_EffectGroups("Effect_Blood_L_Vill_M", 10, L"Prototype_Effect_Blood_L_Vill_M")))
 		assert(false);
 
-	if (FAILED(Add_EffectGroups("Effect_Blood_R_Vill_F", 3, L"Prototype_Effect_Blood_R_Vill_F")))
-		assert(false);
-
-	if (FAILED(Add_EffectGroups("Effect_Blood_L_Vill_M", 3, L"Prototype_Effect_Blood_L_Vill_M")))
-		assert(false);
-
-	if (FAILED(Add_EffectGroups("Effect_Blood_R_Vill_M", 3, L"Prototype_Effect_Blood_R_Vill_M")))
+	if (FAILED(Add_EffectGroups("Effect_Blood_R_Vill_M", 10, L"Prototype_Effect_Blood_R_Vill_M")))
 		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Blood_L_Joker", 3, L"Prototype_Effect_Blood_L_Joker")))
@@ -266,6 +272,18 @@ HRESULT CEffect_Manager::Init_Effects()
 		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Blood_R_Odur", 3, L"Prototype_Effect_Blood_R_Odur")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Corvus_VS_TwinBlade_Blood", 1, L"Prototype_Effect_Corvus_VS_TwinBlade_Blood")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_Execution_Vill_M", 2, L"Prototype_Effect_Blood_Execution_Vill_M")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_Execution_Vill_F", 2, L"Prototype_Effect_Blood_Execution_Vill_F")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Blood_Execution_Halberd", 2, L"Prototype_Effect_Blood_Execution_Halberd")))
 		assert(false);
 
 #pragma endregion
@@ -303,6 +321,12 @@ HRESULT CEffect_Manager::Init_Effects()
 		assert(false);
 
 	if (FAILED(Add_EffectGroups("Effect_Odur_Execution_Knee", 1, L"Prototype_Effect_Odur_Execution_Knee")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Odur_Card_Explosion", 3, L"Prototype_Effect_Odur_Card_Explosion")))
+		assert(false);
+
+	if (FAILED(Add_EffectGroups("Effect_Odur_SP_Start", 1, L"Prototype_Effect_Odur_SP_Start")))
 		assert(false);
 
 #pragma endregion

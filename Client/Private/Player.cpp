@@ -23,6 +23,8 @@
 
 #include "LightObject.h"
 
+#include "Main_Camera.h"
+
 CPlayer::CPlayer(ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 	: CCharacter(pDevice, pContext)
 {
@@ -52,6 +54,8 @@ HRESULT CPlayer::Initialize(void* pArg)
 
 	if (FAILED(Ready_PlagueWeapons()))
 		return E_FAIL;
+
+	m_iActorID = 0;
 
 	Bind_KeyFrames();
 	Bind_KeyFrameEffects();
@@ -110,7 +114,14 @@ void CPlayer::Tick(_float fTimeDelta)
 	}
 
 	if (KEY_DOWN(eKeyCode::M))
-		m_pStats->Increase_Hp(-100);
+	{
+		CMain_Camera::DELTAFOVYDESC Desc{};
+		Desc.fReturnLerpTime = 0.5f;
+		Desc.fTargetFovY = 80.f;
+		Desc.fTargetLerpTime = 0.1f;
+		static_cast<CMain_Camera*>(GET_CAMERA)->Add_DeltaFovYDesc(Desc);
+	}
+		
 	
 
 	if (m_bLockOn)
@@ -120,8 +131,9 @@ void CPlayer::Tick(_float fTimeDelta)
 				, JoMath::Calc_GroundLook(m_pTargetTransform->Get_Position(), m_pTransform->Get_Position())
 				, 10.f * fTimeDelta));
 	}
-		
 
+	m_pStats->Update_CoolDown(fTimeDelta);
+		
 	m_States[m_iState]->Update(fTimeDelta);
 
 	if (m_bAdjustNaviY)
@@ -131,11 +143,8 @@ void CPlayer::Tick(_float fTimeDelta)
 
 	__super::Tick_Weapons(fTimeDelta);
 
-	if (m_bRimLight)
+	if (true == m_bRimLight)
 		Update_RimLight(fTimeDelta);
-
-	if (m_pGameInstance->Is_Active_RadialBlur())
-		m_pGameInstance->Update_BlurCenterWorld(Get_Center());
 
 	if (m_pLightObject && (_uint)PlayerState::State_Cutscene != m_iState)
 		m_pLightObject->Set_LightPosition(m_pTransform->Get_Position());
@@ -219,6 +228,7 @@ void CPlayer::Bind_KeyFrames()
 {
 	m_pModel->Bind_Func("Active_SaberCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SABER], true));
 	m_pModel->Bind_Func("Inactive_SaberCollider", bind(&CWeapon::Set_Active_Collider, m_Weapons[SABER], false));
+	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("Active_Claw_R", bind(&CWeapon::Set_Active_Collider, m_Weapons[CLAW_R], true));
 	m_pModel->Bind_Func("Inactive_Claw_R", bind(&CWeapon::Set_Active_Collider, m_Weapons[CLAW_R], false));
 	m_pModel->Bind_Func("Active_Claw_L", bind(&CWeapon::Set_Active_Collider, m_Weapons[CLAW_L], true));
@@ -244,11 +254,11 @@ void CPlayer::Bind_KeyFrames()
 	m_pModel->Bind_Func("Active_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, true));
 	m_pModel->Bind_Func("Inactive_PW_Twin_R_Collider", bind(&CPlayer::Set_Active_WeaponCollider, this, PW_TWINBLADE_R, false));
 	m_pModel->Bind_Func("Healing", bind(&CPlayer::Healing, this));
-	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, 1.5f));
+	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, m_iActorID, 1.f));
 	m_pModel->Bind_Func("Execution_Odur_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.4f));
 	m_pModel->Bind_Func("Execution_Urd_SlowTime", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 0.2f));
 	m_pModel->Bind_Func("Reset_TimeScale", bind(&CGameInstance::Set_TimeScale, m_pGameInstance, 1.f));
-	m_pModel->Bind_Func("End_RadialBlur", bind(&CGameInstance::Inactive_RadialBlur, m_pGameInstance, 1.5f));
+	m_pModel->Bind_Func("Return_FovY", bind(&CMain_Camera::End_DeltaFov, static_cast<CMain_Camera*>(GET_CAMERA), 2.f));
 }
 
 void CPlayer::Bind_KeyFrameEffects()
@@ -266,7 +276,7 @@ void CPlayer::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_PW_Spear_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Spear_Particle", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Spear_Slash", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Spear_Slash", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Hammer_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Hammer_Start", &m_tEffectSpawnDesc));
-	m_pModel->Bind_Func("Effect_PW_Hammer_Slash", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Hammer_Start", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_Hammer_Slash", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Hammer_Slash", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_Hammer_Impact", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_Hammer_Impact", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Start", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash0", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash0", &m_tEffectSpawnDesc));
@@ -274,6 +284,7 @@ void CPlayer::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash2", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash2", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash3", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash3", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash4", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash4", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_PW_TwinBlade_Slash5", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash5", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_PW_TwinBlade_Final", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_PW_TwinBlade_Slash_End", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Plunder_Rush_Trail", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Rush_Trail", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Plunder_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Plunder_Start", &m_tEffectSpawnDesc));
@@ -282,13 +293,14 @@ void CPlayer::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_Execution_Odur_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Execution_Odur_Blood", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Execution_Urd_Spark", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_VS_Urd_Spark", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Exectuion_Urd_Blood1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Execution_Blood", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_VS_Twin_Execution_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_VS_TwinBlade_Blood", &m_tEffectSpawnDesc));
 
 }
 
 void CPlayer::Bind_KeyFrameSounds()
 {
-	
-	
+	m_pModel->Bind_Func("Sound_Footstep", bind(&CPlayer::Play_FootStep, this));
+	m_pModel->Bind_Func("Sound_SkillStart", bind(&CGameInstance::Play, m_pGameInstance, L"PW_Active", false, 1.f));
 }
 
 HRESULT CPlayer::Bind_ShaderResources()
@@ -302,6 +314,11 @@ HRESULT CPlayer::Bind_ShaderResources()
 			return E_FAIL;
 	}
 	return S_OK;
+}
+
+void CPlayer::Play_FootStep()
+{
+	m_pGameInstance->Play_RandomSound(m_wstrFootStepTag, 1, 2, false, 1.f);
 }
 
 void CPlayer::Update_CanExecutionEnemy()
@@ -528,7 +545,7 @@ void CPlayer::OnCollisionExit(CGameObject* pOther)
 
 void CPlayer::ChangeToNextComboAnim()
 {
-	m_pModel->Change_Animation(m_pModel->Get_CurrentAnimIndex() + 1);
+	ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, m_pModel->Get_CurrentAnimIndex() + 1, 0.1f, true));
 }
 
 void CPlayer::Healing()
@@ -601,6 +618,15 @@ void CPlayer::Enroll_AllColliders()
 		if (nullptr != pWeapon)
 			pWeapon->Enroll_Collider();
 	}
+}
+
+void CPlayer::Set_Active_DefaultEffect(_bool bActive)
+{
+	if (m_bActive)
+		EFFECTMGR->Active_Effect("Effect_Corvus_Foot_Particle", &m_tEffectSpawnDesc);
+	else
+		EFFECTMGR->Inactive_Effect("Effect_Corvus_Foot_Particle");
+
 }
 
 HRESULT CPlayer::Ready_Components()

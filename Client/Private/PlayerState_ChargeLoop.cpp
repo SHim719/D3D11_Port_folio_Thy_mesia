@@ -23,6 +23,9 @@ void CPlayerState_ChargeLoop::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Claws(true);
 	m_pPlayer->Set_Active_DefaultWeapons(false);
 
+	ADD_EVENT(bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Charge_Start", m_pPlayer->Get_EffectSpawnDescPtr()));
+	ADD_EVENT(bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Corvus_Charge_Complete", m_pPlayer->Get_EffectSpawnDescPtr()));
+
 	m_pModel->Change_Animation(Corvus_Raven_ClawCommon_ChargeLoop);
 }
 
@@ -49,6 +52,9 @@ void CPlayerState_ChargeLoop::OnState_End()
 {
 	m_pPlayer->Set_Active_DefaultWeapons(true);
 	m_pPlayer->Set_Active_Claws(false);
+
+	EFFECTMGR->Inactive_Effect("Effect_Corvus_Charge_Start");
+	EFFECTMGR->Inactive_Effect("Effect_Corvus_Charge_Complete");
 }
 
 

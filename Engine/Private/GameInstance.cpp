@@ -349,9 +349,9 @@ void CGameInstance::Active_RadialBlur(const RADIALBLUR_DESCS& Descs)
 {
 	m_pRenderer->Active_RadialBlur(Descs);
 }
-void CGameInstance::Inactive_RadialBlur(_float fLerpTime)
+void CGameInstance::Inactive_RadialBlur(_uint iActorID, _float fLerpTime)
 {
-	m_pRenderer->Inactive_RadialBlur(fLerpTime);
+	m_pRenderer->Inactive_RadialBlur(iActorID, fLerpTime);
 }
 void CGameInstance::Update_BlurCenterWorld(_vector vBlurCenterWorld)
 {

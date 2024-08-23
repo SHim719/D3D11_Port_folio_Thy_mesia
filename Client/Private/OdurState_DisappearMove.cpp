@@ -34,7 +34,7 @@ void COdurState_DisappearMove::OnState_Start(void* pArg)
 
 	EFFECTMGR->Active_Effect("Effect_Odur_Disappear_Particle", &m_pOdur->Get_EffectSpawnDesc());
 
-	PLAY_SOUND(L"Odur_DisappearMove", false, 0.4f);
+	PLAY_SOUND(L"Odur_DisappearMove", false, 1.f);
 }
 
 void COdurState_DisappearMove::Update(_float fTimeDelta)

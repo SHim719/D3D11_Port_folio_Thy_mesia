@@ -18,12 +18,11 @@ HRESULT CTwinBladeKnightState_Executed_End::Initialize(void* pArg)
 void CTwinBladeKnightState_Executed_End::OnState_Start(void* pArg)
 {
 	m_pTwinBladeKnight->Active_Dissolve();
-	PLAY_SOUND(L"TwinBlade_Die", false, 0.5f);
+	PLAY_SOUND(L"TwinBlade_Die", false, 1.f);
 }
 
 void CTwinBladeKnightState_Executed_End::Update(_float fTimeDelta)
 {
-	m_pTwinBladeKnight->Update_Dissolve(fTimeDelta);
 }
 
 void CTwinBladeKnightState_Executed_End::Late_Update(_float fTimeDelta)

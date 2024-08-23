@@ -34,10 +34,12 @@ private:
 
 	HRESULT Bind_ShaderResources()							override;
 
+	void Play_FootStep();
 public:
 	HRESULT Reset_NaviData(LEVEL eLevel);
 	void Enroll_AllColliders();
-	
+	void Set_Active_DefaultEffect(_bool bActive);
+
 private:
 	class CPlayerStats*	m_pStats = { nullptr };
 
@@ -86,6 +88,9 @@ private:
 
 	_float					m_fHitGap = { 0.1f };
 	_float					m_fHitGapAcc = { 0.f };
+
+	wstring					m_wstrFootStepTag = { L"FootStep_Wood" };
+
 
 public:
 	_bool Is_LockOn() const { 
@@ -191,6 +196,16 @@ public:
 	_vector Get_Center() const override {
 		return m_pTransform->Get_Position() + m_pTransform->Get_Up() * 1.5f;
 	}
+
+	const wstring& Get_FootStepTag() const {
+		return m_wstrFootStepTag;
+	}
+
+	void Set_FootStepTag(const wstring& wstrFootStepTag) {
+		m_wstrFootStepTag = wstrFootStepTag;
+	}
+
+
 private:
 	void OnCollisionEnter(CGameObject* pOther)	override;
 	void OnCollisionExit(CGameObject* pOther)	override;

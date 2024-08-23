@@ -22,6 +22,8 @@ private:
 
 	void Check_NextAttack();
 
+private:
+	void Active_RadialBlur();
 	void Play_AttackSound();
 private:
 	_uint			m_iNowComboCnt = 0;

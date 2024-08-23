@@ -46,7 +46,7 @@ void CUrdState_Base::OnHit(const ATTACKDESC& AttackDesc)
 	{
 		m_pUrd->Change_State((_uint)UrdState::State_Stunned_Start);
 	}
-	else if (!m_pUrd->Is_Stanced())
+	else if (PARRY != AttackDesc.ePlayerAttackType && (!m_pUrd->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType))
 	{
 		m_pUrd->Change_State((_uint)UrdState::State_Hit);
 	}
@@ -64,7 +64,7 @@ void CUrdState_Base::Decide_State()
 {
 	int iRandNum = JoRandom::Random_Int(0, 7);
 
-	if (iRandNum < 1 && true == m_pUrd->Can_EnableSkill())
+	if (iRandNum < 2 && true == m_pUrd->Can_EnableSkill())
 	{
 		_uint iState = 0;
 		iRandNum = JoRandom::Random_Int(0, 2);

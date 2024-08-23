@@ -20,6 +20,7 @@ void COdurState_Stunned_Start::OnState_Start(void* pArg)
 	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pOdur->Set_LookTarget(false);
 	m_pOdur->Set_Alpha(1.f);
+	m_pOdur->Set_Active_AllWeapon_Colliders(false);
 
 	RIMLIGHTDESC RimDesc{};
 	RimDesc.bColorLerp = true;

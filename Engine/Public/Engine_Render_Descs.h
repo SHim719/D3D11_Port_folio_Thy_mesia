@@ -1,8 +1,14 @@
 #pragma once
 
+namespace Engine
+{
+	class CGameObject;
+}
+
 
 typedef struct tagRadialBlurDescs
 {
-	float		fBlurStrength;
-	float		fBlurRadius;
+	Engine::CGameObject*		pActor;
+	float						fBlurStrength;
+	float						fBlurRadius;
 } RADIALBLUR_DESCS;

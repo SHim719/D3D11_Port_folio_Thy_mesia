@@ -32,6 +32,7 @@ void CHalberdKnightState_Stunned_Start::OnState_Start(void* pArg)
 	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };
 
 	m_pHalberdKnight->Active_RimLight(RimDesc);
+	m_pHalberdKnight->Set_Active_AllWeapon_Colliders(false);
 
 	PLAY_SOUND(L"Normal_KillChance", false, 1.f);
 

@@ -27,6 +27,9 @@ HRESULT COdur::Initialize_Prototype()
 {
 	m_iTag = (_uint)TAG_ENEMY;
 	m_eExecutionTag = ODUR;
+
+	m_iSoulCount = 2000;
+
 	return S_OK;
 }
 
@@ -172,6 +175,7 @@ void COdur::OnStart_Cutscene(CUTSCENE_NUMBER eCutsceneNumber)
 void COdur::OnEnd_Cutscene()
 {
 	UIMGR->Active_UI("UI_BossBar", m_pStats);
+	PLAY_SOUND(L"BGM_Odur", true, 1.f);
 }
 
 void COdur::Bind_KeyFrames()
@@ -198,7 +202,7 @@ void COdur::Bind_KeyFrames()
 	m_pModel->Bind_Func("Enable_SwordTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[SWORD], true));
 	m_pModel->Bind_Func("Disable_SwordTrail", bind(&CWeapon::Set_Active_Trail, m_Weapons[SWORD], false));
 	m_pModel->Bind_Func("Odur_Light_On", bind(&CGameObject::Set_Active, m_pLightObject, true));
-
+	m_pModel->Bind_Func("Odur_Execution_Attack", bind(&COdur::Execution_Attack, this));
 }
 
 void COdur::Bind_KeyFrameEffects()
@@ -210,6 +214,7 @@ void COdur::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_Odur_Disappear_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Disappear_Particle", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Odur_Execution_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Execution_Blood", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Odur_Execution_Knee", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_Execution_Knee", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Odur_SP_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Odur_SP_Start", &m_tEffectSpawnDesc));
 }
 
 void COdur::Bind_KeyFrameSounds()
@@ -281,6 +286,14 @@ void COdur::Update_WeaponAlpha()
 {
 	for (auto pWeapon : m_Weapons)
 		pWeapon->Set_Alpha(m_fAlpha);
+}
+
+void COdur::Execution_Attack()
+{
+	ATTACKDESC AttackDesc{};
+	AttackDesc.iDamage = 124;
+
+	static_cast<CPlayer*>(s_pTarget)->Hit(AttackDesc);
 }
 
 HRESULT COdur::Ready_Components(void* pArg)
@@ -430,7 +443,7 @@ HRESULT COdur::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"¿ÀµÎ¸£";
-	EnemyDesc.iMaxHp = 1000;
+	EnemyDesc.iMaxHp = 300;
 	EnemyDesc.bIsBoss = true;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);

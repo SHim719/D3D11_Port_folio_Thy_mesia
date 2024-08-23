@@ -41,7 +41,7 @@ void CTwinBladeKnightState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
 	if (0 == m_pTwinBladeKnight->Take_Damage(AttackDesc))
 		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_Stunned_Start);
-	else if (!m_pTwinBladeKnight->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType)
+	else if (PARRY != AttackDesc.ePlayerAttackType && (!m_pTwinBladeKnight->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType))
 		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_Hit, const_cast<ATTACKDESC*>(&AttackDesc));
 
 	EFFECTMGR->Active_Effect("Effect_TwinBlade_Hit", &m_pTwinBladeKnight->Get_EffectSpawnDesc());
@@ -62,7 +62,7 @@ void CTwinBladeKnightState_Base::Decide_State()
 	_float fDist = XMVector3Length(m_pTargetTransform->Get_Position() - m_pOwnerTransform->Get_Position()).m128_f32[0];
 	_int iRandNum = JoRandom::Random_Int(0, 2);
 	
-	if (0 == iRandNum && fDist < 3.f)
+	if (iRandNum && fDist < 3.f)
 		Decide_Attack();
 	else
 		m_pTwinBladeKnight->Change_State((_uint)TwinBladeKnight_State::State_Walk);

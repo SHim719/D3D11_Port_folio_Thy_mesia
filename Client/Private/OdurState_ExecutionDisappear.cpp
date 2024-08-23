@@ -20,6 +20,10 @@ void COdurState_ExecutionDisappear::OnState_Start(void* pArg)
 
 	m_pOdur->Set_Alpha(0.f);
 
+	EFFECTMGR->Active_Effect("Effect_Odur_Disappear_Particle", &m_pOdur->Get_EffectSpawnDesc());
+
+	PLAY_SOUND(L"Odur_DisappearMove", false, 1.f);
+
 	m_pModel->Change_Animation(Magician_DisappearMove_F);
 }
 

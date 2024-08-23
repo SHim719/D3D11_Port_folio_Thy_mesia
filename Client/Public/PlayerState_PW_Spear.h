@@ -17,6 +17,9 @@ private:
 	void Init_AttackDesc()				override;
 	void Reset_AttackDesc()				override;
 
+private:
+	void Active_RadialBlur();
+
 public:
 	static CPlayerState_PW_Spear* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);
 	void Free() override;

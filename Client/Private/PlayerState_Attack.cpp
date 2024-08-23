@@ -16,6 +16,7 @@ HRESULT CPlayerState_Attack::Initialize(void* pArg)
 		, PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_Healing };
 
 	m_pModel->Bind_Func("Sound_Attack", bind(&CPlayerState_Attack::Play_AttackSound, this));
+	m_pModel->Bind_Func("Active_RadialBlur_NormalAttack", bind(&CPlayerState_Attack::Active_RadialBlur, this));
 
 
 	return S_OK;
@@ -32,6 +33,7 @@ void CPlayerState_Attack::OnState_Start(void* pArg)
 	m_pPlayer->Set_CanNextAttack(false);
 	m_pPlayer->Set_CanNextState(false);
 	m_pPlayer->Set_CanRotation(true);
+
 
 	Reset_AttackIdx();
 
@@ -51,7 +53,8 @@ void CPlayerState_Attack::Update(_float fTimeDelta)
 			Rotate_To_Look(vNewLook, fTimeDelta);
 	}
 
-	m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+	if (false == m_pPlayer->Is_CollEnemy())
+		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
 
 }
 
@@ -71,7 +74,11 @@ void CPlayerState_Attack::Late_Update(_float fTimeDelta)
 void CPlayerState_Attack::OnState_End()
 {
 	m_iNowComboCnt = 0;
+
+	m_pGameInstance->Inactive_RadialBlur(m_pPlayer->Get_ActorID(), 0.5f);
+	m_pMain_Camera->End_DeltaFov(1.f);
 }
+
 
 void CPlayerState_Attack::Init_AttackDesc()
 {
@@ -130,10 +137,30 @@ void CPlayerState_Attack::Check_NextAttack()
 	}
 }
 
+void CPlayerState_Attack::Active_RadialBlur()
+{
+	RADIALBLUR_DESCS RadialDescs{};
+
+	RadialDescs.pActor = m_pPlayer;
+	RadialDescs.fBlurRadius = 10.f;
+	RadialDescs.fBlurStrength = 2.f;
+
+	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
+	m_pGameInstance->Active_RadialBlur(RadialDescs);
+	m_pGameInstance->Inactive_RadialBlur(m_pPlayer->Get_ActorID(), 1.f);
+
+	CMain_Camera::DELTAFOVYDESC DeltaFovYDesc{};
+	DeltaFovYDesc.fReturnLerpTime = -1.f;
+	DeltaFovYDesc.fTargetFovY = 75.f;
+	DeltaFovYDesc.fTargetLerpTime = 0.2f;
+
+	m_pMain_Camera->Add_DeltaFovYDesc(DeltaFovYDesc);
+}
+
 void CPlayerState_Attack::Play_AttackSound()
 {
 	wstring wstrSoundTag = L"Corvus_Attack" + to_wstring(m_iNowComboCnt + 1);
-	PLAY_SOUND(wstrSoundTag, false, 0.8f);
+	PLAY_SOUND(wstrSoundTag, false, 1.f);
 }
 
 

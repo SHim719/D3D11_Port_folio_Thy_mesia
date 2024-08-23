@@ -41,7 +41,7 @@ void CVillagerFState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
 	if (0 == m_pVillager_F->Take_Damage(AttackDesc))
 		m_pVillager_F->Change_State((_uint)VillagerF_State::State_Stunned_Start);
-	else if (!m_pVillager_F->Is_Stanced())
+	else if (PARRY != AttackDesc.ePlayerAttackType && (!m_pVillager_F->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType))
 		m_pVillager_F->Change_State((_uint)VillagerF_State::State_Hit);
 
 	_int iRandNum = JoRandom::Random_Int(0, 1);

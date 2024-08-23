@@ -30,6 +30,7 @@ public:
 
 	virtual HRESULT Render();
 
+	virtual	_vector Get_Center() const;
 protected:
 	virtual HRESULT Bind_ShaderResources();
 	virtual void Decide_PassIdx();
@@ -74,19 +75,21 @@ public:
 	virtual void OnCollisionExit(CGameObject* pOther) {}
 
 protected:
-	_bool	m_bDestroyed = { false };
-	_bool	m_bActive = { true };
-	_bool	m_bInstancing = { false }; // 인스턴싱되는 오브젝트면 렌더링을 하지않아 물체자체의 로직만 돌아가게만듬.
+	_bool		m_bDestroyed = { false };
+	_bool		m_bActive = { true };
+	_bool		m_bInstancing = { false }; // 인스턴싱되는 오브젝트면 렌더링을 하지않아 물체자체의 로직만 돌아가게만듬.
 
-	_bool	m_bReturnToPool = { false }; // For Object Pool
-	_bool	m_bNoRender = { false };
+	_bool		m_bReturnToPool = { false }; // For Object Pool
+	_bool		m_bNoRender = { false };
 
-	_uint	m_iTag = { 0 };
+	_uint		m_iTag = { 0 };
 
-	_float	m_fCullingRadius = { 1.f };
-	_float4 m_vCullingOffset = {};
+	_float		m_fCullingRadius = { 1.f };
+	_float4		m_vCullingOffset = {};
 
-	_uint			m_iPassIdx = { 0 };
+	_uint		m_iPassIdx = { 0 };
+
+	_uint		m_iActorID = { 999999 };
 public:
 	void Set_Destroy(_bool b) { m_bDestroyed = b; }
 	_bool Is_Destroyed() { 
@@ -128,6 +131,10 @@ public:
 
 	_float Get_CamDistance() const {
 		return XMVector3Length(XMLoadFloat4(&m_pGameInstance->Get_CamPosition()) - m_pTransform->Get_Position()).m128_f32[0];
+	}
+
+	_uint Get_ActorID() const {
+		return m_iActorID;
 	}
 
 public:

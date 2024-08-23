@@ -10,6 +10,8 @@ HRESULT CPlayerState_PW_TwinBlade::Initialize(void* pArg)
 	if (FAILED(__super::Initialize(pArg)))
 		return E_FAIL;
 
+	m_pModel->Bind_Func("Sound_PW_TwinBlade_Slash_Final", bind(&CGameInstance::Play, m_pGameInstance, L"PW_TwinBlade_Slash_Final", false, 1.f));
+
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry
 	, PlayerState::State_Healing };
 
@@ -72,19 +74,21 @@ void CPlayerState_PW_TwinBlade::OnState_End()
 
 void CPlayerState_PW_TwinBlade::Init_AttackDesc()
 {
-	m_AttackDescs.reserve(2);
+	m_AttackDescs.reserve(3);
 
 	ATTACKDESC AtkDesc = m_pPlayerStats->Get_PlagueAttackDesc();
 	AtkDesc.iDamage = AtkDesc.iPlagueDamage;
 
 	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_L, AtkDesc);
 	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_R, AtkDesc);
+	m_AttackDescs.emplace_back(CPlayer::PW_TWINBLADE_R, AtkDesc);
 }
 
 void CPlayerState_PW_TwinBlade::Reset_AttackDesc()
 {
-	m_AttackDescs[0].second = m_pPlayer->Get_PlayerStats()->Get_SkillAttackDesc(SKILLTYPE::TWINBLADE);
-	m_AttackDescs[1].second = m_pPlayer->Get_PlayerStats()->Get_SkillAttackDesc(SKILLTYPE::TWINBLADE);
+	m_AttackDescs[0].second = m_AttackDescs[1].second = m_AttackDescs[2].second = m_pPlayer->Get_PlayerStats()->Get_SkillAttackDesc(SKILLTYPE::TWINBLADE);
+	m_AttackDescs[2].second.iDamage *= 2;
+	m_AttackDescs[2].second.iPlagueDamage *= 2;
 }
 
 CPlayerState_PW_TwinBlade* CPlayerState_PW_TwinBlade::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)

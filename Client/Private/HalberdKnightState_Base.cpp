@@ -41,7 +41,7 @@ void CHalberdKnightState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
 	if (0 == m_pHalberdKnight->Take_Damage(AttackDesc))
 		m_pHalberdKnight->Change_State((_uint)HalberdKnight_State::State_Stunned_Start);
-	else if (!m_pHalberdKnight->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType)
+	else if (PARRY != AttackDesc.ePlayerAttackType && (!m_pHalberdKnight->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType))
 		m_pHalberdKnight->Change_State((_uint)HalberdKnight_State::State_Hit,  const_cast<ATTACKDESC*>(&AttackDesc));
 
 	_int iRandNum = JoRandom::Random_Int(0, 1);

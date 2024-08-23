@@ -12,6 +12,9 @@ HRESULT CPlayerState_PlunderRush::Initialize(void* pArg)
 
 	m_PossibleStates = { PlayerState::State_Avoid, PlayerState::State_Parry };
 
+	m_pModel->Bind_Func("Sound_Plunder_Claw", bind(&CGameInstance::Play, m_pGameInstance, L"Claw_Plunder_Rush", false, 1.f));
+
+
 	return S_OK;
 }
 
@@ -27,11 +30,21 @@ void CPlayerState_PlunderRush::OnState_Start(void* pArg)
 	m_pPlayer->Update_AttackDesc();
 
 	RADIALBLUR_DESCS RadialDescs{};
-	RadialDescs.fBlurRadius = 10.f;
-	RadialDescs.fBlurStrength = 1.5f;
+	RadialDescs.pActor = m_pPlayer;
+	RadialDescs.fBlurRadius = 8.f;
+	RadialDescs.fBlurStrength = 2.f;
 
 	m_pGameInstance->Active_RadialBlur(RadialDescs);
 	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
+
+	CMain_Camera::DELTAFOVYDESC DeltaFovYDesc{};
+	DeltaFovYDesc.fReturnLerpTime = -1.f;
+	DeltaFovYDesc.fTargetFovY = 75.f;
+	DeltaFovYDesc.fTargetLerpTime = 0.2f;
+
+	m_pMain_Camera->Add_DeltaFovYDesc(DeltaFovYDesc);
+
+	PLAY_SOUND(L"Plunder_Rush", false, 1.f);
 
 	m_pModel->Change_AnimationWithStartFrame(Corvus_Raven_ClawLong_ChargeFull, 40, 0.05f);
 }
@@ -69,7 +82,9 @@ void CPlayerState_PlunderRush::OnState_End()
 	m_pPlayer->Set_Active_DefaultWeapons(true);
 	m_pPlayer->Set_Active_Claws(false);
 
-	m_pGameInstance->Inactive_RadialBlur(0.5f);
+	m_pMain_Camera->End_DeltaFov(1.f);
+
+	m_pGameInstance->Inactive_RadialBlur(m_pPlayer->Get_ActorID(), 0.5f);
 }
 
 void CPlayerState_PlunderRush::Init_AttackDesc()

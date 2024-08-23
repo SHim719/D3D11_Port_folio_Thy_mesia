@@ -33,6 +33,7 @@ void CBossMusic_Player::Play_BossBGM(vector<BOSSMUSICDESC> BGMInfos)
 {
 	m_BGMInfos = BGMInfos;
 	m_iNowPlayingIdx = 0;
+	m_bFinished = false;
 
 	m_pNowPlayingBGM = m_pGameInstance->Get_Sound(m_BGMInfos[m_iNowPlayingIdx].wstrMusicTag);
 	Safe_AddRef(m_pNowPlayingBGM);
@@ -55,6 +56,7 @@ void CBossMusic_Player::Play_NextBGM()
 
 void CBossMusic_Player::Finish_BGM()
 {
+	m_bFinished = true;
 	m_pGameInstance->Set_Sound_FadeOut(m_BGMInfos[m_iNowPlayingIdx].wstrMusicTag, 1.f);
 }
 

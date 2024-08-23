@@ -21,6 +21,7 @@ void CPlayerState_Climb_Start::OnState_Start(void* pArg)
 	m_pPlayer->Set_Stanced(true);
 
 	m_pPlayer->Set_Adjust_NaviY(false);
+	m_pPlayer->Set_Active_DefaultWeapons(false);
 
 	_uint iAnimIdx = *(_uint*)pArg;
 

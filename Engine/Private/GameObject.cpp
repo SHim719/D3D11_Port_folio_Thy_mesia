@@ -22,6 +22,7 @@ CGameObject::CGameObject(const CGameObject & rhs)
 	, m_bDestroyed { false }
 	, m_fDissolveAmount { rhs.m_fDissolveAmount }
 	, m_fDissolveSpeed { rhs.m_fDissolveSpeed }
+	, m_iActorID { rhs.m_iActorID }
 {
 	Safe_AddRef(m_pGameInstance);
 	Safe_AddRef(m_pDevice);
@@ -71,6 +72,10 @@ HRESULT CGameObject::Render()
 	return S_OK;
 }
 
+_vector CGameObject::Get_Center() const
+{
+	return _vector();
+}
 
 HRESULT CGameObject::Bind_ShaderResources()
 {

@@ -61,8 +61,8 @@ HRESULT CArchive_Chair::Render()
 		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_DIFFUSE, "g_DiffuseTexture")))
 			return E_FAIL;
 
-		/*if (FAILED(m_pModelCom->SetUp_OnShader(m_pShaderCom, m_pModel->Get_MaterialIndex(i), aiTextureType_NORMALS, "g_NormalTexture")))
-			return E_FAIL;*/
+		if (FAILED(m_pModel->SetUp_OnShader(m_pShader, i, TextureType_NORMALS, "g_NormalTexture")))
+			return E_FAIL;
 
 		if (FAILED(m_pModel->Bind_Buffers(i)))
 			return E_FAIL;
@@ -83,6 +83,8 @@ void CArchive_Chair::Active_Chair()
 	pAisemyTransform->Set_WorldMatrix(m_pTransform->Get_WorldMatrix());
 	pAisemyTransform->Add_Position(XMVectorSet(1.f, 0.f, -1.f, 0.f), true);
 	pAisemyTransform->LookTo(m_pTransform->Get_GroundRight());
+
+	PLAY_SOUND(L"Active_Chair", false, 1.f);
 }
 
 void CArchive_Chair::OnCollisionStay(CGameObject* pOther)

@@ -18,10 +18,11 @@ private:
 
 public:
 	void Update_HpBar(_int iMaxHp, _int iHp);
-	void Update_SoulBar(_int iSoulCount);
+	void Update_SoulBar(_int iSoulCount, _bool bImmediate);
 	void Update_SkillSlot(SKILLTYPE eSkillType);
 	void Update_PlunderSlot(SKILLTYPE eSkilType);
 	void Update_PotionSlot(_int iPotionCount);
+	void Set_CoolDownRatio(_float fRatio);
 
 private:
 	class CUI_PlayerBar*	m_pPlayerBar	= { nullptr };

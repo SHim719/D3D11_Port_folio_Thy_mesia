@@ -158,6 +158,11 @@ HRESULT CUrd_Weapon::OnEnter_Layer(void* pArg)
 	m_pEffect_SwordDefault->OnEnter_Layer(&m_EffectSpawnDesc);
 	Safe_AddRef(m_pEffect_SwordDefault);
 
+	m_bReleased = false;
+	m_bLanded = false;
+	m_bThrow = false; 
+	m_bParried = false;
+
 	m_pCollider->Enroll_Collider();
 	m_pCollider->Update(m_pTransform->Get_WorldMatrix());
 

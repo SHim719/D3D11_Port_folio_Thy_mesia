@@ -39,9 +39,10 @@ void COdurState_Base::OnState_End()
 
 void COdurState_Base::OnHit(const ATTACKDESC& AttackDesc)
 {
+	
 	if (0 == m_pOdur->Take_Damage(AttackDesc))
 		m_pOdur->Change_State((_uint)OdurState::State_Stunned_Start);
-	else if (!m_pOdur->Is_Stanced())
+	else if (PARRY != AttackDesc.ePlayerAttackType && (!m_pOdur->Is_Stanced() || IGNORE_STANCE == AttackDesc.ePlayerAttackType))
 		m_pOdur->Change_State((_uint)OdurState::State_Hit);
 	
 		

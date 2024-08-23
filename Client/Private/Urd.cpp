@@ -97,8 +97,8 @@ void CUrd::Tick(_float fTimeDelta)
 	if (KEY_DOWN(eKeyCode::O))
 	{
 		//Change_State((_uint)UrdState::State_Skill1);
-		Change_State((_uint)UrdState::State_Skill3);
-		//Change_State((_uint)UrdState::State_Ultimate);
+		//Change_State((_uint)UrdState::State_Skill3);
+		Change_State((_uint)UrdState::State_Ultimate);
 		//Change_State((_uint)UrdState::State_TripleStab);
 		//Change_State((_uint)UrdState::State_Stunned_Start);
 		//Change_State((_uint)UrdState::State_DefaultAttack);
@@ -136,7 +136,7 @@ void CUrd::Tick(_float fTimeDelta)
 		if (false == m_bDissolve)
 		{
 			Set_Active(false);
-			OnDeath();
+			m_Weapons[SWORD]->Set_Active(false);
 		}
 	}
 
@@ -276,7 +276,7 @@ void CUrd::Bind_KeyFrameEffects()
 	m_pModel->Bind_Func("Effect_Slash_Horizontal", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Slash_Horizontal", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Slash_Vertical", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Slash_Vertical", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Strong_Stab", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Strong_Stab", &m_tEffectSpawnDesc));
-	m_pModel->Bind_Func("Effect_Strong_Stab_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Strong_Stab_Particle", &m_tEffectSpawnDesc));
+	m_pModel->Bind_Func("Effect_Strong_Stab_Particle", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Strong_Stab_Particle", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Pierce_Start", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Pierce_Start", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_Pierce", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_Pierce", &m_tEffectSpawnDesc));
 	m_pModel->Bind_Func("Effect_DefaultAttack1", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Urd_DefaultAttack_Particle1", &m_tEffectSpawnDesc));
@@ -286,17 +286,17 @@ void CUrd::Bind_KeyFrameEffects()
 
 void CUrd::Bind_KeyFrameSounds()
 {
-	m_pModel->Bind_Func("Sound_SkillStart", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_SkillStart", false, 0.6f));
+	m_pModel->Bind_Func("Sound_SkillStart", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_SkillStart", false, 1.f));
 	m_pModel->Bind_Func("Sound_Voice_Skill1_2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_Skill1_2", false, 1.f));
 	m_pModel->Bind_Func("Sound_Voice_Skill3", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_Skill3", false, 1.f));
 	m_pModel->Bind_Func("Sound_Voice_Cutscene1", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_CutScene1", false, 1.f));
 	m_pModel->Bind_Func("Sound_Voice_Cutscene2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_CutScene2", false, 1.f));
 	m_pModel->Bind_Func("Sound_Voice_Attack2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Voice_Attack2", false, 1.f));
-	m_pModel->Bind_Func("Sound_Urd_Attack6", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack6", false, 0.8f));
-	m_pModel->Bind_Func("Sound_Urd_Attack7", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack7", false, 0.8f));
-	m_pModel->Bind_Func("Sound_Urd_Attack2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack2", false, 0.8f));
-	m_pModel->Bind_Func("Sound_Urd_FootStep", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Urd_FootStep", 1, 2, false, 0.5f));
-	m_pModel->Bind_Func("Sound_Voice_ExtraAttack", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Urd_Voice_ExtraAttack", 1, 2, false, 0.8f));
+	m_pModel->Bind_Func("Sound_Urd_Attack6", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack6", false, 1.f));
+	m_pModel->Bind_Func("Sound_Urd_Attack7", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack7", false, 1.f));
+	m_pModel->Bind_Func("Sound_Urd_Attack2", bind(&CGameInstance::Play, m_pGameInstance, L"Urd_Attack2", false, 1.f));
+	m_pModel->Bind_Func("Sound_Urd_FootStep", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Urd_FootStep", 1, 2, false, 1.f));
+	m_pModel->Bind_Func("Sound_Voice_ExtraAttack", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Urd_Voice_ExtraAttack", 1, 2, false, 1.f));
 
 }
 
@@ -426,7 +426,6 @@ void CUrd::Active_Phase2()
 {
 	m_bPhase2 = true;
 	m_pStats->Increase_Hp(m_pStats->Get_MaxHp());
-	m_Weapons[SWORD]->Set_Active_Trail(true);
 	Set_Active_Colliders(true);
 }
 
@@ -596,7 +595,7 @@ HRESULT CUrd::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"¿ì¸£µå";
-	EnemyDesc.iMaxHp = 50;
+	EnemyDesc.iMaxHp = 300;
 	EnemyDesc.bIsBoss = true;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);

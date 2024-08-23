@@ -49,6 +49,7 @@ void CUrdState_StrongStab::OnState_End()
 void CUrdState_StrongStab::Init_AttackDesc()
 {
 	ATTACKDESC AttackDesc{};
+	AttackDesc.pAttacker = m_pUrd;
 	AttackDesc.eEnemyAttackType = KNOCKBACK;
 	AttackDesc.iDamage = 123;
 	AttackDesc.strShakingTag = "Shaking_Big_Hit";

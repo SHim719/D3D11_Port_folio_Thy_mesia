@@ -27,8 +27,8 @@ void CPlayerState_Execution_Default::OnState_Start(void* pArg)
 	m_pExecutionEnemy->Set_Active_Colliders(false);
 	m_pOwnerTransform->LookAt2D(m_pExecutionEnemy->Get_Transform()->Get_Position());
 
-
 	RADIALBLUR_DESCS RadialDescs{};
+	RadialDescs.pActor = m_pPlayer;
 	RadialDescs.fBlurRadius = 10.f;
 	RadialDescs.fBlurStrength = 1.f;
 
@@ -70,7 +70,7 @@ void CPlayerState_Execution_Default::Late_Update(_float fTimeDelta)
 
 void CPlayerState_Execution_Default::OnState_End()
 {
-	m_pGameInstance->Inactive_RadialBlur(0.5f);
+	m_pGameInstance->Inactive_RadialBlur(m_pPlayer->Get_ActorID(), 0.5f);
 	m_pPlayer->Set_Invincible(false);
 	m_iExecutionCount = 0;
 }

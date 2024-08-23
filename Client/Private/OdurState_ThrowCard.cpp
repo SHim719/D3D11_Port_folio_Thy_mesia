@@ -42,8 +42,8 @@ void COdurState_ThrowCard::OnState_Start(void* pArg)
 
 	m_iCurAnimIdx = 0;
 
-	//m_iThrowState = m_iThrowCount == (m_iMaxThrowCount - 1) ? 1 : 0;
-	m_iThrowState = 1;
+	m_iThrowState = m_iThrowCount == (m_iMaxThrowCount - 1) ? 1 : 0;
+	//m_iThrowState = 1;
 	m_iThrowCount = (m_iThrowCount + 1) % m_iMaxThrowCount;
 
 	m_pModel->Change_Animation(m_AnimPlaylists[m_iThrowState][m_iCurAnimIdx++]);

@@ -32,9 +32,6 @@ HRESULT CUI_PW::Initialize(void* pArg)
 	m_pPlayerStats = GET_PLAYER->Get_PlayerStats();
 	Safe_AddRef(m_pPlayerStats);
 
-	m_bSkillActived[CLAW_SHORT] = true;
-	m_bSkillActived[CLAW_LONG] = true;
-
 	return S_OK;
 }
 
@@ -44,26 +41,32 @@ void CUI_PW::Tick(_float fTimeDelta)
 	if (KEY_DOWN(eKeyCode::Left))
 	{
 		m_eNowSelected = UI_PlagueWeapons((m_eNowSelected + WEAPON_END - 1) % WEAPON_END);
+		PLAY_SOUND(L"UI_Select", false, 1.f);
 	}
 	else if (KEY_DOWN(eKeyCode::Right))
 	{
 		m_eNowSelected = UI_PlagueWeapons((m_eNowSelected + 1) % WEAPON_END);
+		PLAY_SOUND(L"UI_Select", false, 1.f);
 	}
 	else if (KEY_DOWN(eKeyCode::Up))
 	{
-		m_eNowSelected = UI_PlagueWeapons((m_eNowSelected + WEAPON_END - 3) % WEAPON_END);
+		m_eNowSelected = UI_PlagueWeapons((m_eNowSelected + WEAPON_END - 2) % WEAPON_END);
+		PLAY_SOUND(L"UI_Select", false, 1.f);
 	}
 	else if (KEY_DOWN(eKeyCode::Down))
 	{
-		m_eNowSelected = UI_PlagueWeapons((m_eNowSelected + 3) % WEAPON_END);
+		m_eNowSelected = UI_PlagueWeapons((m_eNowSelected + 2) % WEAPON_END);
+		PLAY_SOUND(L"UI_Select", false, 1.f);
 	}
 	else if (KEY_DOWN(eKeyCode::Enter))
 	{
 		Change_UsingSkill();
+		PLAY_SOUND(L"UI_Menu_Select", false, 1.f);
 	}
 	else if (KEY_DOWN(eKeyCode::ESC))
 	{
 		Exit();
+		PLAY_SOUND(L"UI_Menu_Select", false, 1.f);
 	}
 
 }
@@ -172,33 +175,27 @@ HRESULT CUI_PW::Render_Selected()
 
 HRESULT CUI_PW::Render_UsingSkillIcon()
 {
+	if (nullptr == m_pUsingSkillTexture)
+		return S_OK;
+
 	m_pTransform->Set_Scale(m_vUsingIconScale);
 	m_fAlpha = 1.f;
 
 	if (FAILED(m_pShader->Set_RawValue("g_fAlpha", &m_fAlpha, sizeof(_float))))
 		return E_FAIL;
 
-	for (_uint i = 0; i < 2; ++i)
-	{
-		if (nullptr == m_pUsingSkillTextures[i])
-			continue;
+	m_pTransform->Set_Position(XMLoadFloat4(&m_vUsingIconPosition));
 
-		m_pTransform->Set_Position(XMLoadFloat4(&m_vUsingIconPositions[i]));
+	if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
+		return E_FAIL;
 
-		if (FAILED(m_pShader->Set_RawValue("g_WorldMatrix", &m_pTransform->Get_WorldFloat4x4_TP(), sizeof(_float4x4))))
-			return E_FAIL;
+	if (FAILED(m_pUsingSkillTexture->Set_SRV(m_pShader, "g_DiffuseTexture", 0)))
+		return E_FAIL;
 
-		if (FAILED(m_pUsingSkillTextures[i]->Set_SRV(m_pShader, "g_DiffuseTexture", 0)))
-			return E_FAIL;
+	if (FAILED(m_pShader->Begin(3)))
+		return E_FAIL;
 
-		if (FAILED(m_pShader->Begin(3)))
-			return E_FAIL;
-
-		if (FAILED(m_pVIBuffer->Render()))
-			return E_FAIL;
-	}
-
-	return S_OK;
+	return m_pVIBuffer->Render();
 }
 
 void CUI_PW::Exit()
@@ -231,12 +228,6 @@ wstring CUI_PW::Get_SkillIconTag()
 	case UI_PlagueWeapons::TWIN:
 		wstrTag = L"Prototype_Texture_SkillIcon_TwinBlade";
 		break;
-	case UI_PlagueWeapons::CLAW_LONG:
-		wstrTag = L"Prototype_Texture_SkillIcon_Claw_Long";
-		break;
-	case UI_PlagueWeapons::CLAW_SHORT:
-		wstrTag = L"Prototype_Texture_SkillIcon_Claw_Short";
-		break;
 	}
 
 	return wstrTag;
@@ -244,7 +235,7 @@ wstring CUI_PW::Get_SkillIconTag()
 
 SKILLTYPE CUI_PW::Get_SelectedToSkillType()
 {
-	SKILLTYPE eType;
+	SKILLTYPE eType = SKILLTYPE::AXE;
 
 	switch (m_eNowSelected)
 	{
@@ -281,8 +272,6 @@ HRESULT CUI_PW::Ready_Component()
 
 	if (FAILED(__super::Add_Component(LEVEL_STATIC, TEXT("Prototype_Texture_Slot_Selected"), TEXT("Selected_Texture"), (CComponent**)&m_pSelectedTexture)))
 		return E_FAIL;
-	
-	m_pUsingSkillTextures[1] = static_cast<CTexture*>(m_pGameInstance->Clone_Component(LEVEL_STATIC, L"Prototype_Texture_SkillIcon_Claw_Long"));
 
 	return S_OK;
 }
@@ -301,15 +290,12 @@ void CUI_PW::Init_UIMatrices()
 
 void CUI_PW::Init_UIPos()
 {
-	XMStoreFloat4(&m_vIconPositions[AXE], Convert_ScreenToRenderPos(XMVectorSet(317.f, 178.f, 1.f, 1.f)));
-	XMStoreFloat4(&m_vIconPositions[HAMMER], Convert_ScreenToRenderPos(XMVectorSet(460.f, 178.f, 1.f, 1.f)));
-	XMStoreFloat4(&m_vIconPositions[CLAW_LONG], Convert_ScreenToRenderPos(XMVectorSet(783.f, 188.f, 1.f, 1.f)));
-	XMStoreFloat4(&m_vIconPositions[SPEAR], Convert_ScreenToRenderPos(XMVectorSet(317.f, 385.f, 1.f, 1.f))); 
-	XMStoreFloat4(&m_vIconPositions[TWIN], Convert_ScreenToRenderPos(XMVectorSet(460.f, 385.f, 1.f, 1.f))); 
-	XMStoreFloat4(&m_vIconPositions[CLAW_SHORT], Convert_ScreenToRenderPos(XMVectorSet(783.f, 356.f, 1.f, 1.f)));
+	XMStoreFloat4(&m_vIconPositions[AXE], Convert_ScreenToRenderPos(XMVectorSet(437.f, 202.f, 1.f, 1.f)));
+	XMStoreFloat4(&m_vIconPositions[HAMMER], Convert_ScreenToRenderPos(XMVectorSet(734.f, 204.f, 1.f, 1.f)));
+	XMStoreFloat4(&m_vIconPositions[SPEAR], Convert_ScreenToRenderPos(XMVectorSet(445.f, 388.f, 1.f, 1.f))); 
+	XMStoreFloat4(&m_vIconPositions[TWIN], Convert_ScreenToRenderPos(XMVectorSet(735.f, 386.f, 1.f, 1.f))); 
 
-	XMStoreFloat4(&m_vUsingIconPositions[0], Convert_ScreenToRenderPos(XMVectorSet(386.f, 576.f, 1.f, 1.f)));
-	XMStoreFloat4(&m_vUsingIconPositions[1], Convert_ScreenToRenderPos(XMVectorSet(785.f, 570.f, 1.f, 1.f)));
+	XMStoreFloat4(&m_vUsingIconPosition, Convert_ScreenToRenderPos(XMVectorSet(601.f, 575.f, 1.f, 1.f)));
 	
 }
 
@@ -323,19 +309,11 @@ void CUI_PW::Update_SkillActived()
 
 void CUI_PW::Change_UsingSkill()
 {
-	if (m_eNowSelected == CLAW_SHORT || m_eNowSelected == CLAW_LONG)
+	if (m_pPlayerStats->Is_SkillActived(Get_SelectedToSkillType()))
 	{
-		Safe_Release(m_pUsingSkillTextures[1]);
+		Safe_Release(m_pUsingSkillTexture);
 
-		m_pUsingSkillTextures[1] = static_cast<CTexture*>(m_pGameInstance->Clone_Component(LEVEL_STATIC, Get_SkillIconTag()));
-
-		m_pPlayerStats->Set_UseShortClaw(m_eNowSelected == CLAW_SHORT);
-	}
-	else if (m_pPlayerStats->Is_SkillActived(Get_SelectedToSkillType()))
-	{
-		Safe_Release(m_pUsingSkillTextures[0]);
-
-		m_pUsingSkillTextures[0] = static_cast<CTexture*>(m_pGameInstance->Clone_Component(LEVEL_STATIC, Get_SkillIconTag()));
+		m_pUsingSkillTexture = static_cast<CTexture*>(m_pGameInstance->Clone_Component(LEVEL_STATIC, Get_SkillIconTag()));
 
 		m_pPlayerStats->Update_UsingSkill(Get_SelectedToSkillType());
 	}
@@ -375,8 +353,7 @@ void CUI_PW::Free()
 
 	Safe_Release(m_pPlayerStats);
 
-	Safe_Release(m_pUsingSkillTextures[0]);
-	Safe_Release(m_pUsingSkillTextures[1]);
+	Safe_Release(m_pUsingSkillTexture);
 	Safe_Release(m_pInactiveCoverTexture);
 	Safe_Release(m_pSelectedTexture);
 }

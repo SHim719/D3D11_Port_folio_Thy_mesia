@@ -73,10 +73,7 @@ void CCharacter::OnDeath()
 {
 }
 
-_vector CCharacter::Get_Center() const
-{
-	return _vector();
-}
+
 
 void CCharacter::Tick_Weapons(_float fTimeDelta)
 {
@@ -106,6 +103,14 @@ void CCharacter::Update_AttackDesc()
 void CCharacter::Set_Active_Weapon(_uint iWeaponIdx, _bool bActive)
 {
 	m_Weapons[iWeaponIdx]->Set_Active(bActive);
+}
+
+void CCharacter::Set_Active_AllWeapon_Colliders(_bool bActive)
+{
+	for (auto& pWeapon : m_Weapons)
+	{
+		pWeapon->Set_Active_Collider(false);
+	}
 }
 
 void CCharacter::Compute_YPos()

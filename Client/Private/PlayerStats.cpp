@@ -7,6 +7,19 @@ CPlayerStats::CPlayerStats()
 {
 }
 
+void CPlayerStats::Update_CoolDown(_float fTimeDelta)
+{
+	if (m_fSkillCoolTimeAcc < 0.f)
+		return;
+
+	m_fSkillCoolTimeAcc += fTimeDelta;
+	_float fCoolTimeRatio = min(m_fSkillCoolTimeAcc / m_fSkillCoolTime, 1.f);
+	m_pPlayerUI->Set_CoolDownRatio(fCoolTimeRatio);
+
+	if (m_fSkillCoolTimeAcc >= m_fSkillCoolTime)
+		m_fSkillCoolTimeAcc = -1.f;
+}
+
 
 void CPlayerStats::Active_Skill(SKILLTYPE eSkill)
 {
@@ -60,14 +73,20 @@ void CPlayerStats::Increase_SoulCount(_int iSoul)
 {
 	m_iSoulCount += iSoul;
 	if (iSoul > 0)
-		m_pPlayerUI->Update_SoulBar(m_iSoulCount);
+		m_pPlayerUI->Update_SoulBar(m_iSoulCount, false);
+}
+
+void CPlayerStats::Set_SoulCount(_int iSoulCount)
+{
+	m_iSoulCount = iSoulCount;
+	m_pPlayerUI->Update_SoulBar(m_iSoulCount, true);
 }
 
 ATTACKDESC CPlayerStats::Get_NormalAttackDesc() const
 {
 	ATTACKDESC AttackDesc;
 	AttackDesc.ePlayerAttackType = ATTACK_NORMAL;
-	AttackDesc.iDamage = m_iStrength * 2;
+	AttackDesc.iDamage = _int((_float)m_iStrength * 1.5);
 	AttackDesc.iPlagueDamage = m_iPlague >> 2;
 	return AttackDesc;
 }
@@ -77,7 +96,7 @@ ATTACKDESC CPlayerStats::Get_PlagueAttackDesc() const
 	ATTACKDESC AttackDesc;
 	AttackDesc.ePlayerAttackType = ATTACK_NORMAL;
 	AttackDesc.iDamage = m_iPlague >> 2;
-	AttackDesc.iPlagueDamage = m_bShortClaw ? m_iPlague * 2 - m_iPlague / 2 : m_iPlague * 3;
+	AttackDesc.iPlagueDamage = _int(m_iPlague * 4.f);
 
 	return AttackDesc;
 }
@@ -89,7 +108,7 @@ ATTACKDESC CPlayerStats::Get_SkillAttackDesc(SKILLTYPE eSkillType) const
 	switch (eSkillType)
 	{
 	case AXE:
-		AttackDesc.ePlayerAttackType = ATTACK_NORMAL;
+		AttackDesc.ePlayerAttackType = NO_PARRY;
 		AttackDesc.iDamage = m_iStrength * 3;
 		AttackDesc.iPlagueDamage = AttackDesc.iDamage;
 		break;
@@ -100,12 +119,12 @@ ATTACKDESC CPlayerStats::Get_SkillAttackDesc(SKILLTYPE eSkillType) const
 		break;
 	case SPEAR:
 		AttackDesc.ePlayerAttackType = IGNORE_STANCE;
-		AttackDesc.iDamage = _int(m_iStrength * 3);
+		AttackDesc.iDamage = _int(m_iStrength * 4);
 		AttackDesc.iPlagueDamage = AttackDesc.iDamage;
 		break;
 	case TWINBLADE:
-		AttackDesc.ePlayerAttackType = ATTACK_NORMAL;
-		AttackDesc.iDamage = _int(m_iStrength * 1.5f);
+		AttackDesc.ePlayerAttackType = NO_PARRY;
+		AttackDesc.iDamage = m_iStrength * 2;
 		AttackDesc.iPlagueDamage = AttackDesc.iDamage;
 		break;
 	}

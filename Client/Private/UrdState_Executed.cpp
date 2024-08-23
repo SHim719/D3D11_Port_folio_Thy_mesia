@@ -29,6 +29,7 @@ void CUrdState_Executed::OnState_Start(void* pArg)
 	Safe_AddRef(m_AttachDesc.pAttachBone);
 	Safe_AddRef(m_AttachDesc.pParentTransform);
 
+	m_pUrd->Set_Adjust_NaviY(true);
 	m_pUrd->Set_LookTarget(false);
 	m_pUrd->Set_Active_Colliders(false);
 	m_pUrd->InActive_StunnedMark();
@@ -40,7 +41,7 @@ void CUrdState_Executed::OnState_Start(void* pArg)
 	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pOwnerTransform->Add_YAxisInput(XM_PI);
 
-	PLAY_SOUND(L"Urd_Cutscene_Execution", false, 0.5f);
+	PLAY_SOUND(L"Urd_Cutscene_Execution", false, 1.f);
 
 	m_pModel->Change_Animation(Urd_VS_TakeExecution, 0.f, false);
 
@@ -95,6 +96,8 @@ void CUrdState_Executed::Die()
 
 	m_pUrd->Active_Dissolve();
 	PLAY_SOUND(L"Urd_Dead", false, 1.f);
+
+	Get_Inst(CBossMusic_Player)->Finish_BGM();
 }
 
 

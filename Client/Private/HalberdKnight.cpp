@@ -27,6 +27,8 @@ HRESULT CHalberdKnight::Initialize_Prototype()
 	m_iStunnedStateIdx = (_uint)HalberdKnight_State::State_Stunned_Loop;
 	m_iStunnedStartStateIdx = (_uint)HalberdKnight_State::State_Stunned_Start;
 
+	m_iSoulCount = 125;
+
 	return S_OK;
 }
 
@@ -79,6 +81,8 @@ void CHalberdKnight::Bind_KeyFrames()
 	m_pModel->Bind_Func("Update_AttackDesc", bind(&CCharacter::Update_AttackDesc, this));
 	m_pModel->Bind_Func("ChangeToNextAttackAnim", bind(&CHalberdKnight::Change_To_NextComboAnim, this));
 	m_pModel->Bind_Func("Active_Dissolve", bind(&CGameObject::Active_Dissolve, this));
+
+	m_pModel->Bind_Func("Effect_Execution_Blood", bind(&CEffect_Manager::Active_Effect, EFFECTMGR, "Effect_Blood_Execution_Halberd", &m_tEffectSpawnDesc));
 
 	m_pModel->Bind_Func("Sound_AttackVoice", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Halberds_Voice", 1, 5, false, 0.6f));
 	m_pModel->Bind_Func("Sound_Whoosh", bind(&CGameInstance::Play_RandomSound, m_pGameInstance, L"Spear_Whoosh", 1, 2, false, 0.5f));
@@ -200,7 +204,7 @@ HRESULT CHalberdKnight::Ready_Stats()
 {
 	ENEMYDESC EnemyDesc;
 	EnemyDesc.wstrEnemyName = L"할버드기사";
-	EnemyDesc.iMaxHp = 100;
+	EnemyDesc.iMaxHp = 90;
 
 	m_pStats = CEnemyStats::Create(EnemyDesc);
 

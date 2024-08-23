@@ -18,7 +18,6 @@ void CUrdState_Skill1::OnState_Start(void* pArg)
 	m_pOwnerTransform->LookAt2D(m_pTargetTransform->Get_Position());
 	m_pUrd->Set_LookTarget(false);
 	m_pUrd->Set_Stanced(true);
-	m_pUrd->Set_Adjust_NaviY(false);
 
 	m_pUrd->Active_UrdWeapon();
 	m_pModel->Change_Animation(Urd_Skill01);

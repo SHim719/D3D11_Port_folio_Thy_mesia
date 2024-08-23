@@ -19,6 +19,8 @@ void CJokerState_StrongAttack::OnState_Start(void* pArg)
 	m_pJoker->Set_LookTarget(true);
 	m_pJoker->Update_AttackDesc();
 
+	PLAY_SOUND(L"Joker_Vocal_StrongAttack", false, 1.f);
+	
 	m_pModel->Change_Animation(Joker_StrongAttack);
 }
 

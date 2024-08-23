@@ -124,6 +124,8 @@ HRESULT CUI_Popup::OnEnter_Layer(void* pArg)
 	m_fLerpRate = 1.f;
 	m_fTimeAcc = 0.f;
 
+	PLAY_SOUND(L"Popup", false, 1.f);
+	
 	return S_OK;
 }
 

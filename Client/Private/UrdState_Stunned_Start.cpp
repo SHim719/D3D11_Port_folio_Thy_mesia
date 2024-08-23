@@ -29,6 +29,8 @@ void CUrdState_Stunned_Start::OnState_Start(void* pArg)
 
 	m_pUrd->Active_RimLight(RimDesc);
 	m_pUrd->Set_NowWeapon_Disappear();
+	m_pUrd->Set_Adjust_NaviY(true);
+	m_pUrd->Set_Active_AllWeapon_Colliders(false);
 
 	m_pGameInstance->Set_TimeScaleWithRealTime(0.4f, 1.f);
 

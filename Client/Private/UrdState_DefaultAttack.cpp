@@ -27,7 +27,7 @@ void CUrdState_DefaultAttack::OnState_Start(void* pArg)
 
 	m_pModel->Change_Animation(Urd_Attack05);
 
-	PLAY_SOUND(L"Urd_DefaultAttack", false, 0.3f);
+	PLAY_SOUND(L"Urd_DefaultAttack", false, 1.f);
 }
 
 void CUrdState_DefaultAttack::Update(_float fTimeDelta)
@@ -45,12 +45,14 @@ void CUrdState_DefaultAttack::Late_Update(_float fTimeDelta)
 
 void CUrdState_DefaultAttack::OnState_End()
 {
-
+	if (m_pGameInstance->Is_Playing(L"Urd_DefaultAttack"))
+		m_pGameInstance->Stop(L"Urd_DefaultAttack");
 }
 
 void CUrdState_DefaultAttack::Init_AttackDesc()
 {
 	ATTACKDESC AttackDesc{};
+	AttackDesc.pAttacker = m_pUrd;
 	AttackDesc.eEnemyAttackType = NORMAL;
 	AttackDesc.iDamage = 73;
 

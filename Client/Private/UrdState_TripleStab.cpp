@@ -30,7 +30,7 @@ void CUrdState_TripleStab::OnState_Start(void* pArg)
 	if ((_uint)UrdState::State_Parry == m_pUrd->Get_PrevState())
 	{
 		m_pModel->Change_AnimationWithStartFrame(Urd_Attack01LV2, 18, 0.05f, true);
-		PLAY_SOUND(L"Urd_Attack1", false, 0.8f);
+		PLAY_SOUND(L"Urd_Attack1", false, 1.f);
 		return;
 	}
 	else
@@ -38,9 +38,9 @@ void CUrdState_TripleStab::OnState_Start(void* pArg)
 
 
 	if (m_pUrd->Is_Phase2())
-		PLAY_SOUND(L"Urd_Attack1_P2", false, 0.8f);
+		PLAY_SOUND(L"Urd_Attack1_P2", false, 1.f);
 	else
-		PLAY_SOUND(L"Urd_Attack1", false, 0.8f);
+		PLAY_SOUND(L"Urd_Attack1", false, 1.f);
 }
 
 void CUrdState_TripleStab::Update(_float fTimeDelta)
@@ -58,7 +58,16 @@ void CUrdState_TripleStab::Late_Update(_float fTimeDelta)
 
 void CUrdState_TripleStab::OnState_End()
 {
+	if (m_pGameInstance->Is_Playing(L"Urd_Attack1"))
+	{
+		m_pGameInstance->Stop(L"Urd_Attack1");
+		return;
+	}
+		
+	if (m_pGameInstance->Is_Playing(L"Urd_Attack1_P2"))
+		m_pGameInstance->Stop(L"Urd_Attack1_P2");
 
+	
 }
 
 void CUrdState_TripleStab::Init_AttackDesc()

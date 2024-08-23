@@ -55,12 +55,12 @@ private:
 	_bool					m_bCanLevelUp = { false };
 	_bool					m_bCanLevelDown = { false };
 private:
-	CTexture*		m_pNumberTexture = { nullptr };
-	CTexture*		m_pHighlightedTexture = { nullptr };
-	CTexture*		m_pStatArrowsTexture = { nullptr };
+	CTexture*				m_pNumberTexture = { nullptr };
+	CTexture*				m_pHighlightedTexture = { nullptr };
+	CTexture*				m_pStatArrowsTexture = { nullptr };
 
-	CTexture*		m_pArrowRightTexture = { nullptr };
-	CTexture*		m_pArrowLeftTexture = { nullptr };
+	CTexture*				m_pArrowRightTexture = { nullptr };
+	CTexture*				m_pArrowLeftTexture = { nullptr };
 
 private:
 	HRESULT Ready_Component();

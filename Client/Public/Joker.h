@@ -20,6 +20,8 @@ private:
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
 
+	void OnDeath()						override;
+	
 	void Bind_KeyFrames()				override;
 	void Bind_KeyFrameSounds()			override;
 

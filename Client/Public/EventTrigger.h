@@ -7,7 +7,7 @@ BEGIN(Client)
 class CEventTrigger final : public CGameObject
 {
 private:
-	enum TRIGGEREVENTS { START_ODUR_CUTSCENE, START_URD_CUTSCENE, EVENT_END };
+	enum TRIGGEREVENTS { START_ODUR_CUTSCENE, START_URD_CUTSCENE, CHANGE_FOOTSTEP_SOUND, EVENT_END };
 
 private:
 	CEventTrigger(ID3D11Device* pDevice, ID3D11DeviceContext* pContext);

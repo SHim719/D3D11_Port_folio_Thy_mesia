@@ -12,6 +12,7 @@ HRESULT CPlayerState_PW_Hammer::Initialize(void* pArg)
 		return E_FAIL;
 
 	m_pModel->Bind_Func("Shaking_PW_Hammer", bind(&CMain_Camera::Play_CameraShake, m_pMain_Camera, "Shaking_PW_Hammer"));
+	m_pModel->Bind_Func("Sound_PW_Hammer_Impact", bind(&CGameInstance::Play, m_pGameInstance, L"PW_Hammer_Impact", false, 0.8f));
 
 	m_PossibleStates = { PlayerState::State_Attack, PlayerState::State_ChargeStart, PlayerState::State_Avoid, PlayerState::State_Parry
 	, PlayerState::State_Healing };
@@ -31,7 +32,6 @@ void CPlayerState_PW_Hammer::OnState_Start(void* pArg)
 	m_pPlayer->Set_Active_Weapon(CPlayer::PW_HAMMER, true);
 	m_pPlayer->Set_Adjust_NaviY(false);
 	EFFECTMGR->Active_Effect("Effect_Corvus_PW_Hammer", &m_pPlayer->Get_EffectSpawnDesc());
-	PLAY_SOUND(L"PW_Active", false, 1.f);
 
 	Reset_AttackDesc();
 

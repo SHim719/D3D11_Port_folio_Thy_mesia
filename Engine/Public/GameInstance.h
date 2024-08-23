@@ -80,7 +80,7 @@ public:
 	void Add_UsingShader(class CShader* pShader);
 
 	void Active_RadialBlur(const RADIALBLUR_DESCS& Descs);
-	void Inactive_RadialBlur(_float fLerpTime);
+	void Inactive_RadialBlur(_uint iActorID, _float fLerpTime);
 	void Update_BlurCenterWorld(_vector vBlurCenterWorld);
 	_bool Is_Active_RadialBlur() const {
 		return m_pRenderer->Is_Active_RadialBlur();

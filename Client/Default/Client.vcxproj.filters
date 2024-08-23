@@ -871,6 +871,9 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Weapon">
       <UniqueIdentifier>{e8e0588c-d890-4239-b2da-2013dc1f5d0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. UI\InGameUI\08. UI_Message\UI_NeedKey">
+      <UniqueIdentifier>{82e6b312-4d85-4e17-be8e-0450e8beff45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -1638,6 +1641,9 @@
     <ClInclude Include="..\Public\BossMusic_Player.h">
       <Filter>97. Managers\03. BossMusic_Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\Public\UI_NeedKey.h">
+      <Filter>04. UI\InGameUI\08. UI_Message\UI_NeedKey</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -2326,6 +2332,9 @@
     </ClCompile>
     <ClCompile Include="..\Private\BossMusic_Player.cpp">
       <Filter>97. Managers\03. BossMusic_Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Private\UI_NeedKey.cpp">
+      <Filter>04. UI\InGameUI\08. UI_Message\UI_NeedKey</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -19,8 +19,13 @@ public:
 	void OnHit(const ATTACKDESC& AttackDesc)				override;
 
 private:
+	void Decide_State()		override;
+
+
+private:
 	_int	m_iHitCount = { 0 };
 	_int	m_iMaxHitCount = { 10 };
+
 
 public:
 	static CUrdState_Hit* Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg);

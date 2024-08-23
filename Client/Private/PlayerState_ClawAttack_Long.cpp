@@ -14,7 +14,7 @@ HRESULT CPlayerState_ClawAttack_Long::Initialize(void* pArg)
 		PlayerState::State_Avoid, PlayerState::State_Parry, PlayerState::State_ChargeStart, PlayerState::State_Healing };
 
 	m_pModel->Bind_Func("Shaking_Claw_Long", bind(&CMain_Camera::Play_CameraShake, m_pMain_Camera, "Shaking_Claw_Long"));
-	m_pModel->Bind_Func("Sound_ClawLong", bind(&CGameInstance::Play, m_pGameInstance, L"Corvus_ClawLong1", false, 0.8f));
+	m_pModel->Bind_Func("Sound_ClawLong", bind(&CGameInstance::Play, m_pGameInstance, L"Corvus_ClawLong1", false, 1.f));
 
 	return S_OK;
 }
@@ -36,11 +36,19 @@ void CPlayerState_ClawAttack_Long::OnState_Start(void* pArg)
 		m_pModel->Change_AnimationWithStartFrame(Corvus_Raven_ClawLong_L02, 18, 0.1f);
 
 	RADIALBLUR_DESCS RadialDescs{};
+	RadialDescs.pActor = m_pPlayer;
 	RadialDescs.fBlurRadius = 8.f;
 	RadialDescs.fBlurStrength = 1.5f;
 
 	m_pGameInstance->Active_RadialBlur(RadialDescs);
 	m_pGameInstance->Update_BlurCenterWorld(m_pPlayer->Get_Center());
+
+	CMain_Camera::DELTAFOVYDESC DeltaFovYDesc{};
+	DeltaFovYDesc.fReturnLerpTime = -1.f;
+	DeltaFovYDesc.fTargetFovY = 75.f;
+	DeltaFovYDesc.fTargetLerpTime = 0.2f;
+
+	m_pMain_Camera->Add_DeltaFovYDesc(DeltaFovYDesc);
 
 	++m_iAttackCnt;
 }
@@ -80,7 +88,8 @@ void CPlayerState_ClawAttack_Long::OnState_End()
 	m_pPlayer->Set_Active_DefaultWeapons(true);
 	m_pPlayer->Set_Active_Claws(false);
 
-	m_pGameInstance->Inactive_RadialBlur(0.5f);
+	m_pGameInstance->Inactive_RadialBlur(m_pPlayer->Get_ActorID(), 0.5f);
+	m_pMain_Camera->End_DeltaFov(1.f);
 
 	m_iAttackCnt = 0;
 }
@@ -109,16 +118,6 @@ void CPlayerState_ClawAttack_Long::Check_ExtraStateChange(PlayerState eState)
 		break;
 	}
 }
-
-void CPlayerState_ClawAttack_Long::Play_ClawLongSound()
-{
-	_int iRandNum = JoRandom::Random_Int(1, 2);
-	wstring wstrSoundtag = L"Corvus_ClawLong" + to_wstring(iRandNum);
-
-	PLAY_SOUND(wstrSoundtag, false, 0.8f);
-}
-
-
 CPlayerState_ClawAttack_Long* CPlayerState_ClawAttack_Long::Create(ID3D11Device* pDevice, ID3D11DeviceContext* pContext, void* pArg)
 {
 	CPlayerState_ClawAttack_Long* pInstance = new CPlayerState_ClawAttack_Long(pDevice, pContext);

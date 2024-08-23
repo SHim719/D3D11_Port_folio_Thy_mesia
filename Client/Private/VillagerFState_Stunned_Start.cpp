@@ -30,6 +30,8 @@ void CVillagerFState_Stunned_Start::OnState_Start(void* pArg)
 	RimDesc.fRimStrength = 3.f;
 	RimDesc.vRimColor = { 0.f, 1.f, 0.6f, 1.f };
 
+	m_pVillager_F->Set_Active_AllWeapon_Colliders(false);
+
 	PLAY_SOUND(L"Normal_KillChance", false, 1.f);
 
 	static_cast<CMain_Camera*>(GET_CAMERA)->Play_CameraShake("Shaking_Execution");
