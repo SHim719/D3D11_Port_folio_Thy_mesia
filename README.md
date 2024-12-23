@@ -14,6 +14,10 @@ https://www.youtube.com/watch?v=F7a7G8MvuqQ
 
 ## 프레임워크
 
+### 프로토타입 패턴
+- 로딩 레벨에서 미리 객체 원형을 만들어 두고 게임에 진입하는 시점에 Clone 함수를 이용하여 객체를 클론하는 방식으로 객체를 생성하였습니다.
+- 이러한 방식으로 정점 버퍼, 텍스처와 같은 비대한 데이터를 로드 단계에서 처리하고, 데이터를 얕은 복사하여 객체가 하나의 인스턴스를 참조하도록 구현함으로써 경량 패턴(FlyWeight)을 보다 쉽게 적용할 수 있었습니다.
+
 ### 이벤트 매니져
 
 - 함수 호출 시점에 의하여 발생하는 문제를 해결하기 위해 이벤트 매니저를 설계했습니다. 이를 통해 호출 시점으로 인한 문제들을 효과적으로 해결할 수 있었습니다.
@@ -111,13 +115,28 @@ https://www.youtube.com/watch?v=F7a7G8MvuqQ
 - 이펙트가 파티클인지 메쉬 이펙트인지 트레일 인지 구분하는 enum 변수를 저장해주고, 각 이펙트에 필요한 데이터들을 바이너리 화 시켜서 저장했습니다.
 - 인 게임에서 이펙트를 활성화할 때마다 객체를 생성하면 상당한 오버헤드가 발생했습니다. 이를 해결하기 위해 오브젝트 풀 패턴을 이용하여 게임 진입 시점에 이펙트 객체를 미리 생성해 두고, 활성화 시 기존에 생성해 둔 객체를 재사용하도록 했습니다.
 
+### 맵 툴
+<img src="https://github.com/SHim719/Image/blob/main/%EB%A7%B5%ED%88%B41.gif" alt="이미지" width="400"> <img src="https://github.com/SHim719/Image/blob/main/%EB%A7%B5%ED%88%B42.gif" alt="이미지" width="400">
+
+- 오브젝트를 배치하는 모습을 확인하며 개발하기 위해 맵 툴을 제작했습니다.
+- 배치된 메쉬의 모델 이름, 월드 행렬 등을 vector에 담아서 저장했습니다. 문, 체크포인트 의자 같은 기믹 오브젝트는 저장한 모델 이름으로 객체 원형이 있는지 탐색하고, 객체 원형이 있으면 그 객체를 클론합니다.
+- 원하는 오브젝트를 피킹할 때, 맵에 배치된 오브젝트 수만큼 레이 체킹을 수행하는 비용이 크다고 판단했습니다. 
+- 이를 해결하기 위해, 현재 vector에 저장된 인덱스를 기준으로 색깔 값을 결정하고, 다른 렌더 타겟에 해당 색깔 값을 기록한 후, 마우스 위치에서 색깔을 받아와 해당 색깔에 대응하는 인덱스를 역산하여 물체를 더 빠르게 피킹할 수 있도록 최적화했습니다.
+
+## 쉐이더
+
+### 디퍼드 렌더링
+<img src="https://github.com/SHim719/Image/blob/main/Diffuse.png" alt="이미지" width="250" height="250"> <img src="https://github.com/SHim719/Image/blob/main/Normal.png" alt="이미지" width="250" height="250"> <img src="https://github.com/SHim719/Image/blob/main/Depth.png" alt="이미지" width="250" height="250"> <img src="https://github.com/SHim719/Image/blob/main/Shade.png" alt="이미지" width="250" height="250"> <img src="https://github.com/SHim719/Image/blob/main/Deferred.png" alt="이미지" width="250" height="250">
+
+(차례로 Diffuse, Normal, Depth, Shade, Deferred)
 
 
+- 기존 물체 렌더링 방식인 포워드 렌더링 방식을 사용하면 모든 물체에 대해 조명 연산을 진행하기 때문에 다중 조명 연산에 있어서 계산량이 높습니다. 그래서 다중 조명 연산에 최적화 된 디퍼드 렌더링을 구현했습니다.
+- Diffuse, Normal, Depth 등의 정보를 G-버퍼에 저장하고, G-버퍼의 정보를 이용해 조명 연산을 해주었습니다. G-버퍼에 저장된 정보를 활용하여 후처리 효과를 보다 효율적으로 구현할 수 있었습니다.
 
+### 안개
 
+<img src="https://github.com/SHim719/Image/blob/main/%EC%95%88%EA%B0%9C.png" alt="이미지" width="500">
 
-
-
-
-
+- G-버퍼의 깊이 정보를 이용해 뷰 공간의 깊이를 구하고, 안개가 적용될 최소 거리, 최대 거리를 이용하여 안개가 지는 비율을 구하여 지수 안개 파라미터에 넣어서 fogFactor를 구하고, 원본 스크린 색상과 안개 색상을 fogFactor의 비율로 섞어주었습니다.
 
