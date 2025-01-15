@@ -2,7 +2,7 @@
   
 # 티메시아 모작(DirectX 11, 개인프로젝트)
 
-<img src="https://i.namu.wiki/i/4VDxvXKYKcyXqsQfhMk2fJGnk6ha388DZEOQ_RRWF62bmAnaAb5rFsKbfKQ8db47fc4ooCQpj4GXUIHUyozo2dyVheiR5DX5ZKWO1dCfBQVLhVgNUcqQ4l5Du9xgisyblmaz0cv3FUW9Qtv_Oq8ZhQ.webp" alt="이미지" width="400">
+<img src="https://i.namu.wiki/i/duY34msZlbpAy02b8wXvuQmopW_-TsQ8kvnfLzdI-n8akuZc5CeEMJcWiLnhP-XLcozSREZakrkPy5IC47YeMrFhWAWyv1PYxM81hkAkev8HoRSiC8eInJRxGqOsOSx6742F7xeDz0nBDH05Xq6nyA.webp" alt="이미지" width="400">
 
 2024.05.15 ~ 2025.08.23
 </div>
