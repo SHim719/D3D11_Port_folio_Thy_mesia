@@ -4,7 +4,7 @@
 
 <img src="https://i.namu.wiki/i/duY34msZlbpAy02b8wXvuQmopW_-TsQ8kvnfLzdI-n8akuZc5CeEMJcWiLnhP-XLcozSREZakrkPy5IC47YeMrFhWAWyv1PYxM81hkAkev8HoRSiC8eInJRxGqOsOSx6742F7xeDz0nBDH05Xq6nyA.webp" alt="이미지" width="400">
 
-2025.05.15 ~ 2025.08.23
+2024.05.15 ~ 2024.08.23
 </div>
 
 # 동영상
