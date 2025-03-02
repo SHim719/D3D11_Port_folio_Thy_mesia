@@ -2,7 +2,7 @@
   
 # 티메시아 모작(DirectX 11, 개인프로젝트)
 
-<img src="https://i.namu.wiki/i/duY34msZlbpAy02b8wXvuQmopW_-TsQ8kvnfLzdI-n8akuZc5CeEMJcWiLnhP-XLcozSREZakrkPy5IC47YeMrFhWAWyv1PYxM81hkAkev8HoRSiC8eInJRxGqOsOSx6742F7xeDz0nBDH05Xq6nyA.webp" alt="이미지" width="400">
+<img src="https://github.com/SHim719/Image/blob/main/%ED%8B%B0%EB%A9%94%EC%8B%9C%EC%95%84%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg" alt="이미지" width="400">
 
 2024.05.15 ~ 2024.08.23
 </div>
@@ -13,10 +13,6 @@ https://www.youtube.com/watch?v=F7a7G8MvuqQ
 # 프로젝트 설명
 
 ## 프레임워크
-
-### 프로토타입 패턴
-- 로딩 레벨에서 미리 객체 원형을 만들어 두고 게임에 진입하는 시점에 Clone 함수를 이용하여 객체를 클론하는 방식으로 객체를 생성하였습니다.
-- 이러한 방식으로 정점 버퍼, 텍스처와 같은 비대한 데이터를 로드 단계에서 처리하고, 데이터를 얕은 복사하여 객체가 하나의 인스턴스를 참조하도록 구현함으로써 메모리를 좀 더 효율적으로 사용할 수 있었습니다.
 
 ### 이벤트 매니져
 
