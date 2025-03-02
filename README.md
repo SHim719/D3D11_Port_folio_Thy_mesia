@@ -4,7 +4,6 @@
 
 <img src="https://github.com/SHim719/Image/blob/main/%ED%8B%B0%EB%A9%94%EC%8B%9C%EC%95%84%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg" alt="이미지" width="400">
 
-2024.05.15 ~ 2024.08.23
 </div>
 
 # 동영상
