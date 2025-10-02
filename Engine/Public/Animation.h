@@ -8,7 +8,7 @@ BEGIN(Engine)
 class ENGINE_DLL CAnimation final : public CBase
 {
 private:
-	typedef unordered_multimap<_int, class CKeyFrameEvent*>	ANIMEVENTS;
+	typedef vector<vector<class CKeyFrameEvent*>> ANIMEVENTS;
 
 private:
 	CAnimation();
@@ -38,11 +38,11 @@ private:
 
 	_float4						m_vInitialRootPos = {};
 private:
-	vector<_uint>									m_ChannelKeyFrames;
-	vector<_uint>									m_BoneIndices;
-	unordered_multimap<_int, class CKeyFrameEvent*>	m_KeyFrameEvents;
+	vector<_uint>									 m_ChannelKeyFrames;
+	vector<_uint>									 m_BoneIndices;
+	vector<vector<class CKeyFrameEvent*>>			 m_KeyFrameEvents;
 
-	_bool*											m_bCheckKeyFrames = { nullptr };
+	_bool*											 m_bCheckKeyFrames = { nullptr };
 public:
 	const string& Get_AnimName() { return m_strAnimName; }
 	void Set_BlendingTime(_float fTime) {

@@ -108,8 +108,8 @@ void CPlayer::Tick(_float fTimeDelta)
 		//UIMGR->Active_UI("UI_Popup", &eTypes);
 
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::HAMMER);
-		m_pStats->Update_PlunderSkill(SKILLTYPE::SPEAR);
-		//m_pStats->Update_PlunderSkill(SKILLTYPE::TWINBLADE);
+		//m_pStats->Update_PlunderSkill(SKILLTYPE::SPEAR);
+		m_pStats->Update_PlunderSkill(SKILLTYPE::TWINBLADE);
 		//m_pStats->Update_PlunderSkill(SKILLTYPE::AXE);
 	}
 
@@ -545,7 +545,8 @@ void CPlayer::OnCollisionExit(CGameObject* pOther)
 
 void CPlayer::ChangeToNextComboAnim()
 {
-	ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, m_pModel->Get_CurrentAnimIndex() + 1, 0.1f, true));
+	m_pModel->Change_Animation(m_pModel->Get_CurrentAnimIndex() + 1, 0.1f, true);
+	//ADD_EVENT(bind(&CModel::Change_Animation, m_pModel, m_pModel->Get_CurrentAnimIndex() + 1, 0.1f, true));
 }
 
 void CPlayer::Healing()

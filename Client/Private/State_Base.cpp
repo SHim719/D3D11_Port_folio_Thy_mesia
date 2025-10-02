@@ -65,9 +65,9 @@ void CState_Base::Reset_AttackDesc()
 
 void CState_Base::Setup_RootRotation()
 {
-	_vector vQuat = m_pModel->Get_NowRootQuat();
-
-	ADD_EVENT(bind(&CTransform::Turn_Quaternion, m_pOwnerTransform, vQuat, XMLoadFloat4x4(&m_OffsetMatrix))); // 마지막 회전상태를 가짐
+	//_vector vQuat = m_pModel->Get_NowRootQuat();
+	//
+	//ADD_EVENT(bind(&CTransform::Turn_Quaternion, m_pOwnerTransform, vQuat, XMLoadFloat4x4(&m_OffsetMatrix))); // 마지막 회전상태를 가짐
 
 }
 

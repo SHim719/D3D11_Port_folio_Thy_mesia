@@ -17,11 +17,10 @@ CAnimation::CAnimation(const CAnimation& rhs)
 	, m_fPlayTime(rhs.m_fPlayTime)
 	, m_strAnimName(rhs.m_strAnimName)
 	, m_BoneIndices(rhs.m_BoneIndices)
+	, m_ChannelKeyFrames(rhs.m_ChannelKeyFrames)
 {
 	for (auto& pChannel : m_Channels)
 		Safe_AddRef(pChannel);
-
-	m_ChannelKeyFrames.resize(rhs.m_ChannelKeyFrames.size(), 0);
 
 
 }
@@ -61,24 +60,28 @@ HRESULT CAnimation::Initialize_Prototype(ifstream& fin)
 		m_Channels.push_back(pChannel);
 	}
 
+	m_KeyFrameEvents.resize(Get_NumKeyFrames());
+
 	return S_OK;
 }
 
 HRESULT CAnimation::Initialize(const CModel::KEYFRAMEEVENTS& Events, const ANIMEVENTS& AnimEvents)
 {
-	for (auto& Pair : AnimEvents)
-		m_KeyFrameEvents.emplace(Pair);
-	
+	m_KeyFrameEvents = AnimEvents;
 
-	for (auto& Pair : m_KeyFrameEvents)
+	for (size_t i = 0; i < m_KeyFrameEvents.size(); ++i)
 	{
-		auto it = Events.find(Pair.second->Get_EventName());
-		if (Events.end() == it)
-			return E_FAIL;
-		
-		Pair.second = it->second;
-		Safe_AddRef(Pair.second);
+		for (CKeyFrameEvent*& KeyFrameEvent : m_KeyFrameEvents[i])
+		{
+			auto it = Events.find(KeyFrameEvent->Get_EventName());
+			if (Events.end() == it)
+				return E_FAIL;
+
+			KeyFrameEvent = it->second;
+			Safe_AddRef(KeyFrameEvent);
+		}
 	}
+	
 
 	m_bCheckKeyFrames = new _bool[Get_NumKeyFrames()];
 	if (nullptr == m_bCheckKeyFrames)
@@ -191,7 +194,7 @@ _matrix CAnimation::Get_RootTransformation()
 
 void CAnimation::Add_KeyFrameEvent(_int iKeyFrame, CKeyFrameEvent* pEvent)
 {
-	m_KeyFrameEvents.insert({ iKeyFrame, pEvent }); 
+	m_KeyFrameEvents[iKeyFrame].emplace_back(pEvent); 
 	Safe_AddRef(pEvent);
 }
 
@@ -200,19 +203,18 @@ void CAnimation::Check_KeyFrameEvent()
 	_int iNowKeyFrame = (_int)Get_NowKeyFrame();
 	_int iPrevKeyFrame = m_iPrevKeyFrame;
 
-	if (iNowKeyFrame < iPrevKeyFrame)
-		swap(iNowKeyFrame, iPrevKeyFrame);
-
-	for (_int i = iPrevKeyFrame; i <= iNowKeyFrame; ++i)
+	// KeyFrame이 한 프레임에 2 프레임이상 띄워질 경우를 대비한 처리
+	for (_int i = iPrevKeyFrame; i <= iNowKeyFrame; ++i) 
 	{
 		if (true == m_bCheckKeyFrames[i])
 			continue;
-		
-		auto Pair = m_KeyFrameEvents.equal_range(i);
-		if (m_KeyFrameEvents.end() != Pair.first)
+	
+		for (CKeyFrameEvent* KeyFrameEvent : m_KeyFrameEvents[i])
 		{
-			for (auto it = Pair.first; it != Pair.second; ++it)
-				it->second->Execute();
+			if (KeyFrameEvent)
+			{
+				KeyFrameEvent->Execute();
+			}
 		}
 
 		m_bCheckKeyFrames[i] = true;
@@ -254,8 +256,13 @@ void CAnimation::Free()
 
 	m_Channels.clear();
 
-	for (auto& Pair : m_KeyFrameEvents)
-		Safe_Release(Pair.second);
+	for (size_t i = 0; i < m_KeyFrameEvents.size(); ++i)
+	{
+		for (auto& pKeyFrameEvent : m_KeyFrameEvents[i])
+		{
+			Safe_Release(pKeyFrameEvent);
+		}
+	}
 
 	m_KeyFrameEvents.clear();
 

@@ -82,10 +82,17 @@ void CJoker::Tick(_float fTimeDelta)
 {
 	if (KEY_DOWN(eKeyCode::N))
 	{
-		Change_State((_uint)JokerState::State_ShockAttack);
+		Change_State((_uint)JokerState::State_TurnAttack_R);
 	}
 
 	__super::Tick(fTimeDelta);		
+}
+
+HRESULT CJoker::Render()
+{
+	CEnemy::Render();
+
+	return S_OK;
 }
 
 void CJoker::OnDeath()

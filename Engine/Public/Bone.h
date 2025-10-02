@@ -56,8 +56,13 @@ public:
 		return m_LastKeyFrame;
 	}
 
-	void Reset_Position() {
-		XMStoreFloat4((_float4*)m_Transformation.m[3], XMVectorSetW(XMVectorZero(), 1.f));
+	void Clear() {
+		XMStoreFloat4x4(&m_Transformation, XMMatrixIdentity());
+	}
+
+	void Clear_Translation(){
+		_float4 NoTranslation = _float4(0.f, 0.f, 0.f, 1.f);
+		memcpy(&m_Transformation.m[3], &NoTranslation, sizeof(_float4));
 	}
 
 	void Set_RootBone() {

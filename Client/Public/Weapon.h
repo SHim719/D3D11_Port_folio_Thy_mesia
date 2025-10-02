@@ -37,8 +37,8 @@ protected:
 public:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
-	void Tick(_float fTimeDelta)		override;
-	void LateTick(_float fTimeDelta)	override;
+	void	Tick(_float fTimeDelta)		override;
+	void	LateTick(_float fTimeDelta)	override;
 	HRESULT Render()					override;
 
 protected:

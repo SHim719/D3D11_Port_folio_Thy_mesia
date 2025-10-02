@@ -84,10 +84,11 @@ void CVIBuffer_Particle::Update_Particle(const vector<VTXPARTICLE>& ParticleData
 
 	m_pContext->Map(m_pVBInstance, 0, D3D11_MAP_WRITE_DISCARD, 0, &SubResource);
 
-	for (size_t i = 0; i < ParticleDatas.size(); ++i)
-	{
-		memcpy(&static_cast<VTXPARTICLE*>(SubResource.pData)[i], &ParticleDatas[i], sizeof(VTXPARTICLE));
-	}
+	memcpy(SubResource.pData, ParticleDatas.data(), sizeof(VTXPARTICLE) * ParticleDatas.size());
+	//for (size_t i = 0; i < ParticleDatas.size(); ++i)
+	//{
+	//	
+	//}
 
 	m_pContext->Unmap(m_pVBInstance, 0);
 

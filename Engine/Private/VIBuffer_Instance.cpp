@@ -62,6 +62,5 @@ void CVIBuffer_Instance::Free()
 	__super::Free();
 
 	Safe_Release(m_pVBInstance);
-
 	Safe_Release(m_pGameInstance);
 }

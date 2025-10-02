@@ -760,9 +760,6 @@
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\01. Odur\State\12. OdurState_Stunned\Loop">
       <UniqueIdentifier>{98a9db6c-7244-4bd5-9323-0bd6f96c19af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObjects\06. LockOnCurve\07. LightObject">
-      <UniqueIdentifier>{f99a8523-4526-4cc0-9ab2-116535d5d151}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObjects\02. Character\02. Enemy\Enemies\Boss\02. Urd\Define">
       <UniqueIdentifier>{591d2660-a031-400c-aeaa-69bfddd46e04}</UniqueIdentifier>
     </Filter>
@@ -873,6 +870,9 @@
     </Filter>
     <Filter Include="04. UI\InGameUI\08. UI_Message\UI_NeedKey">
       <UniqueIdentifier>{82e6b312-4d85-4e17-be8e-0450e8beff45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObjects\07. LightObject">
+      <UniqueIdentifier>{f99a8523-4526-4cc0-9ab2-116535d5d151}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1519,7 +1519,7 @@
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Normal\Villager_F</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\LightObject.h">
-      <Filter>02. GameObjects\06. LockOnCurve\07. LightObject</Filter>
+      <Filter>02. GameObjects\07. LightObject</Filter>
     </ClInclude>
     <ClInclude Include="..\Public\JokerState_ShockAttack.h">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ShockAttack</Filter>
@@ -2217,7 +2217,7 @@
       <Filter>02. GameObjects\05. Effect\Effect_Hit</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\LightObject.cpp">
-      <Filter>02. GameObjects\06. LockOnCurve\07. LightObject</Filter>
+      <Filter>02. GameObjects\07. LightObject</Filter>
     </ClCompile>
     <ClCompile Include="..\Private\JokerState_ShockAttack.cpp">
       <Filter>02. GameObjects\02. Character\02. Enemy\Enemies\Elite\Joker\State\03. JokerState_Attack\JokerState_ShockAttack</Filter>

@@ -19,6 +19,7 @@ private:
 	HRESULT Initialize_Prototype()		override;
 	HRESULT Initialize(void* pArg)		override;
 	void Tick(_float fTimeDelta)		override;
+	HRESULT Render()					override;
 
 	void OnDeath()						override;
 	

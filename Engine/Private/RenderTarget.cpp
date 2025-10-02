@@ -44,6 +44,7 @@ HRESULT CRenderTarget::Initialize(void* pArg)
 
 	m_vClearColor = pRTDesc->vClearColor;
 
+
 	return S_OK;
 }
 

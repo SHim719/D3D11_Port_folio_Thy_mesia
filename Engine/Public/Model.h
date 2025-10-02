@@ -63,12 +63,15 @@ private:
 	_uint									m_iRootBoneIdx = { 0 };
 	_float4									m_vPrevRootPos = {};
 	_float4									m_vDeltaRootPos = {};
+	_float4									m_vPrevRootQuat = {};
+	_float4									m_vDeltaRootQuat = {};
 public:
 	const BONES& Get_Bones() { 
 		return m_Bones; }
 
 	_vector Get_DeltaRootPos() {
-		return Organize_RootPos(XMLoadFloat4(&m_vDeltaRootPos));
+		return XMLoadFloat4(&m_vDeltaRootPos);
+		//return Organize_RootPos(XMLoadFloat4(&m_vDeltaRootPos));
 	}
 
 	_vector Organize_RootPos(_fvector OriginRootPos) const {
@@ -76,7 +79,9 @@ public:
 	}
 
 	void Reset_PrevRootPos();
-	_vector Get_NowRootQuat() const;
+	_vector Get_DeltaRootQuat() const {
+		return XMLoadFloat4(&m_vDeltaRootQuat);
+	}
 	
 	void Set_RootBoneIdx(_uint iIdx) {
 		m_iRootBoneIdx = iIdx;

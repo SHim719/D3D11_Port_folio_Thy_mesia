@@ -27,7 +27,7 @@ private:
 	void Camera_Window() override;
 
 	HRESULT Open_MeshesByFolder();
-	wstring Get_FolderPath(const _tchar* szInitialPath = L"D:\\JaeookDX11Tool\\Resources\\");
+	wstring Get_FolderPath(const _tchar* szInitialPath = L"../../Resources/Maps/");
 
 	HRESULT Create_ObjectInLevel();
 	void Check_DestroyObjects();
@@ -122,6 +122,7 @@ private:
 
 	HRESULT Save_NaviData();
 	HRESULT Load_NaviData();
+	bool	Load_UnrealNaviData();
 
 	class CToolNaviCellPoint* Find_SamePoint(_fvector vPointPos);
 	void Get_MouseRayInfo(OUT _float4& _vRayStartPos, OUT _float4& _vRayDir);

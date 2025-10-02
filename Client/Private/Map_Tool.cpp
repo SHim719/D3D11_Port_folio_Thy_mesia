@@ -24,6 +24,11 @@ HRESULT CMap_Tool::Initialize(void* pArg)
 
     m_strPlacable_Objects[TRIGGEROBJ].emplace_back("EventTrigger");
 
+    if (FAILED(CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)))
+    {
+        return FALSE;
+    }
+
     return S_OK;
 }
 
@@ -146,7 +151,7 @@ void CMap_Tool::Camera_Window()
 
 HRESULT CMap_Tool::Open_MeshesByFolder()
 {
-    wstring wstrFolderPath = Get_FolderPath(L"D:\\JaeookDX11Tool\\Resources\\MapObjects\\");
+    wstring wstrFolderPath = Get_FolderPath(L"../../Resources/MapObjects/");
     if (L"" == wstrFolderPath)
         return E_FAIL;
 
@@ -193,10 +198,31 @@ HRESULT CMap_Tool::Open_MeshesByFolder()
 
 wstring CMap_Tool::Get_FolderPath(const _tchar* szInitialPath)
 {
-    ITEMIDLIST* pidlRoot = nullptr;
-    if (!SUCCEEDED(SHParseDisplayName(szInitialPath, NULL, &pidlRoot, 0, NULL))) {
-        pidlRoot = nullptr;
+    _tchar szFullPath[MAX_PATH] = { 0 };
+    if (0 == GetFullPathName(szInitialPath, MAX_PATH, szFullPath, nullptr))
+    {
+        return L"";
     }
+
+    if (!std::filesystem::exists(szFullPath))
+    {
+        // 폴더가 존재하지 않으면 여기서 막히게 됩니다.
+        // szFullPath 변수에 마우스를 올려 어떤 경로가 설정되었는지,
+        // 그리고 그 경로에 정말 폴더가 있는지 탐색기에서 직접 확인해보세요.
+        MessageBox(g_hWnd, szFullPath, L"Error: Folder does not exist!", MB_OK);
+        return L"";
+    }
+
+
+    ITEMIDLIST* pidlRoot = nullptr;
+    HRESULT hr = SHParseDisplayName(szFullPath, NULL, &pidlRoot, 0, NULL);
+    if (FAILED(hr)) {
+        // FAILED(hr)은 HRESULT 값이 실패를 나타내는 경우 true를 반환합니다.
+        // 오류 메시지를 출력하거나 다른 오류 처리를 할 수 있습니다.
+        //TRACE("SHParseDisplayName Failed! hr = %d\n", hr);
+        return false;
+    }
+    
 
     BROWSEINFO browseInfo;
     ZeroMemory(&browseInfo, sizeof(BROWSEINFO));
@@ -205,18 +231,24 @@ wstring CMap_Tool::Get_FolderPath(const _tchar* szInitialPath)
     browseInfo.pidlRoot = pidlRoot;
 
     LPITEMIDLIST pItemIdList = SHBrowseForFolder(&browseInfo);
-    if (0 != pItemIdList)
+    wstring strResultPath = L"";
+
+    if (pItemIdList != nullptr)
     {
-        _tchar szPath[MAX_PATH];
-        if (SHGetPathFromIDList(pItemIdList, szPath))
+        _tchar szSelectedPath[MAX_PATH];
+        if (SHGetPathFromIDList(pItemIdList, szSelectedPath))
         {
-            CoTaskMemFree(pItemIdList);
-            return wstring(szPath);
+            strResultPath = szSelectedPath;
         }
         CoTaskMemFree(pItemIdList);
     }
 
-    return L"";
+    if (pidlRoot != nullptr)
+    {
+        CoTaskMemFree(pidlRoot);
+    }
+
+    return strResultPath;
 }
 
 
@@ -270,7 +302,7 @@ void CMap_Tool::Menu_Bar()
             if (ImGui::MenuItem("Save Map"))
             {
                 if (SUCCEEDED(Save_Map()))
-                    MSG_BOX(L"맵 저장 승공");
+                    MSG_BOX(L"맵 저장 성공");
                 
             }
 
@@ -294,6 +326,12 @@ void CMap_Tool::Menu_Bar()
             if (ImGui::MenuItem("Open_NaviData"))
             {
                 if (S_OK == Load_NaviData())
+                    MSG_BOX(L"네비게이션 불러오기 성공");
+            }
+
+            if (ImGui::MenuItem("Open_UnrealNaviData"))
+            {
+                if (Load_UnrealNaviData())
                     MSG_BOX(L"네비게이션 불러오기 성공");
             }
 
@@ -640,7 +678,7 @@ void CMap_Tool::Ready_InstanceObj()
 
 HRESULT CMap_Tool::Save_Map()
 {
-    wstring wstrFolderPath = Get_FolderPath(L"D:\\JaeookDX11Tool\\Resources\\Maps\\");
+    wstring wstrFolderPath = Get_FolderPath();
     if (L"" == wstrFolderPath)
         return E_FAIL;
 
@@ -680,7 +718,7 @@ HRESULT CMap_Tool::Save_Map()
 
 HRESULT CMap_Tool::Load_Map()
 {
-    wstring wstrFolderPath = Get_FolderPath(L"D:\\JaeookDX11Tool\\Resources\\Maps\\");
+    wstring wstrFolderPath = Get_FolderPath();
     if (L"" == wstrFolderPath)
         return E_FAIL;
 
@@ -1020,6 +1058,96 @@ HRESULT CMap_Tool::Load_NaviData()
     return S_OK;
 }
 
+bool CMap_Tool::Load_UnrealNaviData()
+{
+    _tchar szFullPath[200000] = {};
+    OPENFILENAME ofn = {};
+
+    ofn.lStructSize = sizeof(OPENFILENAME);
+    ofn.hwndOwner = g_hWnd;
+    ofn.lpstrFile = szFullPath;
+    ofn.nMaxFile = sizeof(szFullPath);
+    ofn.lpstrFilter = L"*.dat";
+    ofn.lpstrInitialDir = L"D:\\JaeookDX11Tool\\Resources\\NaviData\\";
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (GetOpenFileName(&ofn))
+    {
+        ifstream fin(szFullPath, ios::binary);
+
+        if (!fin.is_open())
+            return false;
+
+        for (auto pPoint : m_CreatedCellPoints)
+            pPoint->Set_Destroy(true);
+        for (auto pCell : m_CreatedCells)
+            pCell->Set_Destroy(true);
+
+        m_CreatedCellPoints.clear();
+        m_CreatedCells.clear();
+        m_iSelPointIndices.clear();
+        m_iSelCellIdx = 0;
+
+        _int iMaxTileNum = 0;
+        fin.read((_char*)&iMaxTileNum, sizeof(_int));
+
+        for (_int i = 0; i < iMaxTileNum; ++i)
+        {
+            _ushort verticesNum = 0;
+            fin.read((_char*)&verticesNum, sizeof(_ushort));
+
+            vector<double> verticesXYZ(verticesNum);
+            fin.read((_char*)verticesXYZ.data(), sizeof(double) * verticesNum);
+
+            _ushort polygonNum = 0;
+            fin.read((_char*)&polygonNum, sizeof(_ushort));
+
+            _byte vertIndexCount = 0;
+            vector<_ushort> vertIndices;
+            vector<_ushort> neighborIndices;
+            for (int j = 0; j < polygonNum; ++j)
+            {
+                fin.read((_char*)&vertIndexCount, sizeof(_byte));
+				vertIndices.resize(vertIndexCount);
+				neighborIndices.resize(vertIndexCount);
+
+                fin.read((_char*)vertIndices.data(), sizeof(_ushort) * vertIndexCount);
+                fin.read((_char*)neighborIndices.data(), sizeof(_ushort) * vertIndexCount);
+
+                vector<CToolNaviCellPoint*> vecCellPoints;
+                vecCellPoints.reserve(3);
+
+                for (int k = 0; k < vertIndexCount; ++k)
+                {
+                    _ushort vertIndex = vertIndices[k] * 3;
+
+                    _vector vCellPoint = { verticesXYZ[vertIndex], verticesXYZ[vertIndex + 1]
+                        , -verticesXYZ[vertIndex + 2], 1.f };
+
+                    CToolNaviCellPoint* pPoint = Find_SamePoint(vCellPoint);
+                    if (nullptr == pPoint)
+                    {
+                        _float4 f4CellPoint;
+                        XMStoreFloat4(&f4CellPoint, vCellPoint);
+                        pPoint = static_cast<CToolNaviCellPoint*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Cell", L"Prototype_ToolNaviCellPoint", &f4CellPoint));
+                        pPoint->Uncheck_Picked();
+
+                        m_CreatedCellPoints.push_back(pPoint);
+                    }
+                    vecCellPoints.push_back(pPoint);
+                }
+               
+
+                CToolNaviCell* pCell = static_cast<CToolNaviCell*>(m_pGameInstance->Add_Clone(LEVEL_TOOL, L"Cell", L"Prototype_ToolNaviCell", &vecCellPoints));
+                m_CreatedCells.push_back(pCell);
+            }
+        }
+    }
+    
+    return true;
+    
+}
+
 void CMap_Tool::Destroy_Cells()
 {
     for (auto it = m_CreatedCells.begin(); it != m_CreatedCells.end();)
@@ -1182,5 +1310,7 @@ void CMap_Tool::Free()
     Safe_Release(m_pColorTexture);
     
     Safe_Release(m_pPickingTexture);
+    CoUninitialize();
+
 }
 

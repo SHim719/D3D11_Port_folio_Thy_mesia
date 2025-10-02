@@ -1245,7 +1245,7 @@ void CAnim_Tool::Models_Listbox()
 
 void CAnim_Tool::Open_EffectMeshesByFolder()
 {
-    wstring wstrFolderPath = L"D:\\JaeookDX11Tool\\Resources\\Effect\\EffectMesh\\";
+    wstring wstrFolderPath = L"D:\\Projects\\Jusin\\JaeookDX11Tool\\Resources\\Effect\\EffectMesh\\";
 
     fs::path folderPath(wstrFolderPath);
 

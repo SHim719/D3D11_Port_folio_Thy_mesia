@@ -26,6 +26,8 @@ void CJokerState_TurnAttack_L::Update(_float fTimeDelta)
 {
 	if (!m_pJoker->Is_CollPlayer())
 		m_pOwnerTransform->Move_Root(m_pModel->Get_DeltaRootPos(), m_pNavigation);
+
+	//m_pOwnerTransform->Turn_Quaternion(m_pModel->Get_NowRootQuat());
 }
 
 void CJokerState_TurnAttack_L::Late_Update(_float fTimeDelta)
@@ -37,7 +39,6 @@ void CJokerState_TurnAttack_L::Late_Update(_float fTimeDelta)
 
 void CJokerState_TurnAttack_L::OnState_End()
 {
-	Setup_RootRotation();
 }
 
 void CJokerState_TurnAttack_L::Init_AttackDesc()

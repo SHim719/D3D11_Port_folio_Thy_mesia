@@ -140,13 +140,11 @@ void CModel::Reset_PrevRootPos()
 	_vector vInitRootPos = m_Animations[m_iCurrentAnimIndex]->Get_InitRootPos();
 	vInitRootPos = XMVector3TransformCoord(vInitRootPos, XMLoadFloat4x4(&m_PivotMatrix));
 
+
 	XMStoreFloat4(&m_vPrevRootPos, vInitRootPos);
+	XMStoreFloat4(&m_vPrevRootQuat, XMVectorZero());
 }
 
-_vector CModel::Get_NowRootQuat() const
-{
-	return XMLoadFloat4(&m_Bones[m_iRootBoneIdx]->Get_LastKeyFrame().vRotation);
-}
 
 void CModel::Calc_DeltaRootPos()
 {
@@ -161,7 +159,18 @@ void CModel::Calc_DeltaRootPos()
 	XMStoreFloat4(&m_vDeltaRootPos, vNowRootPos - vPrevRootPos);
 	XMStoreFloat4(&m_vPrevRootPos, vNowRootPos);
 
-	m_Bones[m_iRootBoneIdx]->Reset_Position();
+	_vector vNowRootQuat = XMQuaternionNormalize(XMQuaternionRotationMatrix(TransformMatrix));
+
+	XMFLOAT3 euler;
+	XMStoreFloat3(&euler, XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), XMVectorGetY(vNowRootQuat)));
+
+	vNowRootQuat = XMQuaternionRotationRollPitchYaw(0.f, euler.y, 0.f);
+
+	XMVECTOR vInversePrevQuat = XMQuaternionInverse(XMLoadFloat4(&m_vPrevRootQuat));
+
+	XMStoreFloat4(&m_vDeltaRootQuat, XMQuaternionNormalize(XMQuaternionMultiply(vNowRootQuat, vInversePrevQuat)));
+	XMStoreFloat4(&m_vPrevRootQuat, vNowRootQuat);
+	m_Bones[m_iRootBoneIdx]->Clear_Translation();
 }
 
 

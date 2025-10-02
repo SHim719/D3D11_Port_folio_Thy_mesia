@@ -37,6 +37,8 @@ void CBone::Set_CombinedTransformation(const vector<CBone*>& Bones, _fmatrix Piv
 }
 
 
+
+
 void CBone::Set_BlendTransformation(const KEYFRAME& curKeyFrame, _float fRatio)
 {
 	_float3			vScale = {};
