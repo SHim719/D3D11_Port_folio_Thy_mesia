@@ -11,14 +11,6 @@ https://youtu.be/3FAKisv6opQ
 
 # 프로젝트 구현 사항
 
-## 프레임워크
-
-### 애니메이션 키 프레임 이벤트
-
-- 애니메이션 재생 중 특정 동작에서 효과음 및 이펙트를 활성화하고 콜라이더를 활성화하거나 비활성화하는 등의 처리를 효율적으로 하기 위해 키 프레임 이벤트를 구현했습니다.
-- 이중 std::vector을 이용해서 특정 키 프레임에 여러 개의 이벤트를 호출할 수 있도록 설계했습니다.
-- 객체 초기화 시점에서  std::function<void()>를 이용해서 void 함수를 키 프레임에 바인딩해 주었습니다.
-
 ## 최적화
 
 ### FBX To Bin
@@ -63,11 +55,19 @@ https://youtu.be/3FAKisv6opQ
 
 ## 애니메이션
 
-### 키 프레임 선형 보간
-<img src="https://github.com/SHim719/Image/blob/main/%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98%EC%84%A0%ED%98%95%EB%B3%B4%EA%B0%84.gif" alt="이미지" width="500">
+### 애니메이션 키 프레임 이벤트
 
-- 애니메이션을 전환할 때 툭 끊기는 느낌이 들어서 부자연스러워 보입니다.
-- 애니메이션 변경 당시의 키 프레임의 Position, Rotation, Scale과 새로 재생할 애니메이션의 시작 프레임을 일정 시간 동안 선형 보간 해주어서 자연스러운 애니메이션 전환을 구현했습니다.
+- 애니메이션 재생 중 특정 동작에서 효과음 및 이펙트를 활성화하고 콜라이더를 활성화하거나 비활성화하는 등의 처리를 효율적으로 하기 위해 키 프레임 이벤트를 구현했습니다.
+- 이중 std::vector을 이용해서 특정 키 프레임에 여러 개의 이벤트를 호출할 수 있도록 설계했습니다.
+- 객체 초기화 시점에서  std::function<void()>를 이용해서 콜백 함수를 키 프레임에 바인딩해 주었습니다.
+
+### 애니메이션 전환 시 키 프레임 블렌딩
+<img src="https://github.com/SHim719/Image/blob/main/%EB%B3%B4%EA%B0%84%EC%A0%84.gif" alt="이미지" width="300"> <img src="https://github.com/SHim719/Image/blob/main/%EB%B3%B4%EA%B0%84%ED%9B%84.gif" alt="이미지" width="300">
+
+#### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 전&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 후
+
+- 애니메이션을 전환할 때 툭 끊기는 느낌이 들어서 부자연스러워 보이는 문제가 있었습니다.
+- 애니메이션 변경 당시의 키 프레임의 Transform값과 새로 재생할 애니메이션의 시작 프레임의 Transform 값을 일정 시간 동안 선형 보간 해주어서 자연스러운 애니메이션 전환을 구현했습니다.
 
 ### 루트 애니메이션
 <img src="https://github.com/SHim719/Image/blob/main/%EB%A3%A8%ED%8A%B8%EB%AA%A8%EC%85%98.gif" alt="이미지" width="500">
@@ -80,13 +80,13 @@ https://youtu.be/3FAKisv6opQ
 ### 카메라 렉
 <img src="https://github.com/SHim719/Image/blob/main/CameraLerp.gif" alt="이미지" width="500">
 
-- 카메라가 플레이어에 대해 고정되어 있으면 부자연스러워 보입니다. 그래서 카메라가 플레이어를 자연스럽게 따라가도록 구현했습니다. 
+- 카메라가 플레이어에 대해 고정되어 있으면 부자연스러워 보이는 문제가 있었습니다. 그래서 카메라가 플레이어를 자연스럽게 따라가도록 구현했습니다. 
 - 이전 프레임 플레이어의 위치와 현재 플레이어의 위치를 보간하여, 보간된 위치를 기준으로 카메라의 위치를 확정해 줬습니다.
 
 ### 락온
 <img src="https://github.com/SHim719/Image/blob/main/%EB%9D%BD%EC%98%A8%EC%B9%B4%EB%A9%94%EB%9D%BC.gif" alt="이미지" width="500">
 
-- 카메라의 Look을 바로 타겟한테 옮기면 시점이 갑자기 달라져서 부자연스러워 보입니다.
+- 카메라의 Look을 바로 타겟한테 옮기면 시점이 갑자기 달라져서 부자연스러워 보이는 문제가 있었습니다.
 - 이를 해결하기 위해 현재 카메라의 Look 방향과 타겟의 Look 방향을 보간하여 자연스럽게 시점이 전환되도록 연출했습니다.
 
 ## 툴
@@ -118,7 +118,6 @@ https://youtu.be/3FAKisv6opQ
 <img src="https://github.com/SHim719/Image/blob/main/Diffuse.png" alt="이미지" width="250" height="250"> <img src="https://github.com/SHim719/Image/blob/main/Normal.png" alt="이미지" width="250" height="250"> <img src="https://github.com/SHim719/Image/blob/main/Depth.png" alt="이미지" width="250" height="250"> <img src="https://github.com/SHim719/Image/blob/main/Shade.png" alt="이미지" width="250" height="250"> <img src="https://github.com/SHim719/Image/blob/main/Deferred.png" alt="이미지" width="250" height="250">
 
 (차례로 Diffuse, Normal, Depth, Shade, Deferred)
-
 
 - 기존 물체 렌더링 방식인 포워드 렌더링 방식을 사용하면 모든 물체에 대해 조명 연산을 진행하기 때문에 다중 조명 연산에 있어서 계산량이 높습니다. 그래서 다중 조명 연산에 최적화 된 디퍼드 렌더링을 구현했습니다.
 - Diffuse, Normal, Depth 등의 정보를 G-버퍼에 저장하고, G-버퍼의 정보를 이용해 조명 연산을 해주었습니다. G-버퍼에 저장된 정보를 활용하여 후처리 효과를 보다 효율적으로 구현할 수 있었습니다.
