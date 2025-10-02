@@ -1,5 +1,5 @@
-<img width="498" height="337" alt="image" src="https://github.com/user-attachments/assets/972a8f18-734e-4b36-b383-0dbeabe9a588" /><div align="center">
-
+<div align="center">
+  
 # 티메시아 모작(DirectX 11, 개인프로젝트)
 
 <img src="https://github.com/SHim719/Image/blob/main/%ED%8B%B0%EB%A9%94%EC%8B%9C%EC%95%84%EC%8D%B8%EB%84%A4%EC%9D%BC.png" alt="이미지" width="500">
@@ -20,11 +20,11 @@ https://youtu.be/3FAKisv6opQ
 
 ### Frustum Culling
 
-- 카메라의 프러스텀에 포함되지 않는 객체를 렌더링하는 것은 자원 낭비라고 생각했습니다. 그래서 뷰 프러스텀에 포함되지 않은 객체는 렌더링하지 않도록 프러스텀 컬링을 구현했습니다.
+- 카메라의 프러스텀에 포함되지 않는 객체를 렌더링하지 않게 하기 위해서 뷰 프러스텀에 포함되지 않은 객체는 렌더링하지 않도록 프러스텀 컬링을 구현했습니다.
 - 객체마다 일정 값의 반지름을 할당하여, 해당 반지름의 구가 프러스텀에 포함되지 않으면 객체를 그리지 않도록 했습니다.
 
 ### Instancing
-<img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8B%B11.png" alt="이미지" width="450" height="450"> <img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8B%B12.png" alt="이미지" width="450">
+<img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8B%B12.png" alt="이미지" width="450">
 
 - 바닥, 울타리, 다리, 파티클 등의 오브젝트 들이 똑같은 메쉬 데이터를 쓰고 있었고, 적어도 100개 이상이 한번에 그려져서 드로우 콜이 기하급수적으로 증가하는 문제가 있었습니다.
 - DirectX에서 지원하는 하드웨어 인스턴싱을 이용해 한 번의 드로우 콜로 여러 개의 동일한 오브젝트를 그려, 최적화를 시켜주었습니다.
@@ -43,9 +43,9 @@ https://youtu.be/3FAKisv6opQ
 - 그래서 상태, 모델, 네비게이션, 무기 등 공통적으로  이를 처리하는 메서드를 포함한 Character라는 추상 부모 클래스를 설계하고 상속받게 했습니다.
 
 ### 데미지 정보 구조체
-<img src="" alt="이미지" width="500">
+<img src="https://github.com/user-attachments/assets/972a8f18-734e-4b36-b383-0dbeabe9a588" alt="image" width="498" height="337">
 
-- 티메시아는 짧은 넉백, 긴 넉백, 방어 불가 등 여러가지 공격이 있습니다. 이러한 여러가지의 공격에 대한 정보를 효과적으로 전달할 수 있는 방법이 뭘까 생각했습니다.
+- 티메시아는 짧은 넉백, 긴 넉백, 방어 불가 등 여러가지 공격이 있습니다. 이러한 여러가지의 공격에 대한 정보를 효과적으로 전달할 수 있는 방법이 뭘까 고민했습니다.
 - 데미지, 공격 종류등의 정보를 담을 수 있는 ATTACKDESC 이라는 구조체를 만들었습니다. 이를 통해 공격 정보를 읽어 해당 공격에 적합한 히트 처리를 편리하게 구현할 수 있었습니다.
 
 ### 상태 패턴
@@ -58,6 +58,9 @@ https://youtu.be/3FAKisv6opQ
 ## 애니메이션
 
 ### 애니메이션 키 프레임 이벤트
+<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%ED%88%B4.png" alt="이미지" width="300" height="450"><img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EC%9D%B4%EB%B2%A4%ED%8A%B8%EC%B2%B4%ED%81%AC.png" alt="이미지" width="400" height="600">
+<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EC%9D%B4%EB%B2%A4%ED%8A%B8%EB%B0%94%EC%9D%B8%EB%94%A9.png" alt="이미지" width="600">
+
 
 - 애니메이션 재생 중 특정 동작에서 효과음 및 이펙트를 활성화하고 콜라이더를 활성화하거나 비활성화하는 등의 처리를 효율적으로 하기 위해 키 프레임 이벤트를 구현했습니다.
 - 이중 std::vector을 이용해서 특정 키 프레임에 여러 개의 이벤트를 호출할 수 있도록 설계했습니다.
@@ -84,23 +87,20 @@ https://youtu.be/3FAKisv6opQ
 
 ### 카메라 렉
 <img src="https://github.com/SHim719/Image/blob/main/CameraLerp.gif" alt="이미지" width="500">
+<img src="https://github.com/SHim719/Image/blob/main/%EC%B9%B4%EB%A9%94%EB%9D%BC%EB%B3%B4%EA%B0%84.png" alt="이미지" width="500">
+
 
 - 카메라가 플레이어에 대해 고정되어 있으면 부자연스러워 보이는 문제가 있었습니다. 그래서 카메라가 플레이어를 자연스럽게 따라가도록 구현했습니다. 
 - 이전 프레임 플레이어의 위치와 현재 플레이어의 위치를 보간하여, 보간된 위치를 기준으로 카메라의 위치를 확정해 줬습니다.
 
 ### 락온
 <img src="https://github.com/SHim719/Image/blob/main/%EB%9D%BD%EC%98%A8%EC%B9%B4%EB%A9%94%EB%9D%BC.gif" alt="이미지" width="500">
+<img src="https://github.com/SHim719/Image/blob/main/%EB%9D%BD%EC%98%A8%EB%B3%B4%EA%B0%84.png" alt="이미지" width="500">
 
 - 카메라의 Look을 바로 타겟한테 옮기면 시점이 갑자기 달라져서 부자연스러워 보이는 문제가 있었습니다.
 - 이를 해결하기 위해 현재 카메라의 Look 방향과 타겟의 Look 방향을 보간하여 자연스럽게 시점이 전환되도록 연출했습니다.
 
 ## 툴
-
-### 애니메이션 툴
-<img src="https://github.com/SHim719/Image/blob/main/%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98%ED%88%B4.gif" alt="이미지" width="400">
-
-- 애니메이션 키 프레임 이벤트를 생성하고 저장하기 위해 애니메이션 툴을 개발했습니다. 이 툴을 이용해서 적절한 시점에 무기 콜라이더 활성화, 효과음 재생, 이펙트 활성화 등의 다양한 이벤트를 호출할 수 있었습니다.
-- 키 프레임 데이터는 특정 애니메이션의 인덱스, 이벤트의 이름, 키 프레임 호출 될 시점을 바이너리 화 시켜서 저장했습니다.
 
 ### 이펙트 툴
 <img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B4%ED%8E%99%ED%8A%B8%ED%88%B41.gif" alt="이미지" width="400"> <img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B4%ED%8E%99%ED%8A%B8%ED%88%B42.gif" alt="이미지" width="400">
@@ -127,8 +127,3 @@ https://youtu.be/3FAKisv6opQ
 - 기존 물체 렌더링 방식인 포워드 렌더링 방식을 사용하면 모든 물체에 대해 조명 연산을 진행하기 때문에 다중 조명 연산에 있어서 계산량이 높습니다. 그래서 다중 조명 연산에 최적화 된 디퍼드 렌더링을 구현했습니다.
 - Diffuse, Normal, Depth 등의 정보를 G-버퍼에 저장하고, G-버퍼의 정보를 이용해 조명 연산을 해주었습니다. G-버퍼에 저장된 정보를 활용하여 후처리 효과를 보다 효율적으로 구현할 수 있었습니다.
 
-### 안개
-
-<img src="https://github.com/SHim719/Image/blob/main/%EC%95%88%EA%B0%9C.png" alt="이미지" width="500">
-
-- G-버퍼의 깊이 정보를 이용해 뷰 공간의 깊이를 구하고, 안개가 적용될 최소 거리, 최대 거리를 이용하여 안개가 지는 비율을 구하여 지수 안개 파라미터에 넣어서 fogFactor를 구하고, 원본 스크린 색상과 안개 색상을 fogFactor의 비율로 섞어주었습니다.
