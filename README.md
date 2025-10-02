@@ -1,4 +1,4 @@
-<div align="center">
+<img width="498" height="337" alt="image" src="https://github.com/user-attachments/assets/972a8f18-734e-4b36-b383-0dbeabe9a588" /><div align="center">
 
 # 티메시아 모작(DirectX 11, 개인프로젝트)
 
@@ -42,7 +42,9 @@ https://youtu.be/3FAKisv6opQ
 - 플레이어와 몬스터는 공통된 객체와 로직이 많아 동일한 코드를 반복적으로 작성해야 하는 상황이 발생했습니다. 
 - 그래서 상태, 모델, 네비게이션, 무기 등 공통적으로  이를 처리하는 메서드를 포함한 Character라는 추상 부모 클래스를 설계하고 상속받게 했습니다.
 
-### 전투 로직
+### 데미지 정보 구조체
+<img src="" alt="이미지" width="500">
+
 - 티메시아는 짧은 넉백, 긴 넉백, 방어 불가 등 여러가지 공격이 있습니다. 이러한 여러가지의 공격에 대한 정보를 효과적으로 전달할 수 있는 방법이 뭘까 생각했습니다.
 - 데미지, 공격 종류등의 정보를 담을 수 있는 ATTACKDESC 이라는 구조체를 만들었습니다. 이를 통해 공격 정보를 읽어 해당 공격에 적합한 히트 처리를 편리하게 구현할 수 있었습니다.
 
@@ -66,13 +68,16 @@ https://youtu.be/3FAKisv6opQ
 
 #### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 전&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 후
 
+<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EB%B3%B4%EA%B0%80.png" alt="이미지" width="600">
+
 - 애니메이션을 전환할 때 툭 끊기는 느낌이 들어서 부자연스러워 보이는 문제가 있었습니다.
 - 애니메이션 변경 당시의 키 프레임의 Transform값과 새로 재생할 애니메이션의 시작 프레임의 Transform 값을 일정 시간 동안 선형 보간 해주어서 자연스러운 애니메이션 전환을 구현했습니다.
 
-### 루트 애니메이션
-<img src="https://github.com/SHim719/Image/blob/main/%EB%A3%A8%ED%8A%B8%EB%AA%A8%EC%85%98.gif" alt="이미지" width="500">
+### 루트 모션
+<img src="https://github.com/SHim719/Image/blob/main/%EB%A3%A8%ED%8A%B8%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98%EC%A0%81%EC%9A%A9%EC%A0%84.gif" alt="이미지" width="350"><img src="https://github.com/SHim719/Image/blob/main/%EB%A3%A8%ED%8A%B8%EB%AA%A8%EC%85%98.gif" alt="이미지" width="350">
+#### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 전&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 후
 
-- 애니메이션을 재생할 때, 루트 본의 움직임을 그대로 월드 공간에 반영하고 싶었습니다.
+- 애니메이션을 재생할 때, 루트 본의 움직임을 그대로 월드 공간에 반영해서 애니메이션과 실제 이동을 일치시키기위해 루트 모션을 구현했습니다.
 - 이전 프레임의 루트 본과 현재 프레임의 루트 본의 Position 값의 차이를 저장하고 그 변화량만큼 객체를 이동해 주었습니다.
 
 ## 카메라
