@@ -7,7 +7,7 @@
 </div>
 
 # 동영상
-https://www.youtube.com/watch?v=F7a7G8MvuqQ
+https://youtu.be/3FAKisv6opQ
 
 # 프로젝트 구현 사항
 
