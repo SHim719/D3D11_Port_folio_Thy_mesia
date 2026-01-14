@@ -1,8 +1,10 @@
 <div align="center">
   
-# 티메시아 모작(DirectX 11, 개인프로젝트)
+# 티메시아 모작(개인 프로젝트)
 
-<img src="https://github.com/SHim719/Image/blob/main/%ED%8B%B0%EB%A9%94%EC%8B%9C%EC%95%84%EC%8D%B8%EB%84%A4%EC%9D%BC.png" alt="이미지" width="500">
+<img src="https://github.com/SHim719/Image/blob/main/%ED%8B%B0%EB%A9%94%EC%8B%9C%EC%95%84%EC%8D%B8%EB%84%A4%EC%9D%BC.png" alt="이미지" width="500">  
+
+**C++, Direct X 11, ImGUI, Assimp, Fmod, Github Desktop**
 
 </div>
 
@@ -10,113 +12,6 @@
 https://youtu.be/3FAKisv6opQ
 
 # 프로젝트 구현 사항
-
-## 애니메이션
-
-### 애니메이션 키 프레임 이벤트
-<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%ED%88%B4.png" alt="이미지" width="300" height="450"><img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EC%9D%B4%EB%B2%A4%ED%8A%B8%EC%B2%B4%ED%81%AC.png" alt="이미지" width="400" height="600">
-<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EC%9D%B4%EB%B2%A4%ED%8A%B8%EB%B0%94%EC%9D%B8%EB%94%A9.png" alt="이미지" width="600">
-
-
-- 애니메이션 재생 중 특정 동작에서 효과음 및 이펙트를 활성화하고 콜라이더를 활성화하거나 비활성화하는 등의 처리를 효율적으로 하기 위해 키 프레임 이벤트를 구현했습니다.
-- 이중 std::vector을 이용해서 특정 키 프레임에 여러 개의 이벤트를 호출할 수 있도록 설계했습니다.
-- 객체 초기화 시점에서  std::function<void()>를 이용해서 콜백 함수를 키 프레임에 바인딩해 주었습니다.
-
-### 애니메이션 전환 시 키 프레임 블렌딩
-<img src="https://github.com/SHim719/Image/blob/main/%EB%B3%B4%EA%B0%84%EC%A0%84.gif" alt="이미지" width="300"> <img src="https://github.com/SHim719/Image/blob/main/%EB%B3%B4%EA%B0%84%ED%9B%84.gif" alt="이미지" width="300">
-
-#### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 전&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 후
-
-<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EB%B3%B4%EA%B0%80.png" alt="이미지" width="600">
-
-- 애니메이션을 전환할 때 툭 끊기는 느낌이 들어서 부자연스러워 보이는 문제가 있었습니다.
-- 애니메이션 변경 당시의 키 프레임의 Transform값과 새로 재생할 애니메이션의 시작 프레임의 Transform 값을 일정 시간 동안 선형 보간 해주어서 자연스러운 애니메이션 전환을 구현했습니다.
-
-### 루트 모션
-<img src="https://github.com/SHim719/Image/blob/main/%EB%A3%A8%ED%8A%B8%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98%EC%A0%81%EC%9A%A9%EC%A0%84.gif" alt="이미지" width="350"><img src="https://github.com/SHim719/Image/blob/main/%EB%A3%A8%ED%8A%B8%EB%AA%A8%EC%85%98.gif" alt="이미지" width="350">
-#### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 전&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 후
-
-- 애니메이션을 재생할 때, 루트 본의 움직임을 그대로 월드 공간에 반영해서 애니메이션과 실제 이동을 일치시키기위해 루트 모션을 구현했습니다.
-- 이전 프레임의 루트 본과 현재 프레임의 루트 본의 Position 값의 차이를 저장하고 그 변화량만큼 객체를 이동해 주었습니다.
-
-## 카메라
-
-### 카메라 렉
-<img src="https://github.com/SHim719/Image/blob/main/CameraLerp.gif" alt="이미지" width="500">
-<img src="https://github.com/SHim719/Image/blob/main/%EC%B9%B4%EB%A9%94%EB%9D%BC%EB%B3%B4%EA%B0%84.png" alt="이미지" width="500">
-
-
-- 카메라가 플레이어에 대해 고정되어 있으면 부자연스러워 보이는 문제가 있었습니다. 그래서 카메라가 플레이어를 자연스럽게 따라가도록 구현했습니다. 
-- 이전 프레임 플레이어의 위치와 현재 플레이어의 위치를 보간하여, 보간된 위치를 기준으로 카메라의 위치를 확정해 줬습니다.
-
-### 락온
-<img src="https://github.com/SHim719/Image/blob/main/%EB%9D%BD%EC%98%A8%EC%B9%B4%EB%A9%94%EB%9D%BC.gif" alt="이미지" width="500">
-<img src="https://github.com/SHim719/Image/blob/main/%EB%9D%BD%EC%98%A8%EB%B3%B4%EA%B0%84.png" alt="이미지" width="500">
-
-- 카메라의 Look을 바로 타겟한테 옮기면 시점이 갑자기 달라져서 부자연스러워 보이는 문제가 있었습니다.
-- 이를 해결하기 위해 현재 카메라의 Look 방향과 타겟의 Look 방향을 보간하여 자연스럽게 시점이 전환되도록 연출했습니다.
-
-## 최적화
-
-### FBX To Bin
-
-- Assimp로 FBX 모델을 로드할 때 로드 시간이 매우 느렸습니다. 이를 해결하기 위해 FBX를 로드한 후 필요한 정보만 추출하여 Bin 파일로 변환하고, 이후 변환된 Bin 모델 데이터만을 사용했습니다.
-- 이 덕분에 모델 로드 시간이 대략 1분 -> 3초 정도로 대폭 개선되었습니다.
-
-### Frustum Culling
-
-- 카메라의 프러스텀에 포함되지 않는 객체를 렌더링하지 않게 하기 위해서 뷰 프러스텀에 포함되지 않은 객체는 렌더링하지 않도록 프러스텀 컬링을 구현했습니다.
-- 객체마다 일정 값의 반지름을 할당하여, 해당 반지름의 구가 프러스텀에 포함되지 않으면 객체를 그리지 않도록 했습니다.
-
-### Instancing
-<img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8B%B12.png" alt="이미지" width="450">
-
-- 바닥, 울타리, 다리, 파티클 등의 오브젝트 들이 똑같은 메쉬 데이터를 쓰고 있었고, 적어도 100개 이상이 한번에 그려져서 드로우 콜이 기하급수적으로 증가하는 문제가 있었습니다.
-- DirectX에서 지원하는 하드웨어 인스턴싱을 이용해 한 번의 드로우 콜로 여러 개의 동일한 오브젝트를 그려, 최적화를 시켜주었습니다.
-
-### Geometry Shader
-
-- 파티클이나 UI 렌더링 시 지오메트리 쉐이더를 활용하여 하나의 정점을 사각형 형태로 확장시켰습니다. 이를 통해 파티클을 그릴 때 사각형을 구성하는 4개의 정점 대신 하나의 정점만 전송하여 렌더링을 최적화했습니다.
-
-
-## 플레이어, 몬스터
-
-### 상속구조
-<img src="https://github.com/SHim719/Image/blob/main/%EC%BA%90%EB%A6%AD%ED%84%B0%20%EA%B5%AC%EC%A1%B0.webp" alt="이미지" width="500">
-
-- 플레이어와 몬스터는 공통된 객체와 로직이 많아 동일한 코드를 반복적으로 작성해야 하는 상황이 발생했습니다. 
-- 그래서 상태, 모델, 네비게이션, 무기 등 공통적으로 이를 처리하는 메서드를 포함한 Character라는 추상 부모 클래스를 설계하고 상속받게 했습니다.
-
-### 데미지 정보 구조체
-<img src="https://github.com/SHim719/Image/blob/main/AttackDesc%EC%BD%94%EB%93%9C.png" alt="이미지" width="500">
-
-- 티메시아는 짧은 넉백, 긴 넉백, 방어 불가 등 여러가지 공격이 있습니다. 이러한 여러가지의 공격에 대한 정보를 효과적으로 전달할 수 있는 방법을 고민했습니다.
-- 데미지, 공격 종류등의 정보를 담을 수 있는 ATTACKDESC 이라는 구조체를 만들었습니다. 이를 통해 공격 정보를 읽어 해당 공격에 적합한 히트 처리를 편리하게 구현할 수 있었습니다.
-
-### 상태 패턴
-<img src="https://github.com/SHim719/Image/blob/main/%EC%83%81%ED%83%9C%ED%8C%A8%ED%84%B4%EC%83%81%EC%86%8D%EA%B5%AC%EC%A1%B0.png" alt="이미지" width="500">
-
-- 플레이어, 몬스터의 제어는 기본적으로 상태 패턴으로 구현했습니다. 상태 패턴이 객체 상태에 따른 애니메이션 변경 등 각종 로직을 처리하기에 용이하다고 생각했습니다.
-- State_Base라는 추상 클래스를 만들고, OnState_Start와 OnState_End라는 순수 가상 함수를 선언했습니다. 이를 각 상태에서 오버라이딩하여 상태 전환에 따른 처리를 구현했습니다.
-- 각 상태에서 Update와 Late_Update를 오버라이딩하여 상태별 로직을 구현했습니다.
-
-
-## 툴
-
-### 이펙트 툴
-<img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B4%ED%8E%99%ED%8A%B8%ED%88%B41.gif" alt="이미지" width="400"> <img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B4%ED%8E%99%ED%8A%B8%ED%88%B42.gif" alt="이미지" width="400">
-
-- 이펙트 생성 과정을 시각적으로 확인하며 개발하기 위해 이펙트 툴을 제작했습니다.
-- 이펙트가 파티클인지 메쉬 이펙트인지 트레일 인지 구분하는 enum 변수를 저장해주고, 각 이펙트에 필요한 데이터들을 바이너리 화 시켜서 저장했습니다.
-- 인 게임에서 이펙트를 활성화할 때마다 객체를 생성하면 프레임이 튀는 현상이 발생했습니다. 이를 해결하기 위해 오브젝트 풀을 이용하여 게임 진입 시점에 이펙트 객체를 미리 생성해 두고, 활성화 시 기존에 생성해 둔 객체를 재사용하도록 했습니다.
-
-### 맵 툴
-<img src="https://github.com/SHim719/Image/blob/main/%EB%A7%B5%ED%88%B41.gif" alt="이미지" width="400"> <img src="https://github.com/SHim719/Image/blob/main/%EB%A7%B5%ED%88%B42.gif" alt="이미지" width="400">
-
-- 오브젝트를 배치하는 모습을 확인하며 개발하기 위해 맵 툴을 제작했습니다.
-- 배치된 메쉬의 모델 이름, 월드 행렬 등을 vector에 담아서 저장했습니다. 문, 체크포인트 의자 같은 기믹 오브젝트는 저장한 모델 이름으로 객체 원형이 있는지 탐색하고, 객체 원형이 있으면 그 객체를 클론합니다.
-- 원하는 오브젝트를 피킹할 때, 맵에 배치된 오브젝트 수만큼 레이 체킹을 수행하는 비용이 크다고 판단했습니다. 
-- 이를 해결하기 위해, 현재 vector에 저장된 인덱스를 기준으로 색깔 값을 결정하고, 다른 렌더 타겟에 해당 색깔 값을 기록한 후, 마우스 위치에서 색깔을 받아와 해당 색깔에 대응하는 인덱스를 역산하여 물체를 더 빠르게 피킹할 수 있도록 최적화했습니다.
 
 ## 쉐이더
 
@@ -126,5 +21,114 @@ https://youtu.be/3FAKisv6opQ
 (차례로 Diffuse, Normal, Depth, Shade, Deferred)
 
 - 기존 물체 렌더링 방식인 포워드 렌더링 방식을 사용하면 모든 물체에 대해 조명 연산을 진행하기 때문에 다중 조명 연산에 있어서 계산량이 높습니다. 그래서 다중 조명 연산에 최적화 된 디퍼드 렌더링을 구현했습니다.
-- Diffuse, Normal, Depth 등의 정보를 G-버퍼에 저장하고, G-버퍼의 정보를 이용해 조명 연산을 해주었습니다. G-버퍼에 저장된 정보를 활용하여 후처리 효과를 보다 효율적으로 구현할 수 있었습니다.
+- Diffuse, Normal, Depth 등의 정보를 G-버퍼에 저장하고, G-버퍼의 정보를 이용해 조명 연산을 해주었습니다. 또한 G-버퍼에 저장된 정보를 활용하여 후처리 효과를 보다 효율적으로 구현할 수 있었습니다.
+
+## 최적화
+
+### 바이너리 직렬화를 통한 모델 로딩 속도 최적화
+
+- **문제**: Assimp 라이브러리의 런타임 파싱 비용으로 인해 모델 로딩 시 심각한 병목 현상(약 3분 소요)이 발생했습니다.
+- **해결**: 모델 데이터를 파싱한 후, 즉시 로드 가능한 **바이너리 포맷으로 직렬화**해서 저장하는 전처리 과정을 도입했습니다.
+- **성과**: 모델들의 로드 시간을 약 3분에서 5초 정도 대폭 단축했습니다.
+
+### Frustum Culling
+
+- **목표**: 카메라 시야 밖의 객체까지 렌더링 파이프라인에 들어가는 비효율을 방지하고자 했습니다.
+- **구현** : 각 객체에 **경계 구(Bounding Sphere)**를 생성하고, 카메라의 6개 평면과의 충돌 여부를 판별했습니다.
+- **결과** : 시야에 보이지 않는 객체는 Draw Call 제출 단계 이전에 조기 제외시켜 GPU 연산 부하를 효과적으로 줄였습니다.
+
+### Instancing
+<img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8B%B12.png" alt="이미지" width="450">
+
+- **문제** : 바닥, 울타리, 파티클 등 동일한 지오메트리를 가진 다수의 오브젝트 렌더링 시, Draw Call의 과도한 발생으로 CPU 오버헤드가 생기는 문제가 있었습니다.
+- **해결** : DirectX의 하드웨어 인스턴싱 기법을 적용하여, 인스턴스 버퍼를 통해 월드 행렬 등의 개별 데이터를 전달했습니다.
+- **성과** : 수백 개의 오브젝트 렌더링을 한 번의 Draw Call로 처리하여 렌더링 성능을 최적화했습니다.
+
+### Geometry Shader
+
+- **구현**: 파티클 및 UI 렌더링 시, CPU에서는 정점(Point) 하나만 넘겨주고 Geometry Shader 단계에서 사각형으로 확장하는 기법을 사용했습니다.
+- **효과**: 정점 4개 대신 1개만 전송함으로써 CPU-GPU 간 데이터 전송 병목을 줄여서, 파이프라인 효율을 높였습니다.
+
+### 렌더 타겟을 활용한 O(1) 맵 오브젝트 피킹(Picking)
+-  **문제** : 씬에 배치된 오브젝트가 많아질수록, 기존 레이캐스팅 방식의 피킹 연산 비용이 선형적으로 증가하는 문제가 있었습니다.
+-  **해결** :각 오브젝트의 고유 ID를 색상 값으로 매핑하여 별도의 렌더 타겟에 그리는 방식을 이용했습니다.
+-  **성과** : 마우스 클릭 시 해당 픽셀의 색상 값을 읽어오는 것만으로 즉시 객체를 식별할 수 있게 되어, 오브젝트 개수와 무관한 O(1)의 피킹 성능을 확보할 수 있었습니다.
+
+## 애니메이션
+
+### 애니메이션 키 프레임 이벤트
+<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%ED%88%B4.png" alt="이미지" width="300" height="450"><img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EC%9D%B4%EB%B2%A4%ED%8A%B8%EC%B2%B4%ED%81%AC.png" alt="이미지" width="400" height="600">
+<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EC%9D%B4%EB%B2%A4%ED%8A%B8%EB%B0%94%EC%9D%B8%EB%94%A9.png" alt="이미지" width="600">
+
+- **구현 의도**: 애니메이션과 게임 로직(이펙트, 사운드, 피격 판정)의 정확한 동기화를 위해 키 프레임 이벤트 시스템을 구축했습니다.
+- **구현 방법**: std::function을 활용한 콜백 방식으로 설계하여, 애니메이션 시스템이 구체적인 게임 로직을 알 필요 없도록 결합도를 낮췄습니다. 이를 통해 특정 애니메이션 키 프레임에 여러가지의 이벤트를 유연하게 바인딩할 수 있었습니다.
+
+### 애니메이션 블렌딩 
+<img src="https://github.com/SHim719/Image/blob/main/%EB%B3%B4%EA%B0%84%EC%A0%84.gif" alt="이미지" width="300"> <img src="https://github.com/SHim719/Image/blob/main/%EB%B3%B4%EA%B0%84%ED%9B%84.gif" alt="이미지" width="300">
+
+#### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 전&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 후
+
+<img src="https://github.com/SHim719/Image/blob/main/%ED%82%A4%ED%94%84%EB%A0%88%EC%9E%84%EB%B3%B4%EA%B0%80.png" alt="이미지" width="600">
+
+- **문제**: 애니메이션 전환 시 툭 끊기게 전환되는 문제를 해결하고자 했습니다.
+- **구현 방법**: 애니메이션 변경 당시의 키 프레임의 Transform값과 새로 재생할 애니메이션의 시작 프레임의 Transform 값을 일정 시간 동안 선형 보간 해주어서 자연스러운 애니메이션 전환을 구현했습니다.
+
+### 루트 모션
+<img src="https://github.com/SHim719/Image/blob/main/%EB%A3%A8%ED%8A%B8%EC%95%A0%EB%8B%88%EB%A9%94%EC%9D%B4%EC%85%98%EC%A0%81%EC%9A%A9%EC%A0%84.gif" alt="이미지" width="350"><img src="https://github.com/SHim719/Image/blob/main/%EB%A3%A8%ED%8A%B8%EB%AA%A8%EC%85%98.gif" alt="이미지" width="350">
+#### &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 전&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;적용 후
+
+- 애니메이션의 보폭과 실제 이동 거리를 일치시키기 위해 루트 모션을 도입했습니다.
+- 루트 본의 프레임별 이동 변화량을 추출하여 월드 좌표계에 반영함으로써, 애니메이션과 실제 이동이 동기화된 움직임을 구현했습니다.
+
+## 카메라
+
+### 카메라 스무딩
+<img src="https://github.com/SHim719/Image/blob/main/CameraLerp.gif" alt="이미지" width="500">
+<img src="https://github.com/SHim719/Image/blob/main/%EC%B9%B4%EB%A9%94%EB%9D%BC%EB%B3%B4%EA%B0%84.png" alt="이미지" width="500">
+
+- **구현 의도**: 카메라가 캐릭터에 고정되어 딱딱하게 움직일 경우 발생하는 시각적 피로감을 줄이고, 부드러운 조작감을 주기 위해 구현했습니다.
+- **구현 방법**: 현재 카메라 위치와 플레이어의 목표 위치를 선형 보간 하여, 카메라가 뒤따라가는 듯한 지연 효과를 주어 자연스러운 움직임을 연출했습니다.
+
+### 타겟 락온(Lock-On) 카메라 보간
+<img src="https://github.com/SHim719/Image/blob/main/%EB%9D%BD%EC%98%A8%EC%B9%B4%EB%A9%94%EB%9D%BC.gif" alt="이미지" width="500">
+<img src="https://github.com/SHim719/Image/blob/main/%EB%9D%BD%EC%98%A8%EB%B3%B4%EA%B0%84.png" alt="이미지" width="500">
+
+- **문제 해결**: 락온 시 시점이 순간적으로 튀는 현상을 방지하여, 시점 전환의 어색함을 개선해습니다.
+- **구현 방법**: 락온 시 현재 카메라의 Forward 벡터와 타겟을 향한 Look 벡터를 매 프레임 보간하여, 시점이 부드럽게 회전하며 타겟을 조준하도록 구현했습니다.
+
+
+## 플레이어, 몬스터
+
+### 계층적 캐릭터 클래스
+<img src="https://github.com/SHim719/Image/blob/main/%EC%BA%90%EB%A6%AD%ED%84%B0%20%EA%B5%AC%EC%A1%B0.webp" alt="이미지" width="500">
+
+- 플레이어와 몬스터가 공유하는 핵심 로직(이동, 메쉬, 무기 시스템)을 추상 부모 클래스(Character)로 일반화 코드 재사용성과 유지보수성을 확보했습니다.
+- 이를 통해 신규 몬스터 추가 시, 기본 로직은 상속받고 고유 패턴만 오버라이딩하여 빠르게 구현할 수 있는 확장성 있는 구조를 갖췄습니다.
+
+### 전투 이벤트 정보의 규격화 (AttackDesc)
+<img src="https://github.com/SHim719/Image/blob/main/AttackDesc%EC%BD%94%EB%93%9C.png" alt="이미지" width="500">
+
+- 넉백, 경직, 방어 불가 등 다양한 피격 리액션을 처리하기 위해, 함수 인자가 아닌 구조체(AttackDesc) 기반의 메시지 전달 방식을 채택했습니다.
+- 공격 주체가 공격의 정보를 구조체에 담아 전달하면, 피격 객체가 이를 해석하여 적절한 상태로 전이되도록 전투 로직을 데이터 중심으로 단순화했습니다.
+
+### FSM 기반의 행동 제어
+<img src="https://github.com/SHim719/Image/blob/main/%EC%83%81%ED%83%9C%ED%8C%A8%ED%84%B4%EC%83%81%EC%86%8D%EA%B5%AC%EC%A1%B0.png" alt="이미지" width="500">
+
+- 캐릭터의 복잡한 행동과 애니메이션 동기화를 제어하기 위해 유한 상태 머신(FSM) 구조를 도입했습니다.
+- Enter(Start), Exit(End), Update로 상태의 수명 주기를 명확히 분리하여, 상태 전이 시 초기화와 정리 작업이 누락 없이 수행되도록 안전성을 높였습니다.
+
+## 툴
+
+### 이펙트 툴
+<img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B4%ED%8E%99%ED%8A%B8%ED%88%B41.gif" alt="이미지" width="400"> <img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B4%ED%8E%99%ED%8A%B8%ED%88%B42.gif" alt="이미지" width="400">
+
+- **실시간 미리보기(Real-time Preview)**: 파티클, 트레일 등 다양한 이펙트의 속성을 실시간으로 조정하고 시각적으로 확인하며 작업 효율을 높였습니다.  
+- **바이너리 직렬화**: 이펙트 속성 데이터를 엔진에서 즉시 로드 가능한 바이너리 포맷으로 저장하여 로딩 속도를 최적화했습니다.  
+- **오브젝트 풀링 최적화**: 런타임 생성 비용을 줄이기 위해, 게임 로딩 시점에 이펙트 객체와 미리 생성하여 이펙트 생성에 의한 프레임 드랍을 방지했습니다.
+
+### 맵 툴
+<img src="https://github.com/SHim719/Image/blob/main/%EB%A7%B5%ED%88%B41.gif" alt="이미지" width="400"> <img src="https://github.com/SHim719/Image/blob/main/%EB%A7%B5%ED%88%B42.gif" alt="이미지" width="400">  
+- **레벨 편집 효율화**: 월드 상에 메쉬와 기믹 오브젝트(문, 체크포인트 등)를 직관적으로 배치하고 수정할 수 있는 에디터를 제작했습니다.  
+- **오브젝트 배치 및 관리**: 배경을 구성하는 정적 메쉬뿐만 아니라 문, 체크포인트 등 로직이 포함된 기믹 오브젝트의 배치와 데이터 저장을 지원하여 원활한 레벨 디자인이 가능하도록 했습니다.  
+
 
