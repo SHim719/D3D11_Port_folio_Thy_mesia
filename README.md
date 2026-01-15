@@ -34,8 +34,8 @@ https://youtu.be/3FAKisv6opQ
 ### Frustum Culling
 
 - **목표**: 카메라 시야 밖의 객체까지 렌더링 파이프라인에 들어가는 비효율을 방지하고자 했습니다.
-- **구현** : 각 객체에 **경계 구(Bounding Sphere)**를 생성하고, 카메라의 6개 평면과의 충돌 여부를 판별했습니다.
-- **결과** : 시야에 보이지 않는 객체는 Draw Call 제출 단계 이전에 조기 제외시켜 GPU 연산 부하를 효과적으로 줄였습니다.
+- **구현** : 각 객체에 반지름을 세팅하여 Bounding Sphere를 생성하고, 카메라의 6개 평면과의 충돌 여부를 판별했습니다.
+- **결과** : 시야에 보이지 않는 객체는 드로우 콜 제출 단계 이전에 조기 제외시켜 GPU 연산 부하를 효과적으로 줄였습니다.
 
 ### Instancing
 <img src="https://github.com/SHim719/Image/blob/main/%EC%9D%B8%EC%8A%A4%ED%84%B4%EC%8B%B12.png" alt="이미지" width="450">
