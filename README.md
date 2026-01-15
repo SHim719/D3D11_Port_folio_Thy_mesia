@@ -86,7 +86,7 @@ https://youtu.be/3FAKisv6opQ
 <img src="https://github.com/SHim719/Image/blob/main/CameraLerp.gif" alt="이미지" width="500">
 <img src="https://github.com/SHim719/Image/blob/main/%EC%B9%B4%EB%A9%94%EB%9D%BC%EB%B3%B4%EA%B0%84.png" alt="이미지" width="500">
 
-- **구현 의도**: 카메라가 캐릭터에 고정되어 딱딱하게 움직일 경우 발생하는 시각적 피로감을 줄이고, 부드러운 조작감을 주기 위해 구현했습니다.
+- **구현 의도**: 카메라가 캐릭터에 고정되는 부자연스러움을 줄이고, 부드러운 조작감을 주기 위해 구현했습니다.
 - **구현 방법**: 현재 카메라 위치와 플레이어의 목표 위치를 선형 보간 하여, 카메라가 뒤따라가는 듯한 지연 효과를 주어 자연스러운 움직임을 연출했습니다.
 
 ### 타겟 락온(Lock-On) 카메라 보간
